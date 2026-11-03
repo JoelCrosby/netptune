@@ -7,6 +7,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.ViewModels.Automations;
@@ -60,6 +61,14 @@ internal sealed class CreateTaskAction : IAutomationAction
         if (descriptionError is not null)
         {
             return descriptionError;
+        }
+
+        var description = ProjectTaskDescription.Normalize(request.TaskDescription);
+        var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+        if (!hasValidDescription)
+        {
+            return ProjectTaskDescription.TooLongMessage;
         }
 
         var hasConflictingAssignees = request.CopyAssignees && request.AssigneeIds is { Count: > 0 };

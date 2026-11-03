@@ -1,9 +1,11 @@
 import { Component, computed, inject, input, viewChild } from '@angular/core';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
+import { TASK_DESCRIPTION_MAX_LENGTH } from '@core/models/project-task';
 import { assistantInlinePrompt } from '@core/util/assistant-inline-prompt';
 import { syncedDraft } from '@core/util/synced-draft';
 import { ChangeConflictComponent } from '@static/components/change-conflict/change-conflict.component';
+import { CharacterLimitComponent } from '@static/components/character-limit/character-limit.component';
 import { basicEditorCommands } from '@static/components/editor/editor-commands';
 import {
   EditorAppearance,
@@ -45,8 +47,15 @@ import { TaskDetailService } from './task-detail.service';
       [finalSave]="finalSave"
       [(value)]="description.value"
       [isReadOnly]="isReadOnly()"></app-editor>
+
+    @if (!isReadOnly()) {
+      <app-character-limit
+        class="mt-2 block"
+        [length]="description.value().length"
+        [max]="maxLength" />
+    }
   `,
-  imports: [ChangeConflictComponent, EditorComponent],
+  imports: [ChangeConflictComponent, CharacterLimitComponent, EditorComponent],
 })
 export class TaskDetailDescriptionComponent {
   readonly appearance = input<EditorAppearance>('flat');
@@ -60,6 +69,7 @@ export class TaskDetailDescriptionComponent {
   private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
 
   readonly commands = basicEditorCommands;
+  readonly maxLength = TASK_DESCRIPTION_MAX_LENGTH;
 
   readonly eyebrowClass = `${EYEBROW} mb-2.5`;
   readonly labelId = 'task-detail-description-label';

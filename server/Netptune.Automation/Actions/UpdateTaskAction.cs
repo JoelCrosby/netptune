@@ -5,6 +5,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.ViewModels.Automations;
@@ -79,6 +80,14 @@ internal sealed class UpdateTaskAction : IAutomationAction
         if (hasDescriptionConflict)
         {
             return "Update task actions cannot set and clear the description.";
+        }
+
+        var description = ProjectTaskDescription.Normalize(request.TaskDescription);
+        var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+        if (!hasValidDescription)
+        {
+            return ProjectTaskDescription.TooLongMessage;
         }
 
         var hasEstimateConflict = request.ClearEstimate

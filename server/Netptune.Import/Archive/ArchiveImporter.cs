@@ -2,6 +2,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.UnitOfWork;
 using Netptune.Transfer;
@@ -58,6 +59,19 @@ public sealed class ArchiveImporter : IArchiveImporter
     }
 
     public async Task<ArchiveImportResult> Import(ArchiveImportRequest request, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await ImportInTransaction(request, cancellationToken);
+        }
+        // UnitOfWork.Transaction wraps whatever escapes it, and callers refuse an archive by catching this type.
+        catch (Exception exception) when (exception.InnerException is ArchiveSchemaException schemaException)
+        {
+            throw schemaException;
+        }
+    }
+
+    private async Task<ArchiveImportResult> ImportInTransaction(ArchiveImportRequest request, CancellationToken cancellationToken)
     {
         using var reader = new ArchiveReader(request.Archive);
 
@@ -529,6 +543,14 @@ public sealed class ArchiveImporter : IArchiveImporter
 
             projects[projectId.Value] = project;
 
+            var description = ProjectTaskDescription.Normalize(row.Text("description"));
+            var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+            if (!hasValidDescription)
+            {
+                throw new ArchiveSchemaException($"Task {row.Ref.Value}: {ProjectTaskDescription.TooLongMessage}");
+            }
+
             // Keep the archived task number: it is the user-facing id, it is what the task's ref is built
             // from, and letting the project allocate a fresh one would silently renumber the workspace.
             var scopeId = row.Integer("scope_id") ?? project.NextTaskScopeId;
@@ -539,7 +561,7 @@ public sealed class ArchiveImporter : IArchiveImporter
                 ProjectScopeId = scopeId,
                 StatusId = statusId.Value,
                 Name = row.Text("name") ?? row.Ref.Value,
-                Description = row.Text("description"),
+                Description = description,
                 Priority = row.Enum<TaskPriority>("priority"),
                 EstimateType = row.Enum<EstimateType>("estimate_type"),
                 EstimateValue = row.Decimal("estimate_value"),

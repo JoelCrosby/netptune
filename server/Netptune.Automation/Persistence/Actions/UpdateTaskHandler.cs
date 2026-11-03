@@ -231,7 +231,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         }
         else if (contribution.Description is not null)
         {
-            task.Description = contribution.Description;
+            task.Description = ProjectTaskDescription.Normalize(contribution.Description);
         }
 
         if (contribution.ClearOwner)

@@ -70,6 +70,12 @@ public sealed record AutomationMessage
     public static AutomationMessage TaskKeyUnavailable { get; } =
         Coded("taskKeyUnavailable", "Unable to reserve a task key for the project.");
 
+    public static AutomationMessage TaskDescriptionTooLong { get; } =
+        Coded(
+            "taskDescriptionTooLong",
+            $"The task description is longer than the {ProjectTaskDescription.MaxLength} character limit.",
+            Format(ProjectTaskDescription.MaxLength));
+
     public static AutomationMessage ProjectUnavailable { get; } =
         Coded("projectUnavailable", "The triggering task's project is no longer available.");
 

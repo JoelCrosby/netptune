@@ -70,6 +70,14 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             return ClientResponse<TaskViewModel>.Failed(ProjectTaskName.TooLongMessage);
         }
 
+        var description = ProjectTaskDescription.Normalize(req.Description);
+        var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+        if (!hasValidDescription)
+        {
+            return ClientResponse<TaskViewModel>.Failed(ProjectTaskDescription.TooLongMessage);
+        }
+
         var status = req.StatusId.HasValue
             ? await StatusResolver.ResolveRequested(req.StatusId.Value, workspaceId, cancellationToken)
             : null;
@@ -103,7 +111,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             TaskMutationPipeline.Apply(result, new TaskMutationValues(status, req.Priority));
 
             result.Name = req.Name ?? result.Name;
-            result.Description = req.Description ?? result.Description;
+            result.Description = description ?? result.Description;
             result.OwnerId = req.OwnerId ?? result.OwnerId;
             result.EstimateType = req.EstimateType ?? result.EstimateType;
             result.EstimateValue = req.EstimateValue ?? result.EstimateValue;

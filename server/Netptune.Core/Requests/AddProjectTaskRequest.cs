@@ -11,7 +11,6 @@ public record AddProjectTaskRequest
     [MaxLength(ProjectTaskName.MaxLength)]
     public string Name { get; set; } = null!;
 
-    [MaxLength(4096)]
     public string Description { get; set; } = null!;
 
     public int? StatusId { get; set; }

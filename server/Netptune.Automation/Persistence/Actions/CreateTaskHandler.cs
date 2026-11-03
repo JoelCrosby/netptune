@@ -61,6 +61,14 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
             return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.TaskNotInProject);
         }
 
+        var description = ProjectTaskDescription.Normalize(contribution.Description);
+        var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+        if (!hasValidDescription)
+        {
+            return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.TaskDescriptionTooLong);
+        }
+
         var resolution = await ResolveCreationTargets(
             contribution,
             sourceTask,
@@ -80,7 +88,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
             return new ActionOutcome(AutomationActionResultStatus.Failed, AutomationMessage.TaskKeyUnavailable);
         }
 
-        var task = BuildTask(action, contribution, resolution, scopeId.Value);
+        var task = BuildTask(action, contribution with { Description = description }, resolution, scopeId.Value);
 
         await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);

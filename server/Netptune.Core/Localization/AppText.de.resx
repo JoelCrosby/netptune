@@ -1954,4 +1954,7 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="AiReviewSubjectNotSupported" xml:space="preserve">
     <value>Diese Art von Element kann der Assistent nicht prüfen.</value>
   </data>
+  <data name="ErrorTaskDescriptionTooLong" xml:space="preserve">
+    <value>Die Aufgabenbeschreibung darf {0} Zeichen nicht überschreiten</value>
+  </data>
 </root>

@@ -243,6 +243,57 @@ public class UpdateTaskCommandHandlerTests
     }
 
     [Fact]
+    public async Task Update_ShouldStoreTheNormalizedDescription()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 1, Description = "first\r\nsecond\r\n" };
+        var task = BuildTask();
+        var viewModel = new TaskViewModel { Name = task.Name, Description = "first\nsecond" };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        task.Description.Should().Be("first\nsecond");
+    }
+
+    [Fact]
+    public async Task Update_ShouldKeepTheDescription_WhenNoneIsSent()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 1, Name = "Renamed" };
+        var task = BuildTask();
+        var original = task.Description;
+        var viewModel = new TaskViewModel { Name = "Renamed", Description = original };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        task.Description.Should().Be(original);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnFailed_AndKeepDescription_WhenDescriptionIsTooLong()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Id = 1,
+            Description = new string('a', ProjectTaskDescription.MaxLength + 1),
+        };
+        var task = BuildTask();
+        var original = task.Description;
+
+        SetupHandlerDependencies(request, task, new TaskViewModel { Name = task.Name });
+
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(ProjectTaskDescription.TooLongMessage);
+        task.Description.Should().Be(original);
+    }
+
+    [Fact]
     public async Task Update_ShouldReturnFailed_AndKeepName_WhenNameIsTooLong()
     {
         var request = new UpdateProjectTaskRequest { Id = 42, Name = new string('a', ProjectTaskName.MaxLength + 1) };

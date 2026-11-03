@@ -65,6 +65,8 @@ const MESSAGES: Record<string, MessageRenderer> = {
     $localize`:Result of an automation action:The triggering task is not in a project.`,
   taskKeyUnavailable: () =>
     $localize`:Result of an automation action:Unable to reserve a task key for the project.`,
+  taskDescriptionTooLong: ([maxLength]) =>
+    $localize`:Result of an automation action:The task description is longer than the ${maxLength}:maxLength: character limit.`,
   projectUnavailable: () =>
     $localize`:Result of an automation action:The triggering task's project is no longer available.`,
   boardGroupUnavailable: () =>

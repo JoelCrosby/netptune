@@ -91,6 +91,37 @@ public class CreateTaskCommandHandlerTests
         result.Message.Should().Be(ProjectTaskName.TooLongMessage);
     }
 
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenDescriptionIsTooLong()
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = "Long description",
+            Description = new string('a', ProjectTaskDescription.MaxLength + 1),
+            ProjectId = 1,
+        };
+
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(ProjectTaskDescription.TooLongMessage);
+    }
+
+    [Fact]
+    public async Task Create_ShouldStoreTheNormalizedDescription()
+    {
+        var request = BuildRequest().With(p => p.Description, "first\r\nsecond\r\n").Create();
+
+        SetupCreateDependencies(request);
+
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await UnitOfWork.Tasks.Received(1).AddAsync(
+            Arg.Is<ProjectTask>(task => task.Description == "first\nsecond"),
+            TestContext.Current.CancellationToken);
+    }
+
     private IPostprocessComposer<AddProjectTaskRequest> BuildRequest()
     {
         return Fixture.Build<AddProjectTaskRequest>()

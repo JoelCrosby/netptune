@@ -476,6 +476,14 @@ internal static class AutomationTestData
         return await CreateActionRule(db, scenario, AutomationActionType.CreateTask, actionConfig);
     }
 
+    public static async Task<AutomationRule> CreateUpdateTaskRule(
+        DataContext db,
+        AutomationScenario scenario,
+        object actionConfig)
+    {
+        return await CreateActionRule(db, scenario, AutomationActionType.UpdateTask, actionConfig);
+    }
+
     private static async Task<AutomationRule> CreateActionRule(
         DataContext db,
         AutomationScenario scenario,

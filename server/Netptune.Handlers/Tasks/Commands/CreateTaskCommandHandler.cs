@@ -71,6 +71,14 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             return ClientResponse<TaskViewModel>.Failed(ProjectTaskName.TooLongMessage);
         }
 
+        var description = ProjectTaskDescription.Normalize(req.Description);
+        var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+        if (!hasValidDescription)
+        {
+            return ClientResponse<TaskViewModel>.Failed(ProjectTaskDescription.TooLongMessage);
+        }
+
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
@@ -153,7 +161,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         var task = new ProjectTask
         {
             Name = req.Name,
-            Description = req.Description,
+            Description = description,
             StatusId = status.Id,
             Status = status,
             ProjectId = req.ProjectId,

@@ -2600,4 +2600,8 @@ Please confirm your email address with the following link.</value>
     <value>This kind of item cannot be reviewed by the assistant.</value>
     <comment>Shown when an assistant review is asked for on something the review feature does not cover</comment>
   </data>
+  <data name="ErrorTaskDescriptionTooLong" xml:space="preserve">
+    <value>Task description cannot exceed {0} characters</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
 </root>

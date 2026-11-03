@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.ServiceAccounts;
@@ -230,6 +231,77 @@ public sealed class ApiV1EndpointTests
         var response = await client.GetAsync("api/v1/tasks/NOPE-999999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task CreateAndUpdateTask_ShouldNormalizeTheDescription()
+    {
+        var client = await CreateClient();
+        var setup = await GetSetup();
+        var createResponse = await client.PostAsJsonAsync("api/v1/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Normalized API task {Guid.NewGuid():N}",
+            Description = "first\r\nsecond  \nthird\r\n\r\n",
+            ProjectId = setup.ProjectId,
+        });
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created, await createResponse.Content.ReadAsStringAsync());
+
+        var created = await createResponse.Content.ReadFromJsonAsync<TaskViewModel>();
+
+        created!.Description.Should().Be("first\nsecond  \nthird");
+
+        var updateResponse = await client.PatchAsJsonAsync($"api/v1/tasks/{created.SystemId}", new
+        {
+            description = "changed\r\n",
+        });
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var updated = await updateResponse.Content.ReadFromJsonAsync<TaskViewModel>();
+
+        updated!.Description.Should().Be("changed");
+    }
+
+    [Fact]
+    public async Task UpdateTask_ShouldRejectADescriptionOverTheLimit()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.SystemId}", new
+        {
+            description = new string('a', ProjectTaskDescription.MaxLength + 1),
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result!.Message.Should().Be(ProjectTaskDescription.TooLongMessage);
+
+        var fetched = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.SystemId}");
+
+        fetched!.Description.Should().Be(task.Description);
+    }
+
+    [Fact]
+    public async Task UpdateTask_ShouldAcceptADescriptionThatFitsOnceNormalized()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var content = new string('a', ProjectTaskDescription.MaxLength - 1);
+
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.SystemId}", new
+        {
+            description = $"{content}\r\n\r\n",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var updated = await response.Content.ReadFromJsonAsync<TaskViewModel>();
+
+        updated!.Description.Should().Be(content);
     }
 
     [Fact]

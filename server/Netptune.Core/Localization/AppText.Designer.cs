@@ -4981,6 +4981,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Task description cannot exceed {0} characters.
+        /// </summary>
+        public static string ErrorTaskDescriptionTooLong {
+            get {
+                return ResourceManager.GetString("ErrorTaskDescriptionTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Task with key {0} not found.
         /// </summary>
         public static string ErrorTaskKeyNotFound {

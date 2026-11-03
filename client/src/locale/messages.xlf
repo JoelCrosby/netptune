@@ -385,6 +385,15 @@
         <source>Update Member Roles</source>
       </segment>
     </unit>
+    <unit id="3798194238981670052">
+      <notes>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:572</note>
+        <note category="description">Body of a dialog or validation message</note>
+      </notes>
+      <segment>
+        <source>Description cannot exceed <ph id="0" equiv="maxLength" disp="TASK_DESCRIPTION_MAX_LENGTH"/> characters.</source>
+      </segment>
+    </unit>
     <unit id="3799093232488965923">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:91,93</note>
@@ -441,7 +450,7 @@
     </unit>
     <unit id="6086478907980280300">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:187</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:189</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -778,7 +787,7 @@
     </unit>
     <unit id="6323580189657627316">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:99</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:101</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -1364,7 +1373,7 @@
     </unit>
     <unit id="8939429210489646620">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:81</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:83</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -1682,7 +1691,7 @@
     </unit>
     <unit id="3510310123192150537">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:209</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:211</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -1991,7 +2000,7 @@
     </unit>
     <unit id="62403536163906103">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:229</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:234</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -2279,9 +2288,9 @@
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:227</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:236</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:244</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:232</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:241</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:249</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:219</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:229</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:239</note>
@@ -2570,7 +2579,7 @@
     </unit>
     <unit id="7019875426024370063">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:120</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:122</note>
         <note category="description">Why an automation rule was turned off</note>
       </notes>
       <segment>
@@ -2583,8 +2592,8 @@
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:235</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:243</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:240</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:248</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:160</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:539</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:272</note>
@@ -2662,7 +2671,7 @@
     <unit id="5887960889618527515">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:104</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:49</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:50</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -2716,7 +2725,7 @@
     </unit>
     <unit id="99931711529675546">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:71</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:73</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -2752,7 +2761,7 @@
     </unit>
     <unit id="2854924760105873427">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:167</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:169</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -3334,7 +3343,7 @@
     </unit>
     <unit id="7006298497858867926">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:211</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:213</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -3479,7 +3488,7 @@
     </unit>
     <unit id="6419601202667262693">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:76</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:81</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -3506,7 +3515,7 @@
     </unit>
     <unit id="8473956176297638892">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:97</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:102</note>
         <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:40</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -3561,7 +3570,7 @@
     </unit>
     <unit id="7190478463652380023">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:116</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:121</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -3606,7 +3615,7 @@
     </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:237</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:242</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -3633,7 +3642,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:238</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:243</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -4649,7 +4658,7 @@
     </unit>
     <unit id="4050810722021422470">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:93</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:95</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -5103,7 +5112,7 @@
     </unit>
     <unit id="5611829999084308582">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:181</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:183</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -5142,7 +5151,7 @@
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:334,337</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:384,387</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:385,388</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
@@ -5297,7 +5306,7 @@
     </unit>
     <unit id="6812149576275951475">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:73</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:75</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -5306,7 +5315,7 @@
     </unit>
     <unit id="6815685597948322023">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:89</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:91</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -5429,7 +5438,7 @@
     </unit>
     <unit id="551482181981388645">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:101</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:103</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -5565,7 +5574,7 @@
     </unit>
     <unit id="7002886470952373907">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:115</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:117</note>
         <note category="description">Why an automation rule was turned off</note>
       </notes>
       <segment>
@@ -5956,7 +5965,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:161,164</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:162,165</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
         <note category="location">src/app/shell/global-commands.service.ts:456</note>
         <note category="description">Title of the create-task dialog</note>
@@ -5967,7 +5976,7 @@
     </unit>
     <unit id="4730911982816981060">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:165</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:167</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -6015,7 +6024,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:175</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:176</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -6029,7 +6038,7 @@
     <unit id="4902817035128594900">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:66</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:432</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:255</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -6069,8 +6078,8 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:253,255</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:38,40</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:254,256</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:40,42</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
       <segment>
@@ -6079,7 +6088,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:221,225</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:222,226</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment>
@@ -6088,7 +6097,7 @@
     </unit>
     <unit id="5682644810455066377">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:169</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:171</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -6097,7 +6106,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:231,234</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:232,235</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment>
@@ -6115,7 +6124,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:392,394</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:393,395</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment>
@@ -6169,8 +6178,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:538</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:550</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:539</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:551</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -6206,20 +6215,11 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:557</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:558</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
         <source>Summary must have at least 4 characters.</source>
-      </segment>
-    </unit>
-    <unit id="633922115206256018">
-      <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:571</note>
-        <note category="description">Body of a dialog or validation message</note>
-      </notes>
-      <segment>
-        <source>Description cannot exceed 4096 characters.</source>
       </segment>
     </unit>
     <unit id="6000253611495364359">
@@ -6546,7 +6546,7 @@
     </unit>
     <unit id="7583155912125779696">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:95</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:97</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -6883,7 +6883,7 @@
     </unit>
     <unit id="2697219448033055086">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:91</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:93</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -7336,7 +7336,7 @@
     <unit id="4116911651502837995">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:627</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:435</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:275</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:247</note>
         <note category="description">Name of the files permission group</note>
@@ -8685,7 +8685,7 @@
     </unit>
     <unit id="3074710902012405045">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:105</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:107</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -8845,7 +8845,7 @@
     </unit>
     <unit id="166657180724463675">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:185</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:190</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -9230,7 +9230,7 @@
     </unit>
     <unit id="4768857077152601327">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:75</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:77</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -9380,7 +9380,7 @@
     </unit>
     <unit id="5208267466153566698">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:183</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:185</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -10106,7 +10106,7 @@
     </unit>
     <unit id="757544783841175138">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:203</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:205</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -12663,7 +12663,7 @@
     </unit>
     <unit id="1791757930520499573">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:97</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:99</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -12908,7 +12908,7 @@
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:316</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:319</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:231</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:236</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -15045,7 +15045,7 @@
     </unit>
     <unit id="2832439730373347848">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:87</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:89</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -15109,7 +15109,7 @@
     </unit>
     <unit id="7565716024468232322">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:274</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:248</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
@@ -15139,7 +15139,7 @@
     </unit>
     <unit id="5139923050971337063">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:201</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:203</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -16612,7 +16612,7 @@
     </unit>
     <unit id="3528979828894377110">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:107</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:109</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -17576,7 +17576,7 @@
     </unit>
     <unit id="8761140310272472389">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:172,173</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:173,174</note>
         <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:139</note>
         <note category="description">Placeholder in the empty task summary field</note>
       </notes>
@@ -17736,7 +17736,7 @@
     </unit>
     <unit id="6909341881692675891">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:185</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:187</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -18106,7 +18106,7 @@
     </unit>
     <unit id="7409589827715530316">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:205</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:207</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -18134,7 +18134,7 @@
     </unit>
     <unit id="1037129206351388584">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:109</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:111</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -18939,7 +18939,7 @@
     </unit>
     <unit id="1020509482038447568">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:77</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:79</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -19066,7 +19066,7 @@
     </unit>
     <unit id="2352616082179832924">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:103</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:105</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -19457,7 +19457,7 @@
     </unit>
     <unit id="3874207975649217986">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:69</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:71</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -20263,7 +20263,7 @@
     </unit>
     <unit id="2507001995479491974">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:30,35</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:32,37</note>
         <note category="description">Title of the notice shown when a task description changed elsewhere while it was being edited</note>
       </notes>
       <segment>
@@ -23233,7 +23233,7 @@
     </unit>
     <unit id="4378805774812012692">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:375,379</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:376,380</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-timestamps.component.ts:51,55</note>
         <note category="description">Footer line naming who raises the new task. NAME is their display name</note>
       </notes>
@@ -23969,6 +23969,15 @@
         <source>Credential name is required.</source>
       </segment>
     </unit>
+    <unit id="4524901060929613879">
+      <notes>
+        <note category="location">src/app/core/automations/automation-messages.ts:69</note>
+        <note category="description">Result of an automation action</note>
+      </notes>
+      <segment>
+        <source>The task description is longer than the <ph id="0" equiv="maxLength" disp="maxLength"/> character limit.</source>
+      </segment>
+    </unit>
     <unit id="4525703526182627629">
       <notes>
         <note category="location">src/app/core/services/page-commands.service.ts:221</note>
@@ -24312,7 +24321,7 @@
     </unit>
     <unit id="1005445972395556557">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:211</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:216</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -25962,7 +25971,7 @@
     </unit>
     <unit id="8206145775595298090">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:163</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:165</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -26563,7 +26572,7 @@
     </unit>
     <unit id="5673648104994903255">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:564</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:565</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -27143,7 +27152,7 @@
     </unit>
     <unit id="7035335890150155729">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:199</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:201</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -27305,7 +27314,7 @@
     </unit>
     <unit id="5195736582946723495">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:79</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:81</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -27449,7 +27458,7 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:279,281</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:280,282</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:142,144</note>
         <note category="description">Button that links this task to another</note>
       </notes>
@@ -27708,7 +27717,7 @@
     </unit>
     <unit id="542328022766284929">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:111</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:113</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -28526,7 +28535,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:350,354</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:351,355</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment>
@@ -28798,7 +28807,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:326,329</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:327,330</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment>
@@ -29577,7 +29586,7 @@
     </unit>
     <unit id="6662317772987702772">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:230</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:235</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -30150,7 +30159,7 @@
     </unit>
     <unit id="4488382426065225581">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:83</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:85</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>
@@ -30487,7 +30496,7 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:226</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:231</note>
         <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:70,71</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:425</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
@@ -30936,7 +30945,7 @@
     </unit>
     <unit id="5464223370196950888">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:207</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:209</note>
         <note category="description">Warning on an automation rule</note>
       </notes>
       <segment>
@@ -31201,7 +31210,7 @@
     </unit>
     <unit id="852893966682586851">
       <notes>
-        <note category="location">src/app/core/automations/automation-messages.ts:85</note>
+        <note category="location">src/app/core/automations/automation-messages.ts:87</note>
         <note category="description">Result of an automation action</note>
       </notes>
       <segment>

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Entities.Contexts;
 
 using Xunit;
@@ -27,5 +28,16 @@ public sealed class ProjectTaskEntityModelTests
         task.GetProperties().Should().NotContain(property => property.IsShadowProperty());
         userForeignKeys.Should().BeEquivalentTo("OwnerId", "CreatedByUserId", "ModifiedByUserId", "DeletedByUserId");
         task.GetIndexes().Should().NotContain(index => index.GetDatabaseName() == "ix_project_tasks_name");
+    }
+
+    [Fact]
+    public void Description_ShouldBeABoundedColumnMatchingTheRequestLimit()
+    {
+        using var context = new DataContext();
+        var model = context.GetService<IDesignTimeModel>().Model;
+        var description = model.FindEntityType(typeof(ProjectTask))!.FindProperty(nameof(ProjectTask.Description))!;
+
+        description.GetMaxLength().Should().Be(ProjectTaskDescription.MaxLength);
+        description.GetColumnType().Should().Be($"character varying({ProjectTaskDescription.MaxLength})");
     }
 }

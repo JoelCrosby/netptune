@@ -13,6 +13,7 @@ using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Automations;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Entities.Contexts;
 
@@ -1525,6 +1526,76 @@ public sealed class AutomationExecutionServiceTests
             .BeEquivalentTo([scenario.Assignee.Id]);
 
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_normalizes_created_task_description()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        await AutomationTestData.CreateCreateTaskRule(scope.Db, scenario, new
+        {
+            name = "Follow up",
+            description = "first\r\nsecond\r\n",
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var createdTask = await scope.Db.ProjectTasks
+            .SingleAsync(task => task.Id != scenario.Task.Id, TestContext.Current.CancellationToken);
+
+        createdTask.Description.Should().Be("first\nsecond");
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_fails_create_task_action_when_rendered_description_is_too_long()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        const string variable = "{{rule.name}}";
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var template = new string('a', ProjectTaskDescription.MaxLength - variable.Length) + variable;
+
+        await AutomationTestData.CreateCreateTaskRule(scope.Db, scenario, new
+        {
+            name = "Follow up",
+            description = template,
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var createdTaskCount = await scope.Db.ProjectTasks
+            .CountAsync(task => task.Id != scenario.Task.Id, TestContext.Current.CancellationToken);
+        var actionResult = await scope.Db.AutomationActionResults.SingleAsync(TestContext.Current.CancellationToken);
+
+        createdTaskCount.Should().Be(0);
+        actionResult.Status.Should().Be(AutomationActionResultStatus.Failed);
+        actionResult.MessageCode.Should().Be(AutomationMessage.TaskDescriptionTooLong.Code);
+        actionResult.MessageArguments.Should().Equal(ProjectTaskDescription.MaxLength.ToString());
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_normalizes_updated_task_description()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        await AutomationTestData.CreateUpdateTaskRule(scope.Db, scenario, new
+        {
+            description = "changed\r\n",
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var task = await scope.Db.ProjectTasks
+            .AsNoTracking()
+            .SingleAsync(item => item.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+
+        task.Description.Should().Be("changed");
     }
 
     [Fact]

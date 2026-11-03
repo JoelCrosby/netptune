@@ -1,5 +1,7 @@
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 
 using FluentAssertions;
 
@@ -7,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.Pages;
 using Netptune.Core.Responses.Common;
@@ -361,6 +364,86 @@ public sealed class ArchiveRoundTripTests
         var response = await PostArchive("api/import/archive?mode=clone", archive);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Clone_ShouldNormalizeATaskDescription()
+    {
+        var slug = Slug();
+        var exported = await ExportArchive(1);
+        var archive = await WithFirstTaskDescription(exported, "first\r\nsecond\r\n");
+        var result = await CloneInto(archive, slug);
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var hasNormalizedTask = await db.ProjectTasks.AnyAsync(
+            task => task.WorkspaceId == result.WorkspaceId && task.Description == "first\nsecond",
+            TestContext.Current.CancellationToken);
+
+        hasNormalizedTask.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Clone_ShouldRefuseAnArchive_WhenATaskDescriptionIsTooLong()
+    {
+        var slug = Slug();
+        var exported = await ExportArchive(1);
+        var description = new string('a', ProjectTaskDescription.MaxLength + 1);
+        var archive = await WithFirstTaskDescription(exported, description);
+
+        var clone = () => CloneInto(archive, slug);
+
+        await clone.Should().ThrowAsync<ArchiveSchemaException>()
+            .WithMessage($"*{ProjectTaskDescription.TooLongMessage}");
+
+        await using var scope = Fixture.Services.CreateAsyncScope();
+
+        var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspaceExists = await db.Workspaces.AnyAsync(
+            workspace => workspace.Slug == slug,
+            TestContext.Current.CancellationToken);
+
+        workspaceExists.Should().BeFalse();
+    }
+
+    private static async Task<MemoryStream> WithFirstTaskDescription(Stream archive, string description)
+    {
+        archive.Seek(0, SeekOrigin.Begin);
+
+        var rewritten = new MemoryStream();
+
+        await archive.CopyToAsync(rewritten, TestContext.Current.CancellationToken);
+
+        using (var zip = new ZipArchive(rewritten, ZipArchiveMode.Update, leaveOpen: true))
+        {
+            var entry = zip.GetEntry(ArchiveCatalog.Task.FileName)!;
+            var lines = await ReadLines(entry);
+            var firstTask = JsonNode.Parse(lines[0])!;
+
+            firstTask["description"] = description;
+            lines[0] = firstTask.ToJsonString();
+            entry.Delete();
+
+            var replacement = zip.CreateEntry(ArchiveCatalog.Task.FileName);
+
+            await using var writer = new StreamWriter(replacement.Open());
+
+            await writer.WriteAsync(string.Join('\n', lines));
+        }
+
+        rewritten.Seek(0, SeekOrigin.Begin);
+
+        return rewritten;
+    }
+
+    private static async Task<string[]> ReadLines(ZipArchiveEntry entry)
+    {
+        using var reader = new StreamReader(entry.Open());
+
+        var content = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
+
+        return content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
     }
 
     private static string Slug()

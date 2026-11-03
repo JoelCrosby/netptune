@@ -1,5 +1,6 @@
 using Netptune.Core.Constants;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Utilities;
 using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
@@ -78,12 +79,21 @@ public sealed class ImportRowResolver
                 ImportDiagnosticCodes.InvalidSchedule, "The due date falls before the start date.", dueDate?.ToString()));
         }
 
+        var description = ProjectTaskDescription.Normalize(Text(row, TaskFieldKeys.Description));
+        var hasValidDescription = ProjectTaskDescription.IsValid(description);
+
+        if (!hasValidDescription)
+        {
+            diagnostics.Add(Diagnostic(row, TaskFieldKeys.Description, ImportDiagnosticSeverity.Error,
+                ImportDiagnosticCodes.DescriptionTooLong, ProjectTaskDescription.TooLongMessage, null));
+        }
+
         return new ResolvedTaskRow
         {
             RowNumber = row.RowNumber,
             SourceId = Text(row, TaskFieldKeys.SystemId),
             Name = name ?? string.Empty,
-            Description = Text(row, TaskFieldKeys.Description),
+            Description = description,
             StatusValue = Text(row, TaskFieldKeys.Status),
             Priority = Priority(row, diagnostics),
             EstimateValue = Number(row, TaskFieldKeys.EstimateValue, diagnostics),

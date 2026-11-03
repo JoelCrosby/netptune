@@ -1954,4 +1954,7 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="AiReviewSubjectNotSupported" xml:space="preserve">
     <value>L’assistant ne peut pas relire ce type d’élément.</value>
   </data>
+  <data name="ErrorTaskDescriptionTooLong" xml:space="preserve">
+    <value>La description de la tâche ne peut pas dépasser {0} caractères</value>
+  </data>
 </root>

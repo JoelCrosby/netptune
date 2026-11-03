@@ -10,6 +10,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Activity;
@@ -1475,6 +1476,24 @@ public sealed class TasksEndpointTests
         var placement = reloaded.Placements.Should().Contain(item => item.BoardId == board.Id).Which;
 
         placement.BoardGroupId.Should().NotBe(doomedGroup.Id);
+    }
+
+    [Fact]
+    public async Task Update_ShouldExplainTheLimit_WhenTheDescriptionIsTooLong()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+
+        var response = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = task.Id,
+            Description = new string('a', ProjectTaskDescription.MaxLength + 1),
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>(TestContext.Current.CancellationToken);
+
+        result!.Message.Should().Be(ProjectTaskDescription.TooLongMessage);
     }
 
     private async Task<TaskViewModel> CreateTaskOnDefaultBoard()

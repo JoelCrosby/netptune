@@ -26,6 +26,7 @@ import { EstimateType, TaskEstimate } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import {
   AddProjectTaskRequest,
+  TASK_DESCRIPTION_MAX_LENGTH,
   TASK_NAME_MAX_LENGTH,
 } from '@core/models/project-task';
 import { RelationType } from '@core/models/relation-type';
@@ -567,8 +568,8 @@ export class CreateTaskDialogComponent {
 
       return undefined;
     });
-    maxLength(schema.description, 4096, {
-      message: $localize`:Body of a dialog or validation message:Description cannot exceed 4096 characters.`,
+    maxLength(schema.description, TASK_DESCRIPTION_MAX_LENGTH, {
+      message: $localize`:Body of a dialog or validation message:Description cannot exceed ${TASK_DESCRIPTION_MAX_LENGTH}:maxLength: characters.`,
     });
     disabled(schema.name, { when: () => this.busy() });
     disabled(schema.description, { when: () => this.busy() });

@@ -11,6 +11,7 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { TasksService } from '@core/services/tasks.service';
 import { downloadFile } from '@core/util/download-helper';
+import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -67,7 +68,11 @@ export class TaskCommandsService {
       .put(task)
       .pipe(
         unwrapClientResponse(),
-        catchError(() => EMPTY),
+        catchError((error: unknown) => {
+          this.snackbar.error(getErrorMessage(error));
+
+          return EMPTY;
+        }),
         finalize(() => this.editing.set(false))
       )
       .subscribe((updated) => {

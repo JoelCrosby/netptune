@@ -72,6 +72,7 @@ public static class ImportDiagnosticCodes
     public const string InvalidNumber = "invalid_number";
     public const string InvalidPriority = "invalid_priority";
     public const string InvalidSchedule = "invalid_schedule";
+    public const string DescriptionTooLong = "description_too_long";
     public const string MissingRequiredField = "missing_required_field";
     public const string RowSkipped = "row_skipped";
 }

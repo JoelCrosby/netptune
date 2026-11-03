@@ -37,7 +37,7 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
 
         builder
             .Property(task => task.Description)
-            .HasMaxLength(32768);
+            .HasMaxLength(ProjectTaskDescription.MaxLength);
 
         builder
             .Property(task => task.StatusId)
