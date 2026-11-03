@@ -47,6 +47,9 @@ public class GetAssigneesByIdQueryHandlerTests
         var result = await Handler.Handle(new GetAssigneesByIdQuery([]), TestContext.Current.CancellationToken);
 
         result.Should().BeEmpty();
-        await UnitOfWork.Users.DidNotReceiveWithAnyArgs().GetWorkspaceAssignees(default, default!, default);
+        await UnitOfWork.Users.DidNotReceiveWithAnyArgs().GetWorkspaceAssignees(
+            default,
+            default!,
+            TestContext.Current.CancellationToken);
     }
 }
