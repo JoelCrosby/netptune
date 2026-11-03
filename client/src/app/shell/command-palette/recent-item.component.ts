@@ -12,7 +12,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
       [optionId]="optionId()"
       [selected]="selected()"
       (click)="activate.emit(item())"
-      (mouseenter)="hover.emit()">
+      (mousemove)="hover.emit()">
       <svg lucideClock class="h-4 w-4 shrink-0 opacity-50"></svg>
       <span class="flex-1 truncate text-left">{{ item().title }}</span>
     </button>

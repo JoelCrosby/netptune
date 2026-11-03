@@ -28,6 +28,7 @@ import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
+import { PlaceCommandsService } from './place-commands.service';
 import { BoardBackgroundService } from '@core/services/board-background.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { LocalePreferenceService } from '@core/services/locale-preference.service';
@@ -39,7 +40,12 @@ const DOCK_ANIMATION_MS = 180;
 const DRAWER_ANIMATION_MS = 200;
 
 @Component({
-  providers: [ShellService, GlobalCommandsService, CommandShortcutService],
+  providers: [
+    ShellService,
+    GlobalCommandsService,
+    PlaceCommandsService,
+    CommandShortcutService,
+  ],
   imports: [
     CdkTrapFocus,
     WorkspaceOutletComponent,
@@ -221,6 +227,7 @@ export class ShellComponent {
   readonly panel = inject(AiPanelService);
   readonly assistant = inject(AiAssistantService);
   readonly globalCommands = inject(GlobalCommandsService);
+  readonly placeCommands = inject(PlaceCommandsService);
   readonly commandShortcuts = inject(CommandShortcutService);
   readonly preferences = inject(UserPreferencesService);
   readonly lastWorkspace = inject(LastWorkspaceService);

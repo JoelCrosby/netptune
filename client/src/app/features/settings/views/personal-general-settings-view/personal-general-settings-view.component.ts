@@ -9,6 +9,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
 import { PanelComponent } from '@static/components/panel.component';
+import { ScrollAnchorDirective } from '@core/router/scroll-anchor.directive';
 
 const NOTIFICATION_GROUP = 'notifications';
 const APPEARANCE_GROUP = 'appearance';
@@ -23,6 +24,7 @@ const APPEARANCE_GROUP = 'appearance';
     PanelBodyComponent,
     PanelComponent,
     PreferenceListComponent,
+    ScrollAnchorDirective,
     SkeletonComponent,
   ],
   template: `
@@ -53,7 +55,7 @@ const APPEARANCE_GROUP = 'appearance';
       } @else {
         <div class="flex flex-col gap-6">
           @for (group of groups(); track group.key) {
-            <section app-panel surface="card">
+            <section app-panel surface="card" [appScrollAnchor]="group.key">
               <header app-panel-body divider="bottom">
                 <div class="flex min-w-0 items-center gap-3">
                   <app-icon-tile [icon]="groupIcon" />

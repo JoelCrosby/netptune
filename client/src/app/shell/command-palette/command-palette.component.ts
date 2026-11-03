@@ -21,6 +21,7 @@ import {
   Command,
   CommandRegistry,
 } from '@core/services/command-registry.service';
+import { PlaceNavigationService } from '@core/services/place-navigation.service';
 import { SearchService } from '@core/services/search.service';
 import { SearchResult } from '@core/models/search-result';
 import { delayedLoading } from '@core/util/delayed-loading';
@@ -34,6 +35,8 @@ import { SearchResultItemComponent } from './search-result-item.component';
 const SEARCH_HINT = $localize`:Command palette hint shown before the user types. The > character is a literal prefix and must not be translated:Type to search or use > for commands.`;
 const SEARCH_UNAVAILABLE = $localize`:Shown when the command palette search backend cannot be reached:Search is unavailable right now.`;
 const NO_RESULTS = $localize`:Shown when a command palette search matches nothing:No results found.`;
+
+const PLACE_RECENT_TYPE = 'place';
 
 interface PaletteEmptyState {
   hasItems: boolean;
@@ -133,13 +136,13 @@ type PaletteItem =
               class="overflow-hidden p-1"
               role="group"
               i18n-aria-label="Accessible name of the available-commands group"
-              aria-label="Actions">
+              aria-label="Commands">
               <p
                 class="text-muted px-2 py-1.5 text-xs font-medium"
                 aria-hidden="true">
                 <span
                   i18n="Heading above runnable commands in the command palette">
-                  Actions
+                  Commands
                 </span>
               </p>
               @for (cmd of commandItems(); track cmd.id; let idx = $index) {
@@ -200,6 +203,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
   private router = inject(Router);
   private registry = inject(CommandRegistry);
   private recentService = inject(RecentItemsService);
+  private places = inject(PlaceNavigationService);
   private overlayRef: OverlayRef;
   private portal!: TemplatePortal;
 
@@ -222,7 +226,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
       return $localize`:Command palette input placeholder while in task-search mode:Search tasks…`;
     if (q.startsWith('@'))
       return $localize`:Command palette input placeholder while in project-search mode:Search projects…`;
-    return $localize`:Default command palette input placeholder. The > character is a literal prefix and must not be translated:Search or type > for commands…`;
+    return $localize`:Default command palette input placeholder. The > character is a literal prefix and must not be translated:Search, jump to a section, or type > for commands…`;
   });
 
   recentItems = computed(() =>
@@ -446,7 +450,22 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
 
   activateCommand(cmd: Command) {
     this.palette.close();
+    this.recordPlace(cmd);
     cmd.execute();
+  }
+
+  private recordPlace({ label, place }: Command) {
+    if (!place) return;
+
+    const url = this.places.urlFor(place);
+
+    if (!url) return;
+
+    this.recentService.addRecent({
+      title: `${place.section} › ${label}`,
+      url,
+      type: PLACE_RECENT_TYPE,
+    });
   }
 
   activateResult(result: SearchResult) {
@@ -462,6 +481,13 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
 
   activateRecentItem(item: RecentItem) {
     this.palette.close();
+
+    if (item.type === PLACE_RECENT_TYPE) {
+      this.places.open(item.url);
+
+      return;
+    }
+
     void this.router.navigateByUrl(item.url);
   }
 }

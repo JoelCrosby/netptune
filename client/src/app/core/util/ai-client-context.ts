@@ -9,6 +9,7 @@ import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { CurrentPage } from '@core/services/current-context.service';
 import { referenceRoute } from '@core/util/ai-references';
+import { pathOf } from '@core/util/url';
 
 const SECTIONS: Record<string, string> = {
   boards: $localize`:Names the screen the user is on:board`,
@@ -39,8 +40,7 @@ const SELECTION_TOOLTIP_LENGTH = 280;
 
 /** The first segment is the workspace slug, so the section is the one after it. */
 export const readView = (url: string): string | undefined => {
-  const segments = url
-    .split('?')[0]
+  const segments = pathOf(url)
     .split('/')
     .filter((segment) => segment.length > 0);
 

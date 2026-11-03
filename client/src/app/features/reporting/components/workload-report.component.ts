@@ -10,6 +10,7 @@ import {
 import { workloadReportResource } from '@core/resources/reporting.resource';
 import { WorkloadTableComponent } from './workload-table.component';
 import { PanelComponent } from '@static/components/panel.component';
+import { ScrollAnchorDirective } from '@core/router/scroll-anchor.directive';
 
 @Component({
   selector: 'app-workload-report',
@@ -17,6 +18,7 @@ import { PanelComponent } from '@static/components/panel.component';
     EmptyStateComponent,
     ErrorStateComponent,
     PanelComponent,
+    ScrollAnchorDirective,
     SectionHeaderComponent,
     SkeletonComponent,
     StatStripComponent,
@@ -25,6 +27,7 @@ import { PanelComponent } from '@static/components/panel.component';
   template: `
     <section class="flex flex-col gap-6">
       <app-section-header
+        [appScrollAnchor]="'workload'"
         i18n-heading="Section heading for the workload report"
         heading="Current workload"
         i18n-description="Explains what the workload report shows"

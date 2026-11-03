@@ -27,7 +27,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
       [optionId]="optionId()"
       [selected]="selected()"
       (click)="activate.emit(result())"
-      (mouseenter)="hover.emit()">
+      (mousemove)="hover.emit()">
       @switch (result().type) {
         @case ('task') {
           <svg lucideHash class="h-4 w-4 shrink-0 opacity-50"></svg>

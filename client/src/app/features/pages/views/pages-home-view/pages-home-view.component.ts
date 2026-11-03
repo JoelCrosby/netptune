@@ -26,6 +26,7 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PromptHeroComponent } from '@static/components/prompt-hero/prompt-hero.component';
+import { ScrollAnchorDirective } from '@core/router/scroll-anchor.directive';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import {
   SegmentedControlComponent,
@@ -58,6 +59,7 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
     PageTreeComponent,
     PromptHeroComponent,
     SegmentedControlComponent,
+    ScrollAnchorDirective,
     SectionHeaderComponent,
     TemplateCardComponent,
     ChartCardComponent,
@@ -114,7 +116,7 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
         }
 
         @if (canCreate()) {
-          <section>
+          <section [appScrollAnchor]="'templates'">
             <app-section-header
               appearance="inline"
               i18n-heading="Heading over the templates on pages home"

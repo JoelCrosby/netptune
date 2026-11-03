@@ -18,6 +18,7 @@ import { hoursLabel } from './report-format';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 import { flowReportResource } from '@core/resources/reporting.resource';
 import { PanelComponent } from '@static/components/panel.component';
+import { ScrollAnchorDirective } from '@core/router/scroll-anchor.directive';
 
 @Component({
   selector: 'app-flow-report',
@@ -31,6 +32,7 @@ import { PanelComponent } from '@static/components/panel.component';
     FlowThroughputTableComponent,
     PanelComponent,
     ReportCoverageNoticeComponent,
+    ScrollAnchorDirective,
     SectionHeaderComponent,
     SkeletonComponent,
     StatStripComponent,
@@ -71,6 +73,7 @@ import { PanelComponent } from '@static/components/panel.component';
 
         @if (report.buckets.length) {
           <app-chart-card
+            [appScrollAnchor]="'throughput'"
             [flush]="true"
             [icon]="throughputIcon"
             i18n-title="Heading of the throughput chart card"
@@ -113,6 +116,7 @@ import { PanelComponent } from '@static/components/panel.component';
 
           @if (report.cycleTimeBuckets.length) {
             <app-chart-card
+              [appScrollAnchor]="'cycle-time'"
               [flush]="true"
               [icon]="cycleTimeIcon"
               i18n-title="Heading of the cycle-time chart card"

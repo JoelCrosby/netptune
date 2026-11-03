@@ -20,6 +20,10 @@ import {
   PageVersionSummary,
 } from '@core/models/pages';
 import { prettyShortDate } from '@core/util/dates';
+import {
+  Command,
+  injectCommands,
+} from '@core/services/command-registry.service';
 import { CurrentContextService } from '@core/services/current-context.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
@@ -309,7 +313,50 @@ export class PageDetailViewComponent {
 
     this.currentContext.publish('page', this.currentPage);
 
+    injectCommands(() => this.openPageCommands());
+
     inject(DestroyRef).onDestroy(() => this.presence.leave());
+  }
+
+  private openPageCommands(): Command[] {
+    const isLoaded = this.detail.hasValue();
+
+    if (!isLoaded) return [];
+
+    const page = this.detail.value();
+    const draft = this.draft();
+
+    if (!page || !draft) return [];
+
+    const commands: Command[] = [];
+
+    if (this.canUpdate()) {
+      commands.push(
+        pageStatusCommand(draft, (status) => {
+          this.onStatusChanged(draft, status);
+        })
+      );
+    }
+
+    if (page.kind === PageKind.document) {
+      commands.push({
+        id: 'page.export',
+        label: $localize`:Command palette action that downloads the open page as a markdown file:Export Page as Markdown`,
+        group: 'actions',
+        execute: () => this.onExport(draft),
+      });
+    }
+
+    if (this.canArchive()) {
+      commands.push({
+        id: 'page.archive',
+        label: $localize`:Command palette action that archives the open page:Archive Page`,
+        group: 'actions',
+        execute: () => this.onArchive(page),
+      });
+    }
+
+    return commands;
   }
 
   private applyRemote(page: PageDetail) {
@@ -431,3 +478,26 @@ function versionHeading(version: PageVersionSummary): string {
 const untitled = $localize`:Name shown for a page without a title:Untitled`;
 const linkCopied = $localize`:Confirmation that a page link was copied:Link copied`;
 const linkNotCopied = $localize`:Shown when a page link could not be copied:Link could not be copied`;
+
+function pageStatusCommand(
+  draft: PageDraft,
+  changeStatus: (status: PageStatus) => void
+): Command {
+  const isPublished = draft.latest().status === PageStatus.published;
+
+  if (isPublished) {
+    return {
+      id: 'page.markDraft',
+      label: $localize`:Command palette action that moves the open published page back to draft:Mark Page as Draft`,
+      group: 'actions',
+      execute: () => changeStatus(PageStatus.draft),
+    };
+  }
+
+  return {
+    id: 'page.publish',
+    label: $localize`:Command palette action that publishes the open draft page:Publish Page`,
+    group: 'actions',
+    execute: () => changeStatus(PageStatus.published),
+  };
+}

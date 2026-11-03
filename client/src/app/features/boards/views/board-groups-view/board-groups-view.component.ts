@@ -34,7 +34,10 @@ import { BoardPinnedBannerComponent } from '@boards/components/board-pinned-bann
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { EditBoardComponent } from '@boards/components/edit-board/edit-board.component';
-import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
+import {
+  CreateBoardGroupComponent,
+  openCreateBoardGroupDialog,
+} from '@boards/components/create-board-group/create-board-group.component';
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
@@ -44,6 +47,10 @@ import {
   BOARDS_HIDDEN_GROUP_IDS,
   BOARDS_TASK_SORT,
 } from '@core/models/user-preferences';
+import {
+  Command,
+  injectCommands,
+} from '@core/services/command-registry.service';
 import { DialogService } from '@core/services/dialog.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { statusResource } from '@core/resources/status.resource';
@@ -411,6 +418,8 @@ export class BoardGroupsViewComponent implements OnDestroy {
       () => this.loading()
     );
 
+    injectCommands(() => this.openBoardCommands());
+
     // Navigating between boards reuses this component, so the open board has to
     // follow the input rather than be claimed once on the way in.
     effect(() => {
@@ -545,6 +554,27 @@ export class BoardGroupsViewComponent implements OnDestroy {
       maxWidth: 'calc(100vw - 32px)',
       data: board,
     });
+  }
+
+  private openBoardCommands(): Command[] {
+    const board = this.board();
+
+    if (!board || !this.isAuthenticated()) return [];
+
+    return [
+      {
+        id: 'board.createGroup',
+        label: $localize`:Command palette action that creates a group on the open board:Create Board Group`,
+        group: 'actions',
+        execute: () => openCreateBoardGroupDialog(this.dialog, board.id),
+      },
+      {
+        id: 'board.manageGroups',
+        label: $localize`:Command palette action that opens the manage-groups dialog for the open board:Manage Board Groups`,
+        group: 'actions',
+        execute: () => this.onManageGroupsClicked(),
+      },
+    ];
   }
 
   onManageGroupsClicked() {

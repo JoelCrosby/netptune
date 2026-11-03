@@ -42,6 +42,7 @@ export function queryParamsRoute(): QueryParamsRoute {
     paramMap: toSignal(route.queryParamMap, { requireSync: true }),
     patch: (params, extras = {}) => {
       void router.navigate([], {
+        preserveFragment: true,
         ...extras,
         relativeTo: route,
         queryParams: params,

@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  OnDestroy,
-  effect,
-  inject,
-  untracked,
-} from '@angular/core';
+import { Injectable, effect, inject, untracked } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
@@ -12,7 +6,7 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import {
   Command,
-  CommandRegistry,
+  injectCommands,
 } from '@core/services/command-registry.service';
 import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceService } from '@core/services/workspace.service';
@@ -39,9 +33,8 @@ interface AvailableCommand extends Command {
 }
 
 @Injectable()
-export class GlobalCommandsService implements OnDestroy {
+export class GlobalCommandsService {
   private router = inject(Router);
-  private registry = inject(CommandRegistry);
   private workspace = inject(WorkspaceService);
   private panel = inject(AiPanelService);
   private dialog = inject(DialogService);
@@ -57,7 +50,6 @@ export class GlobalCommandsService implements OnDestroy {
 
   private canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
   private canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
-  private canExportData = hasPermission(PERMISSIONS.tasks.export);
   private canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   private canReadQueries = hasPermission(PERMISSIONS.queries.read);
   private canReadPages = hasPermission(PERMISSIONS.pages.read);
@@ -68,19 +60,6 @@ export class GlobalCommandsService implements OnDestroy {
   private canReadReports = hasPermission(PERMISSIONS.reports.read);
   private canReadStorage = hasPermission(PERMISSIONS.storage.read);
   private canReadAudit = hasPermission(PERMISSIONS.audit.read);
-  private canReadWorkspace = hasPermission(PERMISSIONS.workspace.read);
-  private canReadTags = hasPermission(PERMISSIONS.tags.read);
-  private canReadStatuses = hasPermission(PERMISSIONS.statuses.read);
-  private canReadRelationTypes = hasPermission(PERMISSIONS.relationTypes.read);
-  private canReadServiceAccounts = hasPermission(
-    PERMISSIONS.serviceAccounts.read
-  );
-  private canReadAssistantConversations = hasPermission(
-    PERMISSIONS.assistant.readAllConversations
-  );
-  private canReadSourceControl = hasPermission(PERMISSIONS.sourceControl.read);
-
-  private registeredIds: string[] = [];
 
   private readonly commands: AvailableCommand[] = [
     {
@@ -284,102 +263,6 @@ export class GlobalCommandsService implements OnDestroy {
       execute: () => this.navigate('settings/personal/general'),
     },
     {
-      id: 'nav.settings.notifications',
-      label: $localize`:Command palette action that navigates to personal notification preference settings:Go to Notification Preferences`,
-      group: 'settings',
-      icon: 'cog',
-      keywords: ['notifications', 'preferences', 'settings', 'email'],
-      available: () => this.authenticated(),
-      execute: () => this.navigate('settings/personal/notifications'),
-    },
-    {
-      id: 'nav.settings.personalAssistant',
-      label: $localize`:Command palette action that navigates to the personal assistant key settings:Go to Assistant Key Settings`,
-      group: 'settings',
-      icon: 'sparkles',
-      keywords: ['assistant', 'ai', 'api key', 'settings'],
-      available: () => this.panel.isAvailable(),
-      execute: () => this.navigate('settings/personal/assistant'),
-    },
-    {
-      id: 'nav.settings.workspace',
-      label: $localize`:Command palette action that navigates to general workspace settings:Go to Workspace Settings`,
-      group: 'settings',
-      icon: 'settings-2',
-      keywords: ['workspace', 'settings', 'general', 'branding'],
-      available: () => this.canReadWorkspace(),
-      execute: () => this.navigate('settings/workspace/general'),
-    },
-    {
-      id: 'nav.settings.tags',
-      label: $localize`:Command palette action that navigates to workspace tag settings:Go to Tag Settings`,
-      group: 'settings',
-      icon: 'tag',
-      keywords: ['tags', 'labels', 'workspace', 'settings'],
-      available: () => this.canReadTags(),
-      execute: () => this.navigate('settings/workspace/tags'),
-    },
-    {
-      id: 'nav.settings.statuses',
-      label: $localize`:Command palette action that navigates to workspace task status settings:Go to Status Settings`,
-      group: 'settings',
-      icon: 'list-checks',
-      keywords: ['statuses', 'status', 'workflow', 'workspace', 'settings'],
-      available: () => this.canReadStatuses(),
-      execute: () => this.navigate('settings/workspace/statuses'),
-    },
-    {
-      id: 'nav.settings.relations',
-      label: $localize`:Command palette action that navigates to workspace task relation type settings:Go to Relation Settings`,
-      group: 'settings',
-      icon: 'git-fork',
-      keywords: ['relations', 'relation types', 'links', 'workspace'],
-      available: () => this.canReadRelationTypes(),
-      execute: () => this.navigate('settings/workspace/relations'),
-    },
-    {
-      id: 'nav.settings.serviceAccounts',
-      label: $localize`:Command palette action that navigates to workspace service account settings:Go to Service Accounts`,
-      group: 'settings',
-      icon: 'bot',
-      keywords: ['service accounts', 'api', 'tokens', 'bots', 'workspace'],
-      available: () => this.canReadServiceAccounts(),
-      execute: () => this.navigate('settings/workspace/service-accounts'),
-    },
-    {
-      id: 'nav.settings.sourceControl',
-      label: $localize`:Command palette action that navigates to workspace source control settings:Go to Source Control Settings`,
-      group: 'settings',
-      icon: 'git-branch',
-      keywords: [
-        'source control',
-        'github',
-        'repositories',
-        'git',
-        'integrations',
-      ],
-      available: () => this.canReadSourceControl(),
-      execute: () => this.navigate('settings/workspace/source-control'),
-    },
-    {
-      id: 'nav.settings.workspaceAssistant',
-      label: $localize`:Command palette action that navigates to the workspace assistant settings:Go to Workspace Assistant Settings`,
-      group: 'settings',
-      icon: 'sparkles',
-      keywords: ['assistant', 'ai', 'conversations', 'workspace', 'settings'],
-      available: () => this.canReadAssistantConversations(),
-      execute: () => this.navigate('settings/workspace/assistant'),
-    },
-    {
-      id: 'nav.settings.data',
-      label: $localize`:Command palette action that navigates to workspace import and export settings:Go to Import & Export`,
-      group: 'settings',
-      icon: 'database',
-      keywords: ['data', 'import', 'export', 'backup', 'workspace'],
-      available: () => this.canExportData(),
-      execute: () => this.navigate('settings/workspace/data'),
-    },
-    {
       id: 'settings.theme.dark',
       label: $localize`:Command palette action that switches to the dark theme:Use Dark Theme`,
       group: 'settings',
@@ -473,33 +356,13 @@ export class GlobalCommandsService implements OnDestroy {
   ];
 
   constructor() {
-    this.syncCommands();
-    this.registerPinShortcuts();
-  }
-
-  ngOnDestroy() {
-    this.registry.unregister(this.registeredIds);
-  }
-
-  // Re-registering the whole set on every change keeps the palette in declaration order, which
-  // registering only the newly available commands would not.
-  private syncCommands() {
-    effect(() => {
-      const available = this.commands
+    injectCommands(() => {
+      return this.commands
         .filter((command) => command.available?.() ?? true)
         .map(toCommand);
-      const ids = available.map((command) => command.id);
-      const unchanged = sameIds(ids, this.registeredIds);
+    }, 'global');
 
-      if (unchanged) return;
-
-      untracked(() => {
-        this.registry.unregister(this.registeredIds);
-        this.registry.register(available);
-      });
-
-      this.registeredIds = ids;
-    });
+    this.registerPinShortcuts();
   }
 
   private hasChosenTheme(): boolean {
@@ -589,10 +452,6 @@ export class GlobalCommandsService implements OnDestroy {
 
 function toCommand({ available: _available, ...command }: AvailableCommand) {
   return command;
-}
-
-function sameIds(left: string[], right: string[]): boolean {
-  return left.length === right.length && left.every((id, i) => id === right[i]);
 }
 
 function isTypingTarget(event: KeyboardEvent): boolean {

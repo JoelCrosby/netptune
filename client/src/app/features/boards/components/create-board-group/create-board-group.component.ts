@@ -46,13 +46,18 @@ export class CreateBoardGroupComponent {
 
     if (!board) return;
 
-    const { id: boardId } = board;
-
-    this.dialog.open(BoardGroupDialogComponent, {
-      width: '600px',
-      data: {
-        boardId,
-      },
-    });
+    openCreateBoardGroupDialog(this.dialog, board.id);
   }
+}
+
+export function openCreateBoardGroupDialog(
+  dialog: DialogService,
+  boardId: number
+) {
+  dialog.open(BoardGroupDialogComponent, {
+    width: '600px',
+    data: {
+      boardId,
+    },
+  });
 }

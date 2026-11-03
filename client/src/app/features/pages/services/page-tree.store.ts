@@ -6,6 +6,7 @@ import {
   linkedSignal,
 } from '@angular/core';
 import { PageTreeNode } from '@core/models/pages';
+import { queryOf } from '@core/util/url';
 import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { CurrentRouteService } from '@core/router/current-route.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -75,7 +76,7 @@ export class PageTreeStore {
   private readonly requestedSpaceKey = computed(() => {
     if (!this.homeSelected()) return null;
 
-    const query = this.currentRoute.url().split('?')[1] ?? '';
+    const query = queryOf(this.currentRoute.url());
 
     return new URLSearchParams(query).get(spaceParam);
   });

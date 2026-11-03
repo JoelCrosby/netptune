@@ -17,6 +17,7 @@ import { SprintBurndownTableComponent } from './sprint-burndown-table.component'
 import { SprintVelocityTableComponent } from './sprint-velocity-table.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 import { PanelComponent } from '@static/components/panel.component';
+import { ScrollAnchorDirective } from '@core/router/scroll-anchor.directive';
 import {
   sprintBurndownResource,
   velocityReportResource,
@@ -33,6 +34,7 @@ const recentSprints = 12;
     PageLoadingComponent,
     PanelComponent,
     ReportCoverageNoticeComponent,
+    ScrollAnchorDirective,
     SectionHeaderComponent,
     SprintBurndownChartComponent,
     SprintBurndownTableComponent,
@@ -44,6 +46,7 @@ const recentSprints = 12;
   template: `
     <section class="flex flex-col gap-4">
       <app-section-header
+        [appScrollAnchor]="'burndown'"
         i18n-heading="Section heading for sprint reports"
         heading="Sprint reporting"
         i18n-description="Explains what sprint reports show"
@@ -138,83 +141,88 @@ const recentSprints = 12;
         </app-chart-card>
       }
 
-      @if (projectId()) {
-        <app-section-header
-          class="mt-6"
-          i18n-heading="Section heading for sprint velocity"
-          heading="Velocity"
-          i18n-description="Explains what velocity shows"
-          description="Committed and completed scope across recent sprints." />
+      <app-section-header
+        class="mt-6"
+        [appScrollAnchor]="'velocity'"
+        i18n-heading="Section heading for sprint velocity"
+        heading="Velocity"
+        i18n-description="Explains what velocity shows"
+        description="Committed and completed scope across recent sprints." />
 
-        @if (velocity.isLoading()) {
-          <div class="h-40">
-            <app-page-loading
-              i18n-label="Shown while velocity loads"
-              label="Loading velocity" />
-          </div>
-        } @else if (velocity.error()) {
-          <app-error-state
-            compact
-            i18n-title="Shown when velocity fails to load"
-            title="Velocity could not be loaded"
-            i18n-description="Advice when velocity fails to load"
-            description="Retry the request to load sprint velocity."
-            (retry)="velocity.reload()" />
-        } @else if (velocity.value(); as report) {
-          <app-report-coverage-notice [coverage]="report.coverage" />
+      @if (!projectId()) {
+        <app-empty-state
+          compact
+          i18n-title="Shown in the velocity section before a project is chosen"
+          title="No project selected"
+          i18n-description="Prompts the user to choose a project"
+          description="Select a project to view its velocity." />
+      } @else if (velocity.isLoading()) {
+        <div class="h-40">
+          <app-page-loading
+            i18n-label="Shown while velocity loads"
+            label="Loading velocity" />
+        </div>
+      } @else if (velocity.error()) {
+        <app-error-state
+          compact
+          i18n-title="Shown when velocity fails to load"
+          title="Velocity could not be loaded"
+          i18n-description="Advice when velocity fails to load"
+          description="Retry the request to load sprint velocity."
+          (retry)="velocity.reload()" />
+      } @else if (velocity.value(); as report) {
+        <app-report-coverage-notice [coverage]="report.coverage" />
 
-          @if (report.sprints.length) {
-            <app-chart-card
-              [flush]="true"
-              [icon]="velocityIcon"
-              i18n-title="Heading of the velocity chart card"
-              title="Recent velocity"
-              i18n-description="Subheading of the velocity chart card"
-              description="Committed and completed sprint scope">
-              <button
-                chartCardActions
-                app-stroked-button
-                color="neutral"
-                type="button"
-                class="h-9 px-3 text-sm font-normal"
-                id="velocity-data-toggle"
-                aria-controls="velocity-data"
-                [attr.aria-expanded]="showVelocityData()"
-                (click)="showVelocityData.set(!showVelocityData())">
-                @if (showVelocityData()) {
-                  <span i18n="Button that hides the throughput breakdown table">
-                    Hide data
-                  </span>
-                } @else {
-                  <span
-                    i18n="Button that reveals the throughput breakdown table">
-                    Show data
-                  </span>
-                }
-              </button>
-
-              <div class="px-6 py-5">
-                <app-sprint-velocity-chart [sprints]="report.sprints" />
-              </div>
-
-              @if (showVelocityData() && projectId(); as project) {
-                <app-sprint-velocity-table
-                  id="velocity-data"
-                  role="region"
-                  aria-labelledby="velocity-data-toggle"
-                  [projectId]="project"
-                  [unit]="unit()"
-                  [take]="recentSprints" />
+        @if (report.sprints.length) {
+          <app-chart-card
+            [flush]="true"
+            [icon]="velocityIcon"
+            i18n-title="Heading of the velocity chart card"
+            title="Recent velocity"
+            i18n-description="Subheading of the velocity chart card"
+            description="Committed and completed sprint scope">
+            <button
+              chartCardActions
+              app-stroked-button
+              color="neutral"
+              type="button"
+              class="h-9 px-3 text-sm font-normal"
+              id="velocity-data-toggle"
+              aria-controls="velocity-data"
+              [attr.aria-expanded]="showVelocityData()"
+              (click)="showVelocityData.set(!showVelocityData())">
+              @if (showVelocityData()) {
+                <span i18n="Button that hides the throughput breakdown table">
+                  Hide data
+                </span>
+              } @else {
+                <span i18n="Button that reveals the throughput breakdown table">
+                  Show data
+                </span>
               }
-            </app-chart-card>
-          } @else {
-            <app-empty-state
-              compact
-              i18n-title="Empty state for sprint velocity"
-              title="No velocity data"
-              i18n-description="Explains the empty velocity state"
-              description="No completed, post-coverage sprints are available." />
-          }
+            </button>
+
+            <div class="px-6 py-5">
+              <app-sprint-velocity-chart [sprints]="report.sprints" />
+            </div>
+
+            @if (showVelocityData() && projectId(); as project) {
+              <app-sprint-velocity-table
+                id="velocity-data"
+                role="region"
+                aria-labelledby="velocity-data-toggle"
+                [projectId]="project"
+                [unit]="unit()"
+                [take]="recentSprints" />
+            }
+          </app-chart-card>
+        } @else {
+          <app-empty-state
+            compact
+            i18n-title="Empty state for sprint velocity"
+            title="No velocity data"
+            i18n-description="Explains the empty velocity state"
+            description="No completed, post-coverage sprints are available." />
         }
       }
     </section>

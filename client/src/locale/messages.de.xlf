@@ -289,7 +289,7 @@
     </unit>
     <unit id="185582359745220936">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:259</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:261</note>
         <note category="description">Suggested question on pages home about a page the user opened recently</note>
       </notes>
       <segment state="translated">
@@ -325,8 +325,9 @@
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:110,112</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:74</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:76</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:94</note>
+        <note category="location">src/app/shell/place-commands.service.ts:14</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:222</note>
         <note category="location">src/app/workspace.routes.ts:99</note>
         <note category="description">Name of the pages permission group</note>
@@ -912,7 +913,7 @@
     </unit>
     <unit id="2739290873356276814">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:897</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:894</note>
         <note category="description">Seeds the composer with a request to rework one proposed change</note>
       </notes>
       <segment state="translated">
@@ -922,7 +923,7 @@
     </unit>
     <unit id="6970177201160204335">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:197</note>
+        <note category="location">src/app/shell/global-commands.service.ts:176</note>
         <note category="description">Command palette action that navigates to the pinned task list</note>
       </notes>
       <segment state="initial">
@@ -933,8 +934,9 @@
     <unit id="6970305243947070538">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:12,15</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:101,102</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:104,105</note>
         <note category="location">src/app/features/sprints/components/sprint-burndown-card.component.ts:42,43</note>
+        <note category="location">src/app/shell/place-commands.service.ts:96</note>
         <note category="description">Heading above the sprint burndown sparkline</note>
       </notes>
       <segment state="translated">
@@ -1046,7 +1048,7 @@
     </unit>
     <unit id="2292068350947207931">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:400</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:402</note>
         <note category="description">Suggested page for the assistant to draft on pages home</note>
       </notes>
       <segment state="translated">
@@ -1118,7 +1120,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:233</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:384</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:391</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1138,7 +1140,7 @@
     </unit>
     <unit id="886974259328140572">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:144,146</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:146,148</note>
         <note category="description">Pages home heading for someone reading a public workspace</note>
       </notes>
       <segment state="translated">
@@ -1179,7 +1181,7 @@
     <unit id="4391289919356861627">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:237,239</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:407,409</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:404,406</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -1225,6 +1227,16 @@
       <segment state="translated">
         <source>Full width</source>
         <target>Volle Breite</target>
+      </segment>
+    </unit>
+    <unit id="4396984039892552539">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:269</note>
+        <note category="description">Command palette place for the workspace assistant settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace Assistant Settings</source>
+        <target>Assistenteneinstellungen des Arbeitsbereichs</target>
       </segment>
     </unit>
     <unit id="4397487264295948754">
@@ -1330,7 +1342,7 @@
     </unit>
     <unit id="3000507912077213325">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:24</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:25</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:56,59</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:138</note>
         <note category="description">Names the screen the user is on</note>
@@ -1348,6 +1360,16 @@
       <segment state="translated">
         <source>Manage Sprint Tasks</source>
         <target>Sprint-Aufgaben verwalten</target>
+      </segment>
+    </unit>
+    <unit id="3002879087502149500">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:85</note>
+        <note category="description">Comma-separated search terms for the workload report. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>assignees,capacity,open work</source>
+        <target>Zugewiesene,Kapazität,offene Arbeit</target>
       </segment>
     </unit>
     <unit id="3386323988375703429">
@@ -1371,7 +1393,7 @@
     </unit>
     <unit id="3389185365103310416">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:277</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:279</note>
         <note category="description">Heading of the pages home box that asks the assistant a question</note>
       </notes>
       <segment state="translated">
@@ -1785,7 +1807,7 @@
     </unit>
     <unit id="3784176916264881006">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:393</note>
+        <note category="location">src/app/shell/global-commands.service.ts:276</note>
         <note category="description">Command palette action that switches to the light theme</note>
       </notes>
       <segment state="initial">
@@ -2002,6 +2024,16 @@
       <segment state="translated">
         <source>workspace roles</source>
         <target>Arbeitsbereichsrollen</target>
+      </segment>
+    </unit>
+    <unit id="21275452006765587">
+      <notes>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:139,141</note>
+        <note category="description">Accessible name of the available-commands group</note>
+      </notes>
+      <segment state="translated">
+        <source>Commands</source>
+        <target>Befehle</target>
       </segment>
     </unit>
     <unit id="2128755808672960949">
@@ -2277,16 +2309,6 @@
         <target>Dateien hochladen</target>
       </segment>
     </unit>
-    <unit id="3977029777747898046">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:342</note>
-        <note category="description">Command palette action that navigates to workspace service account settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Service Accounts</source>
-        <target>Zu den Dienstkonten</target>
-      </segment>
-    </unit>
     <unit id="1847898654428547577">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:102,104</note>
@@ -2399,7 +2421,7 @@
     </unit>
     <unit id="7731815178951959340">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:15</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:16</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -2722,7 +2744,7 @@
     </unit>
     <unit id="6590475405017990661">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:19</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:20</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -2804,7 +2826,7 @@
     </unit>
     <unit id="1279691093154837242">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:429</note>
+        <note category="location">src/app/shell/global-commands.service.ts:312</note>
         <note category="description">Command palette action that switches the task detail view to the cockpit layout</note>
       </notes>
       <segment state="initial">
@@ -2844,7 +2866,7 @@
     </unit>
     <unit id="5309518457085242318">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:261</note>
+        <note category="location">src/app/shell/global-commands.service.ts:240</note>
         <note category="description">Command palette action that navigates to the signed-in user&apos;s profile</note>
       </notes>
       <segment state="initial">
@@ -2922,7 +2944,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:399</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:406</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3003,7 +3025,7 @@
     </unit>
     <unit id="996642948903085680">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:737</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:734</note>
         <note category="description">Counts the proposals that will be applied</note>
       </notes>
       <segment state="initial">
@@ -3059,6 +3081,16 @@
       <segment state="translated">
         <source>This rule is scoped to a sprint that no longer exists.</source>
         <target>Diese Regel gilt für einen Sprint, den es nicht mehr gibt.</target>
+      </segment>
+    </unit>
+    <unit id="2856051384744650703">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:137</note>
+        <note category="description">Command palette place for the templates section on the pages home</note>
+      </notes>
+      <segment state="translated">
+        <source>Page templates</source>
+        <target>Seitenvorlagen</target>
       </segment>
     </unit>
     <unit id="2856093664313447266">
@@ -3149,16 +3181,6 @@
       <segment state="translated">
         <source>Model for assistant chat</source>
         <target>Modell für den Assistenten-Chat</target>
-      </segment>
-    </unit>
-    <unit id="1718381178086769880">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:315</note>
-        <note category="description">Command palette action that navigates to workspace tag settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Tag Settings</source>
-        <target>Zu den Tag-Einstellungen</target>
       </segment>
     </unit>
     <unit id="3596210590059423029">
@@ -3709,7 +3731,7 @@
     </unit>
     <unit id="7006642263471484709">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:188</note>
+        <note category="location">src/app/shell/global-commands.service.ts:167</note>
         <note category="description">Command palette action that navigates to the saved query list</note>
       </notes>
       <segment state="initial">
@@ -4291,7 +4313,7 @@
     </unit>
     <unit id="2275328567992347600">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:145,147</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:149,151</note>
         <note category="description">Shown when the requested page does not exist or was archived</note>
       </notes>
       <segment state="translated">
@@ -4617,6 +4639,16 @@
         <target>Aufzählung</target>
       </segment>
     </unit>
+    <unit id="2954294066807942887">
+      <notes>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:229</note>
+        <note category="description">Default command palette input placeholder. The &gt; character is a literal prefix and must not be translated</note>
+      </notes>
+      <segment state="translated">
+        <source>Search, jump to a section, or type &gt; for commands…</source>
+        <target>Suchen, zu einem Abschnitt springen oder &gt; für Befehle eingeben…</target>
+      </segment>
+    </unit>
     <unit id="2956098160626271284">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:631</note>
@@ -4801,10 +4833,10 @@
     </unit>
     <unit id="3291907618467497224">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:92,94</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:133,135</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:116,119</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:186,188</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:95,97</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:137,139</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:119,122</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:196,198</note>
         <note category="description">Button that hides the throughput breakdown table</note>
       </notes>
       <segment state="translated">
@@ -5325,7 +5357,7 @@
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:36</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:393</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:395</note>
         <note category="location">src/app/features/pins/components/pin-scope-menu.component.ts:160</note>
         <note category="location">src/app/features/settings/components/preference-scope.ts:36</note>
         <note category="location">src/app/features/settings/settings.routes.ts:46</note>
@@ -5340,7 +5372,7 @@
     <unit id="8117668572148231876">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:84</note>
-        <note category="location">src/app/core/util/ai-client-context.ts:29</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:30</note>
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:69</note>
@@ -5351,7 +5383,7 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:68,69</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:23</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:27,30</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:85</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:91</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:386</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:306</note>
@@ -5423,6 +5455,16 @@
       <segment state="translated">
         <source>Board flow</source>
         <target>Board-Ablauf</target>
+      </segment>
+    </unit>
+    <unit id="7440276103744687953">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:130</note>
+        <note category="description">Comma-separated search terms for the archived pages list. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>archived,deleted,restore</source>
+        <target>archiviert,gelöscht,wiederherstellen</target>
       </segment>
     </unit>
     <unit id="7440923050870641719">
@@ -5558,7 +5600,7 @@
     </unit>
     <unit id="7480444655465895778">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:447</note>
+        <note category="location">src/app/shell/global-commands.service.ts:330</note>
         <note category="description">Command palette action that opens the AI assistant</note>
       </notes>
       <segment state="translated">
@@ -5709,7 +5751,7 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:74,75</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:443,446</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:440,443</note>
         <note category="location">src/app/static/components/dialog/dialog-header.component.ts:43</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
@@ -5929,7 +5971,7 @@
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:75</note>
         <note category="location">src/app/core/tasks/task-columns.ts:94</note>
-        <note category="location">src/app/core/util/ai-client-context.ts:31</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:32</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:74</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:182,184</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-sprint-field.component.ts:33</note>
@@ -5937,7 +5979,7 @@
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:104</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:39</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:140</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:146</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:377</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:53</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:28</note>
@@ -6034,7 +6076,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:54</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:302</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:189</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:195</note>
         <note category="description">Label of the story points field</note>
       </notes>
       <segment state="translated">
@@ -6072,7 +6114,7 @@
     </unit>
     <unit id="8851067750279637711">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:402</note>
+        <note category="location">src/app/shell/global-commands.service.ts:285</note>
         <note category="description">Command palette action that drops the theme choice so the app follows the operating system</note>
       </notes>
       <segment state="initial">
@@ -6133,7 +6175,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:120,125</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:83,94</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/settings/components/service-accounts/api-credential-row.component.ts:96,100</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:68,76</note>
         <note category="location">src/app/features/settings/components/service-accounts/service-account-permission-summary.component.ts:145,151</note>
@@ -6169,7 +6211,7 @@
     </unit>
     <unit id="7386303229223377554">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:121,122</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:123,124</note>
         <note category="description">Heading over the templates on pages home</note>
       </notes>
       <segment state="translated">
@@ -6283,7 +6325,7 @@
     </unit>
     <unit id="5520127934627226585">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:14</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:15</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -6384,7 +6426,7 @@
     </unit>
     <unit id="6947960783690563673">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:359,361</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:356,358</note>
         <note category="description">Keyboard hint for including a change</note>
       </notes>
       <segment state="translated">
@@ -6426,7 +6468,7 @@
     </unit>
     <unit id="8970106517317640002">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:109,114</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:111,116</note>
         <note category="description">Accessible label for the switch between asking the assistant and drafting a page on pages home</note>
       </notes>
       <segment state="translated">
@@ -6536,7 +6578,7 @@
     </unit>
     <unit id="3836000317327860441">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:18</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:19</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:79,81</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:130</note>
         <note category="description">Names the screen the user is on</note>
@@ -6590,7 +6632,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:162,165</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
-        <note category="location">src/app/shell/global-commands.service.ts:456</note>
+        <note category="location">src/app/shell/global-commands.service.ts:339</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
       <segment state="translated">
@@ -6643,7 +6685,7 @@
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:52</note>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:94</note>
         <note category="location">src/app/features/reporting/components/flow-cycle-time-table.component.ts:62</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:196</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:200</note>
         <note category="description">Series name for the 85th percentile cycle time</note>
       </notes>
       <segment state="translated">
@@ -6802,7 +6844,7 @@
     </unit>
     <unit id="6355874628025541354">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:336,339</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:333,336</note>
         <note category="description">Keyboard key that moves down the review list. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -7097,7 +7139,7 @@
     <unit id="5635707779811339571">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:505</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:747</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:744</note>
         <note category="description">Shown after applied proposals were taken back</note>
       </notes>
       <segment state="translated">
@@ -7358,7 +7400,7 @@
     <unit id="8394008335792720695">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:120</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:137,143</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:134,140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:263</note>
         <note category="description">Marks a group of changes being applied</note>
       </notes>
@@ -7611,7 +7653,7 @@
     </unit>
     <unit id="5311439953585427905">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:233,234</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:230,231</note>
         <note category="description">Button that clears every selected change</note>
       </notes>
       <segment state="translated">
@@ -7923,7 +7965,7 @@
     </unit>
     <unit id="3881052394638902678">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:252</note>
+        <note category="location">src/app/shell/global-commands.service.ts:231</note>
         <note category="description">Command palette action that navigates to the workspace audit log</note>
       </notes>
       <segment state="initial">
@@ -7967,9 +8009,8 @@
     </unit>
     <unit id="4360239040231802726">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:142,145</note>
         <note category="location">src/app/static/components/datatable/datatable.component.ts:122,125</note>
-        <note category="description">Heading above runnable commands in the command palette</note>
+        <note category="description">Screen-reader heading for the table row action column</note>
       </notes>
       <segment state="translated">
         <source> Actions </source>
@@ -8324,16 +8365,6 @@
         <target>Benutzer filtern</target>
       </segment>
     </unit>
-    <unit id="3905491520406429600">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:297</note>
-        <note category="description">Command palette action that navigates to the personal assistant key settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Assistant Key Settings</source>
-        <target>Zu den Assistenten-Schlüsseleinstellungen</target>
-      </segment>
-    </unit>
     <unit id="390927307085402665">
       <notes>
         <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:230</note>
@@ -8472,6 +8503,16 @@
         <target>Tags</target>
       </segment>
     </unit>
+    <unit id="2362090233975382573">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:126</note>
+        <note category="description">Command palette place for the list of archived pages</note>
+      </notes>
+      <segment state="translated">
+        <source>Page archive</source>
+        <target>Seitenarchiv</target>
+      </segment>
+    </unit>
     <unit id="2362646105488486702">
       <notes>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:373</note>
@@ -8533,6 +8574,16 @@
         <target>Favoriten</target>
       </segment>
     </unit>
+    <unit id="4162942538466413233">
+      <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:499</note>
+        <note category="description">Command palette action that publishes the open draft page</note>
+      </notes>
+      <segment state="translated">
+        <source>Publish Page</source>
+        <target>Seite veröffentlichen</target>
+      </segment>
+    </unit>
     <unit id="4164796296331721280">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:94,96</note>
@@ -8562,7 +8613,7 @@
     <unit id="4166637194006456845">
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:51,54</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:509</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:506</note>
         <note category="description">Accessible label for the switch between diff layouts</note>
       </notes>
       <segment state="translated">
@@ -8811,7 +8862,7 @@
     <unit id="5203279511751768967">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:14</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:97</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:103</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:398</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:105,106</note>
@@ -8855,7 +8906,7 @@
     </unit>
     <unit id="163701335564941353">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:518</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:515</note>
         <note category="description">Title of the full screen review of proposed changes</note>
       </notes>
       <segment state="translated">
@@ -8876,7 +8927,7 @@
     <unit id="1640609344969975994">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-date-range.component.ts:36</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:106</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:112</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:410</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:113,114</note>
@@ -8931,7 +8982,7 @@
     </unit>
     <unit id="7808802259664641341">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:268</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:270</note>
         <note category="description">Placeholder of the pages home box when drafting a page</note>
       </notes>
       <segment state="translated">
@@ -9011,7 +9062,7 @@
     </unit>
     <unit id="2378730518632679921">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:246</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:248</note>
         <note category="description">Hint beside the templates on pages home naming the space new pages go in</note>
       </notes>
       <segment state="translated">
@@ -9534,7 +9585,7 @@
     </unit>
     <unit id="8658377241875728158">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:155,157</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:157,159</note>
         <note category="description">Heading over the pages the user opened recently</note>
       </notes>
       <segment state="translated">
@@ -9584,7 +9635,7 @@
     </unit>
     <unit id="3071620290019453863">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:389</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:391</note>
         <note category="description">Button that marks a page as still accurate so it leaves needs review</note>
       </notes>
       <segment state="translated">
@@ -9694,7 +9745,7 @@
     </unit>
     <unit id="467515590191938529">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:30</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:31</note>
         <note category="location">src/app/core/util/pin-scope.ts:78</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:228</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:87</note>
@@ -10303,7 +10354,7 @@
     </unit>
     <unit id="1493770091147271250">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:384</note>
+        <note category="location">src/app/shell/global-commands.service.ts:267</note>
         <note category="description">Command palette action that switches to the dark theme</note>
       </notes>
       <segment state="initial">
@@ -10314,7 +10365,7 @@
     <unit id="1494518490116523821">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:80,83</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:237,239</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:234,236</note>
         <note category="description">Button that selects every exportable field</note>
       </notes>
       <segment state="translated">
@@ -10597,7 +10648,7 @@
     </unit>
     <unit id="4354588089802697390">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:402</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:404</note>
         <note category="description">Suggested page for the assistant to draft on pages home</note>
       </notes>
       <segment state="translated">
@@ -11149,7 +11200,7 @@
     </unit>
     <unit id="7572709072780766984">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:162</note>
+        <note category="location">src/app/shell/global-commands.service.ts:141</note>
         <note category="description">Command palette action that navigates to the roadmap timeline</note>
       </notes>
       <segment state="initial">
@@ -11231,7 +11282,7 @@
     <unit id="8932917860978648376">
       <notes>
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:131,132</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:117</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:95,96</note>
         <note category="description">Label of the unit field</note>
       </notes>
@@ -11294,7 +11345,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:138,139</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:191</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:197</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:179</note>
         <note category="description">Delay unit: hours</note>
@@ -11388,7 +11439,7 @@
     </unit>
     <unit id="9200330298718156939">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:278</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:280</note>
         <note category="description">Description under the pages home heading when asking the assistant</note>
       </notes>
       <segment state="translated">
@@ -11641,7 +11692,7 @@
         <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:25</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.ts:51</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:670</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:667</note>
         <note category="description">Pinned task filter showing every pin</note>
       </notes>
       <segment state="translated">
@@ -11710,6 +11761,16 @@
         <target>Auslastung des Teams</target>
       </segment>
     </unit>
+    <unit id="696205900600562048">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:227</note>
+        <note category="description">Command palette place for workspace task relation type settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Relation Settings</source>
+        <target>Beziehungseinstellungen</target>
+      </segment>
+    </unit>
     <unit id="6965292663128126881">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-spend-cap-dialog.component.ts:60,64</note>
@@ -11732,7 +11793,7 @@
     </unit>
     <unit id="4771541703055633807">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:380,382</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:377,379</note>
         <note category="description">Keyboard hint for applying the selected changes</note>
       </notes>
       <segment state="translated">
@@ -11783,7 +11844,7 @@
     </unit>
     <unit id="8736025615104066664">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:144</note>
+        <note category="location">src/app/shell/global-commands.service.ts:123</note>
         <note category="description">Command palette action that navigates to the sprint backlog</note>
       </notes>
       <segment state="initial">
@@ -12090,7 +12151,7 @@
     </unit>
     <unit id="2402750656737688">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:209</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:213</note>
         <note category="description">Subheading of the cycle-time chart card. COUNT is how many completed cycles the figures are based on</note>
       </notes>
       <segment state="translated">
@@ -12297,7 +12358,6 @@
     <unit id="3193976279273491157">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:64</note>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:136,138</note>
         <note category="location">src/app/static/components/page-header/page-header-actions.component.ts:35,36</note>
         <note category="description">Field of a proposed change, what an automation rule does</note>
       </notes>
@@ -12400,7 +12460,7 @@
     </unit>
     <unit id="1746908154865482674">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:169,171</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:171,173</note>
         <note category="description">Shown on pages home before the user has opened any page</note>
       </notes>
       <segment state="translated">
@@ -12420,7 +12480,7 @@
     </unit>
     <unit id="5775346636203685655">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:433,436</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:430,433</note>
         <note category="description">Button that takes back an applied change set</note>
       </notes>
       <segment state="translated">
@@ -12653,7 +12713,7 @@
     </unit>
     <unit id="231679111972850796">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:238</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:246</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:290</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-automation-diff.component.ts:74</note>
         <note category="description">Stat label for scope added mid-sprint</note>
@@ -12685,10 +12745,10 @@
     </unit>
     <unit id="5406093358072761930">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:242</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:250</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:294</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-automation-diff.component.ts:75</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:685</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:682</note>
         <note category="description">Stat label for scope removed mid-sprint</note>
       </notes>
       <segment state="translated">
@@ -13116,7 +13176,7 @@
     </unit>
     <unit id="3530843538847118284">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:116</note>
+        <note category="location">src/app/shell/global-commands.service.ts:95</note>
         <note category="description">Command palette action that navigates to the archived task list</note>
       </notes>
       <segment state="initial">
@@ -13447,7 +13507,7 @@
     </unit>
     <unit id="6917262024577443751">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:185,186</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:187,188</note>
         <note category="description">Accessible label for the list of pages that need review</note>
       </notes>
       <segment state="translated">
@@ -13663,7 +13723,7 @@
     </unit>
     <unit id="1343094894232587177">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:267</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:269</note>
         <note category="description">Description under the pages home heading when drafting a page with the assistant</note>
       </notes>
       <segment state="translated">
@@ -14119,7 +14179,7 @@
     </unit>
     <unit id="3898388632413645870">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:165,167</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:167,169</note>
         <note category="description">Accessible label for the list of recently viewed pages</note>
       </notes>
       <segment state="translated">
@@ -14150,7 +14210,7 @@
     </unit>
     <unit id="2642012433003949544">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:411</note>
+        <note category="location">src/app/shell/global-commands.service.ts:294</note>
         <note category="description">Command palette action that stretches pages across the full window width</note>
       </notes>
       <segment state="initial">
@@ -14210,7 +14270,7 @@
     </unit>
     <unit id="1049706183293561301">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:377,378</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:374,375</note>
         <note category="description">Symbol for the return key. Leave the symbol as-is</note>
       </notes>
       <segment state="translated">
@@ -14360,6 +14420,16 @@
         <target> Zuständige ersetzen </target>
       </segment>
     </unit>
+    <unit id="2780166062520789589">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:251</note>
+        <note category="description">Command palette place for workspace source control settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Source Control Settings</source>
+        <target>Einstellungen der Quellcodeverwaltung</target>
+      </segment>
+    </unit>
     <unit id="2784730701772172476">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:143,146</note>
@@ -14373,7 +14443,8 @@
     <unit id="2789470198117284549">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:28,30</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:77,78</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:80,81</note>
+        <note category="location">src/app/shell/place-commands.service.ts:51</note>
         <note category="description">Heading of the dashboard throughput card</note>
       </notes>
       <segment state="translated">
@@ -14528,7 +14599,7 @@
     <unit id="4995415456901189493">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:99,102</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:315,318</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:312,315</note>
         <note category="description">Shown on the stop button once a stop was asked for</note>
       </notes>
       <segment state="translated">
@@ -14757,16 +14828,6 @@
         <target>Boards suchen</target>
       </segment>
     </unit>
-    <unit id="6542083255352890889">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:324</note>
-        <note category="description">Command palette action that navigates to workspace task status settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Status Settings</source>
-        <target>Zu den Statuseinstellungen</target>
-      </segment>
-    </unit>
     <unit id="6542150205027637766">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:38,40</note>
@@ -14917,7 +14978,7 @@
     </unit>
     <unit id="9214432864445261604">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:170</note>
+        <note category="location">src/app/shell/global-commands.service.ts:149</note>
         <note category="description">Command palette action that navigates to the calendar</note>
       </notes>
       <segment state="initial">
@@ -14927,7 +14988,7 @@
     </unit>
     <unit id="8505589254065619352">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:397</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:399</note>
         <note category="description">Option on pages home that has the assistant draft a new page</note>
       </notes>
       <segment state="translated">
@@ -15544,6 +15605,7 @@
     <unit id="3127646278831765507">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-workload-card.component.ts:28,29</note>
+        <note category="location">src/app/shell/place-commands.service.ts:81</note>
         <note category="description">Heading of the sprint workload card</note>
       </notes>
       <segment state="initial">
@@ -15726,7 +15788,7 @@
     <unit id="3278205153911408159">
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:112</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:717</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:714</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:211</note>
         <note category="description">Names the single column diff layout</note>
       </notes>
@@ -15937,6 +15999,16 @@
         <target>Alle Teilaufgaben abgeschlossen</target>
       </segment>
     </unit>
+    <unit id="3702747701797275979">
+      <notes>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:573</note>
+        <note category="description">Command palette action that opens the manage-groups dialog for the open board</note>
+      </notes>
+      <segment state="translated">
+        <source>Manage Board Groups</source>
+        <target>Boardgruppen verwalten</target>
+      </segment>
+    </unit>
     <unit id="3712427397909119671">
       <notes>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:51,54</note>
@@ -16047,7 +16119,7 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:433</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:480</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
@@ -16372,6 +16444,16 @@
         <target> Änderungen anzeigen </target>
       </segment>
     </unit>
+    <unit id="3268176600597198377">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:16</note>
+        <note category="description">Command palette section label for places inside personal settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Personal settings</source>
+        <target>Persönliche Einstellungen</target>
+      </segment>
+    </unit>
     <unit id="7984607742745700304">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:215,216</note>
@@ -16671,7 +16753,7 @@
     </unit>
     <unit id="4710835816744718690">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:280</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:282</note>
         <note category="description">Hint in the pages home box saying how many pages the assistant searches</note>
       </notes>
       <segment state="translated">
@@ -16815,7 +16897,7 @@
     </unit>
     <unit id="8729582342971384106">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:177,178</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:179,180</note>
         <note category="description">Heading over published pages that may be out of date</note>
       </notes>
       <segment state="translated">
@@ -16948,7 +17030,7 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:635</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:687</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:594</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:703</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:700</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:262</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
@@ -17011,6 +17093,16 @@
       <segment state="translated">
         <source>Pending</source>
         <target>Ausstehend</target>
+      </segment>
+    </unit>
+    <unit id="9162543989422983557">
+      <notes>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:567</note>
+        <note category="description">Command palette action that creates a group on the open board</note>
+      </notes>
+      <segment state="translated">
+        <source>Create Board Group</source>
+        <target>Boardgruppe erstellen</target>
       </segment>
     </unit>
     <unit id="9165932520457161115">
@@ -17281,7 +17373,7 @@
     </unit>
     <unit id="7148233672490240354">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:153</note>
+        <note category="location">src/app/shell/global-commands.service.ts:132</note>
         <note category="description">Command palette action that navigates to the workspace pages</note>
       </notes>
       <segment state="translated">
@@ -17672,7 +17764,7 @@
     </unit>
     <unit id="3212500310580654477">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:51</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:52</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment state="translated">
@@ -18108,7 +18200,7 @@
     </unit>
     <unit id="1326977467186694964">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:98,100</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:104,106</note>
         <note category="description">Accessible label for the report start date</note>
       </notes>
       <segment state="translated">
@@ -18685,7 +18777,7 @@
     </unit>
     <unit id="5048551055618217661">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:187,189</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:189,191</note>
         <note category="description">Shown when no published page needs review</note>
       </notes>
       <segment state="translated">
@@ -18861,7 +18953,7 @@
     </unit>
     <unit id="8091027299239292755">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:515</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:512</note>
         <note category="description">Title of the full screen view of changes already made</note>
       </notes>
       <segment state="translated">
@@ -19177,7 +19269,7 @@
     <unit id="1407560924967345762">
       <notes>
         <note category="location">src/app/core/transforms/entity-type.ts:28</note>
-        <note category="location">src/app/core/util/ai-client-context.ts:33</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:34</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:34</note>
         <note category="description">Name of the page entity in activity and audit logs</note>
       </notes>
@@ -19251,7 +19343,7 @@
     </unit>
     <unit id="3131851492199185855">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:420,422</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:417,419</note>
         <note category="description">Button that runs the changes that failed again</note>
       </notes>
       <segment state="translated">
@@ -19272,7 +19364,7 @@
     <unit id="3133539296286953705">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:103,110</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:322,326</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:319,323</note>
         <note category="description">Button that stops changes part way through being applied</note>
       </notes>
       <segment state="translated">
@@ -19298,6 +19390,16 @@
       <segment state="translated">
         <source>Notification options appear here once they are available.</source>
         <target>Benachrichtigungsoptionen erscheinen hier, sobald sie verfügbar sind.</target>
+      </segment>
+    </unit>
+    <unit id="8707300317030061765">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:70</note>
+        <note category="description">Comma-separated search terms for the cycle-time report. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>flow,elapsed,lead time,duration</source>
+        <target>Fluss,verstrichen,Durchlaufzeit,Dauer</target>
       </segment>
     </unit>
     <unit id="8708845522681012494">
@@ -19584,7 +19686,7 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:39</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
         <note category="location">src/app/features/reporting/components/workload-table.component.ts:49</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:226</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
@@ -19721,7 +19823,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:371</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:378</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -19787,8 +19889,8 @@
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:117,120</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:80,82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:91,93</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:210</note>
-        <note category="location">src/app/shell/global-commands.service.ts:466</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:212</note>
+        <note category="location">src/app/shell/global-commands.service.ts:349</note>
         <note category="description">Menu item that creates a page</note>
       </notes>
       <segment state="translated">
@@ -19833,7 +19935,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:44,47</note>
         <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:103,105</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:391</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:393</note>
         <note category="location">src/app/features/settings/settings.routes.ts:149</note>
         <note category="location">src/app/features/settings/settings.routes.ts:150</note>
         <note category="description">Page title for the guided import builder</note>
@@ -19916,7 +20018,7 @@
     </unit>
     <unit id="3226430334036368740">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:49</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:50</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment state="translated">
@@ -20218,7 +20320,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:175</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:102</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:680</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:677</note>
         <note category="description">Column heading for when the task last changed</note>
       </notes>
       <segment state="translated">
@@ -20228,7 +20330,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:234,235</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:241,242</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -20269,7 +20371,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:246,247</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:253,254</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -20289,7 +20391,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:376</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:383</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -20299,7 +20401,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:392</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:399</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -20427,7 +20529,7 @@
     <unit id="7869199587095613616">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:431</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:478</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
       </notes>
@@ -20538,7 +20640,7 @@
     </unit>
     <unit id="1417693373625142806">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:234</note>
+        <note category="location">src/app/shell/global-commands.service.ts:213</note>
         <note category="description">Command palette action that navigates to the full-page assistant chat</note>
       </notes>
       <segment state="initial">
@@ -20768,7 +20870,7 @@
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:50,52</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:24,26</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:86,88</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:92,94</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:134,136</note>
         <note category="description">Filter option including every project</note>
       </notes>
@@ -20799,7 +20901,7 @@
     </unit>
     <unit id="8190317540244065621">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:21</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:22</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -20999,6 +21101,16 @@
         <target>Spalten zuordnen</target>
       </segment>
     </unit>
+    <unit id="1029437056343569038">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:100</note>
+        <note category="description">Comma-separated search terms for the sprint burndown report. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>sprint,remaining,scope</source>
+        <target>Sprint,verbleibend,Umfang</target>
+      </segment>
+    </unit>
     <unit id="7070451801438959154">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:87</note>
@@ -21113,7 +21225,7 @@
     <unit id="3823219296477075982">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:209,210</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:397,400</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:394,397</note>
         <note category="description">Accessible label for closing the assistant result card</note>
       </notes>
       <segment state="translated">
@@ -21417,9 +21529,9 @@
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:44</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:213</note>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:188</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:192</note>
         <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:63</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:246</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:254</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:71</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:205</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:212</note>
@@ -21794,7 +21906,7 @@
     </unit>
     <unit id="3512180719745660914">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:20</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:21</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -22212,7 +22324,7 @@
     </unit>
     <unit id="4917333568122703029">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:22</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:23</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:139</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
@@ -22436,7 +22548,7 @@
     </unit>
     <unit id="2509141182388535183">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:28</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:29</note>
         <note category="description">Names the kind of thing a context chip points at</note>
       </notes>
       <segment state="translated">
@@ -22597,7 +22709,7 @@
     </unit>
     <unit id="8762019541565613143">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:179</note>
+        <note category="location">src/app/shell/global-commands.service.ts:158</note>
         <note category="description">Command palette action that navigates to the reporting views</note>
       </notes>
       <segment state="initial">
@@ -22684,6 +22796,16 @@
       <segment state="translated">
         <source>Task Detail</source>
         <target>Aufgabendetails</target>
+      </segment>
+    </unit>
+    <unit id="2386418608135311898">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:281</note>
+        <note category="description">Command palette place for workspace import and export settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Import &amp; Export</source>
+        <target>Import &amp; Export</target>
       </segment>
     </unit>
     <unit id="5058134351315070081">
@@ -23048,7 +23170,7 @@
     <unit id="5391425222835958460">
       <notes>
         <note category="location">src/app/features/reporting/components/charts/flow-throughput-chart.component.ts:16,19</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:79,81</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:82,84</note>
         <note category="description">Accessible name of the throughput chart</note>
       </notes>
       <segment state="translated">
@@ -23119,7 +23241,7 @@
     </unit>
     <unit id="8888491308706722034">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:44</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:46</note>
         <note category="description">Section heading for flow metrics</note>
       </notes>
       <segment state="translated">
@@ -23129,7 +23251,7 @@
     </unit>
     <unit id="395920093596085512">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:45,48</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:47,50</note>
         <note category="description">Explains what flow metrics show</note>
       </notes>
       <segment state="translated">
@@ -23159,7 +23281,7 @@
     </unit>
     <unit id="6715882737092090306">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:53,54</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:55,56</note>
         <note category="description">Shown while flow metrics load</note>
       </notes>
       <segment state="translated">
@@ -23189,7 +23311,7 @@
     </unit>
     <unit id="4675733746486809825">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:61,62</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:63,64</note>
         <note category="description">Shown when flow metrics fail to load</note>
       </notes>
       <segment state="translated">
@@ -23209,7 +23331,7 @@
     </unit>
     <unit id="5286842193626986274">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:63,65</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:65,67</note>
         <note category="description">Advice when flow metrics fail to load</note>
       </notes>
       <segment state="translated">
@@ -23219,7 +23341,7 @@
     </unit>
     <unit id="5909176191309455278">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:192</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:196</note>
         <note category="description">Stat label for the median cycle time</note>
       </notes>
       <segment state="translated">
@@ -23239,7 +23361,7 @@
     </unit>
     <unit id="119512492457151325">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:200</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:204</note>
         <note category="description">Stat label for tasks still open</note>
       </notes>
       <segment state="translated">
@@ -23259,7 +23381,7 @@
     </unit>
     <unit id="8610729415808550096">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:119,120</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:123,124</note>
         <note category="description">Heading of the cycle-time chart card</note>
       </notes>
       <segment state="translated">
@@ -23329,7 +23451,7 @@
     </unit>
     <unit id="6073259723754877941">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:161,162</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:165,166</note>
         <note category="description">Empty state for flow metrics</note>
       </notes>
       <segment state="translated">
@@ -23359,7 +23481,7 @@
     </unit>
     <unit id="6294652447422181192">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:163,169</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:167,173</note>
         <note category="description">Explains the empty flow metrics state</note>
       </notes>
       <segment state="translated">
@@ -23429,7 +23551,7 @@
     </unit>
     <unit id="7593806729418317060">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:48,49</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:51,52</note>
         <note category="description">Section heading for sprint reports</note>
       </notes>
       <segment state="translated">
@@ -23449,7 +23571,7 @@
     </unit>
     <unit id="9129776216937058001">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:50,53</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:53,56</note>
         <note category="description">Explains what sprint reports show</note>
       </notes>
       <segment state="translated">
@@ -23460,6 +23582,7 @@
     <unit id="1131240155962002938">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:38,39</note>
+        <note category="location">src/app/shell/place-commands.service.ts:66</note>
         <note category="description">Heading of the dashboard cycle time card</note>
       </notes>
       <segment state="translated">
@@ -23490,7 +23613,7 @@
     </unit>
     <unit id="1132945315828298235">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:56,57</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:59,60</note>
         <note category="description">Shown before a sprint is chosen</note>
       </notes>
       <segment state="translated">
@@ -23510,7 +23633,7 @@
     </unit>
     <unit id="5315296767764931025">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:58,60</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:61,63</note>
         <note category="description">Prompts the user to choose a sprint</note>
       </notes>
       <segment state="translated">
@@ -23520,7 +23643,7 @@
     </unit>
     <unit id="9011313573748627602">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:63,65</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:66,68</note>
         <note category="description">Shown while the burndown loads</note>
       </notes>
       <segment state="translated">
@@ -23530,7 +23653,7 @@
     </unit>
     <unit id="1361120296134923223">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:69,70</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:72,73</note>
         <note category="description">Shown when a sprint has no burndown baseline</note>
       </notes>
       <segment state="translated">
@@ -23560,7 +23683,7 @@
     </unit>
     <unit id="1364951183871731535">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:347,349</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:344,346</note>
         <note category="description">Keyboard hint for moving through the review list</note>
       </notes>
       <segment state="translated">
@@ -23610,7 +23733,7 @@
     </unit>
     <unit id="8611492333162495855">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:71,73</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:74,76</note>
         <note category="description">Explains why a burndown is unavailable</note>
       </notes>
       <segment state="translated">
@@ -23632,7 +23755,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:40</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:685</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:234</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:242</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:61</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:286</note>
         <note category="description">Series name for work a sprint took on</note>
@@ -23664,7 +23787,7 @@
     </unit>
     <unit id="1134043805497572295">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:250</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:258</note>
         <note category="description">Stat label for the completion percentage</note>
       </notes>
       <segment state="translated">
@@ -23684,7 +23807,7 @@
     </unit>
     <unit id="3195023709605439944">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:83,90</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,93</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {1 current scope item has no compatible estimate and is excluded from numeric totals. } other {<ph id="0" equiv="INTERPOLATION"/> current scope items have no compatible estimate and are excluded from numeric totals. }}</source>
@@ -23693,7 +23816,7 @@
     </unit>
     <unit id="6850280530427691740">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:103,106</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:106,109</note>
         <note category="description">Subheading of the burndown chart card</note>
       </notes>
       <segment state="translated">
@@ -23753,8 +23876,9 @@
     </unit>
     <unit id="3857877369981030045">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:145,146</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:148,149</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:243</note>
+        <note category="location">src/app/shell/place-commands.service.ts:111</note>
         <note category="description">Section heading for sprint velocity</note>
       </notes>
       <segment state="translated">
@@ -23764,7 +23888,7 @@
     </unit>
     <unit id="1971022799242079514">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:147,149</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:150,153</note>
         <note category="description">Explains what velocity shows</note>
       </notes>
       <segment state="translated">
@@ -23784,7 +23908,7 @@
     </unit>
     <unit id="6796520629267981972">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:153,155</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:163,165</note>
         <note category="description">Shown while velocity loads</note>
       </notes>
       <segment state="translated">
@@ -23794,7 +23918,7 @@
     </unit>
     <unit id="6949999148572224142">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:159,160</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:169,170</note>
         <note category="description">Shown when velocity fails to load</note>
       </notes>
       <segment state="translated">
@@ -23804,7 +23928,7 @@
     </unit>
     <unit id="1055084063226917954">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:161,163</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:171,173</note>
         <note category="description">Advice when velocity fails to load</note>
       </notes>
       <segment state="translated">
@@ -23834,7 +23958,7 @@
     </unit>
     <unit id="442898940461496743">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:171,172</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:181,182</note>
         <note category="description">Heading of the velocity chart card</note>
       </notes>
       <segment state="translated">
@@ -23854,7 +23978,7 @@
     </unit>
     <unit id="3803064400600933303">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:173,175</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:183,185</note>
         <note category="description">Subheading of the velocity chart card</note>
       </notes>
       <segment state="translated">
@@ -23946,12 +24070,22 @@
     </unit>
     <unit id="2102825898069375693">
       <notes>
-        <note category="location">src/app/shell/shell.component.ts:205,207</note>
+        <note category="location">src/app/shell/shell.component.ts:211,213</note>
         <note category="description">Accessible name of the sidebar menu on small screens</note>
       </notes>
       <segment state="translated">
         <source>Menu</source>
         <target>Menü</target>
+      </segment>
+    </unit>
+    <unit id="2104841930904056551">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:15</note>
+        <note category="description">Command palette section label for places inside workspace settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace settings</source>
+        <target>Arbeitsbereichseinstellungen</target>
       </segment>
     </unit>
     <unit id="2105499142972466940">
@@ -23986,7 +24120,7 @@
     </unit>
     <unit id="2159818663883242096">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:214,215</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:223,224</note>
         <note category="description">Empty state for sprint velocity</note>
       </notes>
       <segment state="translated">
@@ -23996,7 +24130,7 @@
     </unit>
     <unit id="4015182315022243447">
       <notes>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:216,220</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:225,231</note>
         <note category="description">Explains the empty velocity state</note>
       </notes>
       <segment state="translated">
@@ -24026,7 +24160,7 @@
     </unit>
     <unit id="9010209365276278425">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:29,30</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:32,33</note>
         <note category="description">Section heading for the workload report</note>
       </notes>
       <segment state="translated">
@@ -24046,7 +24180,7 @@
     </unit>
     <unit id="7831424791501412228">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:31,34</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:34,37</note>
         <note category="description">Explains what the workload report shows</note>
       </notes>
       <segment state="translated">
@@ -24056,7 +24190,7 @@
     </unit>
     <unit id="2765298659248883432">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:39,41</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:42,44</note>
         <note category="description">Shown while the workload report loads</note>
       </notes>
       <segment state="translated">
@@ -24096,7 +24230,7 @@
     </unit>
     <unit id="4257828580066254399">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:47,48</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:50,51</note>
         <note category="description">Shown when the workload report fails to load</note>
       </notes>
       <segment state="translated">
@@ -24116,7 +24250,7 @@
     </unit>
     <unit id="8322685192229295037">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:133,136</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:130,133</note>
         <note category="description">Shown on the review while a run is being stopped</note>
       </notes>
       <segment state="translated">
@@ -24124,9 +24258,19 @@
         <target>Wird gestoppt</target>
       </segment>
     </unit>
+    <unit id="8324374130879440675">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:215</note>
+        <note category="description">Command palette place for workspace task status settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Status Settings</source>
+        <target>Statuseinstellungen</target>
+      </segment>
+    </unit>
     <unit id="832650734198023544">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:49,51</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:52,54</note>
         <note category="description">Advice when the workload report fails to load</note>
       </notes>
       <segment state="translated">
@@ -24136,7 +24280,7 @@
     </unit>
     <unit id="1427482027925612559">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:83</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:86</note>
         <note category="description">Stat label for distinct open tasks</note>
       </notes>
       <segment state="translated">
@@ -24148,7 +24292,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-assignee-field.component.ts:50</note>
         <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:88</note>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:87</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:90</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:155</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:364</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:76</note>
@@ -24161,7 +24305,7 @@
     </unit>
     <unit id="68633469488862583">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:91</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:94</note>
         <note category="description">Stat label for tasks with several assignees</note>
       </notes>
       <segment state="translated">
@@ -24172,7 +24316,7 @@
     <unit id="6836002360916972371">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:81</note>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:95</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:98</note>
         <note category="description">Column heading for tasks without an estimate</note>
       </notes>
       <segment state="translated">
@@ -24215,7 +24359,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:83</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:250</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:30,34</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:272</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:274</note>
         <note category="description">State of a draft pull request</note>
       </notes>
       <segment state="translated">
@@ -24276,7 +24420,7 @@
     <unit id="7679272376567925786">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:241</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:757</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:754</note>
         <note category="description">Describes what applying a change set did</note>
       </notes>
       <segment state="translated">
@@ -24286,7 +24430,7 @@
     </unit>
     <unit id="9209157814850494554">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:62,63</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:65,66</note>
         <note category="description">Empty state for the workload report</note>
       </notes>
       <segment state="translated">
@@ -24296,7 +24440,7 @@
     </unit>
     <unit id="8590979282363628894">
       <notes>
-        <note category="location">src/app/features/reporting/components/workload-report.component.ts:64,70</note>
+        <note category="location">src/app/features/reporting/components/workload-report.component.ts:67,73</note>
         <note category="description">Explains the empty workload state</note>
       </notes>
       <segment state="translated">
@@ -24317,7 +24461,8 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:620</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:66,68</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:68,72</note>
+        <note category="location">src/app/shell/place-commands.service.ts:13</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:244</note>
         <note category="location">src/app/workspace.routes.ts:93</note>
         <note category="description">Name of the reports permission group</note>
@@ -24349,7 +24494,7 @@
     </unit>
     <unit id="8395914283364907947">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:75,79</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:81,85</note>
         <note category="description">Explains what the report filters control</note>
       </notes>
       <segment state="translated">
@@ -24369,8 +24514,8 @@
     </unit>
     <unit id="408476512549431766">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:73,74</note>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:81,83</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:79,80</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:87,89</note>
         <note category="description">Heading of the report filter card</note>
       </notes>
       <segment state="translated">
@@ -24380,7 +24525,7 @@
     </unit>
     <unit id="877780134171662191">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:126,127</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:132,133</note>
         <note category="description">Label of the report grouping filter</note>
       </notes>
       <segment state="translated">
@@ -24430,7 +24575,7 @@
     </unit>
     <unit id="2988589012964101797">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:129</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:135</note>
         <note category="description">Report grouping by day</note>
       </notes>
       <segment state="translated">
@@ -24461,7 +24606,7 @@
     </unit>
     <unit id="928838138686087140">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:195</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:201</note>
         <note category="description">Report grouping by week</note>
       </notes>
       <segment state="translated">
@@ -24601,7 +24746,7 @@
     </unit>
     <unit id="2434944824726929798">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:713</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:710</note>
         <note category="description">Diff layout with two columns</note>
       </notes>
       <segment state="translated">
@@ -24765,6 +24910,16 @@
         <target>Trennzeichen für Mehrfachwerte</target>
       </segment>
     </unit>
+    <unit id="5401532492032235568">
+      <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:344</note>
+        <note category="description">Command palette action that downloads the open page as a markdown file</note>
+      </notes>
+      <segment state="translated">
+        <source>Export Page as Markdown</source>
+        <target>Seite als Markdown exportieren</target>
+      </segment>
+    </unit>
     <unit id="5403684285319082289">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:229</note>
@@ -24799,7 +24954,7 @@
     <unit id="4578192247039196794">
       <notes>
         <note category="location">src/app/core/tasks/task-columns.ts:71</note>
-        <note category="location">src/app/core/util/ai-client-context.ts:32</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:33</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:133,134</note>
         <note category="location">src/app/features/roadmap/components/roadmap-timeline.component.ts:72,73</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:378</note>
@@ -24875,7 +25030,7 @@
     </unit>
     <unit id="6203693342135702246">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:270</note>
+        <note category="location">src/app/shell/global-commands.service.ts:249</note>
         <note category="description">Command palette action that navigates to the workspace picker</note>
       </notes>
       <segment state="initial">
@@ -24934,6 +25089,16 @@
         <target>Die Roadmap konnte nicht geladen werden</target>
       </segment>
     </unit>
+    <unit id="1124129456980495245">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:55</note>
+        <note category="description">Comma-separated search terms for the throughput report. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>flow,completed,done,charts</source>
+        <target>Fluss,abgeschlossen,erledigt,Diagramme</target>
+      </segment>
+    </unit>
     <unit id="1125364152850958195">
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-list.component.ts:134,136</note>
@@ -24963,6 +25128,16 @@
       <segment state="initial">
         <source>At least 8 characters</source>
         <target>Mindestens 8 Zeichen</target>
+      </segment>
+    </unit>
+    <unit id="5243214413970854673">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:156</note>
+        <note category="description">Comma-separated search terms for the appearance settings. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>theme,dark,light,page width,task layout</source>
+        <target>Design,dunkel,hell,Seitenbreite,Aufgabenlayout</target>
       </segment>
     </unit>
     <unit id="5243494589614712043">
@@ -25194,7 +25369,7 @@
     </unit>
     <unit id="5990720761138943356">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:266</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:268</note>
         <note category="description">Heading of the pages home box when drafting a page with the assistant</note>
       </notes>
       <segment state="translated">
@@ -25294,7 +25469,7 @@
     </unit>
     <unit id="9081463435738465430">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:690</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:687</note>
         <note category="description">Review filter showing changes that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -25365,7 +25540,7 @@
     </unit>
     <unit id="9095134843628689709">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:371,373</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:368,370</note>
         <note category="description">Keyboard hint for editing a change</note>
       </notes>
       <segment state="translated">
@@ -25406,8 +25581,8 @@
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:31,33</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:154,157</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:160,162</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:151,154</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:157,159</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:389</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:453</note>
         <note category="location">src/app/workspace.routes.ts:117</note>
@@ -25550,7 +25725,7 @@
     </unit>
     <unit id="8638195718204770647">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:510</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:507</note>
         <note category="description">Shown when there is no change to review</note>
       </notes>
       <segment state="translated">
@@ -25799,16 +25974,6 @@
         <target>Kontodetails</target>
       </segment>
     </unit>
-    <unit id="5356910550354823790">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:351</note>
-        <note category="description">Command palette action that navigates to workspace source control settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Source Control Settings</source>
-        <target>Zu den Einstellungen der Quellcodeverwaltung</target>
-      </segment>
-    </unit>
     <unit id="7793498748790553680">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:81,83</note>
@@ -25941,6 +26106,16 @@
         <target>Anzeigemodus</target>
       </segment>
     </unit>
+    <unit id="7312761390026892518">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:203</note>
+        <note category="description">Command palette place for workspace tag settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Tag Settings</source>
+        <target>Tag-Einstellungen</target>
+      </segment>
+    </unit>
     <unit id="7314814725704332646">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:118,119</note>
@@ -26067,7 +26242,7 @@
     </unit>
     <unit id="1917188133536938125">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:401</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:403</note>
         <note category="description">Suggested page for the assistant to draft on pages home</note>
       </notes>
       <segment state="translated">
@@ -26709,7 +26884,7 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:432</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:479</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
@@ -26830,16 +27005,6 @@
         <target>Öffentlicher Zugriff</target>
       </segment>
     </unit>
-    <unit id="684158162620573424">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:366</note>
-        <note category="description">Command palette action that navigates to the workspace assistant settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Workspace Assistant Settings</source>
-        <target>Zu den Assistenteneinstellungen des Arbeitsbereichs</target>
-      </segment>
-    </unit>
     <unit id="6844266706936447326">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:89</note>
@@ -26862,7 +27027,7 @@
     </unit>
     <unit id="6848079532028484128">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:171,173</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:168,170</note>
         <note category="description">Accessible label for the button that closes the review</note>
       </notes>
       <segment state="translated">
@@ -27052,16 +27217,6 @@
         <target>Eigentümer entfernen</target>
       </segment>
     </unit>
-    <unit id="2052572547732747214">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:306</note>
-        <note category="description">Command palette action that navigates to general workspace settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Workspace Settings</source>
-        <target>Zu den Arbeitsbereichseinstellungen</target>
-      </segment>
-    </unit>
     <unit id="2057462794608190902">
       <notes>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:95</note>
@@ -27070,16 +27225,6 @@
       <segment state="translated">
         <source>Untagged</source>
         <target>Ohne Tags</target>
-      </segment>
-    </unit>
-    <unit id="7061746686189484080">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:375</note>
-        <note category="description">Command palette action that navigates to workspace import and export settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Import &amp; Export</source>
-        <target>Zu Import &amp; Export</target>
       </segment>
     </unit>
     <unit id="7063429306122513331">
@@ -27328,7 +27473,7 @@
     <unit id="5000740075940518750">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:498</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:741</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:738</note>
         <note category="description">Shown after proposals were discarded</note>
       </notes>
       <segment state="translated">
@@ -27687,7 +27832,7 @@
     </unit>
     <unit id="8676025783488152933">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:279</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:281</note>
         <note category="description">Placeholder of the box on pages home that asks the assistant about the workspace&apos;s pages</note>
       </notes>
       <segment state="translated">
@@ -27703,6 +27848,16 @@
       <segment state="translated">
         <source>Resize sidebar</source>
         <target>Seitenleiste anpassen</target>
+      </segment>
+    </unit>
+    <unit id="7353862971881435414">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:115</note>
+        <note category="description">Comma-separated search terms for the sprint velocity report. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>sprint,committed,completed,points</source>
+        <target>Sprint,zugesagt,abgeschlossen,Punkte</target>
       </segment>
     </unit>
     <unit id="7357824854550266974">
@@ -27865,6 +28020,16 @@
         <target>Runbook</target>
       </segment>
     </unit>
+    <unit id="8671234314555525900">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:152</note>
+        <note category="description">Command palette place for the appearance section in personal settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Appearance</source>
+        <target>Darstellung</target>
+      </segment>
+    </unit>
     <unit id="8673416323370089865">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/service-account-card.component.ts:80,83</note>
@@ -27986,9 +28151,19 @@
         <target>Repositorys auswählen</target>
       </segment>
     </unit>
+    <unit id="5604420070249845402">
+      <notes>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:156,158</note>
+        <note category="description">Shown in the velocity section before a project is chosen</note>
+      </notes>
+      <segment state="translated">
+        <source>No project selected</source>
+        <target>Kein Projekt ausgewählt</target>
+      </segment>
+    </unit>
     <unit id="5604637583769459715">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:148,150</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:150,152</note>
         <note category="description">Pages home hint for someone reading a public workspace</note>
       </notes>
       <segment state="translated">
@@ -28351,7 +28526,7 @@
     </unit>
     <unit id="2946988289493771337">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:17</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:18</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -28447,6 +28622,16 @@
       <segment state="initial">
         <source>Comment — @ to mention</source>
         <target>Kommentieren — @ zum Erwähnen</target>
+      </segment>
+    </unit>
+    <unit id="4272600624627368576">
+      <notes>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:145,148</note>
+        <note category="description">Heading above runnable commands in the command palette</note>
+      </notes>
+      <segment state="translated">
+        <source> Commands </source>
+        <target>Befehle</target>
       </segment>
     </unit>
     <unit id="427261400160913038">
@@ -28733,7 +28918,7 @@
     </unit>
     <unit id="8205434857423213542">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:225</note>
+        <note category="location">src/app/shell/global-commands.service.ts:204</note>
         <note category="description">Command palette action that navigates to the notification list</note>
       </notes>
       <segment state="initial">
@@ -28773,7 +28958,7 @@
     </unit>
     <unit id="8208675890777914624">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:23</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:24</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -28783,7 +28968,7 @@
     </unit>
     <unit id="8511730155855822220">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:537</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:534</note>
         <note category="description">Counts the changes a run has applied so far</note>
       </notes>
       <segment state="translated">
@@ -28886,7 +29071,7 @@
     </unit>
     <unit id="6920187614613605770">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:754</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:751</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment state="translated">
@@ -29046,7 +29231,7 @@
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:123</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:253</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:675</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:672</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -29259,16 +29444,6 @@
         <target> Archiv importieren </target>
       </segment>
     </unit>
-    <unit id="5017699476642878935">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:288</note>
-        <note category="description">Command palette action that navigates to personal notification preference settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Notification Preferences</source>
-        <target>Zu den Benachrichtigungseinstellungen</target>
-      </segment>
-    </unit>
     <unit id="5018155553239492864">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:155,157</note>
@@ -29404,6 +29579,16 @@
       <segment state="initial">
         <source>no change</source>
         <target>keine Änderung</target>
+      </segment>
+    </unit>
+    <unit id="1241637421226997644">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:179</note>
+        <note category="description">Command palette place for the personal assistant key settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Assistant Key Settings</source>
+        <target>Assistenten-Schlüsseleinstellungen</target>
       </segment>
     </unit>
     <unit id="5673648104994903255">
@@ -29607,7 +29792,7 @@
     </unit>
     <unit id="818882206456622635">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:282</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:284</note>
         <note category="description">Accessible label of the box on pages home that asks the assistant a question</note>
       </notes>
       <segment state="translated">
@@ -29966,7 +30151,7 @@
     </unit>
     <unit id="745963961861200833">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:159,162</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:161,164</note>
         <note category="description">Description of the pages home recently viewed card</note>
       </notes>
       <segment state="translated">
@@ -29999,7 +30184,7 @@
     </unit>
     <unit id="7473967539394647356">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:141,143</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:147,149</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:119,120</note>
         <note category="description">Placeholder option in the sprint filter</note>
       </notes>
@@ -30292,7 +30477,7 @@
     </unit>
     <unit id="8123881768100361598">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:16</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:17</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:24,26</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:78,79</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:131</note>
@@ -30305,7 +30490,7 @@
     </unit>
     <unit id="8127725951732050615">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:356,358</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:353,355</note>
         <note category="description">Name of the space bar. Translate it to its local name</note>
       </notes>
       <segment state="translated">
@@ -30325,10 +30510,10 @@
     </unit>
     <unit id="1182793675272300291">
       <notes>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:96,99</note>
-        <note category="location">src/app/features/reporting/components/flow-report.component.ts:138,140</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:120,123</note>
-        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:191,193</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:99,102</note>
+        <note category="location">src/app/features/reporting/components/flow-report.component.ts:142,144</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:123,126</note>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:200,203</note>
         <note category="description">Button that reveals the throughput breakdown table</note>
       </notes>
       <segment state="translated">
@@ -30400,7 +30585,7 @@
     </unit>
     <unit id="2468424720649338406">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:50</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:51</note>
         <note category="description">Why a page is listed under needs review</note>
       </notes>
       <segment state="translated">
@@ -30555,7 +30740,7 @@
     </unit>
     <unit id="4348734030451828895">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:271</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:273</note>
         <note category="description">Accessible label of the pages home box when drafting a page</note>
       </notes>
       <segment state="translated">
@@ -30615,7 +30800,7 @@
     </unit>
     <unit id="4901555042063443017">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:369,371</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:366,368</note>
         <note category="description">Keyboard key that edits the selected change. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -30826,6 +31011,16 @@
         <target> Profilbilder und Audit-Archive werden bei der Arbeitsbereichsnutzung nicht mitgezählt. </target>
       </segment>
     </unit>
+    <unit id="3156024178755682639">
+      <notes>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:491</note>
+        <note category="description">Command palette action that moves the open published page back to draft</note>
+      </notes>
+      <segment state="translated">
+        <source>Mark Page as Draft</source>
+        <target>Seite als Entwurf markieren</target>
+      </segment>
+    </unit>
     <unit id="3156973054003371495">
       <notes>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:90,91</note>
@@ -30874,16 +31069,6 @@
       <segment state="translated">
         <source>Open file</source>
         <target>Datei öffnen</target>
-      </segment>
-    </unit>
-    <unit id="8979299419810230617">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:333</note>
-        <note category="description">Command palette action that navigates to workspace task relation type settings</note>
-      </notes>
-      <segment state="initial">
-        <source>Go to Relation Settings</source>
-        <target>Zu den Beziehungseinstellungen</target>
       </segment>
     </unit>
     <unit id="8979656408332491985">
@@ -31028,7 +31213,7 @@
     </unit>
     <unit id="345994992360406582">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:729</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:726</note>
         <note category="description">Counts the changes and the entities they touch</note>
       </notes>
       <segment state="translated">
@@ -31058,7 +31243,7 @@
     </unit>
     <unit id="8178416786371438773">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:511</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:508</note>
         <note category="description">Explains the empty review surface</note>
       </notes>
       <segment state="translated">
@@ -31206,6 +31391,16 @@
         <target> Monatliches Ausgabenlimit </target>
       </segment>
     </unit>
+    <unit id="194416167503499468">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:141</note>
+        <note category="description">Comma-separated search terms for the page templates section. Translate each term and keep the commas</note>
+      </notes>
+      <segment state="translated">
+        <source>new page,create,start</source>
+        <target>neue Seite,erstellen,beginnen</target>
+      </segment>
+    </unit>
     <unit id="8837180097116489811">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:183,185</note>
@@ -31240,6 +31435,7 @@
       <notes>
         <note category="location">src/app/core/services/page-commands.service.ts:234</note>
         <note category="location">src/app/core/services/page-commands.service.ts:236</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:353</note>
         <note category="description">Title of the dialog confirming a page is archived</note>
       </notes>
       <segment state="translated">
@@ -31368,7 +31564,7 @@
     </unit>
     <unit id="3334152991864561474">
       <notes>
-        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:107,108</note>
+        <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:113,114</note>
         <note category="description">Accessible label for the report end date</note>
       </notes>
       <segment state="translated">
@@ -31388,7 +31584,7 @@
     </unit>
     <unit id="3335455471343847900">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:438</note>
+        <note category="location">src/app/shell/global-commands.service.ts:321</note>
         <note category="description">Command palette action that switches the task detail view to the document layout</note>
       </notes>
       <segment state="initial">
@@ -31593,7 +31789,7 @@
     </unit>
     <unit id="2214406551817330687">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:420</note>
+        <note category="location">src/app/shell/global-commands.service.ts:303</note>
         <note category="description">Command palette action that caps pages to a centered readable column</note>
       </notes>
       <segment state="initial">
@@ -31663,7 +31859,7 @@
     </unit>
     <unit id="8104638323313491168">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:34</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:35</note>
         <note category="description">Command palette hint shown before the user types. The &gt; character is a literal prefix and must not be translated</note>
       </notes>
       <segment state="translated">
@@ -31683,7 +31879,7 @@
     </unit>
     <unit id="4844611077398964021">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:35</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:36</note>
         <note category="description">Shown when the command palette search backend cannot be reached</note>
       </notes>
       <segment state="translated">
@@ -31693,7 +31889,7 @@
     </unit>
     <unit id="8692634109890521682">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:36</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:37</note>
         <note category="description">Shown when a command palette search matches nothing</note>
       </notes>
       <segment state="translated">
@@ -31703,7 +31899,7 @@
     </unit>
     <unit id="2718977986022591344">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:67,68</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:70,71</note>
         <note category="description">Accessible name of the command palette dialog</note>
       </notes>
       <segment state="translated">
@@ -31713,8 +31909,8 @@
     </unit>
     <unit id="5968132631442328843">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:98</note>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:164,166</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:101</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:167,169</note>
         <note category="description">Accessible name of the command palette result list</note>
       </notes>
       <segment state="translated">
@@ -31735,7 +31931,7 @@
     </unit>
     <unit id="4911843450729688319">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:109,110</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:112,113</note>
         <note category="description">Accessible name of the recently-visited group</note>
       </notes>
       <segment state="translated">
@@ -31765,7 +31961,7 @@
     </unit>
     <unit id="7542074709541168939">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:116,119</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:119,122</note>
         <note category="description">Heading above recently-visited items in the command palette</note>
       </notes>
       <segment state="translated">
@@ -31805,7 +32001,7 @@
     </unit>
     <unit id="6036308268629413664">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:170,173</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:173,176</note>
         <note category="description">Heading above search results in the command palette</note>
       </notes>
       <segment state="translated">
@@ -31825,7 +32021,7 @@
     </unit>
     <unit id="7984088154288778834">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:220</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:224</note>
         <note category="description">Command palette input placeholder while in command mode</note>
       </notes>
       <segment state="translated">
@@ -31835,7 +32031,7 @@
     </unit>
     <unit id="2301915146705136931">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:222</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:226</note>
         <note category="description">Command palette input placeholder while in task-search mode</note>
       </notes>
       <segment state="translated">
@@ -31855,7 +32051,7 @@
     </unit>
     <unit id="1169166453555057750">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:224</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:228</note>
         <note category="description">Command palette input placeholder while in project-search mode</note>
       </notes>
       <segment state="translated">
@@ -31863,19 +32059,9 @@
         <target>Projekte suchen…</target>
       </segment>
     </unit>
-    <unit id="9034570009377772375">
-      <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:225</note>
-        <note category="description">Default command palette input placeholder. The &gt; character is a literal prefix and must not be translated</note>
-      </notes>
-      <segment state="translated">
-        <source>Search or type &gt; for commands…</source>
-        <target>Suchen oder &gt; für Befehle eingeben…</target>
-      </segment>
-    </unit>
     <unit id="6277392156435513308">
       <notes>
-        <note category="location">src/app/shell/command-palette/command-palette.component.ts:287</note>
+        <note category="location">src/app/shell/command-palette/command-palette.component.ts:291</note>
         <note category="description">Shown while a command palette search is in flight</note>
       </notes>
       <segment state="translated">
@@ -32077,7 +32263,7 @@
     </unit>
     <unit id="2547653457651632153">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:98</note>
+        <note category="location">src/app/shell/global-commands.service.ts:77</note>
         <note category="description">Command palette action that navigates to the project list</note>
       </notes>
       <segment state="translated">
@@ -32119,7 +32305,7 @@
     </unit>
     <unit id="5123189455675344637">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:107</note>
+        <note category="location">src/app/shell/global-commands.service.ts:86</note>
         <note category="description">Command palette action that navigates to the task list</note>
       </notes>
       <segment state="translated">
@@ -32129,7 +32315,7 @@
     </unit>
     <unit id="5086261568382990197">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:125</note>
+        <note category="location">src/app/shell/global-commands.service.ts:104</note>
         <note category="description">Command palette action that navigates to the board list</note>
       </notes>
       <segment state="translated">
@@ -32139,7 +32325,7 @@
     </unit>
     <unit id="5086267064675007910">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:40,43</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:42,45</note>
         <note category="description">Accessible label while personal settings load</note>
       </notes>
       <segment state="translated">
@@ -32189,7 +32375,7 @@
     </unit>
     <unit id="2627358752486456707">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:134</note>
+        <note category="location">src/app/shell/global-commands.service.ts:113</note>
         <note category="description">Command palette action that navigates to the sprint list</note>
       </notes>
       <segment state="translated">
@@ -32199,7 +32385,7 @@
     </unit>
     <unit id="178520337056147266">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:88</note>
+        <note category="location">src/app/shell/global-commands.service.ts:67</note>
         <note category="description">Command palette action that navigates to the dashboard</note>
       </notes>
       <segment state="translated">
@@ -32230,7 +32416,7 @@
     </unit>
     <unit id="2117590223216089367">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:206</note>
+        <note category="location">src/app/shell/global-commands.service.ts:185</note>
         <note category="description">Command palette action that navigates to the member list</note>
       </notes>
       <segment state="translated">
@@ -32250,7 +32436,7 @@
     </unit>
     <unit id="7783914774924915188">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:279</note>
+        <note category="location">src/app/shell/global-commands.service.ts:258</note>
         <note category="description">Command palette action that navigates to settings</note>
       </notes>
       <segment state="translated">
@@ -32260,7 +32446,7 @@
     </unit>
     <unit id="5354615118655779282">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:215</note>
+        <note category="location">src/app/shell/global-commands.service.ts:194</note>
         <note category="description">Command palette action that navigates to the automation list</note>
       </notes>
       <segment state="translated">
@@ -32323,7 +32509,7 @@
     </unit>
     <unit id="5387282719521675016">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:243</note>
+        <note category="location">src/app/shell/global-commands.service.ts:222</note>
         <note category="description">Command palette action that navigates to file storage</note>
       </notes>
       <segment state="translated">
@@ -32443,8 +32629,8 @@
     </unit>
     <unit id="23718004345171053">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:507</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:508</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:504</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:505</note>
         <note category="description">Placeholder of the field that filters the review list</note>
       </notes>
       <segment state="translated">
@@ -32554,6 +32740,16 @@
         <target>Leeren</target>
       </segment>
     </unit>
+    <unit id="1239794155824086840">
+      <notes>
+        <note category="location">src/app/features/reporting/components/sprint-report.component.ts:158,160</note>
+        <note category="description">Prompts the user to choose a project</note>
+      </notes>
+      <segment state="translated">
+        <source>Select a project to view its velocity.</source>
+        <target>Wählen Sie ein Projekt, um dessen Velocity zu sehen.</target>
+      </segment>
+    </unit>
     <unit id="6490688569532630280">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:10</note>
@@ -32588,7 +32784,7 @@
     </unit>
     <unit id="4036781966313831213">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:269</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:271</note>
         <note category="description">Hint in the pages home box saying where an assistant draft is created</note>
       </notes>
       <segment state="translated">
@@ -32638,7 +32834,7 @@
     </unit>
     <unit id="2610280847967679840">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:179,182</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:181,184</note>
         <note category="description">Description of the pages home needs review card</note>
       </notes>
       <segment state="translated">
@@ -32867,7 +33063,7 @@
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:21</note>
         <note category="location">src/app/features/settings/settings.routes.ts:57</note>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:34,37</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:349</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:435</note>
@@ -32907,6 +33103,7 @@
     <unit id="788903633413068121">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:124</note>
+        <note category="location">src/app/shell/place-commands.service.ts:239</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="description">Breadcrumb for workspace service account settings</note>
       </notes>
@@ -33057,7 +33254,7 @@
     </unit>
     <unit id="7135702134770124349">
       <notes>
-        <note category="location">src/app/core/util/ai-client-context.ts:34</note>
+        <note category="location">src/app/core/util/ai-client-context.ts:35</note>
         <note category="description">Names the kind of thing a context chip points at, text selected on a page</note>
       </notes>
       <segment state="translated">
@@ -33153,7 +33350,7 @@
     </unit>
     <unit id="3487164997301514763">
       <notes>
-        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:147,151</note>
+        <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:151,155</note>
         <note category="description">Hint shown when a page cannot be found</note>
       </notes>
       <segment state="translated">
@@ -33283,7 +33480,7 @@
     </unit>
     <unit id="7923105806433235005">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:344,346</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:341,343</note>
         <note category="description">Keyboard key that moves up the review list. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -33535,7 +33732,7 @@
     <unit id="450937500922433442">
       <notes>
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:369</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:721</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:718</note>
         <note category="description">Diff layout showing changes in one column</note>
       </notes>
       <segment state="translated">
@@ -33733,6 +33930,16 @@
       <segment state="translated">
         <source>… and <ph id="0" equiv="COUNT" disp="count"/> other changes</source>
         <target>… und <ph id="0" equiv="COUNT" disp="count"/> weitere Änderungen</target>
+      </segment>
+    </unit>
+    <unit id="486412321040439108">
+      <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:191</note>
+        <note category="description">Command palette place for general workspace settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace Settings</source>
+        <target>Arbeitsbereichseinstellungen</target>
       </segment>
     </unit>
     <unit id="4865868083675132195">
@@ -34063,8 +34270,8 @@
     </unit>
     <unit id="6441348058745652320">
       <notes>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:283</note>
-        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:395</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:285</note>
+        <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:397</note>
         <note category="description">Accessible label of the button that sends a question to the assistant</note>
       </notes>
       <segment state="translated">
@@ -34104,7 +34311,7 @@
     </unit>
     <unit id="8488374659708236886">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:499</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:496</note>
         <note category="description">Accessible name of the handle that resizes the list of changes in the review</note>
       </notes>
       <segment state="initial">
@@ -34204,8 +34411,9 @@
     </unit>
     <unit id="2395695896327760676">
       <notes>
+        <note category="location">src/app/shell/place-commands.service.ts:167</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:445</note>
-        <note category="description">Sidebar link to personal notification preference settings</note>
+        <note category="description">Command palette place for personal notification preference settings</note>
       </notes>
       <segment state="translated">
         <source>Notification Preferences</source>

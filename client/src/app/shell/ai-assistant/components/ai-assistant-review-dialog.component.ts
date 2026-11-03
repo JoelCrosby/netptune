@@ -54,6 +54,7 @@ import { AiAssistantReviewListComponent } from './ai-assistant-review-list.compo
 import { ResizeHandleComponent } from '@static/components/resize-handle.component';
 import { SpinnerIconComponent } from '@static/components/spinner/spinner-icon.component';
 import { toggleInSet } from '@core/util/signals';
+import { pathOf } from '@core/util/url';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { AiAssistantPanelComponent } from '../ai-assistant-panel.component';
 
@@ -81,10 +82,6 @@ const clampListWidth = (width: number): number => {
   }
 
   return Math.round(Math.min(MAX_LIST_WIDTH, Math.max(MIN_LIST_WIDTH, width)));
-};
-
-const pathOf = (url: string): string => {
-  return url.split(/[?#]/)[0];
 };
 
 @Component({

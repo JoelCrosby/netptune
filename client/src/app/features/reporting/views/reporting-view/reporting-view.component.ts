@@ -31,6 +31,7 @@ import { WorkloadReportComponent } from '../../components/workload-report.compon
 import { PanelComponent } from '@static/components/panel.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import { PanelBodyComponent } from '@static/components/panel-body.component';
+import { StickyOffsetDirective } from '@static/directives/sticky-offset.directive';
 import {
   defaultReportingRange,
   defaultReportingSprintId,
@@ -53,6 +54,7 @@ const defaultFrom = defaultRange.from;
     PanelHeaderComponent,
     SelectFilterComponent,
     SprintReportComponent,
+    StickyOffsetDirective,
     WorkloadReportComponent,
   ],
   template: `
@@ -65,7 +67,11 @@ const defaultFrom = defaultRange.from;
         i18n-title="Page title for the reporting views"
         title="Reports" />
 
-      <section app-panel surface="card" class="sticky top-10 z-12 mb-8">
+      <section
+        app-panel
+        appStickyOffset
+        surface="card"
+        class="sticky top-10 z-12 mb-8">
         <app-panel-header
           density="comfortable"
           [icon]="filterIcon"
