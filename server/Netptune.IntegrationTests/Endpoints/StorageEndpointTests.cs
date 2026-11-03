@@ -204,6 +204,7 @@ public sealed class StorageEndpointTests
         var contentResponse = await noRedirectClient.GetAsync($"{file.ContentUrl}?disposition=inline");
         contentResponse.StatusCode.Should().Be(HttpStatusCode.Redirect);
         contentResponse.Headers.Location!.Host.Should().Be("storage.test");
+        contentResponse.Headers.Location!.OriginalString.Should().EndWith("?signed=a%20b%22c");
 
         var after = await Client.GetFromJsonAsync<ClientResponse<WorkspaceStorageUsageViewModel>>("api/storage/usage");
         after.Payload!.UsedBytes.Should().Be(before.Payload!.UsedBytes + 4);

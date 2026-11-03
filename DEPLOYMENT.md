@@ -179,6 +179,70 @@ enforcing it. Remove `tlsOptions` from the Traefik values and deploy first.
 An IP allowlist doesn't replace this. The Vultr CCM ignores `loadBalancerSourceRanges`, and an LB firewall
 leaves the NodePorts open on the nodes' public addresses.
 
+## Serving files from a custom domain
+
+Uploads are served from the bucket's own domain with presigned URLs until
+`Storage__S3__CloudFront__BaseUrl` is set. With it set, the servers emit CloudFront URLs: public URLs
+for profile pictures, and signed URLs (`KeyPairId`, `PrivateKey`) for everything else. The servers fail at
+startup if the base URL isn't an absolute `https` URL, or if the key pair ID or a PEM-encoded RSA private key
+is missing.
+
+The distribution must:
+
+- reach the bucket through Origin Access Control, with a bucket policy granting CloudFront `s3:GetObject` on
+  the bucket and denying it on `audit-archive/*` while any audit archives remain there. Database backups and
+  audit archives belong in their own buckets, set with `secrets.postgresBackup.s3_bucket_name` and
+  `Storage__S3__AuditArchiveBucketName`, which the distribution has no access to. The app's key needs
+  `s3:PutObject` and `s3:GetObject` on the audit bucket;
+- require signed URLs (a trusted key group) on the default behavior, and leave `user/profile/*` unsigned;
+- use the `CachingOptimized` managed policy on both behaviors;
+- use the `SecurityHeadersPolicy` managed response headers policy on both behaviors, for `nosniff`;
+- run the viewer-response CloudFront Function below on the default behavior only. It sets the `Content-Disposition`
+  header from the signed `response-content-disposition` query parameter. Managed origin request policies don't
+  forward that parameter to S3, and custom policies need the Business plan or above. The signature is what makes
+  the value trustworthy, so don't attach the function to the unsigned behavior.
+
+The function is what stops uploaded HTML rendering on the files domain. The app's cookies are host-only, so they
+never reach that domain, but it is same-site with the app, so `SameSite=Lax` doesn't stop a page there sending
+authenticated requests to the app. The function falls back to `attachment` so a missing or unreadable parameter
+can't serve a file inline.
+
+```js
+function handler(event) {
+  var response = event.response;
+  var parameter = event.request.querystring['response-content-disposition'];
+
+  response.headers['content-disposition'] = { value: resolveDisposition(parameter) };
+
+  return response;
+}
+
+function resolveDisposition(parameter) {
+  if (!parameter) {
+    return 'attachment';
+  }
+
+  // The server always sends a ';', which only an already decoded value can contain.
+  if (parameter.value.indexOf(';') !== -1) {
+    return parameter.value;
+  }
+
+  try {
+    return decodeURIComponent(parameter.value);
+  } catch (e) {
+    return 'attachment';
+  }
+}
+```
+
+The certificate must be in `us-east-1`. Create the DNS record as DNS only in Cloudflare, since a proxied
+record would put Cloudflare in front of CloudFront.
+
+With CloudFront enabled, uploads send no ACL, so public access on the bucket can be blocked. Stored raw S3 URLs
+stop working at that point, so search for them first, in user picture URLs, task descriptions, pages and comments.
+Only `user/profile/*` URLs can be rewritten to the files domain, because every other path needs a signature.
+Anything else has to be re-uploaded as a workspace file before blocking.
+
 ## Local Development
 
 The server projects use [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/) for local orchestration. Docker is required.
@@ -238,8 +302,8 @@ Compared with the default profile:
   cluster, so a fresh volume starts empty and you register a user.
 - **Scheduled work.** `activity-retention` runs `--job retention` and `postgres-backup` runs the
   backup's `pg_dump` and verify step into the `netptune-postgres-backup` volume. Both are explicit
-  start, so start them from the dashboard. Retention archives to whichever bucket the shell's
-  `Storage__S3__*` settings name before deleting rows; the backup never uploads.
+  start, so start them from the dashboard. Retention archives to the audit bucket the shell's
+  `Storage__S3__*` settings name, or the main bucket without one, before deleting rows; the backup never uploads.
 
 The cluster-parity mode builds container images. Aspire builds them with `docker build`, which
 needs the buildx plugin. On a rootless Podman machine without it, set

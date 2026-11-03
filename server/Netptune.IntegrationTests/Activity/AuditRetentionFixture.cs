@@ -92,6 +92,8 @@ public sealed class CountingStorageService : IStorageService
 
     public ConcurrentBag<string> Uploads { get; } = [];
 
+    public ConcurrentBag<StorageBucket> UploadBuckets { get; } = [];
+
     public ConcurrentBag<string> ArchivedLines { get; } = [];
 
     public IDisposable FailUploads()
@@ -104,6 +106,7 @@ public sealed class CountingStorageService : IStorageService
     public async Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, StorageUploadOptions uploadOptions, CancellationToken cancellationToken = default)
     {
         Uploads.Add(uploadOptions.Key);
+        UploadBuckets.Add(uploadOptions.Bucket);
 
         using var reader = new StreamReader(stream, leaveOpen: true);
 

@@ -9,4 +9,6 @@ public sealed record StorageUploadOptions
     public string ContentType { get; init; } = "application/octet-stream";
 
     public StorageAccess Access { get; init; } = StorageAccess.Private;
+
+    public StorageBucket Bucket { get; init; } = StorageBucket.Uploads;
 }

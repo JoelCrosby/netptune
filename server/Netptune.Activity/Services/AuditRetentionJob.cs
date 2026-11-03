@@ -88,6 +88,7 @@ public sealed class AuditRetentionJob
                 Name = archiveKey,
                 Key = archiveKey,
                 ContentType = "application/x-ndjson",
+                Bucket = StorageBucket.AuditArchive,
             };
             var uploaded = await storage.UploadFileAsync(stream, uploadOptions, cancellationToken);
 

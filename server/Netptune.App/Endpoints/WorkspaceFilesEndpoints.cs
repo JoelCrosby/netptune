@@ -116,7 +116,8 @@ public static class WorkspaceFilesEndpoints
 
         http.Response.Headers.XContentTypeOptions = "nosniff";
 
-        return Results.Redirect(result.Payload!.ToString());
+        // Uri.ToString() unescapes the query, and CloudFront rejects a signed URL that differs from what was signed.
+        return Results.Redirect(result.Payload!.AbsoluteUri);
     }
 
 }

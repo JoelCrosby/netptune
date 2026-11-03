@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageVersion Include="AWSSDK.Extensions.CloudFront.Signers" Version="4.0.101.11" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.104.6" />
     <PackageVersion Include="AngleSharp" Version="1.8.5" />
     <PackageVersion Include="Anthropic" Version="13.3.0" />

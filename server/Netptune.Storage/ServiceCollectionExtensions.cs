@@ -11,6 +11,12 @@ public static class ServiceCollectionExtensions
         services.AddOptions<S3StorageOptions>()
             .BindConfiguration(S3StorageOptions.SectionName)
             .ValidateDataAnnotations()
+            .Validate(
+                options => !options.CloudFront.IsEnabled || options.CloudFront.HasHttpsBaseUrl,
+                "Storage:S3:CloudFront:BaseUrl must be an absolute https URL.")
+            .Validate(
+                options => !options.CloudFront.IsEnabled || options.CloudFront.HasSigningKey(),
+                "Storage:S3:CloudFront:BaseUrl requires KeyPairId and a PEM-encoded RSA PrivateKey.")
             .ValidateOnStart();
 
         services.AddSingleton<IStorageService, S3StorageService>();

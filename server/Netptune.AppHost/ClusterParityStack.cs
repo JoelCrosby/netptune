@@ -49,8 +49,8 @@ public static class ClusterParityStack
         {
             var postgres = resources.Postgres;
 
-            // Like the CronJob, this archives expired audit rows to the bucket the Storage__S3__* settings name
-            // before deleting them, so check which bucket that is before starting it.
+            // Like the CronJob, this archives expired audit rows to Storage__S3__AuditArchiveBucketName, or failing
+            // that Storage__S3__BucketName, before deleting them, so check which bucket that is before starting it.
             builder
                 .AddProject<Projects.Netptune_ActivityServer>("activity-retention", launchProfileName: null)
                 .WithArgs("--job", "retention")

@@ -17,4 +17,8 @@ public class S3StorageOptions
 
     [Required]
     public string SecretAccessKey { get; set; } = null!;
+
+    public string? AuditArchiveBucketName { get; set; }
+
+    public CloudFrontOptions CloudFront { get; set; } = new();
 }

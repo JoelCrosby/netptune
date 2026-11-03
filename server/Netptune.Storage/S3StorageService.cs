@@ -24,42 +24,55 @@ public class S3StorageService : IStorageService
     private readonly IAmazonS3 S3Client;
     private readonly S3StorageOptions Options;
     private readonly RegionEndpoint Region;
+    private readonly CloudFrontUrls? CloudFrontUrls;
 
     public S3StorageService(IOptions<S3StorageOptions> options, ILogger<S3StorageService> logger)
+        : this(options, logger, CreateS3Client(options.Value))
+    {
+    }
+
+    public S3StorageService(IOptions<S3StorageOptions> options, ILogger<S3StorageService> logger, IAmazonS3 s3Client)
     {
         Logger = logger;
         Options = options.Value;
         Region = RegionEndpoint.GetBySystemName(Options.Region);
+        CloudFrontUrls = Options.CloudFront.IsEnabled ? new CloudFrontUrls(Options.CloudFront) : null;
+        S3Client = s3Client;
+    }
 
-        S3Client = new AmazonS3Client(
-            Options.AccessKeyId,
-            Options.SecretAccessKey,
-            Region
-        );
+    private static AmazonS3Client CreateS3Client(S3StorageOptions options)
+    {
+        var region = RegionEndpoint.GetBySystemName(options.Region);
+
+        return new AmazonS3Client(options.AccessKeyId, options.SecretAccessKey, region);
     }
 
     public async Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, StorageUploadOptions uploadOptions, CancellationToken cancellationToken = default)
     {
         var fileTransferUtility = new TransferUtility(S3Client);
+        var bucketName = ResolveBucketName(uploadOptions.Bucket);
 
         var request = new TransferUtilityUploadRequest
         {
             InputStream = stream,
-            BucketName = Options.BucketName,
+            BucketName = bucketName,
             AutoCloseStream = true,
             AutoResetStreamPosition = true,
             Key = uploadOptions.Key,
             ContentType = uploadOptions.ContentType,
-            CannedACL = uploadOptions.Access == StorageAccess.PublicRead ? S3CannedACL.PublicRead : S3CannedACL.Private,
+            CannedACL = ResolveCannedAcl(uploadOptions.Access),
         };
 
         try
         {
             await fileTransferUtility.UploadAsync(request, cancellationToken);
 
-            var metadata = await S3Client.GetObjectMetadataAsync(Options.BucketName, uploadOptions.Key, cancellationToken);
+            var metadata = await S3Client.GetObjectMetadataAsync(bucketName, uploadOptions.Key, cancellationToken);
 
-            var uri = $"https://{Options.BucketName}.s3.{Region.SystemName}.{Region.PartitionDnsSuffix}/{uploadOptions.Key}";
+            var isServedByCloudFront = uploadOptions.Bucket == StorageBucket.Uploads && CloudFrontUrls is not null;
+            var uri = isServedByCloudFront
+                ? CloudFrontUrls!.GetPublicUrl(uploadOptions.Key)
+                : $"https://{bucketName}.s3.{Region.SystemName}.{Region.PartitionDnsSuffix}/{uploadOptions.Key}";
 
             var upload = new UploadResponse
             {
@@ -98,21 +111,57 @@ public class S3StorageService : IStorageService
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var safeName = readOptions.FileName.SanitizeFileName();
+        var contentDisposition = BuildContentDisposition(readOptions);
+        var expiresOn = DateTime.UtcNow.Add(readOptions.Lifetime);
+        var uri = CloudFrontUrls?.GetSignedUri(readOptions.Key, contentDisposition, expiresOn)
+            ?? GetPresignedUri(readOptions.Key, contentDisposition, expiresOn);
 
+        return Task.FromResult<Uri?>(uri);
+    }
+
+    private static string BuildContentDisposition(StorageReadOptions readOptions)
+    {
+        var dispositionType = readOptions.Disposition == StorageDisposition.Inline ? "inline" : "attachment";
+        var safeName = readOptions.FileName.SanitizeFileName();
+        var asciiName = new string(safeName.Select(character => char.IsAscii(character) ? character : '_').ToArray());
+        var encodedName = Uri.EscapeDataString(safeName);
+
+        // CloudFront rewrites non-ASCII header bytes to '?', so the real name has to travel percent-encoded.
+        return $"{dispositionType}; filename=\"{asciiName}\"; filename*=UTF-8''{encodedName}";
+    }
+
+    private Uri GetPresignedUri(string key, string contentDisposition, DateTime expiresOn)
+    {
         var request = new GetPreSignedUrlRequest
         {
             BucketName = Options.BucketName,
-            Key = readOptions.Key,
-            Expires = DateTime.UtcNow.Add(readOptions.Lifetime),
+            Key = key,
+            Expires = expiresOn,
             Verb = HttpVerb.GET,
             ResponseHeaderOverrides = new ResponseHeaderOverrides
             {
-                ContentDisposition = $"{(readOptions.Disposition == StorageDisposition.Inline ? "inline" : "attachment")}; filename=\"{safeName}\"",
+                ContentDisposition = contentDisposition,
             },
         };
 
-        return Task.FromResult<Uri?>(new Uri(S3Client.GetPreSignedURL(request)));
+        return new Uri(S3Client.GetPreSignedURL(request));
+    }
+
+    private string ResolveBucketName(StorageBucket bucket)
+    {
+        var isAuditArchive = bucket == StorageBucket.AuditArchive;
+        var hasAuditArchiveBucket = !string.IsNullOrWhiteSpace(Options.AuditArchiveBucketName);
+
+        return isAuditArchive && hasAuditArchiveBucket ? Options.AuditArchiveBucketName! : Options.BucketName;
+    }
+
+    private S3CannedACL? ResolveCannedAcl(StorageAccess access)
+    {
+        // A bucket that blocks public access or disables ACLs rejects uploads that send one, even "private", which
+        // is already what an object gets without an ACL.
+        var needsPublicAcl = access == StorageAccess.PublicRead && CloudFrontUrls is null;
+
+        return needsPublicAcl ? S3CannedACL.PublicRead : null;
     }
 
     public async Task DeleteFileAsync(string key, CancellationToken cancellationToken = default)

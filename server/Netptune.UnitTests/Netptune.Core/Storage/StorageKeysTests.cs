@@ -19,6 +19,16 @@ public class StorageKeysTests
     }
 
     [Fact]
+    public void TryResolveProfilePictureKey_ShouldReturnKey_WhenUrlUsesTheCustomFilesDomain()
+    {
+        const string url = "https://files.netptune.co.uk/user/profile/abc-123.png";
+
+        var key = StorageKeys.TryResolveProfilePictureKey(url);
+
+        key.Should().Be("user/profile/abc-123.png");
+    }
+
+    [Fact]
     public void TryResolveProfilePictureKey_ShouldReturnNull_WhenUrlIsAnExternalProviderAvatar()
     {
         const string url = "https://avatars.githubusercontent.com/u/4275668?v=4";

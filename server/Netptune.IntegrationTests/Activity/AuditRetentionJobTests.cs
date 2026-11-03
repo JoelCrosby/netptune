@@ -10,6 +10,7 @@ using Netptune.Activity.Services;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Storage;
 using Netptune.Entities.Contexts;
 
 using Xunit;
@@ -32,6 +33,7 @@ public class AuditRetentionJobTests(AuditRetentionFixture fixture) : IClassFixtu
         await job.RunAsync(CancellationToken);
 
         (fixture.Storage.Uploads.Count - before).Should().Be(1);
+        fixture.Storage.UploadBuckets.Should().OnlyContain(bucket => bucket == StorageBucket.AuditArchive);
 
         (await CountExpired()).Should().Be(0);
     }
