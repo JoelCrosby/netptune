@@ -21,7 +21,10 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
     SkeletonComponent,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container
+      [centerPage]="true"
+      [marginBottom]="true"
+      followsWidthPreference>
       <app-page-header
         i18n-title="Page title for a single project"
         title="Project" />

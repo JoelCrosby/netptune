@@ -23,7 +23,8 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
     <app-page-container
       [verticalPadding]="false"
       [centerPage]="true"
-      [marginBottom]="true">
+      [marginBottom]="true"
+      followsWidthPreference>
       <app-page-header [title]="user()?.displayName" />
 
       @if (loading()) {
