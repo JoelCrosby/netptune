@@ -55,6 +55,20 @@ public sealed class BackgroundIdentityService : IIdentityService
         return user.Email ?? user.UserName!;
     }
 
+    public string? TryGetCurrentUserEmail()
+    {
+        var userId = TryGetCurrentUserId();
+
+        if (userId is null)
+        {
+            return null;
+        }
+
+        var user = UserCache.Get(userId).GetAwaiter().GetResult();
+
+        return user?.Email ?? user?.UserName;
+    }
+
     public string GetUserName()
     {
         var user = RequireCurrentUser();

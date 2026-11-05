@@ -7,6 +7,10 @@ import { LoginResponse } from '@core/models/session';
 export const authProvider: ResolveFn<boolean> = async (
   route: ActivatedRouteSnapshot
 ): Promise<boolean> => {
+  if (route.queryParamMap.get('failed') === 'true') {
+    return false;
+  }
+
   const expiresValue = route.queryParamMap.get('expires');
   const email = route.queryParamMap.get('email');
   const userId = route.queryParamMap.get('userId');

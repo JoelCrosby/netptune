@@ -28,6 +28,32 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
     public RemoveUsersFromWorkspaceCommandHandlerTests()
     {
         Handler = new(UnitOfWork, Identity, Cache, Activity);
+
+        UnitOfWork.InvokeTransaction<List<string>>();
+        UnitOfWork.WorkspaceInvites
+            .RemovePending(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+    }
+
+    [Fact]
+    public async Task RemoveUsersFromWorkspace_ShouldRevokePendingInvites_ForTheGivenEmails()
+    {
+        const string workspaceKey = "workspaceKey";
+        const string pendingEmail = "pending@email.com";
+        var workspace = AutoFixtures.Workspace;
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns([]);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns([]);
+        UnitOfWork.WorkspaceInvites
+            .RemovePending(Arg.Any<IEnumerable<string>>(), workspace.Id, TestContext.Current.CancellationToken)
+            .Returns([pendingEmail]);
+
+        var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand([pendingEmail]), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Emails.Should().BeEquivalentTo([pendingEmail]);
     }
 
     [Fact]

@@ -112,6 +112,15 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  // A Turnstile token is good for a single verification, so every submission needs a fresh one.
+  reset() {
+    this.tokenGenerated.emit('');
+
+    if (this.turnstileElId && window.turnstile) {
+      window.turnstile.reset(this.turnstileElId);
+    }
+  }
+
   ngOnDestroy(): void {
     this.destroyed = true;
 

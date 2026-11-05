@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
@@ -49,7 +50,6 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
         UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(users);
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(existingUsers);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns([]);
         UnitOfWork.WorkspaceInvites.GetPendingByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(pendingInvites ?? []);
     }
 
@@ -157,6 +157,75 @@ public class InviteUsersToWorkspaceCommandHandlerTests
 
         result.Payload!.Emails.Should().ContainSingle("newuser@email.com");
         await Email.Received(1).Send(Arg.Any<SendEmailModel>());
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldSendExistingAccountsAnAcceptLink_RatherThanAddingThem()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+        var account = new AppUser { Id = "account-id", Email = "account@email.com", UserType = AppUserType.User };
+        var sent = new List<SendEmailModel>();
+
+        Hosting.ClientOrigin.Returns("https://test.example.com");
+
+        Email
+            .When(service => service.Send(Arg.Any<SendEmailModel>()))
+            .Do(call => sent.Add(call.Arg<SendEmailModel>()));
+        SetupValidWorkspace(workspaceKey, workspace, [account], []);
+
+        var result = await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["account@email.com", "newcomer@email.com"]),
+            TestContext.Current.CancellationToken);
+
+        var accountEmail = sent.Single(model => model.SendTo.Address == "account@email.com");
+        var newcomerEmail = sent.Single(model => model.SendTo.Address == "newcomer@email.com");
+
+        result.Payload!.Emails.Should().BeEquivalentTo(["account@email.com", "newcomer@email.com"]);
+        accountEmail.Link.Should().Contain("/auth/accept-invite");
+        newcomerEmail.Link.Should().Contain("/auth/register");
+        await UnitOfWork.WorkspaceUsers.DidNotReceive().AddAsync(Arg.Any<WorkspaceAppUser>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldSkipServiceAccounts()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+        var serviceAccount = new AppUser
+        {
+            Id = "service-id",
+            Email = "svc-1@service.netptune.invalid",
+            UserType = AppUserType.ServiceAccount,
+        };
+
+        SetupValidWorkspace(workspaceKey, workspace, [serviceAccount], []);
+
+        var result = await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["svc-1@service.netptune.invalid"]),
+            TestContext.Current.CancellationToken);
+
+        result.Payload!.Emails.Should().BeEmpty();
+        await Email.DidNotReceive().Send(Arg.Any<SendEmailModel>());
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldSendOneEmail_WhenDuplicatePendingInvitesExist()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+        var first = new WorkspaceInvite { Email = "pending@email.com", WorkspaceId = workspace.Id, Code = "first" };
+        var duplicate = new WorkspaceInvite { Email = "Pending@Email.com", WorkspaceId = workspace.Id, Code = "second" };
+
+        SetupValidWorkspace(workspaceKey, workspace, [], [], [first, duplicate]);
+
+        await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["pending@email.com"]),
+            TestContext.Current.CancellationToken);
+
+        await Email.Received(1).Send(Arg.Any<SendEmailModel>());
+        await UnitOfWork.WorkspaceInvites.Received(1)
+            .AddRangeAsync(Arg.Is<IEnumerable<WorkspaceInvite>>(list => !list.Any()), Arg.Any<CancellationToken>());
     }
 
     [Fact]

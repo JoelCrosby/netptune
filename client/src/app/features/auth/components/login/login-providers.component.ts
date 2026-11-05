@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { writePendingWorkspaceInvite } from '@core/auth/pending-workspace-invite';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ProviderMarkComponent } from '@static/components/provider-mark.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -41,6 +42,8 @@ interface LoginProvider {
   `,
 })
 export class LoginProvidersComponent {
+  readonly inviteCode = input<string>();
+
   protected readonly providers: LoginProvider[] = [
     {
       kind: 'github',
@@ -63,6 +66,13 @@ export class LoginProvidersComponent {
   ];
 
   signInWith(provider: LoginProvider) {
+    const inviteCode = this.inviteCode();
+
+    // The provider round trip leaves the app, so the invite is kept to be accepted on the way back.
+    if (inviteCode) {
+      writePendingWorkspaceInvite(inviteCode);
+    }
+
     location.href = provider.href;
   }
 }

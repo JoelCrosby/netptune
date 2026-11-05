@@ -41,15 +41,24 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
             .ToListAsync(cancellationToken);
     }
 
-    public async Task Accept(string code, CancellationToken cancellationToken = default)
+    public async Task<bool> TryAccept(string code, CancellationToken cancellationToken = default)
     {
-        var invite = await Entities
-            .Where(x => x.Code == code)
-            .FirstOrDefaultAsync(cancellationToken);
+        var now = DateTime.UtcNow;
+        var accepted = await Entities
+            .Where(x => x.Code == code && x.AcceptedAt == null && x.ExpiresAt > now)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.AcceptedAt, now), cancellationToken);
 
-        if (invite is not null)
-        {
-            invite.AcceptedAt = DateTime.UtcNow;
-        }
+        return accepted > 0;
+    }
+
+    public async Task<List<string>> RemovePending(IEnumerable<string> emails, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var normalized = emails.Select(e => e.Trim().IdentityNormalize()).ToHashSet();
+        var pending = Entities.Where(x => normalized.Contains(x.Email.ToUpper()) && x.WorkspaceId == workspaceId && x.AcceptedAt == null);
+        var removedEmails = await pending.Select(x => x.Email).Distinct().ToListAsync(cancellationToken);
+
+        await pending.ExecuteDeleteAsync(cancellationToken);
+
+        return removedEmails;
     }
 }

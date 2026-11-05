@@ -12,6 +12,7 @@ using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Entities.Contexts;
+using Netptune.IntegrationTests.TestServices;
 using Netptune.TestData;
 
 using Xunit;
@@ -105,11 +106,18 @@ public sealed class AuthExternalProviderEndpointTests
         var values = cookies?.ToList();
         values.Should().Contain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
         values.Should().Contain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
+
+        var confirmed = await IsEmailConfirmed(email, TestContext.Current.CancellationToken);
+
+        confirmed.Should().BeTrue();
+        Fixture.Emails.SentTo(email).Should().BeEmpty();
     }
 
     [Fact]
     public async Task ProviderLoginRedirect_ShouldRedirectToLinkProvider_WhenEmailBelongsToExistingUser()
     {
+        var existingEmail = SeedData.Users.First().Email!;
+        var emailsBefore = Fixture.Emails.SentTo(existingEmail).Count;
         using var request = new HttpRequestMessage(HttpMethod.Get, "api/auth/github-login-complete");
         request.Headers.Add("x-test-auth-email", SeedData.Users.First().Email);
         request.Headers.Add("x-test-auth-provider-key", $"github-conflict-{Guid.NewGuid():N}");
@@ -136,6 +144,8 @@ public sealed class AuthExternalProviderEndpointTests
             values.Should().NotContain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
             values.Should().NotContain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
         }
+
+        Fixture.Emails.SentTo(existingEmail).Should().HaveCount(emailsBefore);
     }
 
     [Theory]
@@ -156,11 +166,48 @@ public sealed class AuthExternalProviderEndpointTests
 
         var response = await Client.SendAsync(request, cancellationToken);
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        ShouldRedirectToFailedSignIn(response);
 
         var userExists = await UserExists(email, cancellationToken);
 
         userExists.Should().BeFalse();
+        Fixture.Emails.SentTo(email).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ProviderLoginRedirect_ShouldNotOfferALink_WhenAnUnverifiedEmailMatchesAnExistingUser()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        using var request = new HttpRequestMessage(HttpMethod.Get, "api/auth/microsoft-login-complete");
+        request.Headers.Add("x-test-auth-email", SeedData.Users.First().Email);
+        request.Headers.Add("x-test-auth-provider-key", $"microsoft-takeover-{Guid.NewGuid():N}");
+        request.Headers.Add("x-test-auth-email-verified", "false");
+
+        var response = await Client.SendAsync(request, cancellationToken);
+
+        ShouldRedirectToFailedSignIn(response);
+    }
+
+    private static void ShouldRedirectToFailedSignIn(HttpResponseMessage response)
+    {
+        response.StatusCode.Should().Be(HttpStatusCode.Redirect);
+
+        var location = response.Headers.Location!;
+
+        location.GetLeftPart(UriPartial.Path).Should().Be("http://localhost:6400/auth/auth-provider-login");
+        QueryHelpers.ParseQuery(location.Query)["failed"].ToString().Should().Be("true");
+    }
+
+    private async Task<bool> IsEmailConfirmed(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Users
+            .Where(user => user.Email == email)
+            .Select(user => user.EmailConfirmed)
+            .SingleAsync(cancellationToken);
     }
 
     [Fact]

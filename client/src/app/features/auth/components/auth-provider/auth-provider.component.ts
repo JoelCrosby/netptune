@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { routeAfterSignIn } from '@core/auth/route-after-sign-in';
 import { LucideLogIn } from '@lucide/angular';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { SpinnerStatusComponent } from '@static/components/spinner/spinner-status.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 
 @Component({
   selector: 'app-auth-provider',
-  imports: [AuthShellComponent, AuthFormPanelComponent, SpinnerComponent],
+  imports: [AuthShellComponent, AuthFormPanelComponent, SpinnerStatusComponent],
   template: `
     <app-auth-shell>
       <app-auth-form-panel
@@ -17,14 +18,9 @@ import { AuthShellComponent } from '../auth-shell/auth-shell.component';
         i18n-heading="Heading shown while a provider sign-in completes"
         heading="Signing you in"
         [icon]="signInIcon">
-        <div class="flex items-center gap-3.5 py-1" role="status">
-          <app-spinner diameter="22px" />
-          <span
-            class="text-foreground/70 min-w-0 flex-1 text-sm"
-            i18n="Shown while a provider sign-in completes">
-            Completing sign-in with your provider…
-          </span>
-        </div>
+        <app-spinner-status i18n="Shown while a provider sign-in completes">
+          Completing sign-in with your provider…
+        </app-spinner-status>
 
         <p
           panelFootnote
@@ -56,6 +52,6 @@ export class AuthProviderComponent {
     }
 
     // Replaced rather than pushed, so going back does not return to a URL carrying the sign-in.
-    void this.router.navigate(['/workspaces'], { replaceUrl: true });
+    void this.router.navigate(routeAfterSignIn(), { replaceUrl: true });
   }
 }

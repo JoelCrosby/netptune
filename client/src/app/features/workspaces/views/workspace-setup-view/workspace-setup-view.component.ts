@@ -14,9 +14,8 @@ import {
   sourceControlConnectionsResource,
   sourceControlProvidersResource,
 } from '@core/resources/source-control.resource';
-import { userResource } from '@core/resources/user.resource';
+import { membersAndInvitesResource } from '@core/resources/user.resource';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
-import { SessionService } from '@core/services/session.service';
 import { WorkspaceSetupTemplatesService } from '@core/services/workspace-setup-templates.service';
 import { colorDictionary, fallbackColor } from '@core/util/colors/colors';
 import {
@@ -150,7 +149,7 @@ const stepsBeforeSetup = 2;
             <app-setup-team-step
               [invitedCount]="invitedCount()"
               [(invitees)]="invitees"
-              (invited)="users.reload()" />
+              (invited)="membersAndInvites.reload()" />
           }
         }
 
@@ -187,7 +186,6 @@ export class WorkspaceSetupViewComponent {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly session = inject(SessionService);
   private readonly setupTemplates = inject(WorkspaceSetupTemplatesService);
 
   readonly step = input<string>();
@@ -207,7 +205,7 @@ export class WorkspaceSetupViewComponent {
   private readonly providers = sourceControlProvidersResource();
   private readonly connections = sourceControlConnectionsResource();
   protected readonly credentials = workspaceAiCredentialResource();
-  protected readonly users = userResource();
+  protected readonly membersAndInvites = membersAndInvitesResource();
 
   protected readonly invitees = signal<string[]>([]);
 
@@ -245,13 +243,13 @@ export class WorkspaceSetupViewComponent {
     return !!this.credentials.error();
   });
 
+  // Everyone counted except the person setting the workspace up, who is always a member.
   protected readonly invitedCount = computed(() => {
-    const members = this.users.hasValue()
-      ? (this.users.value()?.payload?.items ?? [])
-      : [];
-    const currentUserId = this.session.currentUserId();
+    const totalCount = this.membersAndInvites.hasValue()
+      ? (this.membersAndInvites.value()?.payload?.totalCount ?? 0)
+      : 0;
 
-    return members.filter((member) => member.id !== currentUserId).length;
+    return Math.max(totalCount - 1, 0);
   });
 
   private readonly hasNoProviders = computed(() => {
@@ -424,7 +422,7 @@ export class WorkspaceSetupViewComponent {
   }
 
   private teamState(): WorkspaceFlowOptionalState {
-    if (this.users.error()) {
+    if (this.membersAndInvites.error()) {
       return { key: 'team', summary: couldNotLoad, done: false };
     }
 

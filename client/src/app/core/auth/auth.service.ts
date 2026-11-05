@@ -4,6 +4,7 @@ import { RegisterRequest } from '@app/core/models/register-request';
 import { ClientResponse } from '../models/client-response';
 import { LoginRequest } from '../models/login-request';
 import {
+  AcceptWorkspaceInviteResponse,
   AuthCodeRequest,
   LinkProviderRequest,
   LoginResponse,
@@ -31,10 +32,18 @@ export class AuthService {
     return this.http.post<LoginResponse>('api/auth/confirm-email', request);
   }
 
-  requestPasswordReset(email: string) {
+  requestPasswordReset(email: string, turnstile: string) {
     return this.http.post<ClientResponse>('api/auth/request-password-reset', {
       email,
+      turnstile,
     });
+  }
+
+  acceptWorkspaceInvite(code: string) {
+    return this.http.post<ClientResponse<AcceptWorkspaceInviteResponse>>(
+      'api/auth/accept-workspace-invite',
+      { code }
+    );
   }
 
   resetPassword(request: ResetPasswordRequest) {

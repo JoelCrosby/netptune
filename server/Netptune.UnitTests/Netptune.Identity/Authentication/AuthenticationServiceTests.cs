@@ -18,6 +18,7 @@ using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Authentication;
@@ -51,6 +52,7 @@ public class AuthenticationServiceTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
+    private readonly IWorkspaceUserCache WorkspaceUserCache = Substitute.For<IWorkspaceUserCache>();
     private readonly ICacheProvider Cache = Substitute.For<ICacheProvider>();
     private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
@@ -62,6 +64,8 @@ public class AuthenticationServiceTests
         Configuration["Tokens:ExpireDays"].Returns("7");
         Configuration["Origin"].Returns("https://test.example.com");
         UnitOfWork.InvokeTransaction<LoginResult>();
+        UnitOfWork.InvokeTransaction<bool>();
+        UnitOfWork.InvokeTransaction();
         UnitOfWork.WorkspaceUsers
             .GetWorkspaceIdsForUser(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns([]);
@@ -100,6 +104,7 @@ public class AuthenticationServiceTests
             Identity,
             UnitOfWork,
             WorkspacePermissionCache,
+            WorkspaceUserCache,
             Cache,
             EventRecords,
             Options.Create(new NetptuneAuthenticationOptions { SigningKey = SigningKey }));
@@ -421,7 +426,7 @@ public class AuthenticationServiceTests
         var user = AutoFixtures.AppUser;
         var identities = Substitute.For<IUserSourceControlIdentityRepository>();
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         Identity.GetProviderUsername().Returns("octocat");
         UserManager.FindByLoginAsync("GitHub", providerKey).Returns(user);
@@ -447,7 +452,7 @@ public class AuthenticationServiceTests
         var user = AutoFixtures.AppUser;
         var identities = Substitute.For<IUserSourceControlIdentityRepository>();
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         UserManager.FindByLoginAsync("Google", providerKey).Returns(user);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
@@ -472,7 +477,7 @@ public class AuthenticationServiceTests
         const string providerKey = "github-123";
         var user = AutoFixtures.AppUser;
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         UserManager.FindByLoginAsync(providerScheme, providerKey).Returns(user);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
@@ -500,25 +505,27 @@ public class AuthenticationServiceTests
         const string providerKey = "github-123";
         var user = AutoFixtures.AppUser;
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         Identity.GetUserName().Returns($"{user.Firstname} {user.Lastname}");
         Identity.GetPictureUrl().Returns(user.PictureUrl);
         Identity.IsProviderEmailVerified().Returns(true);
 
-        UserManager.FindByLoginAsync(providerScheme, providerKey)
-            .Returns(null, user);
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
         UserManager.FindByEmailAsync(user.Email!).ReturnsNull();
-        UserManager.FindByEmailAsync(user.Email!).Returns(null, user);
 
         UserManager.CreateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
         UserManager.AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
-        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
-        UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("confirmation-token");
+        UserManager.UpdateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
 
         var result = await Service.LogInViaProvider(providerScheme);
 
         result.IsSuccess.Should().BeTrue();
+        await UserManager.Received(1).CreateAsync(Arg.Is<AppUser>(created => created.EmailConfirmed));
+        await UserManager.DidNotReceive().CreateAsync(Arg.Any<AppUser>(), Arg.Any<string>());
+        await UserManager.Received(1).AddLoginAsync(Arg.Any<AppUser>(), Arg.Is<UserLoginInfo>(login =>
+            login.LoginProvider == providerScheme && login.ProviderKey == providerKey));
+        await Email.DidNotReceive().Send(Arg.Any<SendEmailModel>());
     }
 
     [Fact]
@@ -528,7 +535,7 @@ public class AuthenticationServiceTests
         const string providerKey = "microsoft-123";
         var user = AutoFixtures.AppUser;
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         Identity.IsProviderEmailVerified().Returns(false);
 
@@ -549,10 +556,11 @@ public class AuthenticationServiceTests
         const string providerKey = "github-123";
         var user = AutoFixtures.AppUser;
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         Identity.GetUserName().Returns($"{user.Firstname} {user.Lastname}");
         Identity.GetPictureUrl().Returns(user.PictureUrl);
+        Identity.IsProviderEmailVerified().Returns(true);
 
         UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
         UserManager.FindByEmailAsync(user.Email!).Returns(user);
@@ -585,6 +593,48 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
+    public async Task LogInViaProvider_ShouldNotOfferALink_WhenTheProviderEmailIsUnverified()
+    {
+        const string providerScheme = "Microsoft";
+        const string providerKey = "microsoft-123";
+        var user = AutoFixtures.AppUser;
+
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+        Identity.IsProviderEmailVerified().Returns(false);
+
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
+        UserManager.FindByEmailAsync(user.Email!).Returns(user);
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
+        result.IsLinkRequired.Should().BeFalse();
+        await Cache.DidNotReceive().SetAsync(
+            Arg.Any<string>(),
+            Arg.Any<PendingExternalLogin>(),
+            Arg.Any<DistributedCacheEntryOptions>());
+    }
+
+    [Fact]
+    public async Task LogInViaProvider_ShouldFail_WhenTheProviderSendsNoEmail()
+    {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
+
+        Identity.TryGetCurrentUserEmail().ReturnsNull();
+        Identity.GetProviderKey().Returns(providerKey);
+        Identity.IsProviderEmailVerified().Returns(true);
+
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
+        await UserManager.DidNotReceive().CreateAsync(Arg.Any<AppUser>());
+    }
+
+    [Fact]
     public async Task LogInViaProvider_ShouldRejectServiceAccountFoundByProvider()
     {
         const string providerScheme = "GitHub";
@@ -592,7 +642,7 @@ public class AuthenticationServiceTests
         var user = AutoFixtures.AppUser;
         user.UserType = AppUserType.ServiceAccount;
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         UserManager.FindByLoginAsync(providerScheme, providerKey).Returns(user);
 
@@ -611,7 +661,7 @@ public class AuthenticationServiceTests
         var user = AutoFixtures.AppUser;
         user.UserType = AppUserType.ServiceAccount;
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.TryGetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
         UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
         UserManager.FindByEmailAsync(user.Email!).Returns(user);
@@ -819,7 +869,7 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task Register_ShouldReturnFailure_WhenPasswordIsNullAndNoOAuthProvider()
+    public async Task Register_ShouldReturnFailure_WhenPasswordIsMissing()
     {
         var request = new RegisterRequest
         {
@@ -834,7 +884,7 @@ public class AuthenticationServiceTests
         var result = await Service.Register(request);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be("Invalid request.");
+        result.Message.Should().Be(AppText.ErrorRegisterPasswordRequired);
     }
 
     [Fact]
@@ -854,7 +904,7 @@ public class AuthenticationServiceTests
         var result = await Service.Register(request);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be("User with email already exists");
+        result.Message.Should().Be(AppText.ErrorRegisterEmailTaken);
     }
 
     [Fact]
@@ -874,39 +924,7 @@ public class AuthenticationServiceTests
         var result = await Service.Register(request);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be("Invite code is invalid/expired.");
-    }
-
-    [Fact]
-    public async Task Register_ShouldCreateUserWithoutPassword_WhenOAuthProviderIsSet()
-    {
-        const string providerScheme = "GitHub";
-        const string providerKey = "github-123";
-        var user = AutoFixtures.AppUser;
-        var request = new RegisterRequest
-        {
-            Email = user.Email!,
-            Password = null,
-            Firstname = user.Firstname,
-            Lastname = user.Lastname,
-            OAuthProvider = providerScheme,
-            OAuthProviderKey = providerKey,
-        };
-
-        UserManager.FindByEmailAsync(request.Email).Returns(null, user);
-        UserManager.CreateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
-        UserManager.AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
-        UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
-        SignInManager.SignInAsync(Arg.Any<AppUser>(), false).Returns(Task.CompletedTask);
-        UserManager.UpdateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
-
-        var result = await Service.Register(request);
-
-        result.IsSuccess.Should().BeTrue();
-        await UserManager.Received(1).CreateAsync(Arg.Any<AppUser>());
-        await UserManager.DidNotReceive().CreateAsync(Arg.Any<AppUser>(), Arg.Any<string>());
-        await UserManager.Received(1).AddLoginAsync(Arg.Any<AppUser>(), Arg.Is<UserLoginInfo>(l =>
-            l.LoginProvider == providerScheme && l.ProviderKey == providerKey));
+        result.Message.Should().Be(AppText.ErrorWorkspaceInviteInvalid);
     }
 
     [Fact]
@@ -924,12 +942,15 @@ public class AuthenticationServiceTests
         };
 
         UnitOfWork.WorkspaceInvites.GetByCode("valid-code", Arg.Any<CancellationToken>()).Returns(invite);
+        UnitOfWork.Workspaces.GetAsync(42, true, Arg.Any<CancellationToken>()).Returns(new Workspace { Id = 42, Name = "Acme", Slug = "acme" });
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);
         UserManager.CreateAsync(Arg.Any<AppUser>(), request.Password).Returns(IdentityResult.Success);
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
         SignInManager.SignInAsync(Arg.Any<AppUser>(), false).Returns(Task.CompletedTask);
         UserManager.UpdateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
         UnitOfWork.WorkspaceUsers.AddAsync(Arg.Any<WorkspaceAppUser>(), Arg.Any<CancellationToken>()).Returns(new WorkspaceAppUser());
+        UnitOfWork.WorkspaceInvites.TryAccept("valid-code", Arg.Any<CancellationToken>()).Returns(true);
+        UnitOfWork.Users.IsUserInWorkspace(Arg.Any<string>(), 42, Arg.Any<CancellationToken>()).Returns(false);
         UnitOfWork.CompleteAsync(Arg.Any<CancellationToken>()).Returns(1);
 
         var result = await Service.Register(request);
@@ -937,7 +958,57 @@ public class AuthenticationServiceTests
         result.IsSuccess.Should().BeTrue();
         await UnitOfWork.WorkspaceUsers.Received(1).AddAsync(Arg.Is<WorkspaceAppUser>(w => w.WorkspaceId == 42), Arg.Any<CancellationToken>());
         await UnitOfWork.Received().CompleteAsync(Arg.Any<CancellationToken>());
-        await UnitOfWork.WorkspaceInvites.Received(1).Accept("valid-code", Arg.Any<CancellationToken>());
+        await UnitOfWork.WorkspaceInvites.Received(1).TryAccept("valid-code", Arg.Any<CancellationToken>());
+        await UserManager.Received(1).CreateAsync(Arg.Is<AppUser>(created => created.EmailConfirmed), request.Password);
+        await Email.DidNotReceive().Send(Arg.Any<SendEmailModel>());
+    }
+
+    [Fact]
+    public async Task Register_ShouldReturnFailure_WhenTheInvitedWorkspaceWasDeleted()
+    {
+        var invite = new RelationshipInvite { Email = "invited@example.com", WorkspaceId = 42, Code = "valid-code" };
+        var request = new RegisterRequest
+        {
+            Email = "invited@example.com",
+            Password = "password123",
+            Firstname = "John",
+            Lastname = "Doe",
+            InviteCode = "valid-code",
+        };
+
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", Arg.Any<CancellationToken>()).Returns(invite);
+        UnitOfWork.Workspaces.GetAsync(42, true, Arg.Any<CancellationToken>()).Returns(new Workspace { Id = 42, Name = "Acme", Slug = "acme", IsDeleted = true });
+        UserManager.FindByEmailAsync(request.Email).ReturnsNull();
+        UserManager.CreateAsync(Arg.Any<AppUser>(), request.Password).Returns(IdentityResult.Success);
+
+        var result = await Service.Register(request);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(AppText.ErrorWorkspaceInviteInvalid);
+        await UnitOfWork.WorkspaceInvites.DidNotReceive().TryAccept(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.WorkspaceUsers.DidNotReceive().AddAsync(Arg.Any<WorkspaceAppUser>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Register_ShouldReturnFailure_WhenTheInviteWasSentToAnotherEmail()
+    {
+        var invite = new RelationshipInvite { Email = "invited@example.com", WorkspaceId = 42, Code = "valid-code" };
+        var request = new RegisterRequest
+        {
+            Email = "someone-else@example.com",
+            Password = "password123",
+            Firstname = "John",
+            Lastname = "Doe",
+            InviteCode = "valid-code",
+        };
+
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", Arg.Any<CancellationToken>()).Returns(invite);
+
+        var result = await Service.Register(request);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(AppText.ErrorWorkspaceInviteInvalid);
+        await UserManager.DidNotReceive().CreateAsync(Arg.Any<AppUser>(), Arg.Any<string>());
     }
 
     [Fact]
@@ -969,6 +1040,7 @@ public class AuthenticationServiceTests
     public async Task ConfirmEmail_ShouldReturnSuccess_WhenUserAndCodeAreValid()
     {
         var user = AutoFixtures.AppUser;
+        user.EmailConfirmed = false;
 
         UserManager.FindByIdAsync(user.Id).Returns(user);
         UserManager.ConfirmEmailAsync(user, "valid-code").Returns(IdentityResult.Success);
@@ -993,6 +1065,7 @@ public class AuthenticationServiceTests
     public async Task ConfirmEmail_ShouldReturnFailure_WhenCodeIsInvalid()
     {
         var user = AutoFixtures.AppUser;
+        user.EmailConfirmed = false;
 
         UserManager.FindByIdAsync(user.Id).Returns(user);
         UserManager.ConfirmEmailAsync(user, "bad-code")
@@ -1007,6 +1080,7 @@ public class AuthenticationServiceTests
     public async Task ConfirmEmail_WithAppUser_ShouldReturnSuccess_WhenCodeIsValid()
     {
         var user = AutoFixtures.AppUser;
+        user.EmailConfirmed = false;
 
         UserManager.ConfirmEmailAsync(user, "valid-code").Returns(IdentityResult.Success);
 
@@ -1014,6 +1088,18 @@ public class AuthenticationServiceTests
 
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ConfirmEmail_WithAppUser_ShouldReturnFailure_WhenTheEmailIsAlreadyConfirmed()
+    {
+        var user = AutoFixtures.AppUser;
+        user.EmailConfirmed = true;
+
+        var result = await Service.ConfirmEmail(user, "valid-code");
+
+        result.IsSuccess.Should().BeFalse();
+        await UserManager.DidNotReceive().ConfirmEmailAsync(Arg.Any<AppUser>(), Arg.Any<string>());
     }
 
     [Fact]
@@ -1059,7 +1145,7 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task RequestPasswordReset_ShouldReturnFailure_WhenUserNotFound()
+    public async Task RequestPasswordReset_ShouldReturnTheSameSuccess_WhenUserNotFound()
     {
         var request = new RequestPasswordResetRequest { Email = "missing@example.com" };
 
@@ -1067,7 +1153,7 @@ public class AuthenticationServiceTests
 
         var result = await Service.RequestPasswordReset(request);
 
-        result.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]

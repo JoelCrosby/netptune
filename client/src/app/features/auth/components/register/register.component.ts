@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   apply,
@@ -179,7 +186,7 @@ const PASSWORD_MIN_LENGTH = 8;
         </div>
 
         <app-panel-body divider="top" panelSection>
-          <app-login-providers />
+          <app-login-providers [inviteCode]="invite()?.code" />
         </app-panel-body>
 
         <p class="min-w-0 flex-1" panelFootnote>
@@ -199,6 +206,7 @@ const PASSWORD_MIN_LENGTH = 8;
 export class RegisterComponent {
   private auth = inject(AuthCommandsService);
   private activatedRoute = toSignal(inject(ActivatedRoute).data);
+  private turnstile = viewChild(TurnstileComponent);
 
   protected readonly registerIcon = LucideUserPlus;
   protected readonly inviteIcon = LucideMail;
@@ -315,6 +323,7 @@ export class RegisterComponent {
         inviteCode,
         turnstile,
       });
+      this.turnstile()?.reset();
     });
   }
 

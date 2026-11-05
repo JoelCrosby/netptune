@@ -1231,6 +1231,18 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="ErrorNoPendingInviteFoundEmail" xml:space="preserve">
     <value>Aucune invitation en attente pour cette adresse e-mail</value>
   </data>
+  <data name="ErrorRegisterEmailTaken" xml:space="preserve">
+    <value>Un compte existe déjà avec cette adresse e-mail.</value>
+  </data>
+  <data name="ErrorRegisterPasswordRequired" xml:space="preserve">
+    <value>Saisissez un mot de passe pour créer un compte.</value>
+  </data>
+  <data name="ErrorWorkspaceInviteInvalid" xml:space="preserve">
+    <value>Cette invitation n’est pas valide ou a expiré.</value>
+  </data>
+  <data name="ErrorWorkspaceInviteForAnotherEmail" xml:space="preserve">
+    <value>Cette invitation a été envoyée à une autre adresse e-mail. Connectez-vous avec l’adresse invitée pour l’accepter.</value>
+  </data>
   <data name="ErrorOwnerAssignmentRequiresOwnershipTransfer" xml:space="preserve">
     <value>Attribuer le rôle de propriétaire nécessite un transfert de propriété</value>
   </data>

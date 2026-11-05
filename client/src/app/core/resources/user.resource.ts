@@ -9,13 +9,26 @@ import { MAX_PAGE_SIZE, Page } from '../models/pagination';
 import { WorkspaceRole } from '../enums/workspace-role';
 import { permissionResource, requestFrom } from './permission.resource';
 
+// Members only: pending invitees have no user id, so they cannot be picked or filtered on.
 export const userResource = () => {
   return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>({
     permission: PERMISSIONS.members.read,
     request: () => ({
       url: 'api/users',
-      params: { page: 1, pageSize: MAX_PAGE_SIZE },
+      params: { page: 1, pageSize: MAX_PAGE_SIZE, isPending: false },
     }),
+    refreshOn: ['users'],
+  });
+};
+
+export const membersAndInvitesResource = () => {
+  return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>({
+    permission: PERMISSIONS.members.read,
+    request: () => ({
+      url: 'api/users',
+      params: { page: 1, pageSize: 1 },
+    }),
+    refreshOn: ['users'],
   });
 };
 
@@ -41,7 +54,7 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
 
       return {
         url: 'api/users',
-        params: { page: 1, pageSize: MAX_PAGE_SIZE },
+        params: { page: 1, pageSize: MAX_PAGE_SIZE, isPending: false },
       };
     },
     defaultValue: [],

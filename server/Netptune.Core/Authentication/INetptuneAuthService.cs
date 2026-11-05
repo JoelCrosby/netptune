@@ -18,6 +18,8 @@ public interface INetptuneAuthService
 
     Task<RegisterResult> Register(RegisterRequest model);
 
+    Task<ClientResponse<AcceptWorkspaceInviteResponse>> AcceptWorkspaceInvite(AcceptWorkspaceInviteRequest request);
+
     Task<RegisterResult> ConfirmEmail(string userId, string code);
 
     Task<RegisterResult> ConfirmEmail(AppUser appUser, string code);

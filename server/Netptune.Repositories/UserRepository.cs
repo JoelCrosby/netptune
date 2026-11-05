@@ -212,27 +212,6 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         };
     }
 
-    public async Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default)
-    {
-        var idList = userIds.ToList();
-
-        var defaultPermissions = WorkspaceRolePermissions
-            .GetDefaultPermissions(WorkspaceRole.Member)
-            .ToList();
-
-        var invites = idList.Select(userId => new WorkspaceAppUser
-        {
-            WorkspaceId = workspaceId,
-            UserId = userId,
-            Role = WorkspaceRole.Member,
-            Permissions = defaultPermissions,
-        }).ToList();
-
-        await Context.WorkspaceAppUsers.AddRangeAsync(invites, cancellationToken);
-
-        return invites;
-    }
-
     public async Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default)
     {
         var usersToRemove = await Context.WorkspaceAppUsers

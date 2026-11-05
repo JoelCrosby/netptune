@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -16,6 +17,8 @@ using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;
 
 using Xunit;
+
+using WorkspaceInviteEntity = Netptune.Core.Relationships.WorkspaceInvite;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
@@ -51,6 +54,148 @@ public sealed class AuthEndpointTests
     }
 
     [Fact]
+    public async Task Register_ShouldSendAWelcomeEmail_WhoseLinkConfirmsTheAccount()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var email = await Register(client);
+        var user = await GetUser(email);
+
+        var welcomeEmail = Fixture.Emails.SentTo(email).Should().ContainSingle().Subject;
+        var query = TestEmailService.LinkQuery(welcomeEmail);
+
+        welcomeEmail.Subject.Should().Be(AppText.WelcomeEmailSubject);
+        welcomeEmail.SendTo.DisplayName.Should().Be("Auth Tester");
+        new Uri(welcomeEmail.Link!).AbsolutePath.Should().Be(TestEmailService.ConfirmEmailPath);
+        query["userId"].ToString().Should().Be(user.Id);
+
+        var request = new AuthCodeRequest
+        {
+            userId = query["userId"].ToString(),
+            code = query["code"].ToString(),
+        };
+        var response = await client.PostAsJsonAsync("api/auth/confirm-email", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var confirmedUser = await GetUser(email);
+
+        confirmedUser.EmailConfirmed.Should().BeTrue();
+
+        var reuse = await client.PostAsJsonAsync("api/auth/confirm-email", request, cancellationToken);
+
+        reuse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task Register_ShouldJoinTheWorkspace_WhenUsingTheCodeFromTheInviteEmail()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var email = NewEmail();
+        var inviteRequest = new InviteUsersRequest { EmailAddresses = [email] };
+
+        var inviteResponse = await client.PostAsJsonAsync("api/users/invite", inviteRequest, cancellationToken);
+
+        inviteResponse.EnsureSuccessStatusCode();
+
+        var inviteEmail = Fixture.Emails.SentTo(email, TestEmailService.RegisterPath).Should().ContainSingle().Subject;
+        var inviteCode = TestEmailService.LinkQuery(inviteEmail)["code"].ToString();
+        var registerRequest = new RegisterRequest
+        {
+            Email = email,
+            Password = Password,
+            Firstname = "Invited",
+            Lastname = "Tester",
+            InviteCode = inviteCode,
+            Turnstile = TestTurnstileService.ValidToken,
+        };
+
+        var response = await client.PostAsJsonAsync("api/auth/register", registerRequest, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var user = await GetUser(email);
+        var isMember = await IsWorkspaceMember(user.Id, cancellationToken);
+        var invite = await GetInvite(inviteCode, cancellationToken);
+
+        isMember.Should().BeTrue();
+        invite.AcceptedAt.Should().NotBeNull();
+        user.EmailConfirmed.Should().BeTrue();
+        Fixture.Emails.SentTo(email, TestEmailService.ConfirmEmailPath).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Register_ShouldRejectTheInviteCode_WhenTheEmailDiffersFromTheInvitedAddress()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var invitedEmail = NewEmail();
+        var otherEmail = NewEmail();
+        var inviteRequest = new InviteUsersRequest { EmailAddresses = [invitedEmail] };
+
+        (await client.PostAsJsonAsync("api/users/invite", inviteRequest, cancellationToken)).EnsureSuccessStatusCode();
+
+        var inviteCode = await GetInviteCode(invitedEmail);
+        var registerRequest = new RegisterRequest
+        {
+            Email = otherEmail,
+            Password = Password,
+            Firstname = "Forwarded",
+            Lastname = "Link",
+            InviteCode = inviteCode,
+            Turnstile = TestTurnstileService.ValidToken,
+        };
+
+        var response = await client.PostAsJsonAsync("api/auth/register", registerRequest, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        var invite = await GetInvite(inviteCode, cancellationToken);
+        var userExists = await UserExists(otherEmail, cancellationToken);
+
+        invite.AcceptedAt.Should().BeNull();
+        userExists.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Register_ShouldIgnoreProviderFieldsInTheBody()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var email = NewEmail();
+        var forgedRequest = new
+        {
+            email,
+            firstname = "Forged",
+            lastname = "Provider",
+            oAuthProvider = "GitHub",
+            oAuthProviderKey = "victim-github-id",
+            turnstile = TestTurnstileService.ValidToken,
+        };
+
+        var response = await client.PostAsJsonAsync("api/auth/register", forgedRequest, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        var userExists = await UserExists(email, cancellationToken);
+
+        userExists.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Register_ShouldAcceptAnEmailWithAnApostrophe()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var email = $"o'brien-{Guid.NewGuid():N}@netptune.test";
+
+        var response = await client.PostAsJsonAsync("api/auth/register", NewRegisterRequest(email), cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+    }
+
+    [Fact]
     public async Task Register_ShouldReturnUnauthorized_WhenEmailAlreadyExists()
     {
         var client = CreateClient();
@@ -61,16 +206,22 @@ public sealed class AuthEndpointTests
         var response = await client.PostAsJsonAsync("api/auth/register", NewRegisterRequest(email));
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Fixture.Emails.SentTo(email).Should().ContainSingle();
+
+        var problem = await response.Content.ReadAsStringAsync();
+
+        problem.Should().Contain(AppText.ErrorRegisterEmailTaken);
     }
 
     [Fact]
     public async Task Register_ShouldReturnUnauthorized_WhenTurnstileTokenIsRejected()
     {
         var client = CreateClient();
+        var email = NewEmail();
 
         var response = await client.PostAsJsonAsync("api/auth/register", new RegisterRequest
         {
-            Email = NewEmail(),
+            Email = email,
             Password = Password,
             Firstname = "Auth",
             Lastname = "Tester",
@@ -78,6 +229,7 @@ public sealed class AuthEndpointTests
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Fixture.Emails.SentTo(email).Should().BeEmpty();
     }
 
     [Fact]
@@ -289,36 +441,89 @@ public sealed class AuthEndpointTests
     }
 
     [Fact]
-    public async Task RequestPasswordReset_ShouldReturnCorrectly_WhenTheAccountExists()
+    public async Task RequestPasswordReset_ShouldEmailALinkThatResetsThePassword_WhenTheAccountExists()
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
         var client = CreateClient();
         var email = await Register(client);
+        var user = await GetUser(email);
 
         var response = await client.PostAsJsonAsync(
             "api/auth/request-password-reset",
-            new RequestPasswordResetRequest { Email = email });
+            new RequestPasswordResetRequest { Email = email, Turnstile = TestTurnstileService.ValidToken },
+            cancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>(cancellationToken);
 
         result.IsSuccess.Should().BeTrue();
+
+        var resetEmail = Fixture.Emails.SentTo(email, TestEmailService.ResetPasswordPath).Should().ContainSingle().Subject;
+        var query = TestEmailService.LinkQuery(resetEmail);
+
+        resetEmail.Subject.Should().Be(AppText.PasswordResetEmailSubject);
+        query["userId"].ToString().Should().Be(user.Id);
+
+        const string newPassword = "Emailed-Reset-Password-3!";
+        var resetRequest = new ResetPasswordRequest
+        {
+            UserId = query["userId"].ToString(),
+            Code = query["code"].ToString(),
+            Password = newPassword,
+        };
+
+        var resetResponse = await client.PostAsJsonAsync("api/auth/reset-password", resetRequest, cancellationToken);
+
+        resetResponse.StatusCode.Should().Be(
+            HttpStatusCode.OK,
+            await resetResponse.Content.ReadAsStringAsync(cancellationToken));
+
+        var loginRequest = new TokenRequest
+        {
+            Email = email,
+            Password = newPassword,
+            Turnstile = TestTurnstileService.ValidToken,
+        };
+
+        var login = await client.PostAsJsonAsync("api/auth/login", loginRequest, cancellationToken);
+
+        login.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
-    public async Task RequestPasswordReset_ShouldFail_WhenTheAccountDoesNotExist()
+    public async Task RequestPasswordReset_ShouldAnswerTheSame_WhenTheAccountDoesNotExist()
     {
+        var cancellationToken = TestContext.Current.CancellationToken;
         var client = CreateClient();
+        var request = new RequestPasswordResetRequest
+        {
+            Email = "nobody@netptune.test",
+            Turnstile = TestTurnstileService.ValidToken,
+        };
 
-        var response = await client.PostAsJsonAsync(
-            "api/auth/request-password-reset",
-            new RequestPasswordResetRequest { Email = "nobody@netptune.test" });
+        var response = await client.PostAsJsonAsync("api/auth/request-password-reset", request, cancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>(cancellationToken);
 
-        result.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
+        Fixture.Emails.SentTo("nobody@netptune.test").Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task RequestPasswordReset_ShouldReturnUnauthorized_WhenTurnstileTokenIsRejected()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var client = CreateClient();
+        var email = await Register(client);
+        var request = new RequestPasswordResetRequest { Email = email, Turnstile = "not-a-valid-token" };
+
+        var response = await client.PostAsJsonAsync("api/auth/request-password-reset", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Fixture.Emails.SentTo(email, TestEmailService.ResetPasswordPath).Should().BeEmpty();
     }
 
     [Fact]
@@ -513,6 +718,35 @@ public sealed class AuthEndpointTests
             .Where(invite => invite.Email == email && invite.AcceptedAt == null)
             .Select(invite => invite.Code)
             .SingleAsync();
+    }
+
+    private async Task<bool> IsWorkspaceMember(string userId, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.WorkspaceAppUsers.AnyAsync(
+            member => member.UserId == userId && member.Workspace.Slug == "netptune",
+            cancellationToken);
+    }
+
+    private async Task<bool> UserExists(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Users.AnyAsync(user => user.Email == email, cancellationToken);
+    }
+
+    private async Task<WorkspaceInviteEntity> GetInvite(string code, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.WorkspaceInvites.SingleAsync(invite => invite.Code == code, cancellationToken);
     }
 
     private async Task<string> GenerateToken(string userId, Func<UserManager<AppUser>, AppUser, Task<string>> generate)

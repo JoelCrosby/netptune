@@ -9,6 +9,7 @@ import {
   writePendingProviderLink,
   type PendingProviderLink,
 } from '@core/auth/pending-provider-link';
+import { routeAfterSignIn } from '@core/auth/route-after-sign-in';
 import { SessionService } from '@core/services/session.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -227,7 +228,7 @@ export class LinkProviderComponent {
       this.snackbar.open(
         $localize`:Confirmation shown after linking an external sign-in provider. PROVIDER is the provider name:${pending.provider}:PROVIDER: connected`
       );
-      await this.router.navigate(['/workspaces']);
+      await this.router.navigate(routeAfterSignIn());
     } catch {
       this.error.set(
         $localize`:Error shown when an external provider link cannot be used:This provider link is invalid or expired.`

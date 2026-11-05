@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import {
   disabled,
   email,
@@ -151,6 +151,7 @@ import { LoginProvidersComponent } from './login-providers.component';
 })
 export class LoginComponent {
   private auth = inject(AuthCommandsService);
+  private turnstile = viewChild(TurnstileComponent);
 
   protected readonly alertIcon = LucideCircleAlert;
   protected readonly signInIcon = LucideLogIn;
@@ -202,6 +203,7 @@ export class LoginComponent {
         turnstile,
         keepSignedIn: this.keepSignedIn(),
       });
+      this.turnstile()?.reset();
     });
   }
 

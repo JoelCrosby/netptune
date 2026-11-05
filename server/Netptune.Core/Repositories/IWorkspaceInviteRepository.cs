@@ -11,6 +11,8 @@ public interface IWorkspaceInviteRepository : IRepository<WorkspaceInvite, int>
 
     Task<List<WorkspaceInvite>> GetPendingByEmailRange(IEnumerable<string> emails, int workspaceId, CancellationToken cancellationToken = default);
 
-    Task Accept(string code, CancellationToken cancellationToken = default);
+    Task<bool> TryAccept(string code, CancellationToken cancellationToken = default);
+
+    Task<List<string>> RemovePending(IEnumerable<string> emails, int workspaceId, CancellationToken cancellationToken = default);
 
 }

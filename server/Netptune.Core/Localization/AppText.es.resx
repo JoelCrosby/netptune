@@ -1231,6 +1231,18 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="ErrorNoPendingInviteFoundEmail" xml:space="preserve">
     <value>No hay ninguna invitación pendiente para este correo electrónico</value>
   </data>
+  <data name="ErrorRegisterEmailTaken" xml:space="preserve">
+    <value>Ya existe una cuenta con esta dirección de correo electrónico.</value>
+  </data>
+  <data name="ErrorRegisterPasswordRequired" xml:space="preserve">
+    <value>Introduce una contraseña para crear una cuenta.</value>
+  </data>
+  <data name="ErrorWorkspaceInviteInvalid" xml:space="preserve">
+    <value>Esta invitación no es válida o ha caducado.</value>
+  </data>
+  <data name="ErrorWorkspaceInviteForAnotherEmail" xml:space="preserve">
+    <value>Esta invitación se envió a otra dirección de correo electrónico. Inicia sesión con la dirección invitada para aceptarla.</value>
+  </data>
   <data name="ErrorOwnerAssignmentRequiresOwnershipTransfer" xml:space="preserve">
     <value>Asignar el rol de propietario requiere una transferencia de propiedad</value>
   </data>

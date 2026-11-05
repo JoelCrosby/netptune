@@ -4,7 +4,10 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { UsersService } from '@core/services/users.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { getErrorMessage } from '@core/util/error-message';
-import { unwrapClientResponse } from '@core/util/rxjs-operators';
+import {
+  requireSuccess,
+  unwrapClientResponse,
+} from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, switchMap } from 'rxjs';
@@ -19,7 +22,7 @@ export class UserCommandsService {
   invite(emailAddresses: string[]) {
     this.users
       .inviteUsersToWorkspace(emailAddresses)
-      .pipe(this.reportFailure(INVITE_FAILED))
+      .pipe(requireSuccess(), this.reportFailure(INVITE_FAILED))
       .subscribe(() => {
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Invite(s) Sent`

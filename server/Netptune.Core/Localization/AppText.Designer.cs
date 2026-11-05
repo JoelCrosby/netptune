@@ -4540,6 +4540,24 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An account with this email address already exists..
+        /// </summary>
+        public static string ErrorRegisterEmailTaken {
+            get {
+                return ResourceManager.GetString("ErrorRegisterEmailTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a password to create an account..
+        /// </summary>
+        public static string ErrorRegisterPasswordRequired {
+            get {
+                return ResourceManager.GetString("ErrorRegisterPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Related task keys cannot be empty.
         /// </summary>
         public static string ErrorRelatedTaskKeysCannotEmpty {
@@ -5238,6 +5256,24 @@ namespace Netptune.Core.Localization {
         public static string ErrorWorkspaceAlreadyExportJobsFlightWaitOne {
             get {
                 return ResourceManager.GetString("ErrorWorkspaceAlreadyExportJobsFlightWaitOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This invitation was sent to a different email address. Sign in with the invited address to accept it..
+        /// </summary>
+        public static string ErrorWorkspaceInviteForAnotherEmail {
+            get {
+                return ResourceManager.GetString("ErrorWorkspaceInviteForAnotherEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This invitation is invalid or has expired..
+        /// </summary>
+        public static string ErrorWorkspaceInviteInvalid {
+            get {
+                return ResourceManager.GetString("ErrorWorkspaceInviteInvalid", resourceCulture);
             }
         }
         

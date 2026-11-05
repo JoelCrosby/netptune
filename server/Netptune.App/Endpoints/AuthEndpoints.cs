@@ -69,6 +69,11 @@ public static class AuthEndpoints
             .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
 
         group
+            .MapPost("/accept-workspace-invite", HandleAcceptWorkspaceInvite)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser)
+            .RequireRateLimiting(RateLimiterConfiguration.AuthPolicyName);
+
+        group
             .MapPost("/refresh", HandleRefresh)
             .AllowAnonymous()
             .RequireRateLimiting(RateLimiterConfiguration.RefreshPolicyName);
@@ -243,11 +248,21 @@ public static class AuthEndpoints
 
     public static async Task<IResult> HandleRequestPasswordReset(
         INetptuneAuthService authenticationService,
+        ITurnstileService turnstileService,
+        HttpContext context,
         RequestPasswordResetRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email))
         {
             return Results.BadRequest();
+        }
+
+        var remoteIp = context.GetRemoteIpAddress();
+        var isHuman = await turnstileService.ValidateAsync(request.Turnstile, remoteIp);
+
+        if (!isHuman)
+        {
+            return Results.Unauthorized();
         }
 
         var result = await authenticationService.RequestPasswordReset(request);
@@ -328,6 +343,17 @@ public static class AuthEndpoints
         var result = await authenticationService.ValidateInviteCode(code);
 
         if (result is null) return Results.Unauthorized();
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleAcceptWorkspaceInvite(
+        INetptuneAuthService authenticationService,
+        AcceptWorkspaceInviteRequest request)
+    {
+        var result = await authenticationService.AcceptWorkspaceInvite(request);
+
+        if (!result.IsSuccess) return Results.BadRequest(result);
 
         return Results.Ok(result);
     }
@@ -456,7 +482,12 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess || result.Ticket is null)
         {
-            return Results.Unauthorized();
+            // This is a top-level browser navigation, so a bare 401 would strand the user on the API host.
+            var failedRedirect = hosting.ClientOrigin
+                .AppendPathSegments("/auth/auth-provider-login")
+                .SetQueryParam("failed", "true");
+
+            return Results.Redirect(failedRedirect);
         }
 
         CookieHelper.SetAuthCookies(context, result.Ticket);

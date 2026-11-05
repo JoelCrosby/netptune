@@ -33,3 +33,7 @@ export interface WorkspaceInvite {
   code?: string;
   success: boolean;
 }
+
+export interface AcceptWorkspaceInviteResponse {
+  workspaceSlug: string;
+}

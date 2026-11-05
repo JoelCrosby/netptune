@@ -56,6 +56,10 @@ public static class AuthenticationServiceCollectionExtensions
             options.Password.RequireLowercase = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
+
+            // User names are email addresses, which legitimately carry characters such as ' and + that
+            // Identity's default user name character set rejects.
+            options.User.AllowedUserNameCharacters = string.Empty;
         });
 
         services.AddAuthentication(options =>

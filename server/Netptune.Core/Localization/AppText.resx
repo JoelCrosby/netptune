@@ -1636,6 +1636,22 @@ Please confirm your email address with the following link.</value>
     <value>no pending invite found for this email</value>
     <comment>Error shown when a request cannot be completed</comment>
   </data>
+  <data name="ErrorRegisterEmailTaken" xml:space="preserve">
+    <value>An account with this email address already exists.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorRegisterPasswordRequired" xml:space="preserve">
+    <value>Enter a password to create an account.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorWorkspaceInviteInvalid" xml:space="preserve">
+    <value>This invitation is invalid or has expired.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
+  <data name="ErrorWorkspaceInviteForAnotherEmail" xml:space="preserve">
+    <value>This invitation was sent to a different email address. Sign in with the invited address to accept it.</value>
+    <comment>Error shown when a request cannot be completed</comment>
+  </data>
   <data name="ErrorOwnerAssignmentRequiresOwnershipTransfer" xml:space="preserve">
     <value>owner assignment requires an ownership transfer</value>
     <comment>Error shown when a request cannot be completed</comment>

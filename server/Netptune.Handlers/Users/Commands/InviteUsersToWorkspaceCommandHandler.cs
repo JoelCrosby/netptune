@@ -1,9 +1,8 @@
 using System.Globalization;
 
-using Flurl;
-
 using Mediator;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
@@ -51,7 +50,10 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
     public async ValueTask<ClientResponse<InviteUserResponse>> Handle(InviteUsersToWorkspaceCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var emailList = request.Emails.Select(e => e.Trim().IdentityNormalize()).ToHashSet();
+        var emailList = request.Emails
+            .Select(email => email.Trim().Normalize().ToLowerInvariant())
+            .Where(email => email.Length > 0)
+            .ToHashSet();
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
         if (workspace is null) return ClientResponse<InviteUserResponse>.Failed(AppText.ErrorWorkspaceNotFound);
@@ -61,24 +63,31 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
             return ClientResponse<InviteUserResponse>.Failed(AppText.ErrorNoEmailAddressesProvided);
         }
 
-        var users = await UnitOfWork.Users.GetByEmailRange(emailList, true, cancellationToken);
-        var userIds = users.ConvertAll(user => user.Id);
-        var existingUsers = await UnitOfWork.Users.IsUserInWorkspaceRange(userIds, workspace.Id, cancellationToken);
-        var newUserIds = userIds.Except(existingUsers.Select(x => x.Id)).ToHashSet();
+        var matchingUsers = await UnitOfWork.Users.GetByEmailRange(emailList, true, cancellationToken);
+        var accounts = matchingUsers.Where(user => user.UserType == AppUserType.User).ToList();
+        var serviceAccountEmails = matchingUsers
+            .Where(user => user.UserType != AppUserType.User)
+            .Select(user => user.Email!)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var accountIds = accounts.ConvertAll(user => user.Id);
+        var members = await UnitOfWork.Users.IsUserInWorkspaceRange(accountIds, workspace.Id, cancellationToken);
+        var memberEmails = members
+            .Select(user => user.Email!)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        await UnitOfWork.Users.InviteUsersToWorkspace(newUserIds, workspace.Id, cancellationToken);
-
-        var existingUserEmails = existingUsers.Select(user => user.Email!.IdentityNormalize()).ToHashSet();
-        var usersToInvite = emailList.Where(
-            email => !existingUserEmails.Contains(email)).Select(e => e.ToLowerInvariant()).ToHashSet();
+        // Existing accounts are invited rather than added outright: an account only proves its owner
+        // controls the address once they redeem the code that was emailed to it.
+        var emailsToInvite = emailList
+            .Where(email => !memberEmails.Contains(email) && !serviceAccountEmails.Contains(email))
+            .ToHashSet();
 
         var currentUserId = Identity.GetCurrentUserId();
 
-        var invites = await CreateOrRefreshInvites(usersToInvite, workspace.Id, currentUserId, cancellationToken);
+        var invites = await CreateOrRefreshInvites(emailsToInvite, workspace.Id, currentUserId, cancellationToken);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var localesByEmail = await ReadLocalesByEmail(users, cancellationToken);
+        var localesByEmail = await ReadLocalesByEmail(accounts, cancellationToken);
 
         await SendUserInviteEmails(invites, workspace, localesByEmail);
 
@@ -88,17 +97,19 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
             options.WorkspaceId = workspace.Id;
             options.EntityType = EntityType.Workspace;
             options.Type = ActivityType.Invite;
-            options.Meta = new UserMembershipActivityMeta { Emails = usersToInvite.ToList() };
+            options.Meta = new UserMembershipActivityMeta { Emails = emailsToInvite.ToList() };
         });
 
-        return new InviteUserResponse { Emails = usersToInvite.ToList() };
+        return new InviteUserResponse { Emails = emailsToInvite.ToList() };
     }
 
     private async Task<List<WorkspaceInvite>> CreateOrRefreshInvites(IEnumerable<string> emails, int workspaceId, string? invitedByUserId, CancellationToken cancellationToken)
     {
         var emailList = emails.ToList();
         var existing = await UnitOfWork.WorkspaceInvites.GetPendingByEmailRange(emailList, workspaceId, cancellationToken);
-        var existingByEmail = existing.ToDictionary(x => x.Email);
+        var existingByEmail = existing
+            .GroupBy(invite => invite.Email, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
 
         var now = DateTime.UtcNow;
         var expiry = now.AddDays(7);
@@ -124,7 +135,7 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
 
         await UnitOfWork.WorkspaceInvites.AddRangeAsync(newInvites, cancellationToken);
 
-        return [.. existing, .. newInvites];
+        return [.. existingByEmail.Values, .. newInvites];
     }
 
     private async Task<Dictionary<string, string>> ReadLocalesByEmail(
@@ -149,13 +160,10 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
         var inviterLocale = CultureInfo.CurrentUICulture.Name;
         var tasks = invites.Select(invite =>
         {
-            var link = Hosting.ClientOrigin
-                .AppendPathSegments("auth", "register")
-                .SetQueryParam("code", invite.Code, true)
-                .SetQueryParam("refer", "invite");
-            var locale = localesByEmail.GetValueOrDefault(invite.Email) ?? inviterLocale;
+            var hasAccount = localesByEmail.TryGetValue(invite.Email, out var recipientLocale);
+            var link = WorkspaceInviteLinks.Create(Hosting.ClientOrigin, invite.Code, hasAccount);
 
-            using var culture = CultureScope.Use(locale);
+            using var culture = CultureScope.Use(recipientLocale ?? inviterLocale);
 
             var email = EmailMessages.WorkspaceInvite(invite.Email, workspace.Name, link);
 

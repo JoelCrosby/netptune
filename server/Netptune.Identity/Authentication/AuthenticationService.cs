@@ -23,7 +23,9 @@ using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Extensions;
+using Netptune.Core.Localization;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
@@ -34,6 +36,7 @@ using Netptune.Core.SourceControl;
 using Netptune.Core.UnitOfWork;
 
 using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
+using WorkspaceInviteEntity = Netptune.Core.Relationships.WorkspaceInvite;
 
 namespace Netptune.Identity.Authentication;
 
@@ -46,6 +49,7 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IWorkspacePermissionCache WorkspacePermissionCache;
+    private readonly IWorkspaceUserCache WorkspaceUserCache;
     private readonly ICacheProvider Cache;
     private readonly IEventRecordWriter EventRecords;
 
@@ -63,6 +67,7 @@ public class NetptuneAuthService : INetptuneAuthService
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
         IWorkspacePermissionCache workspacePermissionCache,
+        IWorkspaceUserCache workspaceUserCache,
         ICacheProvider cache,
         IEventRecordWriter eventRecords,
         IOptions<NetptuneAuthenticationOptions> authenticationOptions)
@@ -74,6 +79,7 @@ public class NetptuneAuthService : INetptuneAuthService
         Identity = identity;
         UnitOfWork = unitOfWork;
         WorkspacePermissionCache = workspacePermissionCache;
+        WorkspaceUserCache = workspaceUserCache;
         Cache = cache;
         EventRecords = eventRecords;
 
@@ -155,13 +161,25 @@ public class NetptuneAuthService : INetptuneAuthService
 
     public async Task<LoginResult> LogInViaProvider(string providerScheme)
     {
-        var email = Identity.GetCurrentUserEmail();
         var providerKey = Identity.GetProviderKey();
+        var email = Identity.TryGetCurrentUserEmail() ?? string.Empty;
 
         var user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
 
         if (user is null)
         {
+            // An unverified provider address proves nothing about who owns it, so it must neither
+            // create an account nor offer to link onto the account that already uses it.
+            var hasEmail = !string.IsNullOrWhiteSpace(email);
+            var isEmailVerified = hasEmail && Identity.IsProviderEmailVerified();
+
+            if (!isEmailVerified)
+            {
+                await LogAuthenticationEvent(null, email, providerScheme, succeeded: false);
+
+                return LoginResult.Failed("External login failed.");
+            }
+
             var existingByEmail = await UserManager.FindByEmailAsync(email);
 
             if (existingByEmail is not null)
@@ -179,35 +197,8 @@ public class NetptuneAuthService : INetptuneAuthService
                     providerKey,
                     email);
             }
-            else
-            {
-                var isEmailVerified = Identity.IsProviderEmailVerified();
 
-                if (!isEmailVerified)
-                {
-                    await LogAuthenticationEvent(null, email, providerScheme, succeeded: false);
-
-                    return LoginResult.Failed("External login failed.");
-                }
-
-                var name = Identity.GetUserName();
-                var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-
-                var registerRequest = new RegisterRequest
-                {
-                    Email = email,
-                    Firstname = nameParts.ElementAtOrDefault(0) ?? string.Empty,
-                    Lastname = nameParts.ElementAtOrDefault(1) ?? string.Empty,
-                    PictureUrl = Identity.GetPictureUrl(),
-                    Password = null,
-                    OAuthProvider = providerScheme,
-                    OAuthProviderKey = providerKey,
-                };
-
-                await Register(registerRequest);
-
-                user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
-            }
+            user = await RegisterExternalUser(providerScheme, providerKey, email);
         }
 
         if (!IsInteractiveUser(user))
@@ -411,88 +402,264 @@ public class NetptuneAuthService : INetptuneAuthService
 
     public async Task<RegisterResult> Register(RegisterRequest model)
     {
-        async Task<WorkspaceInvite?> GetWorkspaceInvite()
+        if (string.IsNullOrEmpty(model.Password))
         {
-            if (model.InviteCode is null) return null;
-
-            return await ValidateInviteCode(model.InviteCode);
+            return RegisterResult.Failed(AppText.ErrorRegisterPasswordRequired);
         }
 
-        var invite = await GetWorkspaceInvite();
+        var invite = model.InviteCode is null ? null : await UnitOfWork.WorkspaceInvites.GetByCode(model.InviteCode);
+        var hasInviteCode = model.InviteCode is not null;
+        var isInviteForEmail = invite is not null && IsSameEmail(invite.Email, model.Email);
 
-        if (model.InviteCode is not null && invite is null)
+        if (hasInviteCode && !isInviteForEmail)
         {
-            return RegisterResult.Failed("Invite code is invalid/expired.");
+            return RegisterResult.Failed(AppText.ErrorWorkspaceInviteInvalid);
         }
 
-        if (model.Password is null && model.OAuthProvider is null)
+        var creation = await CreateUser(new NewUser
         {
-            return RegisterResult.Failed("Invalid request.");
+            Email = model.Email,
+            Firstname = model.Firstname,
+            Lastname = model.Lastname,
+            Password = model.Password,
+            // The invite code only ever went to the invited inbox, so redeeming it proves the address.
+            IsEmailVerified = invite is not null,
+            Invite = invite,
+        });
+
+        if (creation.User is null)
+        {
+            return RegisterResult.Failed(creation.Error);
         }
 
-        var existingUser = await UserManager.FindByEmailAsync(model.Email);
+        var user = creation.User;
+
+        await LogNewlyRegisteredUserIn(user);
+
+        if (!user.EmailConfirmed)
+        {
+            await SendWelcomeEmail(user);
+        }
+
+        var ticket = await GenerateTicket(user);
+
+        return RegisterResult.Success(ticket);
+    }
+
+    private async Task<AppUser?> RegisterExternalUser(string providerScheme, string providerKey, string email)
+    {
+        var name = Identity.GetUserName();
+        var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+
+        var creation = await CreateUser(new NewUser
+        {
+            Email = email,
+            Firstname = nameParts.ElementAtOrDefault(0) ?? string.Empty,
+            Lastname = nameParts.ElementAtOrDefault(1) ?? string.Empty,
+            PictureUrl = Identity.GetPictureUrl(),
+            IsEmailVerified = true,
+            Login = new UserLoginInfo(providerScheme, providerKey, providerScheme),
+        });
+
+        if (creation.User is null)
+        {
+            return null;
+        }
+
+        await LogNewlyRegisteredUserIn(creation.User);
+
+        return creation.User;
+    }
+
+    private async Task<UserCreation> CreateUser(NewUser newUser)
+    {
+        var existingUser = await UserManager.FindByEmailAsync(newUser.Email);
 
         if (existingUser is not null)
         {
-            return RegisterResult.Failed("User with email already exists");
+            return UserCreation.Failed(AppText.ErrorRegisterEmailTaken);
         }
 
         var user = new AppUser
         {
-            Email = model.Email,
-            UserName = model.Email,
-            Firstname = model.Firstname,
-            Lastname = model.Lastname,
-            PictureUrl = model.PictureUrl,
+            Email = newUser.Email,
+            UserName = newUser.Email,
+            Firstname = newUser.Firstname,
+            Lastname = newUser.Lastname,
+            PictureUrl = newUser.PictureUrl,
+            EmailConfirmed = newUser.IsEmailVerified,
         };
 
-        var result = model.OAuthProvider is not null
-            ? await UserManager.CreateAsync(user)
-            : await UserManager.CreateAsync(user, model.Password!);
+        UserCreation? creation = null;
 
-        if (invite is not null)
+        try
         {
-            var permissions = WorkspaceRolePermissions
-                .GetDefaultPermissions(WorkspaceRole.Member)
-                .ToList();
-
-            await UnitOfWork.WorkspaceUsers.AddAsync(new WorkspaceAppUser
+            await UnitOfWork.Transaction(async () =>
             {
-                UserId = user.Id,
-                WorkspaceId = invite.WorkspaceId,
-                Role = WorkspaceRole.Member,
-                Permissions = permissions,
-            }, CancellationToken.None);
+                var created = newUser.Password is null
+                    ? await UserManager.CreateAsync(user)
+                    : await UserManager.CreateAsync(user, newUser.Password);
 
-            await UnitOfWork.WorkspaceInvites.Accept(model.InviteCode!, CancellationToken.None);
+                if (!created.Succeeded)
+                {
+                    creation = UserCreation.Failed(DescribeErrors(created));
 
-            await UnitOfWork.CompleteAsync();
+                    return;
+                }
+
+                if (newUser.Login is not null)
+                {
+                    var linked = await UserManager.AddLoginAsync(user, newUser.Login);
+
+                    if (!linked.Succeeded)
+                    {
+                        throw new RolledBackException(DescribeErrors(linked));
+                    }
+                }
+
+                if (newUser.Invite is not null)
+                {
+                    var workspace = await JoinInvitedWorkspace(user, newUser.Invite);
+
+                    if (workspace is null)
+                    {
+                        throw new RolledBackException(AppText.ErrorWorkspaceInviteInvalid);
+                    }
+                }
+
+                creation = UserCreation.Success(user);
+            });
         }
-
-        if (!result.Succeeded)
+        catch (Exception exception) when (AsRolledBack(exception) is { } rolledBack)
         {
-            return RegisterResult.Failed(string.Join(", ", result.Errors));
+            return UserCreation.Failed(rolledBack.Message);
         }
-
-        var appUser = await UserManager.FindByEmailAsync(model.Email);
-
-        if (appUser is null)
+        catch (UniqueConstraintException)
         {
-            throw new InvalidOperationException("Invalid request.");
+            return UserCreation.Failed(AppText.ErrorRegisterEmailTaken);
         }
 
-        if (model.OAuthProvider is not null && model.OAuthProviderKey is not null)
+        return creation!;
+    }
+
+    private async Task<Workspace?> JoinInvitedWorkspace(AppUser user, WorkspaceInviteEntity invite)
+    {
+        var workspace = await UnitOfWork.Workspaces.GetAsync(invite.WorkspaceId, true);
+
+        if (workspace is null || workspace.IsDeleted)
         {
-            var loginInfo = new UserLoginInfo(model.OAuthProvider, model.OAuthProviderKey, model.OAuthProvider);
-            await UserManager.AddLoginAsync(appUser, loginInfo);
+            return null;
         }
 
-        await LogNewlyRegisteredUserIn(appUser);
-        await SendWelcomeEmail(appUser);
+        var accepted = await UnitOfWork.WorkspaceInvites.TryAccept(invite.Code);
 
-        var ticket = await GenerateTicket(appUser);
+        if (!accepted)
+        {
+            return null;
+        }
 
-        return RegisterResult.Success(ticket);
+        var isMember = await UnitOfWork.Users.IsUserInWorkspace(user.Id, invite.WorkspaceId);
+
+        if (isMember)
+        {
+            return workspace;
+        }
+
+        var permissions = WorkspaceRolePermissions
+            .GetDefaultPermissions(WorkspaceRole.Member)
+            .ToList();
+
+        await UnitOfWork.WorkspaceUsers.AddAsync(new WorkspaceAppUser
+        {
+            UserId = user.Id,
+            WorkspaceId = invite.WorkspaceId,
+            Role = WorkspaceRole.Member,
+            Permissions = permissions,
+        });
+
+        await UnitOfWork.CompleteAsync();
+
+        return workspace;
+    }
+
+    public async Task<ClientResponse<AcceptWorkspaceInviteResponse>> AcceptWorkspaceInvite(AcceptWorkspaceInviteRequest request)
+    {
+        var user = await UserManager.FindByIdAsync(Identity.GetCurrentUserId());
+        var invite = await UnitOfWork.WorkspaceInvites.GetByCode(request.Code);
+
+        if (!IsInteractiveUser(user) || invite is null)
+        {
+            return ClientResponse<AcceptWorkspaceInviteResponse>.Failed(AppText.ErrorWorkspaceInviteInvalid);
+        }
+
+        var isInviteForUser = IsSameEmail(invite.Email, user.Email);
+
+        if (!isInviteForUser)
+        {
+            return ClientResponse<AcceptWorkspaceInviteResponse>.Failed(AppText.ErrorWorkspaceInviteForAnotherEmail);
+        }
+
+        Workspace? workspace;
+
+        try
+        {
+            workspace = await UnitOfWork.Transaction(async () =>
+            {
+                var joined = await JoinInvitedWorkspace(user, invite);
+
+                if (joined is null || user.EmailConfirmed)
+                {
+                    return joined;
+                }
+
+                user.EmailConfirmed = true;
+
+                var updated = await UserManager.UpdateAsync(user);
+
+                if (!updated.Succeeded)
+                {
+                    throw new RolledBackException(DescribeErrors(updated));
+                }
+
+                return joined;
+            });
+        }
+        catch (Exception exception) when (AsRolledBack(exception) is not null)
+        {
+            workspace = null;
+        }
+
+        if (workspace is null)
+        {
+            return ClientResponse<AcceptWorkspaceInviteResponse>.Failed(AppText.ErrorWorkspaceInviteInvalid);
+        }
+
+        var cacheKey = new WorkspaceUserKey { UserId = user.Id, WorkspaceKey = workspace.Slug };
+
+        WorkspaceUserCache.Remove(cacheKey);
+        WorkspacePermissionCache.Remove(cacheKey);
+
+        return new AcceptWorkspaceInviteResponse { WorkspaceSlug = workspace.Slug };
+    }
+
+    private static bool IsSameEmail(string inviteEmail, string? email)
+    {
+        if (email is null)
+        {
+            return false;
+        }
+
+        return inviteEmail.Trim().IdentityNormalize() == email.Trim().IdentityNormalize();
+    }
+
+    private static RolledBackException? AsRolledBack(Exception exception)
+    {
+        return exception as RolledBackException ?? exception.InnerException as RolledBackException;
+    }
+
+    private static string DescribeErrors(IdentityResult result)
+    {
+        return string.Join(" ", result.Errors.Select(error => error.Description));
     }
 
     public async Task<RegisterResult> ConfirmEmail(string userId, string code)
@@ -508,6 +675,12 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         if (!IsInteractiveUser(user)) return RegisterResult.Failed();
 
+        // A confirm link signs its holder in, so it must stop working once it has done its one job.
+        if (user.EmailConfirmed)
+        {
+            return RegisterResult.Failed();
+        }
+
         var result = await UserManager.ConfirmEmailAsync(user, code);
 
         if (!result.Succeeded) return RegisterResult.Failed();
@@ -521,7 +694,8 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var user = await UserManager.FindByEmailAsync(request.Email);
 
-        if (!IsInteractiveUser(user)) return ClientResponse.Failed();
+        // The same answer either way, so the form cannot be used to find out who has an account.
+        if (!IsInteractiveUser(user)) return ClientResponse.Success;
 
         var resetCode = await UserManager.GeneratePasswordResetTokenAsync(user);
 
@@ -778,4 +952,36 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         return user?.UserType == AppUserType.User;
     }
+
+    private sealed record NewUser
+    {
+        public required string Email { get; init; }
+
+        public required string Firstname { get; init; }
+
+        public required string Lastname { get; init; }
+
+        public string? Password { get; init; }
+
+        public string? PictureUrl { get; init; }
+
+        public bool IsEmailVerified { get; init; }
+
+        public UserLoginInfo? Login { get; init; }
+
+        public WorkspaceInviteEntity? Invite { get; init; }
+    }
+
+    private sealed record UserCreation
+    {
+        public AppUser? User { get; init; }
+
+        public string? Error { get; init; }
+
+        public static UserCreation Success(AppUser user) => new() { User = user };
+
+        public static UserCreation Failed(string error) => new() { Error = error };
+    }
+
+    private sealed class RolledBackException(string message) : Exception(message);
 }

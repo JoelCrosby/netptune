@@ -6,4 +6,6 @@ public record RequestPasswordResetRequest
 {
     [Required]
     public string Email { get; set; } = null!;
+
+    public string? Turnstile { get; init; }
 }

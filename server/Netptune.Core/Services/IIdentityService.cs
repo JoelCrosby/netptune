@@ -14,6 +14,8 @@ public interface IIdentityService
 
     string GetCurrentUserEmail();
 
+    string? TryGetCurrentUserEmail();
+
     string GetUserName();
 
     string? GetPictureUrl();

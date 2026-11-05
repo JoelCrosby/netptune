@@ -51,6 +51,10 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'accept-invite',
+    loadComponent: () => import('./components/accept-invite/accept-invite.component').then((m) => m.AcceptInviteComponent),
+  },
+  {
     path: 'link-provider',
     loadComponent: () => import('./components/link-provider/link-provider.component').then((m) => m.LinkProviderComponent),
   },

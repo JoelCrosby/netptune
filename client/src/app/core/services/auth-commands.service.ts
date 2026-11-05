@@ -3,16 +3,16 @@ import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import {
-  clearPendingProviderLink,
-  hasPendingProviderLink,
-} from '@core/auth/pending-provider-link';
+import { clearPendingProviderLink } from '@core/auth/pending-provider-link';
+import { clearPendingWorkspaceInvite } from '@core/auth/pending-workspace-invite';
+import { routeAfterSignIn } from '@core/auth/route-after-sign-in';
 import { clearPendingSourceControlConnect } from '@core/auth/pending-source-control-connect';
 import { reloadToLogin } from '@core/auth/reload-to-login';
 import { LoginRequest } from '@core/models/login-request';
 import { RegisterRequest } from '@core/models/register-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { AuthCodeRequest, ResetPasswordRequest } from '@core/models/session';
+import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
@@ -62,16 +62,7 @@ export class AuthCommandsService {
       )
       .subscribe((user) => {
         this.session.establish(user);
-
-        // Linking an external provider bounces through login, and the link has to
-        // be finished before the workspace it was started from is any use.
-        if (hasPendingProviderLink()) {
-          void this.router.navigate(['/auth/link-provider']);
-
-          return;
-        }
-
-        void this.router.navigate(['/workspaces']);
+        void this.router.navigate(routeAfterSignIn());
       });
   }
 
@@ -85,12 +76,20 @@ export class AuthCommandsService {
     this.authService
       .register(request)
       .pipe(
-        catchError(() => EMPTY),
+        catchError((error: unknown) => {
+          this.snackbar.error(getErrorMessage(error, REGISTER_FAILED));
+
+          return EMPTY;
+        }),
         finalize(() => this.registering.set(false))
       )
       .subscribe((user) => {
+        if (request.inviteCode) {
+          clearPendingWorkspaceInvite();
+        }
+
         this.session.establish(user);
-        void this.router.navigate(['/workspaces']);
+        void this.router.navigate(routeAfterSignIn());
       });
   }
 
@@ -119,14 +118,18 @@ export class AuthCommandsService {
       });
   }
 
-  requestPasswordReset(email: string) {
+  requestPasswordReset(email: string, turnstile: string) {
     this.requestingPasswordReset.set(true);
 
     this.authService
-      .requestPasswordReset(email)
+      .requestPasswordReset(email, turnstile)
       .pipe(
         unwrapClientResponse(),
-        catchError(() => EMPTY),
+        catchError((error: unknown) => {
+          this.snackbar.error(getErrorMessage(error, PASSWORD_RESET_FAILED));
+
+          return EMPTY;
+        }),
         finalize(() => this.requestingPasswordReset.set(false))
       )
       .subscribe(() => this.passwordResetSentTo.set(email));
@@ -174,6 +177,7 @@ export class AuthCommandsService {
 
   signOut() {
     clearPendingProviderLink();
+    clearPendingWorkspaceInvite();
     clearPendingSourceControlConnect();
     this.endSession();
     reloadToLogin();
@@ -200,6 +204,10 @@ export class AuthCommandsService {
       .subscribe((user) => this.session.setUser(user));
   }
 }
+
+const REGISTER_FAILED = $localize`:Error shown when an account could not be created and the server gave no reason:Your account could not be created. Please try again.`;
+
+const PASSWORD_RESET_FAILED = $localize`:Error shown when a password reset email could not be requested:The reset link could not be sent. Please try again.`;
 
 const LOGOUT_CONFIRMATION: ConfirmDialogOptions = {
   acceptLabel: $localize`:Confirms the action in a dialog:Logout`,

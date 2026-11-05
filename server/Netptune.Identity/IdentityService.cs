@@ -37,6 +37,8 @@ public class IdentityService : IIdentityService
 
     public string GetCurrentUserEmail() => GetClaimValue(ClaimTypes.Email);
 
+    public string? TryGetCurrentUserEmail() => TryGetClaimValue(ClaimTypes.Email, out var email) ? email : null;
+
     public string GetUserName()
     {
         if (TryGetClaimValue("urn:github:name", out var githubUserName)) return githubUserName;

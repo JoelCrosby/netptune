@@ -51,6 +51,31 @@ public class ResendWorkspaceInviteCommandHandlerTests
     }
 
     [Fact]
+    public async Task ResendInvite_ShouldEmailTheInvitedAddress_AsItWasStored()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+        var invite = new WorkspaceInvite { Email = "user@email.com", WorkspaceId = workspace.Id, Code = "existingcode", ExpiresAt = DateTime.UtcNow.AddDays(7) };
+        var sent = new List<SendEmailModel>();
+
+        Email
+            .When(service => service.Send(Arg.Any<SendEmailModel>()))
+            .Do(call => sent.Add(call.Arg<SendEmailModel>()));
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        Hosting.ClientOrigin.Returns("https://test.example.com");
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
+        UnitOfWork.WorkspaceInvites.GetPendingByEmail(Arg.Any<string>(), workspace.Id, Arg.Any<CancellationToken>()).Returns(invite);
+
+        await Handler.Handle(new ResendWorkspaceInviteCommand("User@Email.com"), TestContext.Current.CancellationToken);
+
+        var email = sent.Should().ContainSingle().Subject;
+
+        email.SendTo.Address.Should().Be("user@email.com");
+        email.Name.Should().Be("user@email.com");
+        email.Link.Should().Contain($"code={invite.Code}");
+    }
+
+    [Fact]
     public async Task ResendInvite_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
         const string workspaceKey = "workspaceKey";

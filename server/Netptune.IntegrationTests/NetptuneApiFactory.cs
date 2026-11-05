@@ -15,6 +15,7 @@ using Netptune.Api.Configuration;
 using Netptune.Ai.Providers;
 using Netptune.App.Utility;
 using Netptune.Core.Authorization;
+using Netptune.Core.Messaging;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.SourceControl;
@@ -64,6 +65,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
     public IServiceProvider ApiServices => ApiApplicationFactory.Services;
 
+    public TestEmailService Emails => Services.GetRequiredService<TestEmailService>();
+
     public NetptuneFixture()
     {
         CacheContainer.StartAsync().Wait();
@@ -102,6 +105,10 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
                     services.Replace<IStorageService, TestStorageService>();
                     services.Replace<ITurnstileService, TestTurnstileService>();
+
+                    services.AddSingleton<TestEmailService>();
+                    services.RemoveAll<IEmailService>();
+                    services.AddSingleton<IEmailService>(provider => provider.GetRequiredService<TestEmailService>());
 
                     services.AddSingleton<TestAiChatScript>();
                     services.AddSingleton<TestAiChatProvider>();

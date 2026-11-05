@@ -1,5 +1,5 @@
 import { RouterLink } from '@angular/router';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import {
   disabled,
   email,
@@ -19,6 +19,8 @@ import { SupportingTextComponent } from '@static/components/supporting-text.comp
 import { AuthFieldComponent } from '../auth-field/auth-field.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 import { AuthShellComponent } from '../auth-shell/auth-shell.component';
+import { TurnstileComponent } from '../turnstile/turnstile.component';
+import { TurnstileNoticeComponent } from '../turnstile/turnstile-notice.component';
 
 @Component({
   selector: 'app-request-password-reset',
@@ -33,6 +35,8 @@ import { AuthShellComponent } from '../auth-shell/auth-shell.component';
     FlatButtonComponent,
     StrokedButtonComponent,
     FormField,
+    TurnstileComponent,
+    TurnstileNoticeComponent,
   ],
   template: `
     <app-auth-shell>
@@ -63,11 +67,12 @@ import { AuthShellComponent } from '../auth-shell/auth-shell.component';
               i18n="
                 Confirms that a password reset link was sent. EMAIL is the
                 address it went to@@auth.passwordReset.sentTo">
-              We sent a reset link to
+              If an account exists for
               <strong>{{
                 sentTo // i18n(ph="EMAIL")
               }}</strong
-              >. Check your spam folder if it has not arrived in a few minutes.
+              >, we sent it a reset link. Check your spam folder if it has not
+              arrived in a few minutes.
             </ng-container>
           </p>
 
@@ -124,12 +129,17 @@ import { AuthShellComponent } from '../auth-shell/auth-shell.component';
             {{ submitLabel() }}
           </button>
         }
+
+        <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
+
+        <app-turnstile-notice panelFootnote />
       </app-auth-form-panel>
     </app-auth-shell>
   `,
 })
 export class RequestPasswordResetComponent {
   private auth = inject(AuthCommandsService);
+  private turnstile = viewChild(TurnstileComponent);
 
   protected readonly mailIcon = LucideMail;
   protected readonly keyIcon = LucideKeyRound;
@@ -155,6 +165,7 @@ export class RequestPasswordResetComponent {
 
   requestFormModel = signal({
     email: '',
+    turnstile: '',
   });
 
   requestForm = form(this.requestFormModel, (schema) => {
@@ -165,14 +176,22 @@ export class RequestPasswordResetComponent {
       message: $localize`:Validation error when the e-mail field is not a valid address:Enter a valid email address.`,
     });
     maxLength(schema.email, 128);
+    required(schema.turnstile);
     disabled(schema, () => this.loading());
   });
 
   requestPasswordReset() {
     submit(this.requestForm, async () => {
       const email = this.requestForm.email().value().trim();
-      this.auth.requestPasswordReset(email);
+      const turnstile = this.requestForm.turnstile().value();
+
+      this.auth.requestPasswordReset(email, turnstile);
+      this.turnstile()?.reset();
     });
+  }
+
+  onTurnstileResult(token: string) {
+    this.requestFormModel.update((form) => ({ ...form, turnstile: token }));
   }
 
   useDifferentEmail() {

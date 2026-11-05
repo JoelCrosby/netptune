@@ -1,9 +1,9 @@
 using System.Globalization;
 
-using Flurl;
-
 using Mediator;
 
+using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 using Netptune.Core.Extensions;
 using Netptune.Core.Localization;
 using Netptune.Core.Messaging;
@@ -46,8 +46,8 @@ public sealed class ResendWorkspaceInviteCommandHandler : IRequestHandler<Resend
 
         if (workspace is null) return ClientResponse.Failed(AppText.ErrorWorkspaceNotFound);
 
-        var email = request.Email.Trim().IdentityNormalize();
-        var invite = await UnitOfWork.WorkspaceInvites.GetPendingByEmail(email, workspace.Id, cancellationToken);
+        var normalizedEmail = request.Email.Trim().IdentityNormalize();
+        var invite = await UnitOfWork.WorkspaceInvites.GetPendingByEmail(normalizedEmail, workspace.Id, cancellationToken);
 
         if (invite is null) return ClientResponse.Failed(AppText.ErrorNoPendingInviteFoundEmail);
 
@@ -56,15 +56,14 @@ public sealed class ResendWorkspaceInviteCommandHandler : IRequestHandler<Resend
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var link = Hosting.ClientOrigin
-            .AppendPathSegments("auth", "register")
-            .SetQueryParam("code", invite.Code, true)
-            .SetQueryParam("refer", "invite");
-        var locale = await ReadRecipientLocale(email, cancellationToken);
+        var recipient = await UnitOfWork.Users.GetByEmail(invite.Email, true, cancellationToken);
+        var hasAccount = recipient?.UserType == AppUserType.User;
+        var link = WorkspaceInviteLinks.Create(Hosting.ClientOrigin, invite.Code, hasAccount);
+        var locale = await ReadRecipientLocale(hasAccount ? recipient : null, cancellationToken);
 
         using (CultureScope.Use(locale))
         {
-            var message = EmailMessages.WorkspaceInvite(email, workspace.Name, link);
+            var message = EmailMessages.WorkspaceInvite(invite.Email, workspace.Name, link);
 
             await Email.Send(message);
         }
@@ -72,15 +71,13 @@ public sealed class ResendWorkspaceInviteCommandHandler : IRequestHandler<Resend
         return ClientResponse.Success;
     }
 
-    private async Task<string> ReadRecipientLocale(string email, CancellationToken cancellationToken)
+    private async Task<string> ReadRecipientLocale(AppUser? recipient, CancellationToken cancellationToken)
     {
-        var user = await UnitOfWork.Users.GetByEmail(email, true, cancellationToken);
-
-        if (user is null)
+        if (recipient is null)
         {
             return CultureInfo.CurrentUICulture.Name;
         }
 
-        return await LocaleReader.GetLocale(user.Id, cancellationToken);
+        return await LocaleReader.GetLocale(recipient.Id, cancellationToken);
     }
 }

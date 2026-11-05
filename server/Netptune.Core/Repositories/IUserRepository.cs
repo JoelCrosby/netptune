@@ -24,8 +24,6 @@ public interface IUserRepository : IRepository<AppUser, string>
 
     Task<IPagedResult<UserSelectOptionViewModel>> GetUserSelectOptionsPaged(int workspaceId, UserSelectFilter filter, CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default);
-
     Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<bool> IsUserInWorkspace(string userId, int workspaceId, CancellationToken cancellationToken = default);

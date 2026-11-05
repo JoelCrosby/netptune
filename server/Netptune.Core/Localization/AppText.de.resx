@@ -1231,6 +1231,18 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="ErrorNoPendingInviteFoundEmail" xml:space="preserve">
     <value>Für diese E-Mail-Adresse gibt es keine ausstehende Einladung</value>
   </data>
+  <data name="ErrorRegisterEmailTaken" xml:space="preserve">
+    <value>Für diese E-Mail-Adresse existiert bereits ein Konto.</value>
+  </data>
+  <data name="ErrorRegisterPasswordRequired" xml:space="preserve">
+    <value>Gib ein Passwort ein, um ein Konto zu erstellen.</value>
+  </data>
+  <data name="ErrorWorkspaceInviteInvalid" xml:space="preserve">
+    <value>Diese Einladung ist ungültig oder abgelaufen.</value>
+  </data>
+  <data name="ErrorWorkspaceInviteForAnotherEmail" xml:space="preserve">
+    <value>Diese Einladung wurde an eine andere E-Mail-Adresse gesendet. Melde dich mit der eingeladenen Adresse an, um sie anzunehmen.</value>
+  </data>
   <data name="ErrorOwnerAssignmentRequiresOwnershipTransfer" xml:space="preserve">
     <value>Die Rolle als Besitzer kann nur durch eine Eigentumsübertragung vergeben werden</value>
   </data>

@@ -64,10 +64,19 @@ public sealed class RemoveUsersFromWorkspaceCommandHandler : IRequestHandler<Rem
             WorkspaceUserCache.Remove(new() { UserId = userId, WorkspaceKey = workspaceKey });
         }
 
-        var removed = await UnitOfWork.Users.RemoveUsersFromWorkspace(userIds, workspace.Id, cancellationToken);
-        var removeUserEmails = removed.Select(x => x.User.Email!).ToList();
+        var removeUserEmails = await UnitOfWork.Transaction(async () =>
+        {
+            var removed = await UnitOfWork.Users.RemoveUsersFromWorkspace(userIds, workspace.Id, cancellationToken);
+            var removedMemberEmails = removed.Select(x => x.User.Email!).ToList();
+            var revokedInviteEmails = await UnitOfWork.WorkspaceInvites.RemovePending(emailList, workspace.Id, cancellationToken);
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            return removedMemberEmails
+                .Concat(revokedInviteEmails)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        });
 
         Activity.LogWith<UserMembershipActivityMeta>(options =>
         {

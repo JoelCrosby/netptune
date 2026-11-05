@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
+using Netptune.Core.Localization;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.ServiceAccounts;
@@ -16,6 +18,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
+using Netptune.IntegrationTests.TestServices;
 using Netptune.TestData;
 
 using Xunit;
@@ -429,6 +432,220 @@ public sealed class UsersEndpointTests
     }
 
     [Fact]
+    public async Task Invite_ShouldEmailEachInviteeALinkCarryingTheirInviteCode()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        List<string> inviteEmails = [NewInviteEmail(), NewInviteEmail()];
+        var request = new InviteUsersRequest { EmailAddresses = inviteEmails };
+
+        var response = await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        foreach (var inviteEmail in inviteEmails)
+        {
+            var sentEmail = Fixture.Emails.SentTo(inviteEmail).Should().ContainSingle().Subject;
+            var query = TestEmailService.LinkQuery(sentEmail);
+            var pendingCode = await GetPendingInviteCode(inviteEmail, cancellationToken);
+
+            sentEmail.Subject.Should().Be(AppText.InviteEmailSubject);
+            new Uri(sentEmail.Link!).AbsolutePath.Should().Be(TestEmailService.RegisterPath);
+            query["code"].ToString().Should().Be(pendingCode);
+            query["refer"].ToString().Should().Be("invite");
+        }
+    }
+
+    [Fact]
+    public async Task Invite_ShouldNotEmailExistingMembers()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var memberEmail = SeedData.Users.First().Email;
+        var emailsBefore = Fixture.Emails.SentTo(memberEmail).Count;
+        var request = new InviteUsersRequest { EmailAddresses = [memberEmail] };
+
+        var response = await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        Fixture.Emails.SentTo(memberEmail).Should().HaveCount(emailsBefore);
+    }
+
+    [Fact]
+    public async Task Invite_ShouldEmailTheRefreshedCode_WhenInvitingTheSameEmailAgain()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var inviteEmail = NewInviteEmail();
+        var request = new InviteUsersRequest { EmailAddresses = [inviteEmail] };
+
+        (await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken)).EnsureSuccessStatusCode();
+        (await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken)).EnsureSuccessStatusCode();
+
+        var sentEmails = Fixture.Emails.SentTo(inviteEmail);
+
+        sentEmails.Should().HaveCount(2);
+
+        var firstCode = TestEmailService.LinkQuery(sentEmails[0])["code"].ToString();
+        var secondCode = TestEmailService.LinkQuery(sentEmails[1])["code"].ToString();
+        var pendingCode = await GetPendingInviteCode(inviteEmail, cancellationToken);
+
+        secondCode.Should().NotBe(firstCode);
+        secondCode.Should().Be(pendingCode);
+    }
+
+    [Fact]
+    public async Task ResendInvite_ShouldEmailANewCode_AndRetireTheOldOne()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var inviteEmail = NewInviteEmail();
+        var request = new InviteUsersRequest { EmailAddresses = [inviteEmail] };
+
+        (await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken)).EnsureSuccessStatusCode();
+
+        var response = await Client.PostAsJsonAsync("api/users/resend-invite", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var sentEmails = Fixture.Emails.SentTo(inviteEmail, TestEmailService.RegisterPath);
+
+        sentEmails.Should().HaveCount(2);
+
+        var originalCode = TestEmailService.LinkQuery(sentEmails[0])["code"].ToString();
+        var resentCode = TestEmailService.LinkQuery(sentEmails[1])["code"].ToString();
+        var pendingCode = await GetPendingInviteCode(inviteEmail, cancellationToken);
+
+        resentCode.Should().NotBe(originalCode);
+        resentCode.Should().Be(pendingCode);
+
+        var originalValidation = await ValidateInviteCode(originalCode, cancellationToken);
+        var resentValidation = await ValidateInviteCode(resentCode, cancellationToken);
+
+        originalValidation.Should().Be(HttpStatusCode.Unauthorized);
+        resentValidation.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Invite_ShouldSendExistingAccountsAnAcceptLink_RatherThanAddingThem()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var accountEmail = await RegisterAccount(cancellationToken);
+        var request = new InviteUsersRequest { EmailAddresses = [accountEmail] };
+
+        var response = await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var inviteEmail = Fixture.Emails.SentTo(accountEmail, TestEmailService.AcceptInvitePath).Should().ContainSingle().Subject;
+        var pendingCode = await GetPendingInviteCode(accountEmail, cancellationToken);
+        var isMember = await IsWorkspaceMember(accountEmail, cancellationToken);
+
+        TestEmailService.LinkQuery(inviteEmail)["code"].ToString().Should().Be(pendingCode);
+        isMember.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task AcceptInvite_ShouldJoinTheWorkspace_AndConfirmTheEmail()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var accountEmail = await RegisterAccount(cancellationToken);
+        var request = new InviteUsersRequest { EmailAddresses = [accountEmail] };
+
+        (await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken)).EnsureSuccessStatusCode();
+
+        var inviteEmail = Fixture.Emails.SentTo(accountEmail, TestEmailService.AcceptInvitePath).Single();
+        var code = TestEmailService.LinkQuery(inviteEmail)["code"].ToString();
+        var inviteeClient = Fixture.CreateNetptuneClientAs(accountEmail, workspaceKey: null);
+        var acceptRequest = new AcceptWorkspaceInviteRequest { Code = code };
+
+        var response = await inviteeClient.PostAsJsonAsync("api/auth/accept-workspace-invite", acceptRequest, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AcceptWorkspaceInviteResponse>>(cancellationToken);
+        var isMember = await IsWorkspaceMember(accountEmail, cancellationToken);
+        var isConfirmed = await IsEmailConfirmed(accountEmail, cancellationToken);
+
+        result.Payload!.WorkspaceSlug.Should().Be(WorkspaceSlug);
+        isMember.Should().BeTrue();
+        isConfirmed.Should().BeTrue();
+
+        var reuse = await inviteeClient.PostAsJsonAsync("api/auth/accept-workspace-invite", acceptRequest, cancellationToken);
+
+        reuse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task AcceptInvite_ShouldBeRejected_WhenSignedInWithADifferentEmail()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var invitedEmail = NewInviteEmail();
+        var otherAccountEmail = await RegisterAccount(cancellationToken);
+        var request = new InviteUsersRequest { EmailAddresses = [invitedEmail] };
+
+        (await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken)).EnsureSuccessStatusCode();
+
+        var code = await GetPendingInviteCode(invitedEmail, cancellationToken);
+        var otherClient = Fixture.CreateNetptuneClientAs(otherAccountEmail, workspaceKey: null);
+        var acceptRequest = new AcceptWorkspaceInviteRequest { Code = code };
+
+        var response = await otherClient.PostAsJsonAsync("api/auth/accept-workspace-invite", acceptRequest, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var isMember = await IsWorkspaceMember(otherAccountEmail, cancellationToken);
+        var stillPendingCode = await GetPendingInviteCode(invitedEmail, cancellationToken);
+
+        isMember.Should().BeFalse();
+        stillPendingCode.Should().Be(code);
+    }
+
+    [Fact]
+    public async Task AcceptInvite_ShouldBeRejected_WhenTheWorkspaceWasDeleted()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var accountEmail = await RegisterAccount(cancellationToken);
+        var invite = await SeedInviteToDeletedWorkspace(accountEmail, cancellationToken);
+        var inviteeClient = Fixture.CreateNetptuneClientAs(accountEmail, workspaceKey: null);
+        var acceptRequest = new AcceptWorkspaceInviteRequest { Code = invite.Code };
+
+        var response = await inviteeClient.PostAsJsonAsync("api/auth/accept-workspace-invite", acceptRequest, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var isMember = await context.WorkspaceAppUsers.AnyAsync(
+            member => member.User.Email == accountEmail && member.WorkspaceId == invite.WorkspaceId,
+            cancellationToken);
+        var acceptedAt = await context.WorkspaceInvites
+            .Where(pending => pending.Id == invite.Id)
+            .Select(pending => pending.AcceptedAt)
+            .SingleAsync(cancellationToken);
+
+        isMember.Should().BeFalse();
+        acceptedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task RemoveFromWorkspace_ShouldRevokeAPendingInvite()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var inviteEmail = NewInviteEmail();
+        var request = new InviteUsersRequest { EmailAddresses = [inviteEmail] };
+
+        (await Client.PostAsJsonAsync("api/users/invite", request, cancellationToken)).EnsureSuccessStatusCode();
+
+        var code = await GetPendingInviteCode(inviteEmail, cancellationToken);
+
+        var response = await Client.PostAsJsonAsync("api/users/remove", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        var validation = await ValidateInviteCode(code, cancellationToken);
+
+        validation.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
     public async Task ResendInvite_ShouldReturnCorrectly_WhenPendingInviteExists()
     {
         const string inviteEmail = "resend-target@gmail.com";
@@ -459,6 +676,7 @@ public sealed class UsersEndpointTests
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Fixture.Emails.SentTo("no-invite-for-this@gmail.com").Should().BeEmpty();
     }
 
     [Fact]
@@ -496,6 +714,100 @@ public sealed class UsersEndpointTests
         {
             await RestoreWorkspaceMembership(target.Id);
         }
+    }
+
+    private static string NewInviteEmail() => $"invitee-{Guid.NewGuid():N}@netptune.test";
+
+    private async Task<string> GetPendingInviteCode(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.WorkspaceInvites
+            .Where(invite => invite.Email == email && invite.AcceptedAt == null)
+            .Select(invite => invite.Code)
+            .SingleAsync(cancellationToken);
+    }
+
+    private async Task<WorkspaceInvite> SeedInviteToDeletedWorkspace(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var suffix = Guid.NewGuid().ToString("N")[..12];
+        var workspace = new Workspace
+        {
+            Name = "Deleted",
+            Slug = $"deleted-{suffix}",
+            CreatedAt = DateTime.UtcNow,
+            MetaInfo = new(),
+            IsDeleted = true,
+        };
+        var invite = new WorkspaceInvite
+        {
+            Email = email,
+            Workspace = workspace,
+            Code = Guid.NewGuid().ToString("N"),
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+        };
+
+        context.WorkspaceInvites.Add(invite);
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        return invite;
+    }
+
+    private async Task<string> RegisterAccount(CancellationToken cancellationToken)
+    {
+        var email = $"account-{Guid.NewGuid():N}@netptune.test";
+        var client = Fixture.CreateNetptuneClient();
+        var request = new RegisterRequest
+        {
+            Email = email,
+            Password = "Integration-Password-1!",
+            Firstname = "Existing",
+            Lastname = "Account",
+            Turnstile = TestTurnstileService.ValidToken,
+        };
+
+        var response = await client.PostAsJsonAsync("api/auth/register", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(cancellationToken));
+
+        return email;
+    }
+
+    private async Task<bool> IsWorkspaceMember(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.WorkspaceAppUsers.AnyAsync(
+            member => member.User.Email == email && member.Workspace.Slug == WorkspaceSlug,
+            cancellationToken);
+    }
+
+    private async Task<bool> IsEmailConfirmed(string email, CancellationToken cancellationToken)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Users
+            .Where(user => user.Email == email)
+            .Select(user => user.EmailConfirmed)
+            .SingleAsync(cancellationToken);
+    }
+
+    private async Task<HttpStatusCode> ValidateInviteCode(string code, CancellationToken cancellationToken)
+    {
+        var escapedCode = Uri.EscapeDataString(code);
+        var response = await Client.GetAsync($"api/auth/validate-workspace-invite?code={escapedCode}", cancellationToken);
+
+        return response.StatusCode;
     }
 
     private async Task RestoreWorkspaceMembership(string userId)

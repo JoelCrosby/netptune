@@ -26,13 +26,17 @@ function getResponseMessage(response: unknown): string | undefined {
     return normalizeMessage(response);
   }
 
-  if (
-    typeof response === 'object' &&
-    response !== null &&
-    'message' in response &&
-    typeof response.message === 'string'
-  ) {
+  if (typeof response !== 'object' || response === null) {
+    return undefined;
+  }
+
+  if ('message' in response && typeof response.message === 'string') {
     return normalizeMessage(response.message);
+  }
+
+  // ASP.NET problem details carry the reason in `detail`.
+  if ('detail' in response && typeof response.detail === 'string') {
+    return normalizeMessage(response.detail);
   }
 
   return undefined;
