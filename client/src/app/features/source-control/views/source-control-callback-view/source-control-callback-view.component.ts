@@ -50,7 +50,7 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
           title="The connection could not be completed"
           [description]="message"
           [retryLabel]="returnLabel"
-          (retry)="onReturnToSettings()" />
+          (retry)="onReturn()" />
       } @else if (choice(); as choice) {
         <section app-panel surface="card" class="w-full max-w-lg">
           <app-panel-header
@@ -138,9 +138,9 @@ export class SourceControlCallbackViewComponent implements OnInit {
   protected readonly error = signal<string | null>(null);
   protected readonly choice = signal<SourceControlConnectChoice | null>(null);
 
-  protected readonly returnLabel = this.workspace
-    ? $localize`:Button that returns to the source control settings:Back to Settings`
-    : $localize`:Button that goes to the list of the user's workspaces:Go to Workspaces`;
+  private readonly returnTo = this.pending?.returnTo ?? null;
+
+  protected readonly returnLabel = this.resolveReturnLabel();
 
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('provider') ?? '';
@@ -179,7 +179,13 @@ export class SourceControlCallbackViewComponent implements OnInit {
     window.location.assign(choice.installUrl);
   }
 
-  protected onReturnToSettings() {
+  protected onReturn() {
+    if (this.returnTo) {
+      void this.router.navigateByUrl(this.returnTo);
+
+      return;
+    }
+
     if (!this.workspace) {
       void this.router.navigate(['/workspaces']);
 
@@ -193,6 +199,18 @@ export class SourceControlCallbackViewComponent implements OnInit {
       'workspace',
       'source-control',
     ]);
+  }
+
+  private resolveReturnLabel(): string {
+    if (this.returnTo) {
+      return $localize`:Button that returns to the new workspace's setup steps:Back to Setup`;
+    }
+
+    if (this.workspace) {
+      return $localize`:Button that returns to the source control settings:Back to Settings`;
+    }
+
+    return $localize`:Button that goes to the list of the user's workspaces:Go to Workspaces`;
   }
 
   private complete(
@@ -240,6 +258,6 @@ export class SourceControlCallbackViewComponent implements OnInit {
         ? $localize`:Shown after a source control account is connected:${account}:account: connected.`
         : $localize`:Shown after a source control account is connected without its name:Account connected.`
     );
-    this.onReturnToSettings();
+    this.onReturn();
   }
 }

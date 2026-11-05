@@ -1,10 +1,12 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import {
+  AI_PROVIDERS,
   AiCredential,
   AiCredentialAvailability,
   AiCredentialScope,
   AiCredentialSource,
   AiProvider,
+  AiProviderDescriptor,
 } from '@core/models/ai-credential';
 import { SearchCredential } from '@core/models/search-credential';
 import { DialogService } from '@core/services/dialog.service';
@@ -27,12 +29,6 @@ import {
   AssistantSearchDialogData,
 } from './assistant-search-dialog.component';
 
-interface ProviderDescriptor {
-  provider: AiProvider;
-  label: string;
-  hint: string;
-}
-
 export interface AssistantConnection {
   id: string;
   icon: LucideIconInput;
@@ -44,19 +40,6 @@ export interface AssistantConnection {
   actionLabel: string;
   provider: AiProvider | null;
 }
-
-const PROVIDERS: ProviderDescriptor[] = [
-  {
-    provider: AiProvider.anthropic,
-    label: $localize`:Name of the Anthropic AI provider:Anthropic`,
-    hint: $localize`:Where to find an Anthropic API key:Create a key at console.anthropic.com`,
-  },
-  {
-    provider: AiProvider.openAi,
-    label: $localize`:Name of the OpenAI provider:OpenAI`,
-    hint: $localize`:Where to find an OpenAI API key:Create a key at platform.openai.com`,
-  },
-];
 
 const SEARCH_PROVIDER_LABELS: Record<number, string> = {
   0: 'Brave Search',
@@ -174,7 +157,7 @@ export class AssistantConnectionsComponent {
   });
 
   protected readonly connections = computed<AssistantConnection[]>(() => {
-    const providerRows = PROVIDERS.map((descriptor) => {
+    const providerRows = AI_PROVIDERS.map((descriptor) => {
       return this.toProviderRow(descriptor);
     });
 
@@ -205,7 +188,7 @@ export class AssistantConnectionsComponent {
     this.openProvider(connection.provider);
   }
 
-  private toProviderRow(descriptor: ProviderDescriptor): AssistantConnection {
+  private toProviderRow(descriptor: AiProviderDescriptor): AssistantConnection {
     const credential = this.credentialFor(descriptor.provider);
     const keyDetail = $localize`:Describes a stored key by its last characters:Key ending …${credential?.secretHint}:hint:`;
 
@@ -270,7 +253,7 @@ export class AssistantConnectionsComponent {
   }
 
   async openProvider(provider: AiProvider) {
-    const descriptor = PROVIDERS.find((item) => item.provider === provider);
+    const descriptor = AI_PROVIDERS.find((item) => item.provider === provider);
 
     if (!descriptor) {
       return;

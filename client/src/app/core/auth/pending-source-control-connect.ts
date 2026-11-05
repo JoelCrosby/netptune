@@ -3,6 +3,7 @@ import { SourceControlProvider } from '@core/models/source-control';
 export interface PendingSourceControlConnect {
   workspace: string;
   provider: SourceControlProvider;
+  returnTo?: string;
 }
 
 const pendingConnectKey = 'netptune:pending-source-control-connect';

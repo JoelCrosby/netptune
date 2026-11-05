@@ -84,7 +84,6 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           i18n-description="Description of the summary wizard step"
           description="Review what will be created.">
           <app-setup-creation-summary
-            entityType="Project"
             i18n-secondaryLabel="
               Label for the repository URL in the creation summary
             "

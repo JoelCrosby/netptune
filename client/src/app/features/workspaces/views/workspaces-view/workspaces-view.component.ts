@@ -6,14 +6,13 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { AuthPageContainerComponent } from '@app/features/auth/components/auth-page-container/auth-page-container.component';
 import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
 import { WorkspacesHeaderComponent } from '@app/features/workspaces/components/workspaces-header.component';
-import { DialogService } from '@core/services/dialog.service';
 import { SessionService } from '@core/services/session.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
-import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { LucidePlus } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -28,6 +27,7 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
     FilterInputComponent,
     LucidePlus,
     PageLoadingComponent,
+    RouterLink,
     StrokedButtonComponent,
     WorkspaceListComponent,
     WorkspacesHeaderComponent,
@@ -53,18 +53,17 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
             }
           </ng-container>
 
-          <button
+          <a
             app-stroked-button
             color="neutral"
             class="shrink-0"
-            type="button"
             headerActions
-            (click)="openWorkspaceDialog()">
+            routerLink="/workspaces/new">
             <svg lucidePlus class="h-4 w-4" aria-hidden="true"></svg>
-            <span i18n="Button that opens the create-workspace dialog">
+            <span i18n="Link that opens the create-workspace page">
               Create workspace
             </span>
-          </button>
+          </a>
         </app-workspaces-header>
 
         @if (loading() && !loaded()) {
@@ -91,7 +90,7 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
   `,
 })
 export class WorkspacesViewComponent {
-  private readonly dialog = inject(DialogService);
+  private readonly router = inject(Router);
   private readonly list = inject(WorkspaceListService);
   private readonly preferences = inject(UserPreferencesService);
   private readonly session = inject(SessionService);
@@ -117,7 +116,6 @@ export class WorkspacesViewComponent {
   });
 
   private readonly workspaces = this.list.workspaces;
-  private initialSetupOpened = false;
 
   constructor() {
     // This page renders outside the app shell, which is what normally loads the
@@ -125,28 +123,17 @@ export class WorkspacesViewComponent {
     this.preferences.ensureLoaded();
 
     effect(() => {
-      if (
-        !this.loaded() ||
-        this.workspaces().length > 0 ||
-        this.initialSetupOpened
-      ) {
+      if (!this.loaded() || this.workspaces().length > 0) {
         return;
       }
 
-      this.initialSetupOpened = true;
-      untracked(() => this.openWorkspaceDialog());
+      untracked(() => {
+        void this.router.navigate(['/workspaces', 'new'], { replaceUrl: true });
+      });
     });
   }
 
   reload() {
     this.list.reload();
-  }
-
-  openWorkspaceDialog() {
-    this.dialog.openWizard(WorkspaceDialogComponent, {
-      title: $localize`:Title of a dialog or section:Create Workspace`,
-      data: null,
-      width: '720px',
-    });
   }
 }

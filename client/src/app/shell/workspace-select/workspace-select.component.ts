@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from '@core/services/session.service';
-import { DialogService } from '@core/services/dialog.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -27,7 +26,6 @@ import { brandingImageUrl } from '@core/util/branding';
 import { filterObjectArray } from '@core/util/arrays';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { KeyboardService } from '@static/services/keyboard.service';
-import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
 import { animatedPresence } from '@core/util/animated-presence';
 import { menuExitMs } from '@static/components/popover-surface/popover-surface.component';
@@ -96,7 +94,6 @@ const maxRecentWorkspaces = 3;
 })
 export class WorkspaceSelectComponent implements OnDestroy {
   private authCommands = inject(AuthCommandsService);
-  private dialog = inject(DialogService);
   private keyboard = inject(KeyboardService);
   private lastWorkspace = inject(LastWorkspaceService);
   private overlay = inject(Overlay);
@@ -388,11 +385,7 @@ export class WorkspaceSelectComponent implements OnDestroy {
   onCreateWorkspaceClicked() {
     this.close();
 
-    this.dialog.openWizard(WorkspaceDialogComponent, {
-      title: $localize`:Title of a dialog or section:Create Workspace`,
-      data: null,
-      width: '720px',
-    });
+    void this.router.navigate(['/workspaces', 'new']);
   }
 
   onManageWorkspacesClicked() {

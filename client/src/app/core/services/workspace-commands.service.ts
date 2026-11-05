@@ -14,7 +14,7 @@ import { WorkspacesService } from '@core/services/workspaces-api.service';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
+import { catchError, EMPTY, finalize, switchMap, tap } from 'rxjs';
 
 @Service()
 export class WorkspaceCommandsService {
@@ -26,27 +26,18 @@ export class WorkspaceCommandsService {
   private readonly snackbar = inject(SnackbarService);
   private readonly router = inject(Router);
 
-  private readonly creating = signal(false);
   private readonly editing = signal(false);
 
-  readonly createLoading = this.creating.asReadonly();
   readonly editLoading = this.editing.asReadonly();
 
   create(request: AddWorkspaceRequest) {
-    this.creating.set(true);
-
-    this.workspacesService
-      .post(request)
-      .pipe(
-        unwrapClientResponse(),
-        catchError(() => EMPTY),
-        finalize(() => this.creating.set(false))
-      )
-      .subscribe((workspace) => {
+    return this.workspacesService.post(request).pipe(
+      unwrapClientResponse(),
+      tap((workspace) => {
         this.list.reload();
         this.workspace.setWorkspace(workspace.slug);
-        void this.router.navigate(['/', workspace.slug, 'projects']);
-      });
+      })
+    );
   }
 
   edit(request: UpdateWorkspaceRequest) {

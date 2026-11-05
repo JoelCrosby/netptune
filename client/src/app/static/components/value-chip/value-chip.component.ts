@@ -1,6 +1,14 @@
-import { booleanAttribute, Component, computed, input } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  computed,
+  input,
+  output,
+} from '@angular/core';
+import { LucideX } from '@lucide/angular';
 import { cva } from 'class-variance-authority';
 import { cn } from '../button/button.variants';
+import { IconButtonComponent } from '../button/icon-button.component';
 import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
 export type ValueChipTone = 'kept' | 'added' | 'removed' | 'empty';
@@ -44,7 +52,7 @@ const valueChipVariants = cva(
 
 @Component({
   selector: 'app-value-chip',
-  imports: [ColorSwatchComponent],
+  imports: [ColorSwatchComponent, IconButtonComponent, LucideX],
   host: { '[class]': 'hostClass()' },
   template: `
     @if (color(); as color) {
@@ -52,6 +60,16 @@ const valueChipVariants = cva(
     }
     <ng-content />
     <span class="min-w-0 truncate">{{ label() }}</span>
+    @if (removeLabel(); as removeLabel) {
+      <button
+        app-icon-button
+        class="-my-1 -mr-1.5 h-6 w-6"
+        type="button"
+        [ariaLabel]="removeLabel"
+        (click)="removed.emit()">
+        <svg lucideX class="h-3.5 w-3.5" aria-hidden="true"></svg>
+      </button>
+    }
   `,
 })
 export class ValueChipComponent {
@@ -60,7 +78,10 @@ export class ValueChipComponent {
   readonly tone = input<ValueChipTone>('kept');
   readonly accent = input<ValueChipAccent>('none');
   readonly mono = input(false, { transform: booleanAttribute });
+  readonly removeLabel = input<string | null>(null);
   readonly class = input('');
+
+  readonly removed = output();
 
   protected readonly hostClass = computed(() => {
     const variants = valueChipVariants({

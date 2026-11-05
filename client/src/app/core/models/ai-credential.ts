@@ -43,3 +43,22 @@ export interface AiProviderAvailability {
 export interface AiCredentialAvailability {
   providers: AiProviderAvailability[];
 }
+
+export interface AiProviderDescriptor {
+  provider: AiProvider;
+  label: string;
+  hint: string;
+}
+
+export const AI_PROVIDERS: AiProviderDescriptor[] = [
+  {
+    provider: AiProvider.anthropic,
+    label: $localize`:Name of the Anthropic AI provider:Anthropic`,
+    hint: $localize`:Where to find an Anthropic API key:Create a key at console.anthropic.com`,
+  },
+  {
+    provider: AiProvider.openAi,
+    label: $localize`:Name of the OpenAI provider:OpenAI`,
+    hint: $localize`:Where to find an OpenAI API key:Create a key at platform.openai.com`,
+  },
+];

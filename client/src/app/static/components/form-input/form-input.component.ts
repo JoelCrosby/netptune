@@ -87,6 +87,10 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
             size="20"
             aria-hidden="true"></svg>
         }
+
+        <div class="mr-3 shrink-0 empty:hidden">
+          <ng-content select="[formInputAction]" />
+        </div>
       </app-form-control-field>
 
       @if (hint()) {

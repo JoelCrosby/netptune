@@ -171,7 +171,7 @@ export class CreateBoardComponent {
       },
       onError: () => ({
         kind: 'networkError',
-        message: $localize`:Shown when the board identifier availability check fails:Could not veify Identifier availability`,
+        message: $localize`:Shown when the board identifier availability check fails:Could not verify Identifier availability`,
       }),
     });
   });

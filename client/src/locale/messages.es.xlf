@@ -75,8 +75,9 @@
     <unit id="8049735056636703804">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:68</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:147</note>
-        <note category="location">src/app/shell/workspace-select/workspace-select.component.ts:392</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:115,118</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:205,207</note>
+        <note category="location">src/app/features/workspaces/workspaces.routes.ts:11</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -142,6 +143,16 @@
       <segment state="initial">
         <source>Inspected</source>
         <target>Inspeccionada</target>
+      </segment>
+    </unit>
+    <unit id="771652493266125841">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:64,70</note>
+        <note category="description">How many people have been invited to the workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {1 invitation sent.} other {<ph id="0" equiv="INTERPOLATION"/> invitations sent.}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 invitación enviada.} other {<ph id="0" equiv="INTERPOLATION"/> invitaciones enviadas.}}</target>
       </segment>
     </unit>
     <unit id="771664384252640128">
@@ -277,6 +288,16 @@
         <target> <ph id="0" equiv="USED" disp="{{ actions().length // i18n(ph=&quot;USED&quot;) }}"/> de <ph id="1" equiv="LIMIT" disp="{{ actionLimit // i18n(ph=&quot;LIMIT&quot;) }}"/> acciones utilizadas </target>
       </segment>
     </unit>
+    <unit id="1854716882241348864">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:70</note>
+        <note category="description">Summary of a workspace setup step whose current state could not be loaded</note>
+      </notes>
+      <segment state="initial">
+        <source>Could not load</source>
+        <target>No se pudo cargar</target>
+      </segment>
+    </unit>
     <unit id="185504950006603388">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:95</note>
@@ -329,7 +350,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:94</note>
         <note category="location">src/app/shell/place-commands.service.ts:14</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:222</note>
-        <note category="location">src/app/workspace.routes.ts:99</note>
+        <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Name of the pages permission group</note>
       </notes>
       <segment state="translated">
@@ -509,7 +530,7 @@
     </unit>
     <unit id="6087946707787576324">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:118,123</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:101,106</note>
         <note category="description">Shown when a member has no key of their own for a provider and the workspace key is used instead</note>
       </notes>
       <segment state="initial">
@@ -679,7 +700,7 @@
     </unit>
     <unit id="8195124744855652290">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:212</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:230</note>
         <note category="description">Fallback when completing a source control connection fails</note>
       </notes>
       <segment state="initial">
@@ -1211,7 +1232,9 @@
     </unit>
     <unit id="4393935842883042759">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:119</note>
+        <note category="location">src/app/core/services/source-control-commands.service.ts:68</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:115</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:128</note>
         <note category="description">Shown when starting a source control connection fails</note>
       </notes>
       <segment state="initial">
@@ -1431,6 +1454,16 @@
         <target>Quitar la etiqueta</target>
       </segment>
     </unit>
+    <unit id="3397063315237339310">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:87,90</note>
+        <note category="description">Placeholder of the invitee e-mail address field</note>
+      </notes>
+      <segment state="translated">
+        <source>name@company.com</source>
+        <target>nombre@empresa.com</target>
+      </segment>
+    </unit>
     <unit id="3398156745191610421">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:353</note>
@@ -1449,6 +1482,16 @@
       <segment state="translated">
         <source>Post Comments</source>
         <target>Publicar los comentarios</target>
+      </segment>
+    </unit>
+    <unit id="5159774273772151117">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:123,128</note>
+        <note category="description">Button that sends the workspace invitations</note>
+      </notes>
+      <segment state="translated">
+        <source>Send Invites</source>
+        <target>Enviar invitaciones</target>
       </segment>
     </unit>
     <unit id="8820435528476775222">
@@ -2411,7 +2454,7 @@
     </unit>
     <unit id="7730041991995170578">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:218</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:196</note>
         <note category="description">Shown after a source control account is disconnected</note>
       </notes>
       <segment state="initial">
@@ -2561,9 +2604,9 @@
         <note category="location">src/app/core/services/task-commands.service.ts:232</note>
         <note category="location">src/app/core/services/task-commands.service.ts:241</note>
         <note category="location">src/app/core/services/task-commands.service.ts:249</note>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:219</note>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:229</note>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:239</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:210</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:220</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:230</note>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:11</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
@@ -2593,13 +2636,15 @@
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:142</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:214</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:32</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:202</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:180</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:238</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
+        <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:23</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:375</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:227</note>
@@ -2812,6 +2857,16 @@
       <segment state="translated">
         <source>This query could not be found</source>
         <target>No se ha encontrado esta consulta</target>
+      </segment>
+    </unit>
+    <unit id="1278052966909515685">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:56</note>
+        <note category="description">Description of the repository step</note>
+      </notes>
+      <segment state="translated">
+        <source>Link branches, commits and pull requests to tasks.</source>
+        <target>Vincula ramas, commits y pull requests a las tareas.</target>
       </segment>
     </unit>
     <unit id="3325929519262234553">
@@ -3223,6 +3278,17 @@
         <target>No se pudo leer el archivo.</target>
       </segment>
     </unit>
+    <unit id="8636583097856189837">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:94,96</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:96,98</note>
+        <note category="description">Accessible label of the create workspace steps list</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace steps</source>
+        <target>Pasos del espacio de trabajo</target>
+      </segment>
+    </unit>
     <unit id="8640677495548743141">
       <notes>
         <note category="location">src/app/core/services/ai-assistant.service.ts:928</note>
@@ -3509,6 +3575,7 @@
     <unit id="3119596725788894513">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:221,222</note>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:34</note>
         <note category="description">Heading of the setup part of the rule</note>
       </notes>
       <segment state="initial">
@@ -3528,7 +3595,7 @@
     </unit>
     <unit id="3127417567733728943">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:51</note>
+        <note category="location">src/app/core/models/ai-credential.ts:56</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:60,63</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
@@ -3783,7 +3850,7 @@
     </unit>
     <unit id="6259071179416803182">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:156,162</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:136,143</note>
         <note category="description">Shown when no repositories match the picker filter</note>
       </notes>
       <segment state="initial">
@@ -3793,7 +3860,7 @@
     </unit>
     <unit id="6259685679738852177">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:118,121</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:98,101</note>
         <note category="description">Badge while a repository&apos;s recent history is being imported</note>
       </notes>
       <segment state="translated">
@@ -3952,7 +4019,7 @@
     </unit>
     <unit id="7183893264147245056">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:60,65</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:40,45</note>
         <note category="description">Explains what linking a repository does</note>
       </notes>
       <segment state="initial">
@@ -4253,7 +4320,7 @@
     </unit>
     <unit id="8995278196065289493">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:173</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:156</note>
         <note category="description">Explains what personal assistant connections are</note>
       </notes>
       <segment state="initial">
@@ -4273,7 +4340,7 @@
     </unit>
     <unit id="5589864608128781435">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:75</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:66</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4283,7 +4350,8 @@
     </unit>
     <unit id="2273088133016853024">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:218</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:209</note>
+        <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:22</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -4323,7 +4391,7 @@
     </unit>
     <unit id="141527660815930501">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:220</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:211</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -4343,7 +4411,7 @@
     </unit>
     <unit id="4854172748547351453">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:221</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:212</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -4374,7 +4442,7 @@
     </unit>
     <unit id="1293575230061580250">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:228</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:219</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -4384,7 +4452,7 @@
     </unit>
     <unit id="8763068601818287275">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:230</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:221</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -4413,7 +4481,7 @@
     </unit>
     <unit id="950348144194379022">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:231</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:222</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:161</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -4440,6 +4508,16 @@
       <segment state="translated">
         <source>Their messages and any changes they have not applied yet will be gone.</source>
         <target>Se perderán sus mensajes y los cambios que aún no se hayan aplicado.</target>
+      </segment>
+    </unit>
+    <unit id="957358589600652803">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:55</note>
+        <note category="description">Title of the workflow card before its template is known</note>
+      </notes>
+      <segment state="translated">
+        <source>Workflow</source>
+        <target>Flujo de trabajo</target>
       </segment>
     </unit>
     <unit id="958878170701195111">
@@ -4498,7 +4576,7 @@
     </unit>
     <unit id="8871304628791267226">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:238</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:229</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -4519,7 +4597,7 @@
     </unit>
     <unit id="4501389782873056968">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:240</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:231</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -4539,7 +4617,7 @@
     </unit>
     <unit id="5832945231912845990">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:241</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:232</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:160</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -5177,12 +5255,22 @@
         <note category="location">src/app/features/settings/settings.routes.ts:27</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:22,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:440</note>
-        <note category="location">src/app/workspace.routes.ts:123</note>
+        <note category="location">src/app/workspace.routes.ts:132</note>
         <note category="description">Name of the notifications permission group</note>
       </notes>
       <segment state="translated">
         <source>Notifications</source>
         <target>Notificaciones</target>
+      </segment>
+    </unit>
+    <unit id="5851804444868316495">
+      <notes>
+        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
+        <note category="description">Summary line under the project being created. TEMPLATE is the chosen workflow template</note>
+      </notes>
+      <segment state="initial">
+        <source>Project using the <ph id="0" equiv="TEMPLATE" disp="this.templateName()"/> workflow</source>
+        <target>Proyecto con el flujo de trabajo <ph id="0" equiv="TEMPLATE" disp="this.templateName()"/></target>
       </segment>
     </unit>
     <unit id="4050810722021422470">
@@ -5354,7 +5442,6 @@
         <note category="location">src/app/core/auth/permission-items.ts:602</note>
         <note category="location">src/app/core/util/pin-scope.ts:25</note>
         <note category="location">src/app/core/util/pin-scope.ts:69</note>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:36</note>
         <note category="location">src/app/features/pages/views/pages-home-view/pages-home-view.component.ts:395</note>
@@ -5374,7 +5461,6 @@
         <note category="location">src/app/core/tasks/task-columns.ts:84</note>
         <note category="location">src/app/core/util/ai-client-context.ts:30</note>
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:59</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:69</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:167,169</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:31</note>
@@ -5409,8 +5495,8 @@
     </unit>
     <unit id="4603846375699577536">
       <notes>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:70</note>
-        <note category="description">Placeholder name for a workspace that has not been named yet</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:321</note>
+        <note category="description">Page title until the new workspace has a name</note>
       </notes>
       <segment state="translated">
         <source>Untitled workspace</source>
@@ -5419,22 +5505,12 @@
     </unit>
     <unit id="2646352380246900341">
       <notes>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:71</note>
+        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:53</note>
         <note category="description">Placeholder name for a project that has not been named yet</note>
       </notes>
       <segment state="translated">
         <source>Untitled project</source>
         <target>Proyecto sin título</target>
-      </segment>
-    </unit>
-    <unit id="6329612353511966120">
-      <notes>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:75</note>
-        <note category="description">Summary line under the name being created. ENTITY is the localised entity name and TEMPLATE is the chosen workflow template</note>
-      </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="ENTITY" disp="this.entityTypeLabel()"/> using the <ph id="1" equiv="TEMPLATE" disp="this.templateName()"/> workflow</source>
-        <target><ph id="0" equiv="ENTITY" disp="this.entityTypeLabel()"/> con el flujo de trabajo <ph id="1" equiv="TEMPLATE" disp="this.templateName()"/></target>
       </segment>
     </unit>
     <unit id="743566291166416394">
@@ -5449,7 +5525,7 @@
     </unit>
     <unit id="7436816029991922180">
       <notes>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:98</note>
+        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:77</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -5548,16 +5624,6 @@
         <target><ph id="0" equiv="COUNT" disp="count"/> condiciones</target>
       </segment>
     </unit>
-    <unit id="3435864796418567667">
-      <notes>
-        <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:104</note>
-        <note category="description">Label shown in the interface</note>
-      </notes>
-      <segment state="translated">
-        <source>Workspace defaults</source>
-        <target>Valores predeterminados del espacio de trabajo</target>
-      </segment>
-    </unit>
     <unit id="7139961824763755600">
       <notes>
         <note category="location">src/app/entry/components/setup-template-picker/setup-template-picker.component.ts:21,25</note>
@@ -5606,6 +5672,16 @@
       <segment state="translated">
         <source>Open Assistant</source>
         <target>Abrir el asistente</target>
+      </segment>
+    </unit>
+    <unit id="7481183920179363714">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:73,78</note>
+        <note category="description">Shown once workspace invitations have gone out</note>
+      </notes>
+      <segment state="translated">
+        <source>Sent</source>
+        <target>Enviado</target>
       </segment>
     </unit>
     <unit id="748535619305677205">
@@ -5660,7 +5736,7 @@
     </unit>
     <unit id="5610449079065825545">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:144,146</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:124,126</note>
         <note category="description">Button that imports a repository&apos;s recent pull requests and branches again</note>
       </notes>
       <segment state="translated">
@@ -5746,7 +5822,6 @@
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:86,88</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:49,51</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:205,206</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
@@ -5794,7 +5869,7 @@
     </unit>
     <unit id="3767233705625660520">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:192</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:154</note>
         <note category="description">Shown when refreshing the repository list fails</note>
       </notes>
       <segment state="initial">
@@ -5854,6 +5929,16 @@
       <segment state="translated">
         <source>Untitled query</source>
         <target>Consulta sin título</target>
+      </segment>
+    </unit>
+    <unit id="2046716892243700803">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:184,187</note>
+        <note category="description">Button that returns to the workspace setup step</note>
+      </notes>
+      <segment state="translated">
+        <source> Setup </source>
+        <target>Configuración</target>
       </segment>
     </unit>
     <unit id="6899352499692995227">
@@ -6288,6 +6373,17 @@
         <target>Las acciones de relación necesitan una relación.</target>
       </segment>
     </unit>
+    <unit id="8721973032922842150">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:55</note>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:74</note>
+        <note category="description">Title of the repository step</note>
+      </notes>
+      <segment state="translated">
+        <source>Link a repository</source>
+        <target>Vincular un repositorio</target>
+      </segment>
+    </unit>
     <unit id="721238037037697089">
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:49,52</note>
@@ -6301,12 +6397,22 @@
     </unit>
     <unit id="6937996967118036600">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:170</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:153</note>
         <note category="description">Explains what the assistant connections are</note>
       </notes>
       <segment state="translated">
         <source>Model providers and web search, shared by every member without a personal key.</source>
         <target>Proveedores de modelos y búsqueda web, compartidos por todos los miembros sin clave personal.</target>
+      </segment>
+    </unit>
+    <unit id="8575407745140134746">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:68,75</note>
+        <note category="description">Says which key is stored for the workspace. HINT is its last characters</note>
+      </notes>
+      <segment state="initial">
+        <source> Key ending <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-mono&quot; &gt;" dispEnd="&lt;/span &gt;">…<ph id="1" equiv="HINT" disp="{{ credential.secretHint // i18n(ph=&quot;HINT&quot;) }}"/></pc> saved for this workspace. </source>
+        <target>Clave que termina en <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;font-mono&quot; &gt;" dispEnd="&lt;/span &gt;">…<ph id="1" equiv="HINT" disp="{{ credential.secretHint // i18n(ph=&quot;HINT&quot;) }}"/></pc> guardada para este espacio de trabajo.</target>
       </segment>
     </unit>
     <unit id="1806667489382256324">
@@ -6351,16 +6457,13 @@
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:120</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:55</note>
-        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:152</note>
+        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:151</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:44</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:101</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:65,67</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:117</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:44,45</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:75</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:89,91</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:136</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:250</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:69,70</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:106</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:94</note>
@@ -6386,6 +6489,8 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:43,44</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:102</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:146</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:142</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:246</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:39</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -6588,6 +6693,16 @@
         <target>proyectos</target>
       </segment>
     </unit>
+    <unit id="3839114790584262524">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:84</note>
+        <note category="description">Heading of the team part of setting up a workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>TEAM</source>
+        <target>EQUIPO</target>
+      </segment>
+    </unit>
     <unit id="3195412850271307750">
       <notes>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:55,58</note>
@@ -6697,7 +6812,6 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:176</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
         <note category="location">src/app/features/pages/editor/page-transform.controller.ts:59</note>
         <note category="description">Label of the task title field</note>
@@ -6713,8 +6827,6 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:255</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:81,84</note>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:31,33</note>
@@ -6723,6 +6835,7 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:91,94</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:172,175</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:144,147</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:159,162</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:40</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -7000,14 +7113,13 @@
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:84,87</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:70,73</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:110,113</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:159,161</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:97,100</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:178,181</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:232</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:150,153</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:205</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:165,168</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
       <segment state="translated">
@@ -7292,6 +7404,7 @@
     <unit id="3237973086449301692">
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:42,45</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:84,86</note>
         <note category="description">Label of the field for an invitee&apos;s e-mail address</note>
       </notes>
       <segment state="translated">
@@ -7360,6 +7473,7 @@
         <note category="location">src/app/features/auth/components/register/register.component.ts:255</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:165</note>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:125</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:35</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -7692,7 +7806,8 @@
     </unit>
     <unit id="5896927379604759167">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:124,127</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:107,110</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:385</note>
         <note category="description">Shown when no provider key is stored</note>
       </notes>
       <segment state="translated">
@@ -7798,7 +7913,7 @@
     </unit>
     <unit id="1645769586576976075">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:241</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:202</note>
         <note category="description">Shown when linking or unlinking a repository fails</note>
       </notes>
       <segment state="initial">
@@ -7809,7 +7924,7 @@
     <unit id="164868101692958802">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:73,74</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:165,166</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:334</note>
         <note category="description">Title of the workflow setup wizard step</note>
       </notes>
       <segment state="translated">
@@ -7861,7 +7976,6 @@
     <unit id="5630056212347859555">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:85,87</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:177,179</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:264,266</note>
         <note category="description">Description of the summary wizard step</note>
       </notes>
@@ -7892,7 +8006,8 @@
     </unit>
     <unit id="6307174276781140101">
       <notes>
-        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:91,93</note>
+        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:90,92</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:54</note>
         <note category="description">Label for the repository URL in the creation summary</note>
       </notes>
       <segment state="translated">
@@ -7912,8 +8027,7 @@
     </unit>
     <unit id="8132424293432274889">
       <notes>
-        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:105,109</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:198,201</note>
+        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:104,108</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:342,347</note>
         <note category="description">Button that returns to the previous wizard step</note>
       </notes>
@@ -7924,7 +8038,7 @@
     </unit>
     <unit id="813263746069473514">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:166</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:149</note>
         <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:94,100</note>
         <note category="description">Button that connects web search</note>
       </notes>
@@ -7975,7 +8089,7 @@
     </unit>
     <unit id="3885497195825665706">
       <notes>
-        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:115,116</note>
+        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:114,115</note>
         <note category="location">src/app/features/data-transfer/components/wizard-actions.component.ts:41,42</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:353,354</note>
         <note category="description">Button that advances to the next wizard step</note>
@@ -7997,7 +8111,7 @@
     </unit>
     <unit id="2489114267038713519">
       <notes>
-        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:124,127</note>
+        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:123,126</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:60,62</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:279</note>
         <note category="description">Button that creates the project</note>
@@ -8098,6 +8212,16 @@
       <segment state="translated">
         <source>Delete Comment</source>
         <target>Eliminar el comentario</target>
+      </segment>
+    </unit>
+    <unit id="9143363282559183905">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:412</note>
+        <note category="description">Summary when the workspace has no AI key</note>
+      </notes>
+      <segment state="translated">
+        <source>No key</source>
+        <target>Sin clave</target>
       </segment>
     </unit>
     <unit id="9143715926734840668">
@@ -8419,6 +8543,16 @@
         <target>Relaciones</target>
       </segment>
     </unit>
+    <unit id="3915966149686975421">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:13</note>
+        <note category="description">Marks a workspace setup step as not required</note>
+      </notes>
+      <segment state="translated">
+        <source>Optional</source>
+        <target>Opcional</target>
+      </segment>
+    </unit>
     <unit id="3802104514603079488">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:51,55</note>
@@ -8533,16 +8667,6 @@
         <target>Filtrar por acción</target>
       </segment>
     </unit>
-    <unit id="1210194986027349974">
-      <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:81,84</note>
-        <note category="description">Title of the edit-workspace dialog</note>
-      </notes>
-      <segment state="translated">
-        <source> Edit Workspace </source>
-        <target>Editar el espacio de trabajo</target>
-      </segment>
-    </unit>
     <unit id="1212736918921252015">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:71</note>
@@ -8586,14 +8710,12 @@
     </unit>
     <unit id="4164796296331721280">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:94,96</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:141,143</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:183,185</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:257</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:102,104</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:151</note>
-        <note category="description">Label of the workspace URL identifier field</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:147,149</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:253</note>
+        <note category="description">Label of the board URL identifier field</note>
       </notes>
       <segment state="translated">
         <source>Identifier</source>
@@ -8643,8 +8765,7 @@
     </unit>
     <unit id="1611064920330567973">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:99,102</note>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:148,151</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:154,157</note>
         <note category="description">Hint explaining what the workspace identifier is used for</note>
       </notes>
       <segment state="translated">
@@ -8664,10 +8785,9 @@
     </unit>
     <unit id="6273997865051397082">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:119,122</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:174,179</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:116,119</note>
-        <note category="description">Button that saves edits to the workspace</note>
+        <note category="description">Button that saves edits to the service account</note>
       </notes>
       <segment state="translated">
         <source> Save Changes </source>
@@ -8696,9 +8816,10 @@
     </unit>
     <unit id="3561477610750565242">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:128,129</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:64,65</note>
-        <note category="description">Title of the workspace details wizard step</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:333</note>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:38</note>
+        <note category="description">Section heading for the workspace detail form</note>
       </notes>
       <segment state="translated">
         <source>Workspace details</source>
@@ -8727,8 +8848,8 @@
     </unit>
     <unit id="4337291959126858715">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:130,132</note>
-        <note category="description">Description of the workspace details wizard step</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:339</note>
+        <note category="description">Description of the workspace details step</note>
       </notes>
       <segment state="translated">
         <source>Name and identify the workspace.</source>
@@ -8737,22 +8858,12 @@
     </unit>
     <unit id="8980880129852044376">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:167,169</note>
-        <note category="description">Description of the workflow setup wizard step</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:340</note>
+        <note category="description">Description of the workflow setup step</note>
       </notes>
       <segment state="translated">
         <source>Choose the statuses, tags, relations, and board layout to start with.</source>
         <target>Elige los estados, etiquetas, relaciones y la disposición del tablero inicial.</target>
-      </segment>
-    </unit>
-    <unit id="3971100408152984961">
-      <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:210,212</note>
-        <note category="description">Button that advances to the next wizard step</note>
-      </notes>
-      <segment state="translated">
-        <source> Next </source>
-        <target>Siguiente</target>
       </segment>
     </unit>
     <unit id="3971902929824297761">
@@ -8773,16 +8884,6 @@
       <segment state="translated">
         <source>is not</source>
         <target>no es</target>
-      </segment>
-    </unit>
-    <unit id="4846490305955266167">
-      <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:220,223</note>
-        <note category="description">Button that creates the workspace</note>
-      </notes>
-      <segment state="translated">
-        <source>Save Workspace</source>
-        <target>Guardar el espacio de trabajo</target>
       </segment>
     </unit>
     <unit id="484726635285231278">
@@ -8818,25 +8919,14 @@
     </unit>
     <unit id="6807439652660785540">
       <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:290</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:169</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:185</note>
-        <note category="description">Body of a dialog or validation message</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:287</note>
+        <note category="description">Validation error when a board identifier is already in use</note>
       </notes>
       <segment state="translated">
         <source>Identifier is already taken</source>
         <target>Ese identificador ya está en uso</target>
-      </segment>
-    </unit>
-    <unit id="8398928552891290802">
-      <notes>
-        <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:295</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:174</note>
-        <note category="description">Body of a dialog or validation message</note>
-      </notes>
-      <segment state="translated">
-        <source>Could not veify Identifier availability</source>
-        <target>No se ha podido verificar la disponibilidad del identificador</target>
       </segment>
     </unit>
     <unit id="8954234322952828545">
@@ -8875,7 +8965,7 @@
     </unit>
     <unit id="5204826649434227680">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:97,100</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:77,80</note>
         <note category="description">Badge on an archived repository</note>
         <note category="meaning">repository state</note>
       </notes>
@@ -9500,6 +9590,16 @@
         <target>Actor</target>
       </segment>
     </unit>
+    <unit id="7625661213306870765">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:116,118</note>
+        <note category="description">Button that stores an API key</note>
+      </notes>
+      <segment state="translated">
+        <source>Save Key</source>
+        <target>Guardar clave</target>
+      </segment>
+    </unit>
     <unit id="7629072322253412501">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:46,51</note>
@@ -9716,6 +9816,7 @@
     <unit id="4671562292257026998">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:277</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:102</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment state="translated">
@@ -9914,7 +10015,7 @@
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:27,28</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:421</note>
-        <note category="location">src/app/workspace.routes.ts:135</note>
+        <note category="location">src/app/workspace.routes.ts:144</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
       <segment state="translated">
@@ -10433,10 +10534,20 @@
         <target> Estás editando tu última pregunta: al enviarla se reemplaza la respuesta. </target>
       </segment>
     </unit>
+    <unit id="3724068243287682962">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:64</note>
+        <note category="description">Name of the team step in the back and next buttons</note>
+      </notes>
+      <segment state="translated">
+        <source>Team</source>
+        <target>Equipo</target>
+      </segment>
+    </unit>
     <unit id="3726797985885972015">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:210</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:251</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:193</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:234</note>
         <note category="description">Describes a stored key by its last characters</note>
       </notes>
       <segment state="translated">
@@ -10725,6 +10836,16 @@
       <segment state="translated">
         <source>Last edited</source>
         <target>Última edición</target>
+      </segment>
+    </unit>
+    <unit id="3249513483374643425">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:95,99</note>
+        <note category="description">Button that adds an e-mail address to the invitation list</note>
+      </notes>
+      <segment state="translated">
+        <source>Add</source>
+        <target>Añadir</target>
       </segment>
     </unit>
     <unit id="3160376611740224455">
@@ -11084,6 +11205,16 @@
         <target>Sin tareas</target>
       </segment>
     </unit>
+    <unit id="861528548944539400">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:92,93</note>
+        <note category="description">Eyebrow above the name of a workspace being created</note>
+      </notes>
+      <segment state="translated">
+        <source>Create workspace</source>
+        <target>Crear un espacio de trabajo</target>
+      </segment>
+    </unit>
     <unit id="8562778474158270448">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:691</note>
@@ -11365,6 +11496,16 @@
         <target>después de <ph id="0" equiv="COUNT" disp="amount"/> horas</target>
       </segment>
     </unit>
+    <unit id="8072522530397927372">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:29</note>
+        <note category="description">Summary of a workspace&apos;s setup. COLOR is its colour</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COLOR" disp="colorLabel"/>, with a description</source>
+        <target><ph id="0" equiv="COLOR" disp="colorLabel"/>, con descripción</target>
+      </segment>
+    </unit>
     <unit id="840951359074313455">
       <notes>
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:141,142</note>
@@ -11465,6 +11606,16 @@
       <segment state="translated">
         <source>This change has no field values to compare.</source>
         <target>Este cambio no tiene valores de campo que comparar.</target>
+      </segment>
+    </unit>
+    <unit id="7992244993643023209">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:55,58</note>
+        <note category="description">Heading of the invitations row in workspace setup</note>
+      </notes>
+      <segment state="translated">
+        <source>Invitations</source>
+        <target>Invitaciones</target>
       </segment>
     </unit>
     <unit id="7997497639597459089">
@@ -11930,6 +12081,16 @@
       <segment state="translated">
         <source>Task name</source>
         <target>Nombre de la tarea</target>
+      </segment>
+    </unit>
+    <unit id="6884581925150077112">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:103,105</note>
+        <note category="description">Placeholder of the API key input</note>
+      </notes>
+      <segment state="translated">
+        <source>Paste your key</source>
+        <target>Pega tu clave</target>
       </segment>
     </unit>
     <unit id="6885047842383777961">
@@ -12819,7 +12980,8 @@
     </unit>
     <unit id="5981012101929159464">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:64,65</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:61,62</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:106,107</note>
         <note category="description">Button that connects a source control provider</note>
       </notes>
       <segment state="initial">
@@ -12924,7 +13086,7 @@
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:6</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
-        <note category="location">src/app/workspace.routes.ts:129</note>
+        <note category="location">src/app/workspace.routes.ts:138</note>
         <note category="description">Label of the users field</note>
       </notes>
       <segment state="translated">
@@ -13515,6 +13677,16 @@
         <target>Páginas que necesitan revisión</target>
       </segment>
     </unit>
+    <unit id="6918904936423737084">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:103,108</note>
+        <note category="description">Button that leaves setup and opens the new workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>Go to Workspace</source>
+        <target>Ir al espacio de trabajo</target>
+      </segment>
+    </unit>
     <unit id="6177550866644062465">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:149,165</note>
@@ -13669,6 +13841,16 @@
       <segment state="translated">
         <source>THEN</source>
         <target>ENTONCES</target>
+      </segment>
+    </unit>
+    <unit id="8666638429357399299">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:421</note>
+        <note category="description">Summary of a stored AI key. PROVIDER is its name, HINT its last characters</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="PROVIDER" disp="label"/> key …<ph id="1" equiv="HINT" disp="secretHint"/></source>
+        <target>Clave de <ph id="0" equiv="PROVIDER" disp="label"/> …<ph id="1" equiv="HINT" disp="secretHint"/></target>
       </segment>
     </unit>
     <unit id="8666730504824237140">
@@ -13950,7 +14132,7 @@
     </unit>
     <unit id="2527613524061523304">
       <notes>
-        <note category="location">src/app/core/services/workspace-commands.service.ts:213</note>
+        <note category="location">src/app/core/services/workspace-commands.service.ts:204</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment state="translated">
@@ -14169,7 +14351,7 @@
     </unit>
     <unit id="3897348120591552265">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:164</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:147</note>
         <note category="description">Button that opens a stored connection</note>
       </notes>
       <segment state="translated">
@@ -14220,7 +14402,7 @@
     </unit>
     <unit id="2642466038653346310">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:199</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:177</note>
         <note category="description">Title of the disconnect source control confirmation</note>
       </notes>
       <segment state="initial">
@@ -14418,6 +14600,16 @@
       <segment state="translated">
         <source> Replace assignees </source>
         <target> Sustituir los asignados </target>
+      </segment>
+    </unit>
+    <unit id="4938565863335641780">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:90,95</note>
+        <note category="description">Explains the redirect when connecting a source control provider</note>
+      </notes>
+      <segment state="translated">
+        <source> You go to the provider, then return to this step. </source>
+        <target>Vas al proveedor y luego vuelves a este paso.</target>
       </segment>
     </unit>
     <unit id="2780166062520789589">
@@ -15117,6 +15309,16 @@
         <target> Las acciones se ejecutan una vez por cada tarea del sprint. </target>
       </segment>
     </unit>
+    <unit id="830999529209968847">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:78</note>
+        <note category="description">Heading of the assistant part of setting up a workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>ASSISTANT</source>
+        <target>ASISTENTE</target>
+      </segment>
+    </unit>
     <unit id="8314762806813599338">
       <notes>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:113,115</note>
@@ -15316,6 +15518,16 @@
       <segment state="translated">
         <source>This query is too large to share as a link</source>
         <target>Esta consulta es demasiado grande para compartirla como enlace</target>
+      </segment>
+    </unit>
+    <unit id="8622004374547516990">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:72</note>
+        <note category="description">Heading of the repository part of setting up a workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>REPOSITORY</source>
+        <target>REPOSITORIO</target>
       </segment>
     </unit>
     <unit id="862315084299301566">
@@ -15870,7 +16082,7 @@
     </unit>
     <unit id="8808562628765178233">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:116</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:115</note>
         <note category="description">Label above the workspace picker naming the signed-in account. EMAIL is its address</note>
       </notes>
       <segment state="initial">
@@ -16047,6 +16259,16 @@
       <segment state="translated">
         <source>Owner</source>
         <target>Propietario</target>
+      </segment>
+    </unit>
+    <unit id="1845360736323199797">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:436</note>
+        <note category="description">Summary when nobody has been invited to the workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>Nobody invited yet</source>
+        <target>Aún no has invitado a nadie</target>
       </segment>
     </unit>
     <unit id="1845447508284521819">
@@ -16571,7 +16793,7 @@
     </unit>
     <unit id="615701940674255230">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:240</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:258</note>
         <note category="description">Shown after a source control account is connected</note>
       </notes>
       <segment state="initial">
@@ -16601,7 +16823,7 @@
     </unit>
     <unit id="6158676915815199876">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:241</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:259</note>
         <note category="description">Shown after a source control account is connected without its name</note>
       </notes>
       <segment state="translated">
@@ -17076,7 +17298,7 @@
     </unit>
     <unit id="7614983501706369438">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:92,94</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:89,91</note>
         <note category="description">Explains who can enable source control providers</note>
       </notes>
       <segment state="initial">
@@ -17481,6 +17703,16 @@
         <target>restauró</target>
       </segment>
     </unit>
+    <unit id="2892430249366351671">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:61</note>
+        <note category="description">Description of the AI assistant key step</note>
+      </notes>
+      <segment state="translated">
+        <source>Turns on the assistant and task reviews for members without their own key.</source>
+        <target>Activa el asistente y las revisiones de tareas para los miembros sin clave propia.</target>
+      </segment>
+    </unit>
     <unit id="2893417064141576408">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:79,82</note>
@@ -17631,6 +17863,16 @@
         <target>cambió la fecha de inicio</target>
       </segment>
     </unit>
+    <unit id="8004272395740026008">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:445</note>
+        <note category="description">Summary when one person has been invited</note>
+      </notes>
+      <segment state="translated">
+        <source>1 invitation sent</source>
+        <target>1 invitación enviada</target>
+      </segment>
+    </unit>
     <unit id="8008785386100703750">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:344</note>
@@ -17754,7 +17996,9 @@
     <unit id="3208980041287937682">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:94,98</note>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:109,111</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:92,94</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:80,82</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:57,61</note>
         <note category="description">Shown when a provider key is stored</note>
       </notes>
       <segment state="translated">
@@ -18228,6 +18472,16 @@
         <target>Eliminar la tarea después de 1 día</target>
       </segment>
     </unit>
+    <unit id="7376915518009230452">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:31</note>
+        <note category="description">Explains how stored keys behave</note>
+      </notes>
+      <segment state="translated">
+        <source>Keys are encrypted and never shown again after saving.</source>
+        <target>Las claves se cifran y no se vuelven a mostrar después de guardarlas.</target>
+      </segment>
+    </unit>
     <unit id="7377803053765268941">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:804</note>
@@ -18358,6 +18612,16 @@
         <target>Todavía no hay nada en <ph id="0" equiv="FOLDER" disp="folder"/></target>
       </segment>
     </unit>
+    <unit id="6989103981760158096">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:397</note>
+        <note category="description">Summary of a connected account and its linked repositories. ACCOUNT is its name, COUNT how many are linked</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="ACCOUNT" disp="accountLogin"/>, <ph id="1" equiv="COUNT" disp="linkedRepoCount"/> repositories linked</source>
+        <target><ph id="0" equiv="ACCOUNT" disp="accountLogin"/>, <ph id="1" equiv="COUNT" disp="linkedRepoCount"/> repositorios vinculados</target>
+      </segment>
+    </unit>
     <unit id="6995352275393710245">
       <notes>
         <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:138</note>
@@ -18440,7 +18704,7 @@
     </unit>
     <unit id="3523968380696217863">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:142</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:210</note>
         <note category="description">Button that returns to the source control settings</note>
       </notes>
       <segment state="initial">
@@ -18586,7 +18850,7 @@
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:105,107</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:110,112</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:91,93</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:77,79</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:76,78</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
       <segment state="translated">
@@ -18606,7 +18870,7 @@
     </unit>
     <unit id="3202815453884947117">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:165</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:148</note>
         <note category="description">Button that adds a provider key</note>
       </notes>
       <segment state="translated">
@@ -18999,7 +19263,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:605</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:484</note>
-        <note category="location">src/app/workspace.routes.ts:147</note>
+        <note category="location">src/app/workspace.routes.ts:156</note>
         <note category="description">Heading of the automation settings step</note>
       </notes>
       <segment state="translated">
@@ -19055,7 +19319,7 @@
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:70,74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:95</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:281</note>
-        <note category="location">src/app/workspace.routes.ts:75</note>
+        <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Name of the automations permission group</note>
       </notes>
       <segment state="translated">
@@ -19445,7 +19709,7 @@
     </unit>
     <unit id="9007078948220384866">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:225</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:203</note>
         <note category="description">Shown when disconnecting a source control account fails</note>
       </notes>
       <segment state="initial">
@@ -19635,6 +19899,16 @@
         <target>Eliminar las tareas</target>
       </segment>
     </unit>
+    <unit id="1077462869426882196">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:303</note>
+        <note category="description">Position of the open step in workspace setup. STEP is its number, TOTAL the number of steps</note>
+      </notes>
+      <segment state="translated">
+        <source>Step <ph id="0" equiv="STEP" disp="stepNumber"/> of <ph id="1" equiv="TOTAL" disp="total"/></source>
+        <target>Paso <ph id="0" equiv="STEP" disp="stepNumber"/> de <ph id="1" equiv="TOTAL" disp="total"/></target>
+      </segment>
+    </unit>
     <unit id="2080795702464659362">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:137</note>
@@ -19691,7 +19965,7 @@
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:140</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:170</note>
-        <note category="location">src/app/workspace.routes.ts:57</note>
+        <note category="location">src/app/workspace.routes.ts:66</note>
         <note category="description">Name of the tasks permission group</note>
       </notes>
       <segment state="translated">
@@ -20060,7 +20334,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:348,353</note>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:63,67</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:174,178</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:47,51</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
@@ -20428,7 +20702,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:184</note>
-        <note category="location">src/app/workspace.routes.ts:81</note>
+        <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Name of the boards permission group</note>
       </notes>
       <segment state="translated">
@@ -20611,6 +20885,7 @@
     <unit id="3423740992676752364">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:247</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:161</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment state="translated">
@@ -20698,6 +20973,16 @@
       <segment state="translated">
         <source>Replace selection</source>
         <target>Reemplazar selección</target>
+      </segment>
+    </unit>
+    <unit id="4233816995659234526">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:94</note>
+        <note category="description">Summary of an optional step that needs the workspace to exist first</note>
+      </notes>
+      <segment state="translated">
+        <source>Available after creating</source>
+        <target>Disponible después de crearlo</target>
       </segment>
     </unit>
     <unit id="4237605958853876047">
@@ -20887,6 +21172,16 @@
       <segment state="translated">
         <source>The invite could not be resent. Please try again.</source>
         <target>No se ha podido reenviar la invitación. Vuelve a intentarlo.</target>
+      </segment>
+    </unit>
+    <unit id="6429537437237628039">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:66</note>
+        <note category="description">Description of the invite teammates step</note>
+      </notes>
+      <segment state="translated">
+        <source>Send email invitations to this workspace.</source>
+        <target>Envía invitaciones por correo a este espacio de trabajo.</target>
       </segment>
     </unit>
     <unit id="8190126395120193208">
@@ -21143,7 +21438,7 @@
     </unit>
     <unit id="7076328347552597132">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:230</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:213</note>
         <note category="description">Name of the assistant web search connection</note>
       </notes>
       <segment state="translated">
@@ -21258,7 +21553,7 @@
         <note category="location">src/app/core/auth/permission-items.ts:619</note>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:61,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:236</note>
-        <note category="location">src/app/workspace.routes.ts:111</note>
+        <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Name of the calendar permission group</note>
       </notes>
       <segment state="translated">
@@ -21712,7 +22007,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:41,43</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:162</note>
-        <note category="location">src/app/workspace.routes.ts:46</note>
+        <note category="location">src/app/workspace.routes.ts:55</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
       <segment state="translated">
@@ -21781,6 +22076,16 @@
       <segment state="translated">
         <source> Delete </source>
         <target>Eliminar</target>
+      </segment>
+    </unit>
+    <unit id="6661267148539225484">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:50</note>
+        <note category="description">Reassures that a workspace setup step can wait</note>
+      </notes>
+      <segment state="translated">
+        <source>You can do this later in Settings.</source>
+        <target>Puedes hacerlo más tarde en la configuración.</target>
       </segment>
     </unit>
     <unit id="4187114561595975197">
@@ -22300,6 +22605,16 @@
         <target>Título de la página</target>
       </segment>
     </unit>
+    <unit id="935790816200474922">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:374</note>
+        <note category="description">Button that signs out instead of cancelling, for someone with no workspaces</note>
+      </notes>
+      <segment state="translated">
+        <source>Sign Out</source>
+        <target>Cerrar sesión</target>
+      </segment>
+    </unit>
     <unit id="935836356119933355">
       <notes>
         <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:83,86</note>
@@ -22314,7 +22629,7 @@
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:32,35</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:117</note>
-        <note category="location">src/app/workspace.routes.ts:153</note>
+        <note category="location">src/app/workspace.routes.ts:162</note>
         <note category="description">Page title for the user profile</note>
       </notes>
       <segment state="translated">
@@ -22788,6 +23103,16 @@
         <target>subió 1 commit a <ph id="0" equiv="BRANCH" disp="FIRST"/></target>
       </segment>
     </unit>
+    <unit id="1064939333589662569">
+      <notes>
+        <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:20</note>
+        <note category="description">Body of the dialog shown when leaving workspace setup with one unsent invitation</note>
+      </notes>
+      <segment state="initial">
+        <source>1 address you added has not been invited.</source>
+        <target>1 dirección que añadiste no ha sido invitada.</target>
+      </segment>
+    </unit>
     <unit id="2386184427978292327">
       <notes>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:23</note>
@@ -23012,7 +23337,7 @@
     </unit>
     <unit id="395357454003185588">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:52</note>
+        <note category="location">src/app/core/models/ai-credential.ts:57</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment state="translated">
@@ -23038,7 +23363,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:67,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:86</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
-        <note category="location">src/app/workspace.routes.ts:51</note>
+        <note category="location">src/app/workspace.routes.ts:60</note>
         <note category="description">Name of the projects permission group</note>
       </notes>
       <segment state="translated">
@@ -23609,6 +23934,16 @@
       <segment>
         <source>NDJSON</source>
         <target>NDJSON</target>
+      </segment>
+    </unit>
+    <unit id="1132222216054053447">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:51</note>
+        <note category="description">Heading of the workflow part of creating a workspace</note>
+      </notes>
+      <segment state="translated">
+        <source>WORKFLOW</source>
+        <target>FLUJO DE TRABAJO</target>
       </segment>
     </unit>
     <unit id="1132945315828298235">
@@ -24464,7 +24799,7 @@
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:68,72</note>
         <note category="location">src/app/shell/place-commands.service.ts:13</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:244</note>
-        <note category="location">src/app/workspace.routes.ts:93</note>
+        <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Name of the reports permission group</note>
       </notes>
       <segment state="translated">
@@ -24842,7 +25177,7 @@
     </unit>
     <unit id="1286135493079382754">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:196</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:158</note>
         <note category="description">Tooltip on the button that imports a repository&apos;s history</note>
       </notes>
       <segment state="translated">
@@ -25071,7 +25406,7 @@
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:61,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:229</note>
-        <note category="location">src/app/workspace.routes.ts:105</note>
+        <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
       <segment state="translated">
@@ -25180,6 +25515,17 @@
       <segment state="translated">
         <source> <ph id="0" equiv="COUNT" disp="{{ relationCount() // i18n(ph=&quot;COUNT&quot;) }}"/> relations </source>
         <target> <ph id="0" equiv="COUNT" disp="{{ relationCount() // i18n(ph=&quot;COUNT&quot;) }}"/> relaciones </target>
+      </segment>
+    </unit>
+    <unit id="8235282277653107812">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:94,95</note>
+        <note category="location">src/app/workspace.routes.ts:38</note>
+        <note category="description">Eyebrow above the name of a workspace being set up</note>
+      </notes>
+      <segment state="translated">
+        <source>Set up workspace</source>
+        <target>Configurar el espacio de trabajo</target>
       </segment>
     </unit>
     <unit id="8236925782664558126">
@@ -25580,12 +25926,13 @@
         <note category="location">src/app/features/settings/settings.routes.ts:173</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:31,33</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:59</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:151,154</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:157,159</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:389</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:453</note>
-        <note category="location">src/app/workspace.routes.ts:117</note>
+        <note category="location">src/app/workspace.routes.ts:126</note>
         <note category="description">Name of the assistant permission group</note>
       </notes>
       <segment state="translated">
@@ -26926,7 +27273,7 @@
     </unit>
     <unit id="8927455770711141149">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:57</note>
+        <note category="location">src/app/core/models/ai-credential.ts:62</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment state="translated">
@@ -26936,7 +27283,7 @@
     </unit>
     <unit id="9050138848550192211">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:56</note>
+        <note category="location">src/app/core/models/ai-credential.ts:61</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:68,71</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
@@ -26947,8 +27294,10 @@
     </unit>
     <unit id="9052706340903358762">
       <notes>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:174</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:190</note>
-        <note category="description">Shown when the workspace identifier availability check fails</note>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:293</note>
+        <note category="description">Shown when the board identifier availability check fails</note>
       </notes>
       <segment state="translated">
         <source>Could not verify Identifier availability</source>
@@ -27117,7 +27466,7 @@
     </unit>
     <unit id="2754654270554116224">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:83,85</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:82,84</note>
         <note category="description">Placeholder of the workspace filter</note>
       </notes>
       <segment state="initial">
@@ -27820,6 +28169,16 @@
         <target>Crear importación</target>
       </segment>
     </unit>
+    <unit id="4023408938629041862">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:153</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The invite(s) could not be sent.</source>
+        <target>No se pudieron enviar las invitaciones.</target>
+      </segment>
+    </unit>
     <unit id="8674937611142284741">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:71,73</note>
@@ -28050,6 +28409,16 @@
         <target> No hay acciones configuradas </target>
       </segment>
     </unit>
+    <unit id="8679806927601731663">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:102,104</note>
+        <note category="description">Button that retries a failed action</note>
+      </notes>
+      <segment state="translated">
+        <source>Try Again</source>
+        <target>Reintentar</target>
+      </segment>
+    </unit>
     <unit id="8679924729501771276">
       <notes>
         <note category="location">src/app/shared/components/query-builder/query-explanation.ts:14</note>
@@ -28132,7 +28501,8 @@
     </unit>
     <unit id="5602212197098670157">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:79,81</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:76,78</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:40,43</note>
         <note category="description">Shown when the source control settings cannot be loaded</note>
       </notes>
       <segment state="translated">
@@ -28143,7 +28513,7 @@
     <unit id="5603033194044285473">
       <notes>
         <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:94,97</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:54,58</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:29,33</note>
         <note category="description">Button that opens the repository picker for a connection</note>
       </notes>
       <segment state="initial">
@@ -29084,7 +29454,7 @@
         <note category="location">src/app/core/auth/permission-items.ts:608</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:48,49</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:252</note>
-        <note category="location">src/app/workspace.routes.ts:63</note>
+        <note category="location">src/app/workspace.routes.ts:72</note>
         <note category="description">Name of the queries permission group</note>
       </notes>
       <segment state="translated">
@@ -29344,13 +29714,23 @@
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:179</note>
         <note category="location">src/app/features/settings/settings.routes.ts:180</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:53,55</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:50,52</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:397</note>
         <note category="description">Breadcrumb for the workspace source control settings</note>
       </notes>
       <segment state="initial">
         <source>Source Control</source>
         <target>Control de código fuente</target>
+      </segment>
+    </unit>
+    <unit id="8218313257001103964">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:229</note>
+        <note category="description">Shown when creating a workspace fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The workspace could not be created.</source>
+        <target>No se pudo crear el espacio de trabajo.</target>
       </segment>
     </unit>
     <unit id="8960678085928120824">
@@ -29920,6 +30300,16 @@
         <target>Ningún evento coincide</target>
       </segment>
     </unit>
+    <unit id="1310029489717814435">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:446</note>
+        <note category="description">Summary of how many people have been invited. COUNT is that number</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> invitations sent</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> invitaciones enviadas</target>
+      </segment>
+    </unit>
     <unit id="1310824757926803504">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,29</note>
@@ -30109,6 +30499,16 @@
         <target>Ascendente</target>
       </segment>
     </unit>
+    <unit id="5808520175871059661">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:60</note>
+        <note category="description">Title of the AI assistant key step</note>
+      </notes>
+      <segment state="translated">
+        <source>Add an AI assistant key</source>
+        <target>Añadir una clave del asistente de IA</target>
+      </segment>
+    </unit>
     <unit id="3259201493560941662">
       <notes>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:156,158</note>
@@ -30201,6 +30601,16 @@
       <segment state="translated">
         <source>Will create 1 link</source>
         <target>Creará 1 enlace</target>
+      </segment>
+    </unit>
+    <unit id="2360433782693088220">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:328</note>
+        <note category="description">Position of the open step when creating a workspace. STEP is its number</note>
+      </notes>
+      <segment state="initial">
+        <source>Step <ph id="0" equiv="STEP" disp="stepNumber"/></source>
+        <target>Paso <ph id="0" equiv="STEP" disp="stepNumber"/></target>
       </segment>
     </unit>
     <unit id="2021375731542005347">
@@ -30455,6 +30865,16 @@
         <target>Otros</target>
       </segment>
     </unit>
+    <unit id="8695890183670129333">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:125,127</note>
+        <note category="description">Confirms the workspace exists and the remaining steps can be skipped. NAME is the workspace name</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="NAME" disp="{{ workspaceName() // i18n(ph=&quot;NAME&quot;) }}"/> is ready. Everything from here is optional.</source>
+        <target><ph id="0" equiv="NAME" disp="{{ workspaceName() // i18n(ph=&quot;NAME&quot;) }}"/> está listo. Todo lo demás es opcional.</target>
+      </segment>
+    </unit>
     <unit id="8696217324884072620">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:179</note>
@@ -30625,7 +31045,8 @@
     </unit>
     <unit id="4008496035123032607">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:170,173</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:43,46</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:71,75</note>
         <note category="description">Button that reloads the repository list from the provider</note>
       </notes>
       <segment state="initial">
@@ -30730,7 +31151,7 @@
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,62</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:87</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:200</note>
-        <note category="location">src/app/workspace.routes.ts:87</note>
+        <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Name of the sprints permission group</note>
       </notes>
       <segment state="translated">
@@ -30893,7 +31314,7 @@
     </unit>
     <unit id="4573642022855940312">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:128,132</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:108,112</note>
         <note category="description">Badge when importing a repository&apos;s recent history failed</note>
       </notes>
       <segment state="translated">
@@ -30928,7 +31349,7 @@
         <note category="location">src/app/core/auth/permission-items.ts:626</note>
         <note category="location">src/app/features/storage/views/storage-view.component.ts:22,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:413</note>
-        <note category="location">src/app/workspace.routes.ts:141</note>
+        <note category="location">src/app/workspace.routes.ts:150</note>
         <note category="description">Name of the storage permission group</note>
       </notes>
       <segment state="translated">
@@ -30972,7 +31393,7 @@
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:32,33</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:263</note>
-        <note category="location">src/app/workspace.routes.ts:69</note>
+        <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Label on the pin control when the task is already pinned</note>
       </notes>
       <segment state="translated">
@@ -31485,7 +31906,7 @@
     </unit>
     <unit id="5125508136883174617">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:75,76</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:74,75</note>
         <note category="description">Shown when the workspace list fails to load</note>
       </notes>
       <segment state="translated">
@@ -31560,6 +31981,16 @@
       <segment state="translated">
         <source>name to &quot;<ph id="0" equiv="NAME" disp="action.taskName"/>&quot;</source>
         <target>nombre a &quot;<ph id="0" equiv="NAME" disp="action.taskName"/>&quot;</target>
+      </segment>
+    </unit>
+    <unit id="3331871060277438994">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:52,55</note>
+        <note category="description">Shown when the saved AI keys of a workspace cannot load</note>
+      </notes>
+      <segment state="initial">
+        <source>Saved keys could not be loaded</source>
+        <target>No se pudieron cargar las claves guardadas</target>
       </segment>
     </unit>
     <unit id="3334152991864561474">
@@ -31981,7 +32412,7 @@
     </unit>
     <unit id="7543358363832842069">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:88,90</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:85,87</note>
         <note category="description">Shown when no source control provider is configured on the server</note>
       </notes>
       <segment state="initial">
@@ -32213,7 +32644,7 @@
     </unit>
     <unit id="8788669123164389474">
       <notes>
-        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:143</note>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:213</note>
         <note category="description">Button that goes to the list of the user&apos;s workspaces</note>
       </notes>
       <segment state="translated">
@@ -32283,7 +32714,7 @@
     </unit>
     <unit id="2557623954339695776">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:82,85</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:65,68</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:136</note>
         <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:34,35</note>
         <note category="description">Heading of the assistant connections card</note>
@@ -32335,7 +32766,7 @@
     </unit>
     <unit id="5087255234379846922">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:200</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:178</note>
         <note category="description">Explains what disconnecting a source control account does</note>
       </notes>
       <segment state="initial">
@@ -32406,7 +32837,7 @@
     </unit>
     <unit id="2116113218403836033">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:74,77</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:54,57</note>
         <note category="description">Shown when the repository list cannot be loaded</note>
       </notes>
       <segment state="initial">
@@ -32466,7 +32897,7 @@
     </unit>
     <unit id="5376287016044032856">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:106,109</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:86,89</note>
         <note category="description">Badge on a repository the connection can no longer see</note>
       </notes>
       <segment state="initial">
@@ -32505,6 +32936,16 @@
       <segment state="translated">
         <source>View All Assistant Conversations</source>
         <target>Ver todas las conversaciones del asistente</target>
+      </segment>
+    </unit>
+    <unit id="5386960713770553549">
+      <notes>
+        <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:21</note>
+        <note category="description">Body of the dialog shown when leaving workspace setup with unsent invitations. COUNT is how many</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> addresses you added have not been invited.</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> direcciones que añadiste no han sido invitadas.</target>
       </segment>
     </unit>
     <unit id="5387282719521675016">
@@ -32922,6 +33363,16 @@
         <target>Activar automatización</target>
       </segment>
     </unit>
+    <unit id="3509408368349569189">
+      <notes>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-assistant-step.component.ts:91,93</note>
+        <note category="description">Accessible label of the AI provider choice</note>
+      </notes>
+      <segment state="translated">
+        <source>AI provider</source>
+        <target>Proveedor de IA</target>
+      </segment>
+    </unit>
     <unit id="5787827157889164686">
       <notes>
         <note category="location">src/app/shell/shell-menu-link.component.ts:169</note>
@@ -33008,6 +33459,17 @@
         <target>Contraer</target>
       </segment>
     </unit>
+    <unit id="1357016527933073189">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:65</note>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:86</note>
+        <note category="description">Title of the invite teammates step</note>
+      </notes>
+      <segment state="translated">
+        <source>Invite teammates</source>
+        <target>Invitar a compañeros</target>
+      </segment>
+    </unit>
     <unit id="1358102618855795038">
       <notes>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:478</note>
@@ -33031,8 +33493,8 @@
     </unit>
     <unit id="6432332024639591969">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:65,68</note>
-        <note category="description">Button that opens the create-workspace dialog</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:64,67</note>
+        <note category="description">Link that opens the create-workspace page</note>
       </notes>
       <segment state="initial">
         <source> Create workspace </source>
@@ -33250,6 +33712,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="NAME" disp="displayName ?? &apos;&apos;"/> <ph id="1" equiv="STATE" disp="state"/></source>
         <target><ph id="0" equiv="NAME" disp="displayName ?? &apos;&apos;"/> <ph id="1" equiv="STATE" disp="state"/></target>
+      </segment>
+    </unit>
+    <unit id="7133842847032503421">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:396</note>
+        <note category="description">Summary of a connected account with one linked repository. ACCOUNT is its name</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="ACCOUNT" disp="accountLogin"/>, 1 repository linked</source>
+        <target><ph id="0" equiv="ACCOUNT" disp="accountLogin"/>, 1 repositorio vinculado</target>
       </segment>
     </unit>
     <unit id="7135702134770124349">
@@ -33528,6 +34000,16 @@
         <target>Elige las columnas visibles y arrástralas para reordenarlas.</target>
       </segment>
     </unit>
+    <unit id="2096688268266883560">
+      <notes>
+        <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:194,196</note>
+        <note category="description">Button that advances to the workflow step</note>
+      </notes>
+      <segment state="translated">
+        <source> Workflow </source>
+        <target>Flujo de trabajo</target>
+      </segment>
+    </unit>
     <unit id="2099366504914913515">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:121</note>
@@ -33619,6 +34101,16 @@
         <target>Personalizar las columnas</target>
       </segment>
     </unit>
+    <unit id="3674642234009089736">
+      <notes>
+        <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:206</note>
+        <note category="description">Button that returns to the new workspace&apos;s setup steps</note>
+      </notes>
+      <segment state="translated">
+        <source>Back to Setup</source>
+        <target>Volver a la configuración</target>
+      </segment>
+    </unit>
     <unit id="3676095562960762035">
       <notes>
         <note category="location">src/app/features/queries/models/task-query-copy.ts:4</note>
@@ -33631,7 +34123,7 @@
     </unit>
     <unit id="3679464218270439179">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:266</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:227</note>
         <note category="description">Shown when starting a repository history sync fails</note>
       </notes>
       <segment state="translated">
@@ -33641,7 +34133,7 @@
     </unit>
     <unit id="3686284950598311784">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:91,93</note>
+        <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:71,73</note>
         <note category="description">Badge on a private repository</note>
       </notes>
       <segment state="initial">
@@ -33697,6 +34189,16 @@
       <segment state="translated">
         <source> You cannot change this shared query, so saving creates your own copy of it. </source>
         <target>No puedes cambiar esta consulta compartida, así que al guardarla se creará tu propia copia.</target>
+      </segment>
+    </unit>
+    <unit id="4456430649973785578">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:30</note>
+        <note category="description">Summary of a workspace&apos;s setup. COLOR is its colour</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COLOR" disp="colorLabel"/>, no description</source>
+        <target><ph id="0" equiv="COLOR" disp="colorLabel"/>, sin descripción</target>
       </segment>
     </unit>
     <unit id="3844444380870280621">
@@ -33768,6 +34270,16 @@
       <segment state="translated">
         <source>Choose month</source>
         <target>Elegir el mes</target>
+      </segment>
+    </unit>
+    <unit id="9040182348182707115">
+      <notes>
+        <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:80</note>
+        <note category="description">Title of the AI assistant key card</note>
+      </notes>
+      <segment state="translated">
+        <source>AI assistant key</source>
+        <target>Clave del asistente de IA</target>
       </segment>
     </unit>
     <unit id="9041444200911417888">
@@ -33968,6 +34480,7 @@
         <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:70,71</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-connection-dialog.component.ts:425</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-search-dialog.component.ts:341</note>
+        <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:111,113</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:46,49</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
@@ -34129,7 +34642,7 @@
     <unit id="2907016025519254862">
       <notes>
         <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:82,85</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:201</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:179</note>
         <note category="description">Button that removes a source control connection</note>
       </notes>
       <segment state="initial">
@@ -34341,7 +34854,7 @@
     </unit>
     <unit id="4443629607890963383">
       <notes>
-        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:247</note>
+        <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:230</note>
         <note category="description">Hint listing the supported web search providers</note>
       </notes>
       <segment state="translated">
@@ -34682,6 +35195,16 @@
       <segment state="translated">
         <source>No deleted tasks match these filters.</source>
         <target>Ninguna tarea eliminada coincide con estos filtros.</target>
+      </segment>
+    </unit>
+    <unit id="9196145963571801217">
+      <notes>
+        <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:17</note>
+        <note category="description">Title of the dialog shown when leaving workspace setup with unsent invitations</note>
+      </notes>
+      <segment state="initial">
+        <source>Leave without sending invites?</source>
+        <target>¿Salir sin enviar las invitaciones?</target>
       </segment>
     </unit>
     <unit id="1978378776147370036">

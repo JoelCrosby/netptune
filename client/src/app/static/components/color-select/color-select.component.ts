@@ -49,7 +49,7 @@ import { labelIdFor } from '../form-control-a11y';
                 #swatch
                 type="button"
                 role="radio"
-                class="focus-visible:ring-primary m-[0.2rem] flex h-9 min-h-9 min-w-9 flex-1 cursor-pointer items-center justify-center rounded-sm text-white focus-visible:ring-2 focus-visible:outline-none"
+                class="focus-visible:ring-primary m-[0.2rem] flex h-9 min-h-9 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-sm text-white focus-visible:ring-2 focus-visible:outline-none max-md:h-11"
                 [appTooltip]="color.label"
                 [class]="color.swatchClass"
                 [attr.aria-label]="color.label"

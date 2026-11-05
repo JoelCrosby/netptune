@@ -1,4 +1,8 @@
 import { Service, inject } from '@angular/core';
+import {
+  PendingSourceControlConnect,
+  writePendingSourceControlConnect,
+} from '@core/auth/pending-source-control-connect';
 import { SourceControlRepo } from '@core/models/source-control';
 import { SourceControlService } from '@core/services/source-control.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
@@ -11,6 +15,22 @@ import { tap } from 'rxjs';
 export class SourceControlCommandsService {
   private readonly api = inject(SourceControlService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+
+  beginConnect(pending: PendingSourceControlConnect) {
+    return this.api.beginConnect(pending.provider).pipe(
+      requireSuccess(),
+      tap((response) => {
+        const redirectUrl = response.payload?.redirectUrl;
+
+        if (!redirectUrl) {
+          throw new Error(CONNECT_FAILED);
+        }
+
+        writePendingSourceControlConnect(pending);
+        window.location.assign(redirectUrl);
+      })
+    );
+  }
 
   disconnect(connectionId: number) {
     return this.api.disconnect(connectionId).pipe(
@@ -44,3 +64,5 @@ export class SourceControlCommandsService {
     this.workspaceRefresh.refresh(['sourceControl', 'codeLinks']);
   }
 }
+
+const CONNECT_FAILED = $localize`:Shown when starting a source control connection fails:The connection could not be started.`;

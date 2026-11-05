@@ -1,6 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { writePendingSourceControlConnect } from '@core/auth/pending-source-control-connect';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
   SourceControlConnection,
@@ -11,18 +10,16 @@ import {
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { DialogService } from '@core/services/dialog.service';
-import { SourceControlService } from '@core/services/source-control.service';
 import { getErrorMessage } from '@core/util/error-message';
 import { mutation } from '@core/util/mutation';
-import { requireSuccess } from '@core/util/rxjs-operators';
 import { SourceControlConnectionsComponent } from '@settings/components/source-control/source-control-connections.component';
 import {
   SourceControlReposDialogComponent,
   SourceControlReposDialogData,
 } from '@settings/components/source-control/source-control-repos-dialog.component';
 import { sourceControlProvidersResource } from '@core/resources/source-control.resource';
-import { sourceControlConnectionsResource } from '@settings/resources/source-control.resource';
-import { SourceControlCommandsService } from '@settings/services/source-control-commands.service';
+import { sourceControlConnectionsResource } from '@core/resources/source-control.resource';
+import { SourceControlCommandsService } from '@core/services/source-control-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -103,7 +100,6 @@ import { first, switchMap } from 'rxjs';
   `,
 })
 export class WorkspaceSourceControlViewComponent {
-  private readonly service = inject(SourceControlService);
   private readonly commands = inject(SourceControlCommandsService);
   private readonly dialog = inject(DialogService);
   private readonly confirmation = inject(ConfirmationService);
@@ -163,26 +159,8 @@ export class WorkspaceSourceControlViewComponent {
     }
 
     this.connect.run(
-      this.service.beginConnect(provider.provider).pipe(requireSuccess()),
-      {
-        onSuccess: (response) => {
-          const redirectUrl = response.payload?.redirectUrl;
-
-          if (!redirectUrl) {
-            this.snackbar.error(this.connectFailedMessage);
-
-            return;
-          }
-
-          writePendingSourceControlConnect({
-            workspace,
-            provider: provider.provider,
-          });
-
-          window.location.assign(redirectUrl);
-        },
-        onError: (message) => this.snackbar.error(message),
-      }
+      this.commands.beginConnect({ workspace, provider: provider.provider }),
+      { onError: (message) => this.snackbar.error(message) }
     );
   }
 

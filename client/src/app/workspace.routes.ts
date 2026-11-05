@@ -24,10 +24,19 @@ import { assistantGuard } from './core/auth/assistant.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { workspaceGuard } from './core/auth/workspace.guard';
 import { workspaceResovler } from './core/resolvers/workspace-resolver';
+import { confirmLeaveWithUnsentInvites } from './features/workspaces/guards/unsent-invites.guard';
 
 // prettier-ignore
 
 export const routes: Routes = [
+  {
+    path: 'setup',
+    canActivate: [authGuard, workspaceGuard],
+    canDeactivate: [confirmLeaveWithUnsentInvites],
+    resolve: [workspaceResovler],
+    loadComponent: () => import('./features/workspaces/views/workspace-setup-view/workspace-setup-view.component').then((m) => m.WorkspaceSetupViewComponent),
+    data: { title: $localize`:Page title for the steps that follow creating a workspace:Set up workspace` },
+  },
   {
     path: '',
     canActivate: [workspaceGuard],

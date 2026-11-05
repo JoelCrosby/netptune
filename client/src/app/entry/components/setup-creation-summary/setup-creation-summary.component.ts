@@ -37,52 +37,31 @@ import {
   `,
 })
 export class SetupCreationSummaryComponent {
-  readonly entityType = input.required<'Workspace' | 'Project'>();
   readonly name = input('');
   readonly secondaryLabel = input('Identifier');
   readonly secondaryValue = input('');
   readonly templateKey = input('basic');
   readonly template = input<WorkspaceSetupTemplate>();
-  readonly showWorkspaceDefaults = input(false);
 
   readonly templateName = computed(
     () => this.template()?.name ?? this.templateKey()
   );
 
-  /**
-   * entityType is a discriminant, so it needs localised display copy rather than
-   * being rendered raw. Concatenating it in the template would be untranslatable.
-   */
-  readonly entityTypeLabel = computed(() => {
-    return this.entityType() === 'Workspace'
-      ? $localize`:The workspace entity, shown in setup copy:Workspace`
-      : $localize`:The project entity, shown in setup copy:Project`;
-  });
-
   readonly displayName = computed(() => {
-    const name = this.name();
-
-    if (name) {
-      return name;
-    }
-
-    return this.entityType() === 'Workspace'
-      ? $localize`:Placeholder name for a workspace that has not been named yet:Untitled workspace`
-      : $localize`:Placeholder name for a project that has not been named yet:Untitled project`;
+    return (
+      this.name() ||
+      $localize`:Placeholder name for a project that has not been named yet:Untitled project`
+    );
   });
 
   readonly summaryLine = computed(() => {
-    return $localize`:Summary line under the name being created. ENTITY is the localised entity name and TEMPLATE is the chosen workflow template:${this.entityTypeLabel()}:ENTITY: using the ${this.templateName()}:TEMPLATE: workflow`;
+    return $localize`:Summary line under the project being created. TEMPLATE is the chosen workflow template:Project using the ${this.templateName()}:TEMPLATE: workflow`;
   });
   readonly boardFlow = computed(() =>
     (this.template()?.boardGroups ?? []).join(' → ')
   );
   readonly summaryItems = computed<readonly SummaryListItem[]>(() => {
-    const selectedTemplate = this.template();
     const secondaryValue = this.secondaryValue();
-    const workspaceDefaults = selectedTemplate
-      ? `${selectedTemplate.statuses.length} statuses · ${selectedTemplate.tags.length} tags · ${selectedTemplate.relationTypes.length} relations`
-      : '';
 
     return [
       ...(secondaryValue
@@ -98,15 +77,6 @@ export class SetupCreationSummaryComponent {
         label: $localize`:Label shown in the interface:Board flow`,
         value: this.boardFlow() || 'Default board',
       },
-      ...(this.showWorkspaceDefaults() && workspaceDefaults
-        ? [
-            {
-              label: $localize`:Label shown in the interface:Workspace defaults`,
-              value: workspaceDefaults,
-              muted: true,
-            },
-          ]
-        : []),
     ];
   });
 }
