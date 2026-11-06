@@ -124,7 +124,7 @@ public sealed class CommentsEndpointTests
     public async Task Update_ShouldReturnNotFound_WhenCommentDoesNotExist()
     {
         var response = await Client.PutAsJsonAsync(
-            "api/comments/1000",
+            $"api/comments/{int.MaxValue}",
             new UpdateCommentRequest { Comment = "Updated comment" });
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -159,7 +159,7 @@ public sealed class CommentsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.DeleteAsync("api/comments/1000");
+        var response = await Client.DeleteAsync($"api/comments/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
@@ -217,7 +217,7 @@ public sealed class CommentsEndpointTests
     public async Task AddReaction_ShouldReturnNotFound_WhenCommentDoesNotExist()
     {
         var response = await Client.PostAsJsonAsync(
-            "api/comments/1000/reactions",
+            $"api/comments/{int.MaxValue}/reactions",
             new CommentReactionRequest { Value = ReactionValues.ThumbsUp });
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

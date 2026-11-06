@@ -321,7 +321,7 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task GetById_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.GetAsync("api/tasks/1000");
+        var response = await Client.GetAsync($"api/tasks/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -846,7 +846,7 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.DeleteAsync("api/tasks/1000");
+        var response = await Client.DeleteAsync($"api/tasks/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 

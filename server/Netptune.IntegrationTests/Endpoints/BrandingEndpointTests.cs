@@ -202,7 +202,7 @@ public sealed class BrandingEndpointTests
     [Fact]
     public async Task Upload_ShouldReturnNotFound_WhenTheTargetDoesNotExist()
     {
-        var response = await Post("api/boards/1000/branding/logo", "logo.png", "image/png", [1]);
+        var response = await Post($"api/boards/{int.MaxValue}/branding/logo", "logo.png", "image/png", [1]);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

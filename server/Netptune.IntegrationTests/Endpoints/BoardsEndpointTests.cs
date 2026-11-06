@@ -42,7 +42,7 @@ public sealed class BoardsEndpointTests
     [Fact]
     public async Task GetById_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.GetAsync("api/boards/1000");
+        var response = await Client.GetAsync($"api/boards/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -79,7 +79,7 @@ public sealed class BoardsEndpointTests
     {
         var request = new UpdateBoardRequest
         {
-            Id = 1000,
+            Id = int.MaxValue,
             Name = "Updated name",
         };
 
@@ -139,7 +139,7 @@ public sealed class BoardsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.DeleteAsync("api/boards/1000");
+        var response = await Client.DeleteAsync($"api/boards/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 

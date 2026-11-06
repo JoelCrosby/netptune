@@ -50,7 +50,7 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task GetById_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.GetAsync("api/boardgroups/1000");
+        var response = await Client.GetAsync($"api/boardgroups/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -84,7 +84,7 @@ public sealed class BoardGroupsEndpointTests
     {
         var request = new UpdateBoardGroupRequest
         {
-            BoardGroupId = 1000,
+            BoardGroupId = int.MaxValue,
             Name = "Updated name",
             SortOrder = 10,
         };
@@ -189,7 +189,7 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.DeleteAsync("api/boardgroups/1000");
+        var response = await Client.DeleteAsync($"api/boardgroups/{int.MaxValue}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
