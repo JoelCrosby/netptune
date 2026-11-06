@@ -150,13 +150,18 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
             return TaskUpdateApplication.Failed(AutomationMessage.InvalidDateRange);
         }
 
+        var statusChanged = status is not null && task.StatusId != status.Id;
+        var changedStatus = statusChanged ? status : null;
+
         TaskMutationPipeline.Apply(task, new TaskMutationValues(status, contribution.Priority));
 
         ApplyScalarUpdates(task, contribution, finalStartDate, finalDueDate);
         ApplyAssignees(task, contribution);
         ApplyTags(task, contribution, tags);
 
-        var boardGroupChanged = await ApplyBoardGroup(task.Id, boardGroup, cancellationToken);
+        var statusMoves = await FollowStatus(task.Id, changedStatus, boardGroup, cancellationToken);
+        var ruleMoves = await ApplyBoardGroup(task.Id, boardGroup, cancellationToken);
+        var boardGroupChanged = statusMoves.HasMoves || ruleMoves.HasMoves;
 
         task.UpdatedAt = DateTime.UtcNow;
         task.ModifiedByUserId = execution.ExecutionUserId!;
@@ -199,6 +204,18 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 
             taskMutations.Add(outcome);
         }
+
+        var moveContext = new TaskBoardMoveContext
+        {
+            WorkspaceId = execution.Rule.WorkspaceId,
+            CorrelationId = execution.CorrelationId,
+            ActorUserId = execution.ExecutionUserId,
+            CausationEventId = execution.CausationEventId,
+            OriginType = EventOriginType.Automation,
+        };
+
+        await Placement.RecordMoves(statusMoves, moveContext, cancellationToken);
+        await Placement.RecordMoves(ruleMoves, moveContext, cancellationToken);
 
         var changedFields = diff.ChangedFields.Select(field => field.ToString()).ToList();
 
@@ -319,14 +336,45 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
             selectedTagIds).ToList();
     }
 
-    private async Task<bool> ApplyBoardGroup(int taskId, BoardGroupTaskTarget? boardGroup, CancellationToken cancellationToken)
+    // The rule's own column wins on its board, so only the task's other boards follow the status.
+    private async Task<TaskBoardMoves> FollowStatus(
+        int taskId,
+        Status? changedStatus,
+        BoardGroupTaskTarget? boardGroup,
+        CancellationToken cancellationToken)
+    {
+        if (changedStatus is null)
+        {
+            return TaskBoardMoves.None;
+        }
+
+        return await Placement.FollowStatus([taskId], changedStatus, boardGroup?.BoardId, cancellationToken);
+    }
+
+    private async Task<TaskBoardMoves> ApplyBoardGroup(
+        int taskId,
+        BoardGroupTaskTarget? boardGroup,
+        CancellationToken cancellationToken)
     {
         if (boardGroup is null)
         {
-            return false;
+            return TaskBoardMoves.None;
         }
 
-        return await Placement.Place(taskId, boardGroup, cancellationToken);
+        var previous = await UnitOfWork.ProjectTasksInGroups.GetPlacementOnBoard(
+            taskId,
+            boardGroup.BoardId,
+            cancellationToken);
+        var placed = await Placement.Place(taskId, boardGroup, cancellationToken);
+
+        if (!placed)
+        {
+            return TaskBoardMoves.None;
+        }
+
+        var move = new TaskBoardMove(taskId, previous?.BoardGroupId, boardGroup);
+
+        return new TaskBoardMoves(null, [move]);
     }
 
     private static List<string> GetReferencedUserIds(AutomationTaskUpdateContribution contribution)

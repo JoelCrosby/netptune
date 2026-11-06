@@ -14,8 +14,15 @@ interface SourceControlActivityMeta {
 export const activityDetail = (value: ActivityViewModel): string => {
   switch (value.type) {
     case ActivityType.move: {
-      const meta = value.meta as { group: string };
-      return `to ${meta?.group ?? ''} group`;
+      const meta = value.meta as { group?: string; causedByStatus?: string };
+      const group = meta?.group ?? '';
+      const status = meta?.causedByStatus;
+
+      if (status) {
+        return $localize`:Detail of a card moved because its status changed. GROUP is a board column, STATUS a task status:to ${group}:GROUP: group after the status changed to ${status}:STATUS:`;
+      }
+
+      return $localize`:Detail of a card moved to a board column in the activity feed. GROUP is the column name:to ${group}:GROUP: group`;
     }
     case ActivityType.assign:
       return `to ${value.assignee?.displayName ?? '(removed user)'}`;

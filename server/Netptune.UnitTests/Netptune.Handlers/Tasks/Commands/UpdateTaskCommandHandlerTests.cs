@@ -12,6 +12,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Tasks.Commands;
@@ -33,6 +34,7 @@ public class UpdateTaskCommandHandlerTests
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
+    private readonly ITaskPlacementService Placement = Substitute.For<ITaskPlacementService>();
 
     public UpdateTaskCommandHandlerTests()
     {
@@ -43,7 +45,9 @@ public class UpdateTaskCommandHandlerTests
         var referenceResolver = new TaskReferenceResolver(UnitOfWork);
         var statusResolver = new TaskStatusResolver(UnitOfWork);
 
-        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver);
+        Placement.FollowStatus(default!, default!, default, default).ReturnsForAnyArgs(TaskBoardMoves.None);
+
+        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver, Placement);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)
@@ -229,6 +233,68 @@ public class UpdateTaskCommandHandlerTests
         await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         await EventPublisher.DidNotReceive().Dispatch(Arg.Any<SearchIndexEvent>());
+    }
+
+    [Fact]
+    public async Task Update_ShouldMoveBoardCardsToFollowStatus_WhenTheStatusChanged()
+    {
+        var task = BuildTask();
+        var newStatusId = task.StatusId + 1;
+        var request = new UpdateProjectTaskRequest { Id = task.Id, StatusId = newStatusId };
+        var viewModel = new TaskViewModel { Id = task.Id, StatusId = newStatusId };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await Placement.Received(1).FollowStatus(
+            Arg.Is<IReadOnlyCollection<int>>(ids => ids.SequenceEqual(new[] { task.Id })),
+            Arg.Is<Status>(status => status.Id == newStatusId),
+            null,
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Update_ShouldRecordTheMoves_WithTheStatusChangeCorrelation()
+    {
+        var task = BuildTask();
+        var newStatusId = task.StatusId + 1;
+        var request = new UpdateProjectTaskRequest { Id = task.Id, StatusId = newStatusId };
+        var viewModel = new TaskViewModel { Id = task.Id, StatusId = newStatusId, WorkspaceId = task.WorkspaceId };
+        var target = new BoardGroupTaskTarget { Id = 30, Name = "Done", MaxSortOrder = 0, BoardId = 3 };
+        var moves = new TaskBoardMoves(new Status { Id = newStatusId }, [new TaskBoardMove(task.Id, 10, target)]);
+        TaskChangedMessage? statusChange = null;
+        TaskBoardMoveContext? recordedContext = null;
+
+        SetupHandlerDependencies(request, task, viewModel);
+        Placement.FollowStatus(default!, default!, default, default).ReturnsForAnyArgs(moves);
+        await Placement.RecordMoves(
+            moves,
+            Arg.Do<TaskBoardMoveContext>(context => recordedContext = context),
+            Arg.Any<CancellationToken>());
+        await EventPublisher.Dispatch(Arg.Do<TaskChangedMessage>(message => statusChange = message));
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        statusChange.Should().NotBeNull();
+        recordedContext.Should().NotBeNull();
+        recordedContext!.WorkspaceId.Should().Be(task.WorkspaceId);
+        statusChange!.CorrelationId.Should().Be(recordedContext.CorrelationId);
+    }
+
+    [Fact]
+    public async Task Update_ShouldLeaveBoardCards_WhenTheStatusIsUnchanged()
+    {
+        var task = BuildTask();
+        var request = new UpdateProjectTaskRequest { Id = task.Id, StatusId = task.StatusId };
+        var viewModel = new TaskViewModel { Id = task.Id, StatusId = task.StatusId };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, default);
     }
 
     [Fact]

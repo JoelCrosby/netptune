@@ -166,6 +166,7 @@ const presentationOf = (activity: ActivityViewModel): Presentation => {
 // $localize as private-use characters and are split back out once the sentence is translated.
 const SLOT_BASE = 0xe000;
 const FIRST = String.fromCharCode(SLOT_BASE);
+const SECOND = String.fromCharCode(SLOT_BASE + 1);
 
 const segmentsOf = (
   text: string,
@@ -478,7 +479,19 @@ const summaryOf = (activity: ActivityViewModel): EventTimelineSegment[] => {
         $localize`:Activity timeline entry after the person's name when they reordered tasks on a board:reordered`
       );
     case ActivityType.move: {
-      const group = (activity.meta as { group?: string } | null)?.group;
+      const meta = activity.meta as {
+        group?: string;
+        causedByStatus?: string;
+      } | null;
+      const group = meta?.group;
+      const status = meta?.causedByStatus;
+
+      if (group && status) {
+        return segmentsOf(
+          $localize`:Activity timeline entry after the person's name when a status change moved a task to the board group mapped to that status. GROUP is the group's name, STATUS the new status:moved to ${FIRST}:GROUP: after the status changed to ${SECOND}:STATUS:`,
+          [group, status]
+        );
+      }
 
       return group
         ? segmentsOf(

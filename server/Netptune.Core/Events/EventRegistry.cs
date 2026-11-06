@@ -41,6 +41,7 @@ public static class EventKeys
     public const string FlagResolutionRecorded = "flag.resolution-recorded";
     public const string FlagRaised = "flag.raised";
     public const string TaskRelationChanged = "relation.changed";
+    public const string TaskBoardMoved = "task.board-moved";
     public const string EntityActivityRecorded = "entity.activity-recorded";
     public const string AssistantConversationDeleted = "assistant.conversation-deleted";
     public const string AssistantReviewCompleted = "assistant.review-completed";
@@ -158,6 +159,7 @@ public static class EventKeys
             ImportFailed => ActivityType.ImportFailed,
             WorkspaceRoleChanged => ActivityType.RoleChanged,
             WorkspaceSettingsChanged => ActivityType.WorkspaceSettingsChanged,
+            TaskBoardMoved => ActivityType.Move,
             EntityDeleted => ActivityType.Delete,
             CommentCreated => ActivityType.AddComment,
             CommentUpdated => ActivityType.ModifyComment,
@@ -283,6 +285,7 @@ public static class EventDefinitionRegistry
             [(EventKeys.EntityDeleted, 1)] = typeof(EntityDeletedPayload),
             [(EventKeys.FlagRaised, 1)] = typeof(FlagRaisedPayload),
             [(EventKeys.TaskRelationChanged, 1)] = typeof(TaskRelationChangedPayload),
+            [(EventKeys.TaskBoardMoved, 1)] = typeof(MoveTaskActivityMeta),
             [(EventKeys.FlagResolutionRecorded, 1)] = typeof(FlagResolutionPayload),
             [(EventKeys.AssistantConversationDeleted, 1)] = typeof(AssistantConversationDeletedPayload),
             [(EventKeys.AutomationRuleAutoDisabled, 1)] = typeof(AutomationRuleActivityMeta),

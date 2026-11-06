@@ -918,6 +918,31 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     }
 
     [Fact]
+    public async Task HandleCanonicalEvent_ShouldProjectABoardMove_AsAMoveEntryCarryingTheMoveMeta()
+    {
+        const int entityId = 1419;
+        var move = new MoveTaskActivityMeta
+        {
+            Group = "Done",
+            GroupId = 31,
+            FromGroupId = 30,
+            CausedByStatusId = 7,
+            CausedByStatus = "Complete",
+        };
+
+        await HandleCanonical(entityId, EventKeys.TaskBoardMoved, move, fixture.ActorUserId);
+
+        var entries = await Entries(entityId);
+        var entry = entries.Should().ContainSingle().Subject;
+        var meta = entry.Meta!.RootElement;
+
+        entry.ActivityType.Should().Be(ActivityType.Move);
+        meta.GetProperty("group").GetString().Should().Be("Done");
+        meta.GetProperty("fromGroupId").GetInt32().Should().Be(30);
+        meta.GetProperty("causedByStatus").GetString().Should().Be("Complete");
+    }
+
+    [Fact]
     public async Task HandleCanonicalEvent_ShouldKeepHumanAndAssistantEditsApart_WithinTheWindow()
     {
         const int entityId = 1418;

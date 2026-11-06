@@ -184,6 +184,8 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         var activeSprintIds = await GetActiveSprintIds(tasks, req.SprintId, cancellationToken);
         var events = new List<IEventWriteRequest>();
         var movedTaskIds = new List<int>();
+        var statusChangedTaskIds = new List<int>();
+        var correlationId = Guid.NewGuid();
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -197,10 +199,13 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                 var oldAssigneeIds = task.ProjectTaskAppUsers.Select(assignment => assignment.UserId).ToList();
                 var projectChanged = req.ProjectId.HasValue && task.ProjectId != req.ProjectId.Value;
 
-                if (status is not null)
+                var statusChanged = status is not null && task.StatusId != status.Id;
+
+                if (statusChanged)
                 {
-                    task.StatusId = status.Id;
+                    task.StatusId = status!.Id;
                     task.Status = status;
+                    statusChangedTaskIds.Add(task.Id);
                 }
 
                 if (req.Priority.HasValue)
@@ -300,6 +305,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                         EventKey = EventKeys.EntityFieldTransitioned,
                         SubjectType = EventEntityTypes.From(EntityType.Task),
                         SubjectId = task.Id.ToString(),
+                        CorrelationId = correlationId,
                         Payload = new FieldTransitionedPayload
                         {
                             Field = "status",
@@ -392,6 +398,14 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             await EventRecords.AppendRange(events, cancellationToken);
             await RepositionInBoardGroup(movedTaskIds, req.ProjectId, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
+
+            var moveContext = new TaskBoardMoveContext
+            {
+                WorkspaceId = workspaceId,
+                CorrelationId = correlationId,
+            };
+
+            await FollowStatus(statusChangedTaskIds, status, moveContext, cancellationToken);
         });
 
         await EventPublisher.IndexTasks(taskIds, workspaceKey);
@@ -500,6 +514,25 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
     {
         task.ProjectScopeId = projectScopeId;
         task.ProjectId = projectId;
+    }
+
+    // Runs after the project reposition is saved, so a task moved to another project follows its
+    // status on the new project's board rather than the old one.
+    private async Task FollowStatus(
+        List<int> taskIds,
+        Status? status,
+        TaskBoardMoveContext moveContext,
+        CancellationToken cancellationToken)
+    {
+        if (taskIds.Count == 0 || status is null)
+        {
+            return;
+        }
+
+        var moves = await Placement.FollowStatus(taskIds, status, cancellationToken: cancellationToken);
+
+        await Placement.RecordMoves(moves, moveContext, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
     }
 
     // Moving a task to a different project invalidates its board-group membership, which belongs to

@@ -566,6 +566,128 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_records_board_moves_from_the_rule_and_from_the_status()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            actionType: AutomationActionType.UpdateTask);
+        var complete = await scope.Db.Statuses.SingleAsync(
+            status => status.WorkspaceId == scenario.Workspace.Id && status.Key == "complete",
+            TestContext.Current.CancellationToken);
+        var ruleBoard = CreateBoard(scenario, "rule-board");
+        var ruleInbox = CreateBoardGroup(scenario, ruleBoard, "Inbox", 1, null);
+        var ruleTarget = CreateBoardGroup(scenario, ruleBoard, "Doing", 2, null);
+        var statusBoard = CreateBoard(scenario, "status-board");
+        var statusInbox = CreateBoardGroup(scenario, statusBoard, "Inbox", 1, null);
+        var statusDone = CreateBoardGroup(scenario, statusBoard, "Done", 2, complete.Id);
+
+        scope.Db.AddRange(ruleBoard, ruleInbox, ruleTarget, statusBoard, statusInbox, statusDone);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        scope.Db.ProjectTaskInBoardGroups.AddRange(
+            new ProjectTaskInBoardGroup { ProjectTaskId = scenario.Task.Id, BoardGroupId = ruleInbox.Id, SortOrder = 1 },
+            new ProjectTaskInBoardGroup { ProjectTaskId = scenario.Task.Id, BoardGroupId = statusInbox.Id, SortOrder = 1 });
+
+        var action = await scope.Db.AutomationActions.SingleAsync(
+            item => item.AutomationRuleId == rule.Id && !item.IsDeleted,
+            TestContext.Current.CancellationToken);
+        action.Config = JsonSerializer.SerializeToDocument(new
+        {
+            statusId = complete.Id,
+            boardGroupId = ruleTarget.Id,
+        }, JsonOptions.Default);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
+
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
+        {
+            EventId = Guid.NewGuid(),
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var placements = await scope.Db.ProjectTaskInBoardGroups
+            .Where(item => item.ProjectTaskId == scenario.Task.Id)
+            .Select(item => item.BoardGroupId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        placements.Should().BeEquivalentTo([ruleTarget.Id, statusDone.Id]);
+
+        var events = scope.EventRecords.Events;
+        var moves = events.Where(recorded => recorded.EventKey == EventKeys.TaskBoardMoved).ToList();
+        var ruleMove = moves.Should().ContainSingle(move => MoveOf(move).GroupId == ruleTarget.Id).Subject;
+        var statusMove = moves.Should().ContainSingle(move => MoveOf(move).GroupId == statusDone.Id).Subject;
+        var statusTransition = events.Should().ContainSingle(recorded => IsStatusTransition(recorded)).Subject;
+
+        moves.Should().HaveCount(2);
+        MoveOf(ruleMove).FromGroupId.Should().Be(ruleInbox.Id);
+        MoveOf(ruleMove).CausedByStatusId.Should().BeNull();
+        MoveOf(statusMove).FromGroupId.Should().Be(statusInbox.Id);
+        MoveOf(statusMove).CausedByStatusId.Should().Be(complete.Id);
+        MoveOf(statusMove).CausedByStatus.Should().Be(complete.Name);
+        ruleMove.ActorUserId.Should().Be(AutomationTestData.ExecutionUserId);
+        ruleMove.OriginType.Should().Be(EventOriginType.Automation);
+        ruleMove.CorrelationId.Should().NotBeNull().And.Be(statusMove.CorrelationId);
+        statusTransition.CorrelationId.Should().Be(statusMove.CorrelationId);
+    }
+
+    private static MoveTaskActivityMeta MoveOf(RecordedEvent recorded)
+    {
+        return (MoveTaskActivityMeta)recorded.Payload;
+    }
+
+    private static bool IsStatusTransition(RecordedEvent recorded)
+    {
+        return recorded.Payload is FieldTransitionedPayload { Field: "status" };
+    }
+
+    private static Board CreateBoard(AutomationScenario scenario, string identifier)
+    {
+        return new Board
+        {
+            Name = identifier,
+            Identifier = identifier,
+            Workspace = scenario.Workspace,
+            Project = scenario.Project,
+            BoardType = BoardType.Default,
+            MetaInfo = new BoardMeta(),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+    }
+
+    private static BoardGroup CreateBoardGroup(
+        AutomationScenario scenario,
+        Board board,
+        string name,
+        double sortOrder,
+        int? statusId)
+    {
+        return new BoardGroup
+        {
+            Name = name,
+            Workspace = scenario.Workspace,
+            Board = board,
+            SortOrder = sortOrder,
+            StatusId = statusId,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_clears_nullable_task_fields()
     {
         await using var scope = await Fixture.CreateScope();

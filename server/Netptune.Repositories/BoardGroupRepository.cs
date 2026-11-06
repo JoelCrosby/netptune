@@ -280,6 +280,26 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         return ProjectTaskTarget(query).FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Dictionary<int, BoardGroupTaskTarget>> GetStatusTaskTargets(
+        IReadOnlyCollection<int> boardIds,
+        int statusId,
+        CancellationToken cancellationToken = default)
+    {
+        if (boardIds.Count == 0)
+        {
+            return [];
+        }
+
+        var query = Entities
+            .Where(group => !group.IsDeleted && boardIds.Contains(group.BoardId) && group.StatusId == statusId)
+            .OrderBy(group => group.SortOrder);
+        var targets = await ProjectTaskTarget(query).ToListAsync(cancellationToken);
+
+        return targets
+            .GroupBy(target => target.BoardId)
+            .ToDictionary(board => board.Key, board => board.First());
+    }
+
     public Task<BoardGroupTaskTarget?> GetFallbackTaskTarget(int boardId, int? excludeGroupId = null, CancellationToken cancellationToken = default)
     {
         var query = Entities

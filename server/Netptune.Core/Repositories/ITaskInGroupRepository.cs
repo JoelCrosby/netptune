@@ -1,3 +1,4 @@
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
 
@@ -11,9 +12,13 @@ public interface ITaskInGroupRepository : IRepository<ProjectTaskInBoardGroup, i
 
     Task<Dictionary<int, int>> GetPlacementGroupsOnBoard(IReadOnlyCollection<int> taskIds, int boardId, CancellationToken cancellationToken = default);
 
+    Task<List<TaskBoardPlacement>> GetBoardPlacements(IReadOnlyCollection<int> taskIds, CancellationToken cancellationToken = default);
+
     Task DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
 
     Task DeleteTasksFromBoard(IEnumerable<int> taskIds, int boardId, CancellationToken cancellationToken = default);
+
+    Task DeletePlacements(IReadOnlyCollection<int> placementIds, CancellationToken cancellationToken = default);
 
     Task MovePlacementsToGroup(int fromGroupId, int toGroupId, double baseSortOrder, CancellationToken cancellationToken = default);
 

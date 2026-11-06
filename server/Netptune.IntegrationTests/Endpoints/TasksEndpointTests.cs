@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using FluentAssertions;
 
@@ -1241,6 +1242,142 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Update_ShouldMoveTheCardToTheMappedColumn_WhenTheStatusChanges()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var defaultPlacement = task.Placements.Should().ContainSingle().Subject;
+        var board = await CreateBoard();
+        var triage = await CreateUnmappedGroup(board.Id);
+
+        await AddTaskToBoard(task.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, triage.Id, task.Id);
+
+        var complete = await GetStatus("complete");
+
+        await UpdateTaskStatus(task.Id, complete.Id);
+
+        var completed = await GetTask(task.Id);
+
+        GroupNameOn(completed, board.Id).Should().Be("Done");
+        GroupIdOn(completed, defaultPlacement.BoardId).Should().Be(defaultPlacement.BoardGroupId);
+
+        var inProgress = await GetStatus("in-progress");
+
+        await UpdateTaskStatus(task.Id, inProgress.Id);
+
+        var started = await GetTask(task.Id);
+
+        GroupNameOn(started, board.Id).Should().Be("Done");
+    }
+
+    [Fact]
+    public async Task Update_ShouldLeaveTheCard_WhenItAlreadySitsInAColumnMappedToTheNewStatus()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+        var complete = await GetStatus("complete");
+        var secondDone = await CreateMappedGroup(board.Id, complete.Id);
+
+        await AddTaskToBoard(task.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, secondDone.Id, task.Id);
+
+        var inProgress = await GetStatus("in-progress");
+
+        await UpdateTaskStatus(task.Id, inProgress.Id);
+        await UpdateTaskStatus(task.Id, complete.Id);
+
+        var completed = await GetTask(task.Id);
+
+        GroupIdOn(completed, board.Id).Should().Be(secondDone.Id);
+    }
+
+    [Fact]
+    public async Task BulkUpdate_ShouldMoveTheCardsToTheMappedColumn_WhenTheStatusChanges()
+    {
+        var first = await CreateTaskOnDefaultBoard();
+        var second = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+        var triage = await CreateUnmappedGroup(board.Id);
+
+        await AddTaskToBoard(first.Id, board.Id);
+        await AddTaskToBoard(second.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, triage.Id, first.Id, second.Id);
+
+        var complete = await GetStatus("complete");
+        var response = await Client.PostAsJsonAsync("api/tasks/bulk-update", new BulkUpdateTasksRequest
+        {
+            TaskIds = [first.Id, second.Id],
+            StatusId = complete.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var firstCompleted = await GetTask(first.Id);
+        var secondCompleted = await GetTask(second.Id);
+
+        GroupNameOn(firstCompleted, board.Id).Should().Be("Done");
+        GroupNameOn(secondCompleted, board.Id).Should().Be("Done");
+    }
+
+    [Fact]
+    public async Task Update_ShouldRecordTheBoardMove_UnderTheStatusChangeCorrelation()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+        var triage = await CreateUnmappedGroup(board.Id);
+
+        await AddTaskToBoard(task.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, triage.Id, task.Id);
+
+        var complete = await GetStatus("complete");
+
+        await UpdateTaskStatus(task.Id, complete.Id);
+
+        var completed = await GetTask(task.Id);
+        var records = await GetTaskEventRecords(task.Id);
+        var statusTransition = records.Last(IsStatusTransition);
+        var move = records.Should().ContainSingle(record => IsBoardMoveFrom(record, triage.Id)).Subject;
+        var payload = move.Payload.RootElement;
+
+        move.CorrelationId.Should().NotBeNull().And.Be(statusTransition.CorrelationId);
+        move.ActorUserId.Should().NotBeNull();
+        payload.GetProperty("groupId").GetInt32().Should().Be(GroupIdOn(completed, board.Id));
+        payload.GetProperty("causedByStatusId").GetInt32().Should().Be(complete.Id);
+        payload.GetProperty("causedByStatus").GetString().Should().Be(complete.Name);
+    }
+
+    [Fact]
+    public async Task BulkUpdate_ShouldRecordABoardMovePerTask_UnderTheStatusChangeCorrelation()
+    {
+        var first = await CreateTaskOnDefaultBoard();
+        var second = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+        var triage = await CreateUnmappedGroup(board.Id);
+
+        await AddTaskToBoard(first.Id, board.Id);
+        await AddTaskToBoard(second.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, triage.Id, first.Id, second.Id);
+
+        var complete = await GetStatus("complete");
+        var response = await Client.PostAsJsonAsync("api/tasks/bulk-update", new BulkUpdateTasksRequest
+        {
+            TaskIds = [first.Id, second.Id],
+            StatusId = complete.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        foreach (var taskId in new[] { first.Id, second.Id })
+        {
+            var records = await GetTaskEventRecords(taskId);
+            var statusTransition = records.Last(IsStatusTransition);
+            var move = records.Should().ContainSingle(record => IsBoardMoveFrom(record, triage.Id)).Subject;
+
+            move.CorrelationId.Should().NotBeNull().And.Be(statusTransition.CorrelationId);
+        }
+    }
+
+    [Fact]
     public async Task AddToBoard_ShouldPlaceTheTaskOnASecondBoard_WithoutLeavingTheFirst()
     {
         var task = await CreateTaskOnDefaultBoard();
@@ -1512,6 +1649,106 @@ public sealed class TasksEndpointTests
         created.IsSuccess.Should().BeTrue();
 
         return created.Payload!;
+    }
+
+    private async Task<List<EventRecord>> GetTaskEventRecords(int taskId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var subjectType = EventEntityTypes.From(EntityType.Task);
+
+        return await context.EventRecords
+            .AsNoTracking()
+            .Where(record => record.SubjectType == subjectType && record.SubjectId == taskId.ToString())
+            .OrderBy(record => record.Id)
+            .ToListAsync(TestContext.Current.CancellationToken);
+    }
+
+    private static bool IsStatusTransition(EventRecord record)
+    {
+        var isFieldTransition = record.EventKey == EventKeys.EntityFieldTransitioned;
+
+        return isFieldTransition && record.Payload.RootElement.GetProperty("field").GetString() == "status";
+    }
+
+    private static bool IsBoardMoveFrom(EventRecord record, int fromGroupId)
+    {
+        var isBoardMove = record.EventKey == EventKeys.TaskBoardMoved;
+        var hasFromGroup = record.Payload.RootElement.TryGetProperty("fromGroupId", out var fromGroup)
+            && fromGroup.ValueKind == JsonValueKind.Number;
+        var cameFromGroup = hasFromGroup && fromGroup.GetInt32() == fromGroupId;
+
+        return isBoardMove && cameFromGroup;
+    }
+
+    private static string GroupNameOn(TaskViewModel task, int boardId)
+    {
+        return task.Placements.Single(placement => placement.BoardId == boardId).BoardGroupName;
+    }
+
+    private static int GroupIdOn(TaskViewModel task, int boardId)
+    {
+        return task.Placements.Single(placement => placement.BoardId == boardId).BoardGroupId;
+    }
+
+    private Task<BoardGroupViewModel> CreateUnmappedGroup(int boardId)
+    {
+        return CreateGroup(boardId, null);
+    }
+
+    private Task<BoardGroupViewModel> CreateMappedGroup(int boardId, int statusId)
+    {
+        return CreateGroup(boardId, statusId);
+    }
+
+    private async Task<BoardGroupViewModel> CreateGroup(int boardId, int? statusId)
+    {
+        var response = await Client.PostAsJsonAsync("api/boardgroups", new AddBoardGroupRequest
+        {
+            Name = $"Group {Guid.NewGuid():N}"[..14],
+            SortOrder = 99,
+            BoardId = boardId,
+            StatusId = statusId,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
+
+        return created.Payload!;
+    }
+
+    private async Task AddTaskToBoard(int taskId, int boardId)
+    {
+        var response = await Client.PostAsJsonAsync($"api/tasks/{taskId}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = boardId,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task MoveTasksToGroup(string boardIdentifier, int groupId, params int[] taskIds)
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks/move-tasks-to-group", new MoveTasksToGroupRequest
+        {
+            BoardId = boardIdentifier,
+            NewGroupId = groupId,
+            TaskIds = [.. taskIds],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task UpdateTaskStatus(int taskId, int statusId)
+    {
+        var response = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = taskId,
+            StatusId = statusId,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
     }
 
     private async Task<BoardViewModel> CreateBoard()

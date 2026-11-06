@@ -20,6 +20,8 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
 
     Task<BoardGroupTaskTarget?> GetStatusTaskTarget(int boardId, int statusId, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<int, BoardGroupTaskTarget>> GetStatusTaskTargets(IReadOnlyCollection<int> boardIds, int statusId, CancellationToken cancellationToken = default);
+
     Task<BoardGroupTaskTarget?> GetFallbackTaskTarget(int boardId, int? excludeGroupId = null, CancellationToken cancellationToken = default);
 
     Task<PagedResponse<BoardGroupOptionViewModel>> GetOptionsPage(int workspaceId, BoardGroupOptionFilter filter, CancellationToken cancellationToken = default);

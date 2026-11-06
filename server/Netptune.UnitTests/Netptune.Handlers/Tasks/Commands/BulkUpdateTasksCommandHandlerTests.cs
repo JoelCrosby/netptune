@@ -44,6 +44,8 @@ public class BulkUpdateTasksCommandHandlerTests
             .ResolveTags(Arg.Any<IReadOnlyCollection<string>?>(), WorkspaceId, Arg.Any<CancellationToken>())
             .Returns(TaskTagResolution.Unchanged());
 
+        Placement.FollowStatus(default!, default!, default, default).ReturnsForAnyArgs(TaskBoardMoves.None);
+
         Handler = new BulkUpdateTasksCommandHandler(
             UnitOfWork,
             Identity,

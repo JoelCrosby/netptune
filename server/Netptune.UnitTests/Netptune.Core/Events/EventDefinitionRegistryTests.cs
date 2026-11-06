@@ -55,6 +55,7 @@ public sealed class EventDefinitionRegistryTests
     [InlineData(EventKeys.CommentCreated, ActivityType.AddComment)]
     [InlineData(EventKeys.CommentUpdated, ActivityType.ModifyComment)]
     [InlineData(EventKeys.CommentDeleted, ActivityType.RemoveComment)]
+    [InlineData(EventKeys.TaskBoardMoved, ActivityType.Move)]
     [InlineData(EventKeys.AssistantConversationDeleted, ActivityType.Delete)]
     [InlineData(EventKeys.SourceControlConnected, ActivityType.Create)]
     [InlineData(EventKeys.SourceControlDisconnected, ActivityType.Delete)]

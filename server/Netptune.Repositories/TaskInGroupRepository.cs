@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -52,6 +53,30 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ToDictionary(group => group.Key, group => group.First().BoardGroupId);
     }
 
+    public async Task<List<TaskBoardPlacement>> GetBoardPlacements(
+        IReadOnlyCollection<int> taskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await Entities
+            .AsNoTracking()
+            .Where(entity => taskIds.Contains(entity.ProjectTaskId))
+            .Where(entity => !entity.BoardGroup!.IsDeleted && !entity.BoardGroup.Board!.IsDeleted)
+            .Select(entity => new TaskBoardPlacement
+            {
+                Id = entity.Id,
+                TaskId = entity.ProjectTaskId,
+                BoardId = entity.BoardGroup!.BoardId,
+                BoardGroupId = entity.BoardGroupId,
+                GroupStatusId = entity.BoardGroup.StatusId,
+            })
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();
@@ -80,6 +105,28 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ExecuteDeleteAsync(cancellationToken);
 
         await DetachDeletedPlacements(taskIdList, boardId, cancellationToken);
+    }
+
+    public async Task DeletePlacements(IReadOnlyCollection<int> placementIds, CancellationToken cancellationToken = default)
+    {
+        if (placementIds.Count == 0)
+        {
+            return;
+        }
+
+        await Entities
+            .Where(entity => placementIds.Contains(entity.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        var trackedPlacements = Context.ChangeTracker
+            .Entries<ProjectTaskInBoardGroup>()
+            .Where(entry => placementIds.Contains(entry.Entity.Id))
+            .ToList();
+
+        foreach (var entry in trackedPlacements)
+        {
+            entry.State = EntityState.Detached;
+        }
     }
 
     // ExecuteDelete bypasses the change tracker, so a placement this context already tracks would

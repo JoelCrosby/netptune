@@ -21,19 +21,22 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     private readonly ITaskMutationPipeline TaskMutationPipeline;
     private readonly ITaskReferenceResolver ReferenceResolver;
     private readonly ITaskStatusResolver StatusResolver;
+    private readonly ITaskPlacementService Placement;
 
     public UpdateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         ITaskMutationPipeline taskMutationPipeline,
         ITaskReferenceResolver referenceResolver,
-        ITaskStatusResolver statusResolver)
+        ITaskStatusResolver statusResolver,
+        ITaskPlacementService placement)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         TaskMutationPipeline = taskMutationPipeline;
         ReferenceResolver = referenceResolver;
         StatusResolver = statusResolver;
+        Placement = placement;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
@@ -105,10 +108,19 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         TaskViewModel? response = null;
         TaskMutationOutcome? mutationOutcome = null;
+        var statusMoves = TaskBoardMoves.None;
+        var correlationId = Guid.NewGuid();
+
+        var statusChanged = status is not null && result.StatusId != status.Id;
 
         await UnitOfWork.Transaction(async () =>
         {
             TaskMutationPipeline.Apply(result, new TaskMutationValues(status, req.Priority));
+
+            if (statusChanged)
+            {
+                statusMoves = await Placement.FollowStatus([result.Id], status!, cancellationToken: cancellationToken);
+            }
 
             result.Name = req.Name ?? result.Name;
             result.Description = description ?? result.Description;
@@ -169,7 +181,16 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
                 Current = response,
                 Diff = diff,
                 ActorUserId = Identity.GetCurrentUserId(),
+                CorrelationId = correlationId,
             }, cancellationToken);
+
+            var moveContext = new TaskBoardMoveContext
+            {
+                WorkspaceId = workspaceId,
+                CorrelationId = correlationId,
+            };
+
+            await Placement.RecordMoves(statusMoves, moveContext, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 

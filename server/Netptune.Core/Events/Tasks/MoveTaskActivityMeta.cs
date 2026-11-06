@@ -13,4 +13,8 @@ public class MoveTaskActivityMeta
     // The group the task was in beforehand. Placement replaces the row rather than editing it, so
     // without this the group a task was dragged out of leaves no trace in the event.
     public int? FromGroupId { get; init; }
+
+    public int? CausedByStatusId { get; init; }
+
+    public string? CausedByStatus { get; init; }
 }
