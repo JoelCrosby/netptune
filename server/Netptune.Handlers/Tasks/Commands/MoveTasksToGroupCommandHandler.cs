@@ -21,7 +21,6 @@ public sealed record MoveTasksToGroupCommand(MoveTasksToGroupRequest Request) : 
 public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksToGroupCommand, ClientResponse>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IActivityLogger Activity;
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
     private readonly IEventRecordWriter EventRecords;
@@ -29,14 +28,12 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
     public MoveTasksToGroupCommandHandler(
         INetptuneUnitOfWork unitOfWork,
-        IActivityLogger activity,
         IEventPublisher eventPublisher,
         IIdentityService identity,
         IEventRecordWriter eventRecords,
         ITaskPlacementService placement)
     {
         UnitOfWork = unitOfWork;
-        Activity = activity;
         EventPublisher = eventPublisher;
         Identity = identity;
         EventRecords = eventRecords;
@@ -75,8 +72,16 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
             boardGroup.BoardId,
             cancellationToken);
 
+        var moveContext = new TaskBoardMoveContext
+        {
+            WorkspaceId = workspaceId,
+            CorrelationId = Guid.NewGuid(),
+        };
+        var moves = BuildMoves(taskIds, groupsBeforeMove, boardGroup);
+
         await UnitOfWork.Transaction(async () =>
         {
+            var statusMoves = TaskBoardMoves.None;
 
             if (boardGroup.StatusId.HasValue)
             {
@@ -85,54 +90,28 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
                 if (newStatus is not null)
                 {
-                    foreach (var oldTask in oldTasks.Where(task => task.StatusId != newStatus.Id))
-                    {
-                        var references = new List<EventReferenceInput>();
+                    var statusChange = new StatusChange(newStatus, oldStatusCategories, moveContext.CorrelationId);
+                    var changedTasks = oldTasks.Where(task => task.StatusId != newStatus.Id).ToList();
+                    var changedTaskIds = changedTasks.Select(task => task.Id).ToList();
+                    var transitions = changedTasks
+                        .Select(task => BuildStatusTransition(task, statusChange))
+                        .ToList();
 
-                        if (oldTask.ProjectId.HasValue)
-                        {
-                            references.Add(new EventReferenceInput
-                            {
-                                Role = EventReferenceRoles.Scope,
-                                EntityType = EventEntityTypes.From(EntityType.Project),
-                                EntityId = oldTask.ProjectId.Value.ToString(),
-                            });
-                        }
+                    await EventRecords.AppendRange(transitions, cancellationToken);
 
-                        if (oldTask.SprintId.HasValue)
-                        {
-                            references.Add(new EventReferenceInput
-                            {
-                                Role = EventReferenceRoles.Scope,
-                                EntityType = EventEntityTypes.From(EntityType.Sprint),
-                                EntityId = oldTask.SprintId.Value.ToString(),
-                            });
-                        }
-                        await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
-                        {
-                            WorkspaceId = oldTask.WorkspaceId,
-                            EventKey = EventKeys.EntityFieldTransitioned,
-                            SubjectType = EventEntityTypes.From(EntityType.Task),
-                            SubjectId = oldTask.Id.ToString(),
-                            Payload = new FieldTransitionedPayload
-                            {
-                                Field = "status",
-                                OldValue = oldTask.StatusId.ToString(),
-                                NewValue = newStatus.Id.ToString(),
-                                OldCategory = oldStatusCategories.GetValueOrDefault(oldTask.StatusId),
-                                NewCategory = newStatus.Category.ToString(),
-                            },
-                            References = references,
-                        }, cancellationToken);
-                    }
+                    statusMoves = await Placement.FollowStatus(
+                        changedTaskIds,
+                        newStatus,
+                        boardGroup.BoardId,
+                        cancellationToken);
                 }
             }
 
             await Placement.PlaceMany(taskIds, boardGroup, cancellationToken);
+            await Placement.RecordMoves(moves, moveContext, cancellationToken);
+            await Placement.RecordMoves(statusMoves, moveContext, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
-
-        LogMoves(taskIds, groupsBeforeMove, boardGroup);
 
         if (boardGroup.StatusId.HasValue)
         {
@@ -153,8 +132,6 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         return ClientResponse.Success;
     }
 
-    // LogWithMany shares one meta across every task it logs, so the tasks are grouped by the column
-    // they came from: one bulk move can drag cards out of several columns at once.
     private async Task<Dictionary<int, string>> GetStatusCategories(
         List<ProjectTask> tasks,
         CancellationToken cancellationToken)
@@ -170,30 +147,63 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         return statuses.ToDictionary(status => status.Id, status => status.Category.ToString());
     }
 
-    private void LogMoves(
+    private sealed record StatusChange(Status NewStatus, Dictionary<int, string> OldStatusCategories, Guid CorrelationId);
+
+    private static EventWriteRequest<FieldTransitionedPayload> BuildStatusTransition(
+        ProjectTask oldTask,
+        StatusChange change)
+    {
+        var references = new List<EventReferenceInput>();
+
+        if (oldTask.ProjectId.HasValue)
+        {
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Project),
+                EntityId = oldTask.ProjectId.Value.ToString(),
+            });
+        }
+
+        if (oldTask.SprintId.HasValue)
+        {
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Sprint),
+                EntityId = oldTask.SprintId.Value.ToString(),
+            });
+        }
+
+        return new EventWriteRequest<FieldTransitionedPayload>
+        {
+            WorkspaceId = oldTask.WorkspaceId,
+            EventKey = EventKeys.EntityFieldTransitioned,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = oldTask.Id.ToString(),
+            CorrelationId = change.CorrelationId,
+            Payload = new FieldTransitionedPayload
+            {
+                Field = "status",
+                OldValue = oldTask.StatusId.ToString(),
+                NewValue = change.NewStatus.Id.ToString(),
+                OldCategory = change.OldStatusCategories.GetValueOrDefault(oldTask.StatusId),
+                NewCategory = change.NewStatus.Category.ToString(),
+            },
+            References = references,
+        };
+    }
+
+    private static TaskBoardMoves BuildMoves(
         List<int> taskIds,
         Dictionary<int, int> groupsBeforeMove,
         BoardGroupTaskTarget boardGroup)
     {
-        var movesByOriginGroup = taskIds.GroupBy(taskId => OriginGroupId(taskId, groupsBeforeMove));
+        var moves = taskIds
+            .Select(taskId => new TaskBoardMove(taskId, OriginGroupId(taskId, groupsBeforeMove), boardGroup))
+            .ToList();
 
-        foreach (var move in movesByOriginGroup)
-        {
-            var movedTaskIds = move.ToList();
-
-            Activity.LogWithMany<MoveTaskActivityMeta>(options =>
-            {
-                options.EntityIds = movedTaskIds;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.Move;
-                options.Meta = new MoveTaskActivityMeta
-                {
-                    Group = boardGroup.Name,
-                    GroupId = boardGroup.Id,
-                    FromGroupId = move.Key,
-                };
-            });
-        }
+        return new TaskBoardMoves(null, moves);
     }
 
     private static int? OriginGroupId(int taskId, Dictionary<int, int> groupsBeforeMove)

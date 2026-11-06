@@ -1378,6 +1378,130 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task MoveTaskInGroup_ShouldRecordTheMove_UnderTheStatusChangeCorrelation()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+        var triage = await CreateUnmappedGroup(board.Id);
+        var complete = await GetStatus("complete");
+        var shipped = await CreateMappedGroup(board.Id, complete.Id);
+
+        await AddTaskToBoard(task.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, triage.Id, task.Id);
+
+        var response = await Client.PostAsJsonAsync("api/tasks/move-task-in-group", new MoveTaskInGroupRequest
+        {
+            TaskId = task.Id,
+            OldGroupId = triage.Id,
+            NewGroupId = shipped.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var records = await GetTaskEventRecords(task.Id);
+        var statusTransition = records.Last(IsStatusTransition);
+        var move = records.Should().ContainSingle(record => IsBoardMoveFrom(record, triage.Id)).Subject;
+        var payload = move.Payload.RootElement;
+
+        var causedByStatus = payload.TryGetProperty("causedByStatusId", out var causedBy)
+            && causedBy.ValueKind != JsonValueKind.Null;
+
+        move.CorrelationId.Should().NotBeNull().And.Be(statusTransition.CorrelationId);
+        payload.GetProperty("groupId").GetInt32().Should().Be(shipped.Id);
+        causedByStatus.Should().BeFalse("a drag is the cause of the status change, not the result of one");
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldRecordAMovePerTask_UnderTheStatusChangeCorrelation()
+    {
+        var first = await CreateTaskOnDefaultBoard();
+        var second = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+        var triage = await CreateUnmappedGroup(board.Id);
+        var complete = await GetStatus("complete");
+        var shipped = await CreateMappedGroup(board.Id, complete.Id);
+
+        await AddTaskToBoard(first.Id, board.Id);
+        await AddTaskToBoard(second.Id, board.Id);
+        await MoveTasksToGroup(board.Identifier, triage.Id, first.Id, second.Id);
+        await MoveTasksToGroup(board.Identifier, shipped.Id, first.Id, second.Id);
+
+        foreach (var taskId in new[] { first.Id, second.Id })
+        {
+            var records = await GetTaskEventRecords(taskId);
+            var statusTransition = records.Last(IsStatusTransition);
+            var move = records.Should().ContainSingle(record => IsBoardMoveFrom(record, triage.Id)).Subject;
+
+            move.CorrelationId.Should().NotBeNull().And.Be(statusTransition.CorrelationId);
+            move.Payload.RootElement.GetProperty("groupId").GetInt32().Should().Be(shipped.Id);
+        }
+    }
+
+    [Fact]
+    public async Task MoveTaskInGroup_ShouldMoveTheCardOnOtherBoards_WhenTheDragChangesTheStatus()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var source = await CreateBoard();
+        var other = await CreateBoard();
+        var complete = await GetStatus("complete");
+        var shipped = await CreateMappedGroup(source.Id, complete.Id);
+        var otherTriage = await CreateUnmappedGroup(other.Id);
+
+        await AddTaskToBoard(task.Id, source.Id);
+        await AddTaskToBoard(task.Id, other.Id);
+        await MoveTasksToGroup(other.Identifier, otherTriage.Id, task.Id);
+
+        var placed = await GetTask(task.Id);
+        var response = await Client.PostAsJsonAsync("api/tasks/move-task-in-group", new MoveTaskInGroupRequest
+        {
+            TaskId = task.Id,
+            OldGroupId = GroupIdOn(placed, source.Id),
+            NewGroupId = shipped.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var moved = await GetTask(task.Id);
+        var records = await GetTaskEventRecords(task.Id);
+        var statusTransition = records.Last(IsStatusTransition);
+        var followed = records.Should().ContainSingle(record => IsBoardMoveFrom(record, otherTriage.Id)).Subject;
+
+        GroupIdOn(moved, source.Id).Should().Be(shipped.Id);
+        GroupNameOn(moved, other.Id).Should().Be("Done");
+        followed.CorrelationId.Should().NotBeNull().And.Be(statusTransition.CorrelationId);
+        followed.Payload.RootElement.GetProperty("causedByStatusId").GetInt32().Should().Be(complete.Id);
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldMoveTheCardsOnOtherBoards_WhenTheMoveChangesTheStatus()
+    {
+        var first = await CreateTaskOnDefaultBoard();
+        var second = await CreateTaskOnDefaultBoard();
+        var source = await CreateBoard();
+        var other = await CreateBoard();
+        var complete = await GetStatus("complete");
+        var shipped = await CreateMappedGroup(source.Id, complete.Id);
+        var otherTriage = await CreateUnmappedGroup(other.Id);
+
+        foreach (var taskId in new[] { first.Id, second.Id })
+        {
+            await AddTaskToBoard(taskId, source.Id);
+            await AddTaskToBoard(taskId, other.Id);
+        }
+
+        await MoveTasksToGroup(other.Identifier, otherTriage.Id, first.Id, second.Id);
+        await MoveTasksToGroup(source.Identifier, shipped.Id, first.Id, second.Id);
+
+        foreach (var taskId in new[] { first.Id, second.Id })
+        {
+            var moved = await GetTask(taskId);
+
+            GroupIdOn(moved, source.Id).Should().Be(shipped.Id);
+            GroupNameOn(moved, other.Id).Should().Be("Done");
+        }
+    }
+
+    [Fact]
     public async Task AddToBoard_ShouldPlaceTheTaskOnASecondBoard_WithoutLeavingTheFirst()
     {
         var task = await CreateTaskOnDefaultBoard();

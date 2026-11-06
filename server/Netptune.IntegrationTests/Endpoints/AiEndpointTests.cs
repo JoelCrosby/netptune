@@ -855,6 +855,65 @@ public sealed class AiEndpointTests
     }
 
     [Fact]
+    public async Task UndoChangeSet_ShouldPutEveryCardBack_AfterAStatusChangeMovedThemOnOtherBoards()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var task = await CreateTaskOnTwoBoards(client);
+        var completeId = await ReadStatusId("complete");
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_task",
+            EntityType = "task",
+            Summary = "Complete the task",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{task.TaskId}},"statusId":{{completeId}}}"""),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        try
+        {
+            await ApplyAndExpectTheTriageCardToFollow(client, seed.ChangeSetId, task);
+            await UndoAndExpectEveryCardBack(client, seed.ChangeSetId, task);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await RemoveBoard(task.First.BoardId);
+            await RemoveBoard(task.Second.BoardId);
+        }
+    }
+
+    [Fact]
+    public async Task UndoChangeSet_ShouldPutEveryCardBack_AfterAColumnMoveChangedTheStatus()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var task = await CreateTaskOnTwoBoards(client);
+        var completeId = await ReadStatusId("complete");
+        var shippedId = await CreateBoardGroup(client, task.First.BoardId, completeId);
+        var move = new AiProposedChangeSeed
+        {
+            ToolName = "propose_move_task_to_board_group",
+            EntityType = "task",
+            Summary = "Ship the task",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{task.TaskId}},"boardGroupId":{{shippedId}},"boardIdentifier":"{{task.First.Identifier}}"}"""),
+        };
+
+        var seed = await SeedPendingChangeSet(move);
+
+        try
+        {
+            await ApplyAndExpectTheTriageCardToFollow(client, seed.ChangeSetId, task);
+            await UndoAndExpectEveryCardBack(client, seed.ChangeSetId, task);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+            await RemoveBoard(task.First.BoardId);
+            await RemoveBoard(task.Second.BoardId);
+        }
+    }
+
+    [Fact]
     public async Task ApplyChangeSet_ShouldCreateAFolderAndAPageInsideIt_ByHandle()
     {
         var client = Fixture.CreateNetptuneClient();
@@ -1191,6 +1250,115 @@ public sealed class AiEndpointTests
             .FirstAsync(TestContext.Current.CancellationToken);
 
         return new SeededBoard(board.Id, board.Identifier, groupId);
+    }
+
+    private sealed record TaskOnTwoBoards(
+        int TaskId,
+        SeededBoard First,
+        SeededBoard Second,
+        int TriageGroupId,
+        List<int> PlacementGroupIds);
+
+    // Every card starts in a column with no status, so putting the columns back cannot also put the
+    // status back: only the field restore does, and it moves the cards as it goes.
+    private async Task<TaskOnTwoBoards> CreateTaskOnTwoBoards(HttpClient client)
+    {
+        var placed = await CreatePlacedTask(client);
+        var defaultBoardId = await ReadBoardId(placed.GroupId);
+        var first = await CreateSecondBoard(client, placed.ProjectId);
+        var second = await CreateSecondBoard(client, placed.ProjectId);
+        var firstTriageId = await CreateBoardGroup(client, first.BoardId, null);
+        var secondTriageId = await CreateBoardGroup(client, second.BoardId, null);
+
+        await AddTaskToBoard(client, placed.TaskId, first.BoardId);
+        await AddTaskToBoard(client, placed.TaskId, second.BoardId);
+
+        var offDefaultBoard = await client.DeleteAsync(
+            $"api/tasks/{placed.TaskId}/boards/{defaultBoardId}",
+            TestContext.Current.CancellationToken);
+
+        offDefaultBoard.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        await MoveTaskToGroup(client, placed.TaskId, first.Identifier, firstTriageId);
+        await MoveTaskToGroup(client, placed.TaskId, second.Identifier, secondTriageId);
+
+        var placementGroupIds = await ReadPlacementGroupIds(placed.TaskId);
+
+        placementGroupIds.Should().BeEquivalentTo([firstTriageId, secondTriageId]);
+
+        return new TaskOnTwoBoards(placed.TaskId, first, second, secondTriageId, placementGroupIds);
+    }
+
+    private static async Task MoveTaskToGroup(HttpClient client, int taskId, string boardIdentifier, int groupId)
+    {
+        var response = await client.PostAsJsonAsync("api/tasks/move-tasks-to-group", new MoveTasksToGroupRequest
+        {
+            BoardId = boardIdentifier,
+            NewGroupId = groupId,
+            TaskIds = [taskId],
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    private async Task ApplyAndExpectTheTriageCardToFollow(HttpClient client, Guid changeSetId, TaskOnTwoBoards task)
+    {
+        var result = await ApplyChangeSet(client, changeSetId, TestContext.Current.CancellationToken);
+
+        result.Results.Should().OnlyContain(outcome => outcome.Status == AiChangeApplyStatus.Applied);
+
+        var appliedGroupIds = await ReadPlacementGroupIds(task.TaskId);
+
+        appliedGroupIds.Should().NotContain(task.TriageGroupId, "the card on the other board follows the new status");
+    }
+
+    private async Task UndoAndExpectEveryCardBack(HttpClient client, Guid changeSetId, TaskOnTwoBoards task)
+    {
+        var undo = await client.PostAsync($"api/ai/change-sets/{changeSetId}/undo", null, TestContext.Current.CancellationToken);
+
+        undo.StatusCode.Should().Be(HttpStatusCode.OK, await undo.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+
+        var undoneGroupIds = await ReadPlacementGroupIds(task.TaskId);
+
+        undoneGroupIds.Should().BeEquivalentTo(task.PlacementGroupIds, "undo puts the card back on every board");
+    }
+
+    private async Task<int> CreateBoardGroup(HttpClient client, int boardId, int? statusId)
+    {
+        var response = await client.PostAsJsonAsync("api/boardgroups", new AddBoardGroupRequest
+        {
+            Name = $"Group {Guid.NewGuid():N}"[..14],
+            SortOrder = 99,
+            BoardId = boardId,
+            StatusId = statusId,
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>(TestContext.Current.CancellationToken);
+
+        return created.Payload!.Id;
+    }
+
+    private static async Task AddTaskToBoard(HttpClient client, int taskId, int boardId)
+    {
+        var response = await client.PostAsJsonAsync($"api/tasks/{taskId}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = boardId,
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    private async Task<int> ReadStatusId(string key)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Statuses
+            .Where(status => status.Workspace!.Slug == "netptune" && status.EntityType == EntityType.Task && status.Key == key)
+            .Select(status => status.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
     }
 
     private async Task<int> ReadBoardId(int groupId)

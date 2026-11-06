@@ -84,7 +84,7 @@ public sealed class UpdateTaskTool : IAiTool
           "taskRef": { "type": "string", "description": "Handle of a task proposed earlier in this change set, to tag it." },
           "name": { "type": "string", "description": "New task name." },
           "description": { "type": "string", "description": "New task description." },
-          "statusId": { "type": "integer", "description": "New status id, from list_records." },
+          "statusId": { "type": "integer", "description": "New status id, from list_records. Changing the status also moves the task's cards into the column mapped to that status on each board that has one." },
           "priority": {
             "type": "string",
             "enum": ["None", "Low", "Medium", "High", "Critical"],
@@ -116,7 +116,7 @@ public sealed class UpdateTaskTool : IAiTool
             "items": { "type": "string" },
             "description": "The complete set of tag names, existing or proposed with propose_tag_change. An empty array clears them."
           },
-          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into. A group with a status of its own sets the task's status too. A group on a board the task is not on yet adds it to that board and leaves it on its other boards; name those in removeFromBoardIds to move it off them." },
+          "boardGroupId": { "type": "integer", "description": "Board group (the column on a board) to move the task into. A group with a status of its own sets the task's status too, which moves the task's cards on its other boards into their column for that status where one exists. A group on a board the task is not on yet adds it to that board and leaves it on its other boards; name those in removeFromBoardIds to move it off them." },
           "boardGroupRef": { "type": "string", "description": "Handle of a board group proposed earlier in this change set, instead of boardGroupId." },
           "removeFromBoardIds": {
             "type": "array",

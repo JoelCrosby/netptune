@@ -1,8 +1,8 @@
 using FluentAssertions;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
-using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -38,6 +38,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         UnitOfWork.BoardGroups
             .GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(AutoFixtures.BoardGroup);
+        Placement.FollowStatus(default!, default!, default, default).ReturnsForAnyArgs(TaskBoardMoves.None);
         Handler = new(
             UnitOfWork,
             Activity,
@@ -69,6 +70,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
             request.CurrentIndex,
             TestContext.Current.CancellationToken)
             .Returns(((double?)0D, (double?)2D));
+        Placement.Place(request.TaskId, Arg.Any<BoardGroupTaskTarget>(), Arg.Any<CancellationToken>()).Returns(true);
     }
 
     private void SetupSameGroup(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup)
@@ -151,15 +153,96 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     }
 
     [Fact]
-    public async Task MoveTaskInBoardGroup_ShouldLogActivity_WhenValidId()
+    public async Task MoveTaskInBoardGroup_ShouldRecordTheMove_UnderTheStatusChangeCorrelation()
     {
         var request = TransferRequest();
         var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
-        SetupTransfer(request, taskInGroupA);
+        var recordedMoves = new List<TaskBoardMoves>();
+        TaskBoardMoveContext? recordedContext = null;
+        Guid? statusCorrelationId = null;
+
+        SetupTransfer(request, taskInGroupA, groupStatusId: 5);
+        Identity.GetWorkspaceId().Returns(1);
+        UnitOfWork.Statuses
+            .GetInWorkspace(5, 1, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(AutoFixtures.TaskStatus with { Id = 5 });
+        await EventRecords.Append(
+            Arg.Do<EventWriteRequest<FieldTransitionedPayload>>(transition => statusCorrelationId = transition.CorrelationId),
+            Arg.Any<CancellationToken>());
+        await Placement.RecordMoves(
+            Arg.Do<TaskBoardMoves>(recordedMoves.Add),
+            Arg.Do<TaskBoardMoveContext>(context => recordedContext = context),
+            Arg.Any<CancellationToken>());
 
         await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
-        Activity.Received(1).LogWith(Arg.Any<Action<ActivityOptions<MoveTaskActivityMeta>>>());
+        var dragMoves = recordedMoves.Should().ContainSingle(moves => moves.HasMoves).Subject;
+        var move = dragMoves.Moves.Should().ContainSingle().Subject;
+
+        move.TaskId.Should().Be(request.TaskId);
+        move.FromGroupId.Should().Be(request.OldGroupId);
+        move.Target.Id.Should().Be(request.NewGroupId);
+        dragMoves.CausedByStatus.Should().BeNull();
+        recordedContext!.WorkspaceId.Should().Be(1);
+        statusCorrelationId.Should().Be(recordedContext.CorrelationId);
+        Activity.DidNotReceiveWithAnyArgs().LogWith<MoveTaskActivityMeta>(default!);
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldRecordNoMove_WhenTheCardIsAlreadyInTheGroup()
+    {
+        var request = TransferRequest();
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+
+        SetupTransfer(request, taskInGroupA);
+        Placement.Place(request.TaskId, Arg.Any<BoardGroupTaskTarget>(), Arg.Any<CancellationToken>()).Returns(false);
+
+        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await Placement.DidNotReceive().RecordMoves(
+            Arg.Is<TaskBoardMoves>(moves => moves.HasMoves),
+            Arg.Any<TaskBoardMoveContext>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldMoveCardsOnOtherBoards_WhenTheStatusChanges()
+    {
+        var request = TransferRequest();
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+        var otherBoardDone = new BoardGroupTaskTarget { Id = 40, Name = "Done", MaxSortOrder = 0, BoardId = 4 };
+        var newStatus = AutoFixtures.TaskStatus with { Id = 5 };
+        var statusMoves = new TaskBoardMoves(newStatus, [new TaskBoardMove(request.TaskId, 41, otherBoardDone)]);
+
+        SetupTransfer(request, taskInGroupA, groupStatusId: 5);
+        UnitOfWork.Statuses
+            .GetInWorkspace(5, 1, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(newStatus);
+        Placement
+            .FollowStatus(Arg.Any<IReadOnlyCollection<int>>(), newStatus, 1, Arg.Any<CancellationToken>())
+            .Returns(statusMoves);
+
+        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await Placement.Received(1).FollowStatus(
+            Arg.Is<IReadOnlyCollection<int>>(ids => ids.SequenceEqual(new[] { request.TaskId })),
+            newStatus,
+            1,
+            Arg.Any<CancellationToken>());
+        await Placement.Received(1).RecordMoves(statusMoves, Arg.Any<TaskBoardMoveContext>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldLeaveOtherBoards_WhenTheStatusIsUnchanged()
+    {
+        var request = TransferRequest();
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+
+        SetupTransfer(request, taskInGroupA, groupStatusId: 1);
+
+        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, default);
     }
 
     [Fact]

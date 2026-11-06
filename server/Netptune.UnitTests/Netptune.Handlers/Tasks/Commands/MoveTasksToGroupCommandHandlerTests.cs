@@ -4,8 +4,8 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
-using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
@@ -26,7 +26,6 @@ public class MoveTasksToGroupCommandHandlerTests
     private readonly Fixture Fixture = new();
     private readonly MoveTasksToGroupCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
@@ -37,9 +36,9 @@ public class MoveTasksToGroupCommandHandlerTests
         Identity.GetCurrentUserId().Returns("user-1");
         Identity.GetWorkspaceKey().Returns("workspace");
         Identity.GetWorkspaceId().Returns(1);
+        Placement.FollowStatus(default!, default!, default, default).ReturnsForAnyArgs(TaskBoardMoves.None);
         Handler = new(
             UnitOfWork,
-            Activity,
             EventPublisher,
             Identity,
             EventRecords,
@@ -203,13 +202,80 @@ public class MoveTasksToGroupCommandHandlerTests
     }
 
     [Fact]
-    public async Task MoveTasksToGroup_ShouldLogActivity_WhenValidId()
+    public async Task MoveTasksToGroup_ShouldRecordAMovePerTask_UnderTheStatusChangeCorrelation()
+    {
+        var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
+        var recordedMoves = new List<TaskBoardMoves>();
+        TaskBoardMoveContext? recordedContext = null;
+        IReadOnlyList<IEventWriteRequest> transitions = [];
+
+        SetupHandlerDependencies(request, groupStatusId: 5);
+        UnitOfWork.Statuses
+            .GetInWorkspace(5, 1, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(AutoFixtures.TaskStatus with { Id = 5 });
+        await EventRecords.AppendRange(
+            Arg.Do<IReadOnlyList<IEventWriteRequest>>(requests => transitions = requests),
+            Arg.Any<CancellationToken>());
+        await Placement.RecordMoves(
+            Arg.Do<TaskBoardMoves>(recordedMoves.Add),
+            Arg.Do<TaskBoardMoveContext>(context => recordedContext = context),
+            Arg.Any<CancellationToken>());
+
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
+
+        var groupMoves = recordedMoves.Should().ContainSingle(moves => moves.HasMoves).Subject;
+
+        groupMoves.Moves.Select(move => move.TaskId).Should().BeEquivalentTo(request.TaskIds);
+        groupMoves.Moves.Should().OnlyContain(move => move.Target.Id == request.NewGroupId);
+        groupMoves.CausedByStatus.Should().BeNull();
+        transitions.Should().HaveCount(request.TaskIds.Count);
+        transitions.Should().OnlyContain(transition => transition.CorrelationId == recordedContext!.CorrelationId);
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldMoveCardsOnOtherBoards_ForTasksWhoseStatusChanged()
+    {
+        var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
+        var newStatus = AutoFixtures.TaskStatus with { Id = 5 };
+        var alreadyCompleteId = request.TaskIds[0];
+        var changedTaskIds = request.TaskIds.Skip(1).Order().ToList();
+
+        SetupHandlerDependencies(request, groupStatusId: 5);
+        UnitOfWork.Statuses
+            .GetInWorkspace(5, 1, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(newStatus);
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), true, TestContext.Current.CancellationToken)
+            .Returns(request.TaskIds.Select(id => TaskWithStatus(id, id == alreadyCompleteId ? 5 : 1)).ToList());
+
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await Placement.Received(1).FollowStatus(
+            Arg.Is<IReadOnlyCollection<int>>(ids => ids.Order().SequenceEqual(changedTaskIds)),
+            newStatus,
+            1,
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldLeaveOtherBoards_WhenTheGroupHasNoStatus()
     {
         var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
         SetupHandlerDependencies(request);
 
         await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
 
-        Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<MoveTaskActivityMeta>>>());
+        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, default);
+    }
+
+    private static ProjectTask TaskWithStatus(int taskId, int statusId)
+    {
+        return new ProjectTask
+        {
+            Id = taskId,
+            WorkspaceId = 1,
+            OwnerId = "user-1",
+            StatusId = statusId,
+            Status = AutoFixtures.TaskStatus with { Id = statusId },
+        };
     }
 }

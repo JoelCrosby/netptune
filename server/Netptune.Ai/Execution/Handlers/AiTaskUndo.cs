@@ -158,28 +158,48 @@ public static class AiTaskUndo
             }
         }
 
-        var placementError = await RestoreSprintAndPlacements(mediator, snapshot, current, touched, cancellationToken);
+        // Fields go back first: restoring the status moves the task's cards into that status's columns,
+        // and the placements put back afterwards, against a fresh read, have to win over those moves.
+        var fieldError = await RestoreFields(mediator, snapshot, touched, cancellationToken);
+
+        if (fieldError is not null)
+        {
+            return AiChangePayload.Failure(change, fieldError);
+        }
+
+        var restored = await mediator.Send(new GetTaskQuery(snapshot.TaskId), cancellationToken);
+
+        if (restored is null)
+        {
+            return AiChangePayload.Failure(change, AppText.AiChangeErrorTaskCouldNotRestored);
+        }
+
+        var placementError = await RestoreSprintAndPlacements(mediator, snapshot, restored, touched, cancellationToken);
 
         if (placementError is not null)
         {
             return AiChangePayload.Failure(change, placementError);
         }
 
+        return AiChangePayload.Applied(change, snapshot.TaskId);
+    }
+
+    private static async Task<string?> RestoreFields(
+        IMediator mediator,
+        AiTaskSnapshot snapshot,
+        AiTaskFacets touched,
+        CancellationToken cancellationToken)
+    {
         var request = CreateRestoreRequest(snapshot, touched);
 
-        if (request is not null)
+        if (request is null)
         {
-            var response = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
-
-            if (!response.IsSuccess)
-            {
-                var fieldError = response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored;
-
-                return AiChangePayload.Failure(change, fieldError);
-            }
+            return null;
         }
 
-        return AiChangePayload.Applied(change, snapshot.TaskId);
+        var response = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
+
+        return response.IsSuccess ? null : response.Message ?? AppText.AiChangeErrorTaskCouldNotRestored;
     }
 
     private static AiTaskFacets Differences(AiTaskSnapshot left, AiTaskSnapshot right)

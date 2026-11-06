@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Ordering;
 using Netptune.Core.Requests;
@@ -57,17 +58,26 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
         var response = req.OldGroupId == req.NewGroupId
             ? await MoveTaskInGroup(req, cancellationToken)
-            : await TransferTaskInGroups(req, cancellationToken);
+            : await TransferTaskInGroups(req, workspaceId, cancellationToken);
 
         return response;
     }
 
-    private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request, CancellationToken cancellationToken)
+    private async Task<ClientResponse> TransferTaskInGroups(
+        MoveTaskInGroupRequest request,
+        int workspaceId,
+        CancellationToken cancellationToken)
     {
         var oldTask = await UnitOfWork.Tasks.GetTaskViewModel(request.TaskId, cancellationToken);
+        var moveContext = new TaskBoardMoveContext
+        {
+            WorkspaceId = workspaceId,
+            CorrelationId = Guid.NewGuid(),
+        };
 
         var boardGroup = await UnitOfWork.Transaction(async () =>
         {
+            var statusMoves = TaskBoardMoves.None;
             var newGroup = await UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, cancellationToken);
 
             if (newGroup is null)
@@ -91,6 +101,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
                             EventKey = EventKeys.EntityFieldTransitioned,
                             SubjectType = EventEntityTypes.From(EntityType.Task),
                             SubjectId = oldTask.Id.ToString(),
+                            CorrelationId = moveContext.CorrelationId,
                             Payload = new FieldTransitionedPayload
                             {
                                 Field = "status",
@@ -101,11 +112,27 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
                             },
                             References = BuildReferences(oldTask.ProjectId, oldTask.SprintId),
                         }, cancellationToken);
+
+                        statusMoves = await Placement.FollowStatus(
+                            [request.TaskId],
+                            newStatus,
+                            newGroup.BoardId,
+                            cancellationToken);
                     }
                 }
             }
 
-            await Placement.Place(request.TaskId, newGroup, cancellationToken);
+            var placed = await Placement.Place(request.TaskId, newGroup, cancellationToken);
+
+            if (placed)
+            {
+                var move = new TaskBoardMove(request.TaskId, request.OldGroupId, newGroup);
+
+                await Placement.RecordMoves(new TaskBoardMoves(null, [move]), moveContext, cancellationToken);
+            }
+
+            await Placement.RecordMoves(statusMoves, moveContext, cancellationToken);
+
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             return newGroup;
@@ -128,19 +155,6 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
         taskInBoardGroup.SortOrder = sortOrder;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
-
-        Activity.LogWith<MoveTaskActivityMeta>(options =>
-        {
-            options.EntityId = request.TaskId;
-            options.EntityType = EntityType.Task;
-            options.Type = ActivityType.Move;
-            options.Meta = new MoveTaskActivityMeta
-            {
-                Group = boardGroup.Name,
-                GroupId = boardGroup.Id,
-                FromGroupId = request.OldGroupId,
-            };
-        });
 
         if (boardGroup.StatusId.HasValue
             && oldTask is not null
