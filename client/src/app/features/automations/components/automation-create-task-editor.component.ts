@@ -9,6 +9,7 @@ import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormSelectGroupComponent } from '@static/components/form-select/form-select-group.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectTagsOptionComponent } from '@static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@static/components/form-select-tags/form-select-tags.component';
@@ -20,12 +21,18 @@ import {
   AutomationDateUpdateMode,
 } from '@core/automations/automation.models';
 
+import {
+  boardGroupLabel,
+  boardGroupSections,
+} from '../models/board-group-sections';
+
 @Component({
   selector: 'app-automation-create-task-editor',
   imports: [
     CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
+    FormSelectGroupComponent,
     FormSelectOptionComponent,
     FormSelectTagsComponent,
     FormSelectTagsOptionComponent,
@@ -210,10 +217,16 @@ import {
               Project default
             </span>
           </app-form-select-option>
-          @for (boardGroup of boardGroups(); track boardGroup.id) {
-            <app-form-select-option [value]="boardGroup.id">
-              {{ boardGroup.name }}
-            </app-form-select-option>
+          @for (section of boardGroupSections(); track section.key) {
+            <app-form-select-group [label]="section.label">
+              @for (group of section.groups; track group.id) {
+                <app-form-select-option
+                  [value]="group.id"
+                  [selectedLabel]="boardGroupLabel(group)">
+                  {{ group.name }}
+                </app-form-select-option>
+              }
+            </app-form-select-group>
           }
         </app-form-select>
       </div>
@@ -253,6 +266,12 @@ export class AutomationCreateTaskEditorComponent {
   boardGroups = input.required<AutomationBoardGroupOption[]>();
   relationTypes = input.required<RelationType[]>();
   patch = output<Partial<AutomationAction>>();
+
+  protected readonly boardGroupSections = computed(() => {
+    return boardGroupSections(this.boardGroups());
+  });
+
+  protected readonly boardGroupLabel = boardGroupLabel;
 
   copiesAssignees = computed(() => this.action().copyAssignees === true);
   dueDateMode = computed(() => this.action().dueDate?.mode ?? null);

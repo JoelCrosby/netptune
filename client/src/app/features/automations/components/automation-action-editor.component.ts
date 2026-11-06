@@ -20,10 +20,11 @@ import { AutomationCreateTaskEditorComponent } from './automation-create-task-ed
 import { AutomationNotifyEditorComponent } from './automation-notify-editor.component';
 import { AutomationRelationEditorComponent } from './automation-relation-editor.component';
 import { AutomationTaskUpdateEditorComponent } from './automation-task-update-editor.component';
+import { TaskUpdateDraft } from '../models/task-update-fields';
 
 export const automationActionLimit = 10;
 
-export interface EditableAutomationAction extends AutomationAction {
+export interface EditableAutomationAction extends TaskUpdateDraft {
   clientId: number;
 }
 

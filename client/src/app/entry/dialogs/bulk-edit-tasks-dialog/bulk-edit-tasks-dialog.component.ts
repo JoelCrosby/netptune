@@ -12,7 +12,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { BulkCollectionMode } from '@core/enums/bulk-collection-mode';
+import {
+  BulkCollectionMode,
+  bulkCollectionModeOptions,
+} from '@core/enums/bulk-collection-mode';
 import { EstimateType, estimateTypeOptions } from '@core/enums/estimate-type';
 import {
   TaskPriority,
@@ -26,25 +29,20 @@ import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { userResource } from '@core/resources/user.resource';
 import { TaskCommandsService } from '@core/services/task-commands.service';
-import { LucideFlag, LucidePlus } from '@lucide/angular';
+import { LucideFlag } from '@lucide/angular';
+import { AddFieldMenuComponent } from '@static/components/add-field-menu/add-field-menu.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatePickerComponent } from '@static/components/date-picker/date-picker.component';
-import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
-import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { NumberInputComponent } from '@static/components/number-input/number-input.component';
 import {
-  BulkEditCollectionPickerComponent,
-  BulkEditPickerOption,
-} from './bulk-edit-collection-picker.component';
-import {
-  BulkEditFieldKey,
-  bulkEditFieldTypeLabels,
-  bulkEditFields,
-} from './bulk-edit-fields';
-import { BulkEditRowComponent } from './bulk-edit-row.component';
+  CollectionPickerComponent,
+  CollectionPickerOption,
+} from '@static/components/collection-picker/collection-picker.component';
+import { RemovableFieldRowComponent } from '@static/components/removable-field-row/removable-field-row.component';
+import { BulkEditFieldKey, bulkEditFields } from './bulk-edit-fields';
 import { BulkEditTask } from './bulk-edit-task';
 import {
   assigneesHint,
@@ -65,17 +63,15 @@ const fadeEdgePx = 4;
 @Component({
   selector: 'app-bulk-edit-tasks-dialog',
   imports: [
-    BulkEditCollectionPickerComponent,
-    BulkEditRowComponent,
+    AddFieldMenuComponent,
+    CollectionPickerComponent,
     DatePickerComponent,
-    DropdownMenuComponent,
     FlatButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
     LucideFlag,
-    LucidePlus,
-    MenuItemComponent,
     NumberInputComponent,
+    RemovableFieldRowComponent,
     StrokedButtonComponent,
   ],
   host: { class: 'flex min-h-0 flex-auto flex-col' },
@@ -115,7 +111,7 @@ const fadeEdgePx = 4;
         class="custom-scroll flex min-h-0 flex-auto flex-col gap-6.5 overflow-x-hidden overflow-y-auto py-0.5 pr-1"
         (scroll)="onRowsScroll($event)">
         @for (field of addedFields(); track field.key) {
-          <app-bulk-edit-row
+          <app-removable-field-row
             [label]="field.label"
             [controlId]="controlId(field.key)"
             [hint]="hints().get(field.key)"
@@ -212,9 +208,10 @@ const fadeEdgePx = 4;
               }
 
               @case ('tags') {
-                <app-bulk-edit-collection-picker
+                <app-collection-picker
                   [options]="tagOptions()"
                   [selected]="tags()"
+                  [modeOptions]="collectionModeOptions"
                   [mode]="tagMode()"
                   [searchPlaceholder]="labels.searchTags"
                   [listAriaLabel]="field.label"
@@ -226,10 +223,11 @@ const fadeEdgePx = 4;
               }
 
               @case ('assignees') {
-                <app-bulk-edit-collection-picker
+                <app-collection-picker
                   [avatars]="true"
                   [options]="assigneeOptions()"
                   [selected]="assigneeIds()"
+                  [modeOptions]="collectionModeOptions"
                   [mode]="assigneeMode()"
                   [searchPlaceholder]="labels.searchPeople"
                   [listAriaLabel]="field.label"
@@ -273,7 +271,7 @@ const fadeEdgePx = 4;
                 </app-form-select>
               }
             }
-          </app-bulk-edit-row>
+          </app-removable-field-row>
         } @empty {
           <p
             class="text-muted py-10 text-center text-sm"
@@ -284,33 +282,10 @@ const fadeEdgePx = 4;
       </div>
     </div>
 
-    <div class="relative mt-3.5 flex-none">
-      <button
-        #addTrigger
-        type="button"
-        class="border-foreground/24 text-primary hover:border-primary/50 hover:bg-primary/8 inline-flex h-10 cursor-pointer items-center gap-2 rounded-sm border border-dashed px-3.5 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-40"
-        [disabled]="!remainingFields().length"
-        (click)="addMenu.toggle(addTrigger)">
-        <svg lucidePlus class="h-4 w-4" aria-hidden="true"></svg>
-        <span i18n="Button that adds another field to a bulk edit">
-          Add a field
-        </span>
-      </button>
-
-      <app-dropdown-menu #addMenu>
-        @for (field of remainingFields(); track field.key) {
-          <button
-            app-menu-item
-            type="button"
-            (click)="addField(field.key); addMenu.close()">
-            <span class="min-w-0 flex-1 truncate">{{ field.label }}</span>
-            <span class="text-foreground/40 font-mono text-[11px]">
-              {{ typeLabels[field.type] }}
-            </span>
-          </button>
-        }
-      </app-dropdown-menu>
-    </div>
+    <app-add-field-menu
+      class="mt-3.5 flex-none"
+      [options]="remainingFields()"
+      (added)="addField($event)" />
 
     <div
       class="border-border mt-4 flex flex-none items-center justify-between gap-4 border-t pt-4">
@@ -369,16 +344,17 @@ export class BulkEditTasksDialogComponent {
   protected readonly noSprint = NO_SPRINT;
   protected readonly priorityOptions = taskPriorityOptions;
   protected readonly estimateOptions = estimateTypeOptions;
-  protected readonly typeLabels = bulkEditFieldTypeLabels;
 
   protected readonly labels = {
     searchTags: $localize`:Placeholder in the box that searches tags:Search tags`,
     searchPeople: $localize`:Placeholder in the box that searches people:Search people`,
-    tagModeLabel: $localize`:Accessible label for the control that chooses whether a bulk edit adds tags or replaces them:Tag change mode`,
-    assigneeModeLabel: $localize`:Accessible label for the control that chooses whether a bulk edit adds assignees or replaces them:Assignee change mode`,
+    tagModeLabel: $localize`:Accessible label for the control that chooses whether an edit adds tags or replaces them:Tag change mode`,
+    assigneeModeLabel: $localize`:Accessible label for the control that chooses whether an edit adds assignees or replaces them:Assignee change mode`,
     noTags: $localize`:Shown when a workspace has no tags to pick from:No tags`,
     noPeople: $localize`:Shown when a workspace has no people to pick from:No people`,
   };
+
+  protected readonly collectionModeOptions = bulkCollectionModeOptions;
 
   readonly statuses = statusResource();
   readonly projects = projectResource();
@@ -452,21 +428,23 @@ export class BulkEditTasksDialogComponent {
     return users.filter((user) => !user.isPending);
   });
 
-  protected readonly assigneeOptions = computed<BulkEditPickerOption[]>(() => {
-    const assignedCounts = this.assignedCounts();
+  protected readonly assigneeOptions = computed<CollectionPickerOption[]>(
+    () => {
+      const assignedCounts = this.assignedCounts();
 
-    return this.assignableUsers().map((user) => {
-      return {
-        value: user.id,
-        label: user.displayName,
-        hint: this.selectionHint(assignedCounts.get(user.id) ?? 0),
-        pictureUrl: user.pictureUrl,
-        isServiceAccount: user.isServiceAccount,
-      };
-    });
-  });
+      return this.assignableUsers().map((user) => {
+        return {
+          value: user.id,
+          label: user.displayName,
+          hint: this.selectionHint(assignedCounts.get(user.id) ?? 0),
+          pictureUrl: user.pictureUrl,
+          isServiceAccount: user.isServiceAccount,
+        };
+      });
+    }
+  );
 
-  protected readonly tagOptions = computed<BulkEditPickerOption[]>(() => {
+  protected readonly tagOptions = computed<CollectionPickerOption[]>(() => {
     const taggedCounts = this.taggedCounts();
 
     return (this.tagsResource.value() ?? []).map((tag) => {
@@ -528,7 +506,7 @@ export class BulkEditTasksDialogComponent {
   }
 
   protected removeLabelFor(label: string): string {
-    return $localize`:Accessible label for the button that drops a field from a bulk edit. FIELD is the field's name:Remove ${label}:FIELD:`;
+    return $localize`:Accessible label for the button that drops a field from an edit. FIELD is the field's name:Remove ${label}:FIELD:`;
   }
 
   protected addField(key: BulkEditFieldKey) {

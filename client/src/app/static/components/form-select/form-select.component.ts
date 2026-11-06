@@ -22,6 +22,7 @@ import {
 } from '@lucide/angular';
 import { FormControlFieldComponent } from '../form-control/form-control-field.component';
 import {
+  FormControlAppearanceDirective,
   FormControlHintDirective,
   FormControlInputDirective,
   FormControlLabelDirective,
@@ -104,13 +105,14 @@ import { ListboxKeyboard } from '../listbox-keyboard';
 
         <svg
           lucideChevronDown
-          size="28"
           aria-hidden="true"
-          class="text-foreground/70 mr-4 flex items-center justify-center"></svg>
+          [size]="quiet() ? 16 : 28"
+          [class]="chevronClass()"></svg>
 
         <app-form-select-dropdown [reference]="dropreference.el">
           <div appFormSelectDropdown class="menu-scale-in">
-            <ng-content select="app-form-select-option" />
+            <ng-content
+              select="app-form-select-option, app-form-select-group" />
           </div>
         </app-form-select-dropdown>
       </app-form-control-field>
@@ -145,7 +147,8 @@ export class FormSelectComponent<
   readonly changed = output<TValue>();
   readonly input = viewChild.required<ElementRef>('input');
   readonly options = contentChildren<FormSelectOptionComponent<TValue>>(
-    FormSelectOptionComponent
+    FormSelectOptionComponent,
+    { descendants: true }
   );
   readonly submitted = output<string>();
 
@@ -175,6 +178,20 @@ export class FormSelectComponent<
   }
   readonly pending = input<boolean>(false);
   readonly noMargin = input(false);
+
+  private readonly appearanceSource = inject(FormControlAppearanceDirective, {
+    optional: true,
+  });
+
+  protected readonly quiet = computed(() => {
+    return this.appearanceSource?.appFormAppearance() === 'quiet';
+  });
+
+  protected readonly chevronClass = computed(() => {
+    const margin = this.quiet() ? 'mr-3' : 'mr-4';
+
+    return `text-foreground/70 flex items-center justify-center ${margin}`;
+  });
 
   selectedPortal?: CdkPortal;
 

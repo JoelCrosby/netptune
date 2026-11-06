@@ -21,6 +21,7 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
   private element = inject(ElementRef);
 
   readonly value = input<TValue>();
+  readonly selectedLabel = input<string>();
 
   @HostBinding('class.selected')
   get selected(): boolean {
@@ -31,7 +32,10 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
   active = false;
 
   get viewValue(): string {
-    return (this.element?.nativeElement.textContent || '').trim();
+    return (
+      this.selectedLabel() ??
+      (this.element?.nativeElement.textContent || '').trim()
+    );
   }
 
   private select?: FormSelectComponent<TValue>;
@@ -42,6 +46,7 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
 
   setActiveStyles(): void {
     this.active = true;
+    this.element.nativeElement.scrollIntoView({ block: 'nearest' });
   }
 
   setInactiveStyles(): void {

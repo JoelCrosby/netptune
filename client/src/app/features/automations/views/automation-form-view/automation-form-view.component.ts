@@ -86,6 +86,7 @@ import { AutomationConditionsEditorComponent } from '../../components/automation
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
 import { AutomationsService } from '../../services/automations.service';
+import { addedTaskUpdateFields } from '../../models/task-update-fields';
 
 type AutomationFlowStepKey = 'settings' | 'trigger' | 'conditions' | number;
 
@@ -732,6 +733,9 @@ export class AutomationFormViewComponent {
   }
 
   onActionTypeChanged(clientId: number, type: AutomationActionType) {
+    const isUpdateTask = type === AutomationActionType.updateTask;
+    const statusId = isUpdateTask ? this.defaultActiveStatusId() : null;
+
     this.updateAction(clientId, {
       type,
       message: type === AutomationActionType.notifyTaskAssignees ? '' : null,
@@ -744,10 +748,7 @@ export class AutomationFormViewComponent {
       comment: type === AutomationActionType.addComment ? '' : null,
       flagName: type === AutomationActionType.flagTask ? '' : null,
       flagDescription: type === AutomationActionType.flagTask ? '' : null,
-      statusId:
-        type === AutomationActionType.updateTask
-          ? this.defaultActiveStatusId()
-          : null,
+      statusId,
       priority: null,
       taskName: type === AutomationActionType.createTask ? '' : null,
       taskDescription: null,
@@ -778,6 +779,9 @@ export class AutomationFormViewComponent {
       sprintId: null,
       clearSprint: false,
       boardGroupId: null,
+      taskUpdateFields: isUpdateTask
+        ? addedTaskUpdateFields({ type, statusId })
+        : undefined,
       delayAmount: type === AutomationActionType.deleteTask ? 0 : null,
       delayUnit:
         type === AutomationActionType.deleteTask
@@ -866,10 +870,17 @@ export class AutomationFormViewComponent {
     const targetBranches = (rule.trigger.targetBranches ?? []).join(', ');
     const includeDrafts = rule.trigger.includeDrafts ?? false;
     const actions = rule.actions.length
-      ? rule.actions.map((action) => ({
-          ...action,
-          clientId: this.nextActionId++,
-        }))
+      ? rule.actions.map((action) => {
+          const isUpdateTask = action.type === AutomationActionType.updateTask;
+
+          return {
+            ...action,
+            taskUpdateFields: isUpdateTask
+              ? addedTaskUpdateFields(action)
+              : undefined,
+            clientId: this.nextActionId++,
+          };
+        })
       : [this.newNotifyAction()];
 
     this.name.set(rule.name);

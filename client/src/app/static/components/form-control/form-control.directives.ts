@@ -4,6 +4,8 @@ export type FormControlDensity = 'default' | 'compact';
 
 export type FormControlShape = 'default' | 'rounded';
 
+export type FormControlAppearance = 'default' | 'quiet';
+
 // Set on any ancestor — usually the form itself — so every field under it picks the shape up
 // through the element injector. A form's fields are spread across nested editor components, which
 // would otherwise each need to thread an input down to the controls they render.
@@ -12,6 +14,13 @@ export type FormControlShape = 'default' | 'rounded';
 })
 export class FormControlShapeDirective {
   readonly appFormShape = input<FormControlShape>('default');
+}
+
+@Directive({
+  selector: '[appFormAppearance]',
+})
+export class FormControlAppearanceDirective {
+  readonly appFormAppearance = input<FormControlAppearance>('default');
 }
 
 @Directive({

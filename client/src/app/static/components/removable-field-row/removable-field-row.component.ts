@@ -3,7 +3,7 @@ import { LucideX } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 @Component({
-  selector: 'app-bulk-edit-row',
+  selector: 'app-removable-field-row',
   imports: [IconButtonComponent, LucideX],
   host: { class: 'flex items-start gap-3' },
   template: `
@@ -17,7 +17,7 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
       <ng-content />
 
       @if (hint(); as hint) {
-        <div class="text-muted mx-[3px] mt-1.5 text-xs font-medium">
+        <div class="text-muted mx-0.75 mt-1.5 text-xs font-medium">
           {{ hint }}
         </div>
       }
@@ -33,10 +33,10 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
     </button>
   `,
 })
-export class BulkEditRowComponent {
+export class RemovableFieldRowComponent {
   readonly label = input.required<string>();
   readonly controlId = input<string>();
-  readonly hint = input<string>();
+  readonly hint = input<string | null>();
   readonly removeLabel = input.required<string>();
 
   readonly removed = output();

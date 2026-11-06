@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { cn } from '../button/button.variants';
 import {
+  FormControlAppearanceDirective,
   FormControlDensity,
   FormControlShapeDirective,
 } from './form-control.directives';
@@ -40,9 +41,26 @@ export class FormControlFieldComponent {
     optional: true,
   });
 
+  private readonly appearanceSource = inject(FormControlAppearanceDirective, {
+    optional: true,
+  });
+
+  private readonly quiet = computed(() => {
+    return this.appearanceSource?.appFormAppearance() === 'quiet';
+  });
+
   protected readonly hostClass = computed(() => {
     const base =
       'flex w-[inherit] max-w-[inherit] flex-row items-center bg-form-field-background transition-colors duration-200 ease-out';
+
+    if (this.quiet()) {
+      return cn(
+        base,
+        'rounded-sm border-2 text-sm [&_input]:leading-9',
+        this.class()
+      );
+    }
+
     const rounded = this.shapeSource?.appFormShape() === 'rounded';
     const shape =
       this.density() === 'compact'
@@ -69,6 +87,10 @@ export class FormControlFieldComponent {
 
     if (this.active() || this.focused()) {
       return 'var(--primary)';
+    }
+
+    if (this.quiet()) {
+      return 'var(--border)';
     }
 
     const idleOpacity = this.density() === 'compact' ? 15 : 30;

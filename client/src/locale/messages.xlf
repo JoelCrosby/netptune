@@ -13,7 +13,7 @@
     </unit>
     <unit id="6097124224289190693">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:162</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:167</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -253,7 +253,7 @@
     </unit>
     <unit id="6164922890839038809">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:294,301</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:295,302</note>
         <note category="description">How many automation actions are in use. USED is that count, LIMIT the maximum</note>
       </notes>
       <segment>
@@ -1270,7 +1270,7 @@
     </unit>
     <unit id="3387705505469073896">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:326,327</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:301,302</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {1 task} other {<ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
@@ -1841,7 +1841,7 @@
     </unit>
     <unit id="9018167576424947945">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:201,203</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:202,204</note>
         <note category="description">Button that saves changes to an automation</note>
       </notes>
       <segment>
@@ -1945,6 +1945,15 @@
       </notes>
       <segment>
         <source>checks failed on <ph id="0" equiv="REFERENCE" disp="FIRST"/> (<ph id="1" equiv="FAILED" disp="failed"/> of <ph id="2" equiv="TOTAL" disp="total"/>)</source>
+      </segment>
+    </unit>
+    <unit id="3667842621564887364">
+      <notes>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:12</note>
+        <note category="description">Kind of control a field brings, shown beside its name in the add-a-field menu</note>
+      </notes>
+      <segment>
+        <source>text</source>
       </segment>
     </unit>
     <unit id="2838129566011107043">
@@ -2195,7 +2204,7 @@
     </unit>
     <unit id="7727358814329370401">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:345</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:338</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -2247,13 +2256,13 @@
         <source>S</source>
       </segment>
     </unit>
-    <unit id="3254123755159477718">
+    <unit id="3256787502298877820">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:263</note>
-        <note category="description">Automation form validation error</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:345,348</note>
+        <note category="description">Button that goes back to setting a value instead of clearing it</note>
       </notes>
       <segment>
-        <source>Complete each configured task date update.</source>
+        <source> Set a value instead </source>
       </segment>
     </unit>
     <unit id="3101405940446847368">
@@ -2354,7 +2363,7 @@
         <note category="location">src/app/core/services/workspace-commands.service.ts:220</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:230</note>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:11</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:337,340</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:312,315</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:238,241</note>
@@ -2722,7 +2731,7 @@
     </unit>
     <unit id="8878445523344517933">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:847</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:851</note>
         <note category="description">Confirmation after creating an automation</note>
       </notes>
       <segment>
@@ -2890,15 +2899,6 @@
       </notes>
       <segment>
         <source>Tasks Re-assigned</source>
-      </segment>
-    </unit>
-    <unit id="1713271461473302108">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:172,173</note>
-        <note category="description">Label of the assignee update mode field</note>
-      </notes>
-      <segment>
-        <source>Mode</source>
       </segment>
     </unit>
     <unit id="171368812856780023">
@@ -3156,7 +3156,8 @@
     </unit>
     <unit id="7963932149029320020">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:281,287</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:279,285</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:323,328</note>
         <note category="description">Shown in a bulk edit dialog before any field has been added</note>
       </notes>
       <segment>
@@ -3240,7 +3241,7 @@
     </unit>
     <unit id="3119596725788894513">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:221,222</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:222,223</note>
         <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:34</note>
         <note category="description">Heading of the setup part of the rule</note>
       </notes>
@@ -3759,7 +3760,7 @@
     </unit>
     <unit id="1460148493925263836">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:620</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:621</note>
         <note category="description">Description of the automation settings step</note>
       </notes>
       <segment>
@@ -4255,7 +4256,7 @@
     </unit>
     <unit id="2952923210661330049">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:624</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:625</note>
         <note category="description">Description of the automation trigger step</note>
       </notes>
       <segment>
@@ -4503,7 +4504,7 @@
     </unit>
     <unit id="2426850352402316192">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:612</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:590</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:260</note>
         <note category="description">Says how many of the selected tasks already carry a tag or assignee. COUNT is how many do and TOTAL is how many are selected</note>
       </notes>
@@ -4607,7 +4608,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:73,75</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:478</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:245,246</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:246,247</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-automation-diff.component.ts:245</note>
         <note category="description">Heading of the conditions part of the rule</note>
       </notes>
@@ -4876,6 +4877,15 @@
         <source><ph id="0" equiv="ACTION" disp="action"/> — <ph id="1" equiv="STATUS" disp="status"/></source>
       </segment>
     </unit>
+    <unit id="1658312554570469747">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:631</note>
+        <note category="description">Says that an update task action swaps out the task&apos;s assignees</note>
+      </notes>
+      <segment>
+        <source>Replaces the task&apos;s assignees. Leave empty to unassign everyone.</source>
+      </segment>
+    </unit>
     <unit id="2324455558447195061">
       <notes>
         <note category="location">src/app/static/components/notification-list.component.ts:24,26</note>
@@ -4954,14 +4964,14 @@
         <note category="location">src/app/core/tasks/task-columns.ts:84</note>
         <note category="location">src/app/core/util/ai-client-context.ts:30</note>
         <note category="location">src/app/core/util/pin-scope.ts:80</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:69</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:55</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:167,169</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-project-field.component.ts:31</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:70</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:68,69</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:23</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:27,30</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:30,33</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:91</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:371</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:386</note>
@@ -5086,8 +5096,8 @@
     </unit>
     <unit id="3431484104185901354">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:23</note>
-        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:11</note>
+        <note category="description">Kind of control a field brings, shown beside its name in the add-a-field menu</note>
       </notes>
       <segment>
         <source>enum</source>
@@ -5215,12 +5225,12 @@
         <note category="location">src/app/core/automations/automation-copy.ts:67</note>
         <note category="location">src/app/core/tasks/task-columns.ts:107</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:34</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:20</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:71,73</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-field-rows.component.ts:193</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:58,59</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:65,66</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:137,141</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:34</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:682</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:450</note>
@@ -5393,7 +5403,7 @@
     </unit>
     <unit id="6899352499692995227">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:87,89</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:83,85</note>
         <note category="description">Title of the dialog for editing several tasks at once</note>
       </notes>
       <segment>
@@ -5460,12 +5470,12 @@
         <note category="location">src/app/core/automations/automation-copy.ts:70</note>
         <note category="location">src/app/core/tasks/task-columns.ts:124</note>
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:314,316</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:39</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:25</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:112,114</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-priority-field.component.ts:44</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:102,104</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:75,77</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:74,76</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:82,84</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:39</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:31</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:42</note>
         <note category="description">Task field that an automation can watch for changes</note>
@@ -5497,11 +5507,12 @@
         <note category="location">src/app/core/automations/automation-copy.ts:75</note>
         <note category="location">src/app/core/tasks/task-columns.ts:94</note>
         <note category="location">src/app/core/util/ai-client-context.ts:32</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:74</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:60</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:182,184</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-sprint-field.component.ts:33</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:187,188</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:194,195</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:104</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:89</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-project-sprint.component.ts:39</note>
         <note category="location">src/app/features/reporting/components/sprint-velocity-table.component.ts:53</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:146</note>
@@ -5580,8 +5591,7 @@
     </unit>
     <unit id="676130444518246482">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:49</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:260,262</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:35</note>
         <note category="description">Label of the estimate-unit field</note>
       </notes>
       <segment>
@@ -5590,7 +5600,7 @@
     </unit>
     <unit id="7238645691627834742">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:54</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:40</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:302</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:195</note>
         <note category="description">Label of the story points field</note>
@@ -5604,9 +5614,9 @@
         <note category="location">src/app/core/automations/automation-copy.ts:68</note>
         <note category="location">src/app/core/automations/automation-copy.ts:126</note>
         <note category="location">src/app/core/tasks/task-columns.ts:137</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:64</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:106,108</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:189,190</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:50</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:113,115</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:59</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:694</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:394</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
@@ -5672,8 +5682,8 @@
     </unit>
     <unit id="8856905278208146821">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:91,96</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:346,351</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:87,92</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:321,326</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:60,66</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
@@ -5734,7 +5744,7 @@
     </unit>
     <unit id="7388001911893689588">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:346,348</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:321,323</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {Apply 1 change} other {Apply <ph id="0" equiv="INTERPOLATION"/> changes}}</source>
@@ -5778,7 +5788,7 @@
     </unit>
     <unit id="8721146433575989462">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:219</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:224</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -5871,6 +5881,7 @@
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:75</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:69,70</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:106</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:44</note>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:94</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:76,78</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:164</note>
@@ -6042,8 +6053,8 @@
     </unit>
     <unit id="4248380204989256605">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:121</note>
-        <note category="description">Bulk edit mode that leaves a task&apos;s existing tags or assignees in place</note>
+        <note category="location">src/app/core/enums/bulk-collection-mode.ts:10</note>
+        <note category="description">Collection edit mode that leaves a task&apos;s existing tags or assignees in place</note>
       </notes>
       <segment>
         <source>Add to</source>
@@ -6200,7 +6211,8 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:255</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:55,57</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:49</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:81,84</note>
         <note category="location">src/app/features/queries/components/query-details-drawer.component.ts:31,33</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:106,108</note>
@@ -6300,7 +6312,7 @@
     </unit>
     <unit id="6353207650879811696">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:198</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:203</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -6364,7 +6376,7 @@
     </unit>
     <unit id="8554930606670469153">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:111</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:116</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -7163,7 +7175,8 @@
     </unit>
     <unit id="2585922590660438126">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:185,187</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:181,183</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:349,353</note>
         <note category="description">Button that clears the due date instead of setting one</note>
       </notes>
       <segment>
@@ -7705,7 +7718,7 @@
     </unit>
     <unit id="390927307085402665">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:230</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:235</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -7820,8 +7833,8 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:613</note>
         <note category="location">src/app/core/automations/automation-copy.ts:73</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:59</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:45</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:132</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:690</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:91,92</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:146,147</note>
@@ -8748,7 +8761,7 @@
     <unit id="9216117865911519658">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:168</note>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:49,50</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:50,51</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -9202,7 +9215,7 @@
     </unit>
     <unit id="6314049972479947514">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:846</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:850</note>
         <note category="description">Confirmation after saving an automation</note>
       </notes>
       <segment>
@@ -9636,7 +9649,8 @@
     </unit>
     <unit id="3739723885372225796">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:379</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:353</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:418</note>
         <note category="description">Shown when a workspace has no tags to pick from</note>
       </notes>
       <segment>
@@ -9900,8 +9914,8 @@
     </unit>
     <unit id="5342067349981153295">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:125</note>
-        <note category="description">Bulk edit mode that swaps out a task&apos;s existing tags or assignees</note>
+        <note category="location">src/app/core/enums/bulk-collection-mode.ts:14</note>
+        <note category="description">Collection edit mode that swaps out a task&apos;s existing tags or assignees</note>
       </notes>
       <segment>
         <source>Replace with</source>
@@ -10004,7 +10018,7 @@
     </unit>
     <unit id="2174353170206211338">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:622</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:623</note>
         <note category="description">Description of the automation conditions step</note>
       </notes>
       <segment>
@@ -10213,7 +10227,7 @@
     </unit>
     <unit id="1304180803180220870">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:161,166</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:162,167</note>
         <note category="description">Button that removes an action</note>
       </notes>
       <segment>
@@ -10222,7 +10236,7 @@
     </unit>
     <unit id="2662644497259948010">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:69,70</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:70,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:32</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:54</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:48</note>
@@ -10279,7 +10293,7 @@
     </unit>
     <unit id="4766402403585838311">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:78,80</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:79,81</note>
         <note category="description">Label of the flag name field</note>
       </notes>
       <segment>
@@ -10294,6 +10308,15 @@
       </notes>
       <segment>
         <source>Tag name</source>
+      </segment>
+    </unit>
+    <unit id="4767602722617549975">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:420</note>
+        <note category="description">Accessible label for the number an update task action sets the task estimate to</note>
+      </notes>
+      <segment>
+        <source>Estimate value</source>
       </segment>
     </unit>
     <unit id="7572709072780766984">
@@ -10344,7 +10367,7 @@
     </unit>
     <unit id="7581179961566661970">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:85,87</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:86,88</note>
         <note category="description">Label of the flag description field</note>
       </notes>
       <segment>
@@ -10362,7 +10385,7 @@
     </unit>
     <unit id="1418101411356139094">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:120,121</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:121,122</note>
         <note category="description">Label of the delay field</note>
       </notes>
       <segment>
@@ -10371,7 +10394,7 @@
     </unit>
     <unit id="8932917860978648376">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:131,132</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:132,133</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:95,96</note>
         <note category="description">Label of the unit field</note>
@@ -10382,7 +10405,7 @@
     </unit>
     <unit id="5531237363767747080">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:135,136</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:136,137</note>
         <note category="description">Delay unit: minutes</note>
       </notes>
       <segment>
@@ -10427,7 +10450,7 @@
     </unit>
     <unit id="8070396816726827304">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:138,139</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:139,140</note>
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:197</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
@@ -10458,8 +10481,8 @@
     </unit>
     <unit id="840951359074313455">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:141,142</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:168,169</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:142,143</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:175,176</note>
         <note category="location">src/app/features/queries/models/task-query-builder.ts:127</note>
         <note category="description">Delay unit: days</note>
       </notes>
@@ -10505,7 +10528,7 @@
     </unit>
     <unit id="5479182328057479730">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:149,152</note>
+        <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:150,153</note>
         <note category="description">Caveat on the delete-task action</note>
       </notes>
       <segment>
@@ -10577,7 +10600,7 @@
     </unit>
     <unit id="7998546634092617403">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:286,288</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:287,289</note>
         <note category="description">Button that adds another automation action</note>
       </notes>
       <segment>
@@ -10657,15 +10680,6 @@
         <source> Created from a review of <pc id="0" equivStart="START_TAG_BUTTON" equivEnd="CLOSE_TAG_BUTTON" type="other" dispStart="&lt;button app-text-link type=&quot;button&quot; (click)=&quot;openParent()&quot;&gt;" dispEnd="&lt;/button&gt;"> <ph id="1" equiv="TASK" disp="{{ origin.parentSystemId ?? &apos;&apos; // i18n(ph=&quot;TASK&quot;) }}"/> </pc> · accepted by <ph id="2" equiv="NAME" disp="{{ origin.acceptedByDisplayName ?? &apos;&apos; // i18n(ph=&quot;NAME&quot;) }}"/> <ph id="3" equiv="TIME" disp="{{ origin.acceptedAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/> </source>
       </segment>
     </unit>
-    <unit id="1505274466151243496">
-      <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:252</note>
-        <note category="description">Automation form validation error</note>
-      </notes>
-      <segment>
-        <source>Choose at least one assignee to add.</source>
-      </segment>
-    </unit>
     <unit id="1509364563909331398">
       <notes>
         <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:38,41</note>
@@ -10732,7 +10746,7 @@
     </unit>
     <unit id="7940271704378752815">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:361</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:354</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -10790,8 +10804,8 @@
     </unit>
     <unit id="6956620730780387566">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:296,300</note>
-        <note category="description">Button that adds another field to a bulk edit</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:38,42</note>
+        <note category="description">Button that adds another field to an edit</note>
       </notes>
       <segment>
         <source> Add a field </source>
@@ -10871,7 +10885,7 @@
     <unit id="4774743033649921775">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:82,85</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:254,256</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:255,257</note>
         <note category="description">Marks the conditions section as not required</note>
       </notes>
       <segment>
@@ -10924,7 +10938,7 @@
     </unit>
     <unit id="8745519897141770821">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:328</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:321</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -10970,7 +10984,7 @@
     <unit id="1277352310505180239">
       <notes>
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:358</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:38,39</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:45,46</note>
         <note category="description">Accessible label of the name of a task a review suggests creating</note>
       </notes>
       <segment>
@@ -10996,8 +11010,8 @@
     </unit>
     <unit id="6885998085930575465">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:377</note>
-        <note category="description">Accessible label for the control that chooses whether a bulk edit adds tags or replaces them</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:351</note>
+        <note category="description">Accessible label for the control that chooses whether an edit adds tags or replaces them</note>
       </notes>
       <segment>
         <source>Tag change mode</source>
@@ -11005,8 +11019,8 @@
     </unit>
     <unit id="6889380838020549066">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:63,65</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:210,212</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:70,72</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:217,219</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-board-group-picker.component.ts:18,20</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-status-picker.component.ts:18,20</note>
         <note category="description">Option that uses the project default</note>
@@ -11017,7 +11031,7 @@
     </unit>
     <unit id="491995769371858733">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:82,83</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:89,90</note>
         <note category="location">src/app/static/components/task-priority.component.ts:28,33</note>
         <note category="description">Shown in place of an empty value</note>
       </notes>
@@ -11036,7 +11050,7 @@
     </unit>
     <unit id="3741232987566177563">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:100,103</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:107,110</note>
         <note category="description">Option that copies assignees from the task that triggered the rule</note>
       </notes>
       <segment>
@@ -11045,7 +11059,7 @@
     </unit>
     <unit id="1272571610038697020">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:110,112</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:117,119</note>
         <note category="description">Placeholder text: Choose assignees; leave empty to unassign</note>
       </notes>
       <segment>
@@ -11054,8 +11068,7 @@
     </unit>
     <unit id="5908963172898140460">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:126,128</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:206,208</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:133,135</note>
         <note category="description">Placeholder text: Choose tags to add</note>
       </notes>
       <segment>
@@ -11065,15 +11078,15 @@
     <unit id="2413171611497962745">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:72</note>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:44</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:30</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:139,140</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:141,144</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:48</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:49</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:153,154</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:155,157</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:139,141</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:418</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:146,148</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:79</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:45</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -11083,7 +11096,7 @@
     </unit>
     <unit id="1101070297501164753">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:145,147</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:152,154</note>
         <note category="description">Option that leaves the created task without a due date</note>
       </notes>
       <segment>
@@ -11101,7 +11114,7 @@
     </unit>
     <unit id="1950398377417978358">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:151,153</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:158,160</note>
         <note category="description">Due date mode: a number of calendar days after creation</note>
       </notes>
       <segment>
@@ -11110,7 +11123,7 @@
     </unit>
     <unit id="789231937774350978">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:156,158</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:163,165</note>
         <note category="description">Due date mode: a number of working days after creation</note>
       </notes>
       <segment>
@@ -11119,7 +11132,7 @@
     </unit>
     <unit id="7892912711626443915">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:217,219</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:218,220</note>
         <note category="description">Accessible label of the automation steps list</note>
       </notes>
       <segment>
@@ -11165,7 +11178,7 @@
     </unit>
     <unit id="1704839025286044463">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:160,162</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:167,169</note>
         <note category="description">Due date mode: a specific date</note>
       </notes>
       <segment>
@@ -11174,7 +11187,7 @@
     </unit>
     <unit id="3973931101896534797">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:176,177</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:183,184</note>
         <note category="location">src/app/features/reporting/components/flow-throughput-table.component.ts:55</note>
         <note category="location">src/app/features/reporting/components/sprint-burndown-table.component.ts:54</note>
         <note category="description">Label of the date field</note>
@@ -11221,7 +11234,7 @@
     </unit>
     <unit id="2409078062655081027">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:192,194</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:199,201</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-sprint-picker.component.ts:18,20</note>
         <note category="location">src/app/static/components/task-sprint.component.ts:18,23</note>
         <note category="description">Option placing the created task outside any sprint</note>
@@ -11233,7 +11246,8 @@
     <unit id="3019687541619414789">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:76</note>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:204,206</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:211,213</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:94</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:375</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:30</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:52</note>
@@ -11254,7 +11268,7 @@
     </unit>
     <unit id="5901056933334652426">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:223,225</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:236,238</note>
         <note category="description">Label of the option that links a notification to its task</note>
       </notes>
       <segment>
@@ -11272,7 +11286,7 @@
     </unit>
     <unit id="2960069153368727992">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:229,231</note>
+        <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:242,244</note>
         <note category="description">Option that creates the task without linking it</note>
       </notes>
       <segment>
@@ -11290,7 +11304,7 @@
     </unit>
     <unit id="5690056637770435279">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:326,334</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:327,335</note>
         <note category="description">Position of the open step in the automation. STEP is its number, TOTAL the number of steps</note>
       </notes>
       <segment>
@@ -11546,11 +11560,20 @@
     <unit id="4816216590591222133">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:258</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:167,168</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:168,169</note>
         <note category="description">Marks an automation that is switched on</note>
       </notes>
       <segment>
         <source>Enabled</source>
+      </segment>
+    </unit>
+    <unit id="4817914611213853415">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:421</note>
+        <note category="description">Label of the days from run date field</note>
+      </notes>
+      <segment>
+        <source>Days from run date</source>
       </segment>
     </unit>
     <unit id="5764460420179405460">
@@ -11618,10 +11641,9 @@
     </unit>
     <unit id="6555318547274416232">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:274,275</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:78</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:163</note>
-        <note category="description">Label of the value field</note>
+        <note category="description">Label of the query builder value picker</note>
       </notes>
       <segment>
         <source>Value</source>
@@ -11629,7 +11651,7 @@
     </unit>
     <unit id="6557362678930490616">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:407</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:400</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -12292,8 +12314,9 @@
     </unit>
     <unit id="4098688651658195116">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:378</note>
-        <note category="description">Accessible label for the control that chooses whether a bulk edit adds assignees or replaces them</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:352</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:417</note>
+        <note category="description">Accessible label for the control that chooses whether an edit adds assignees or replaces them</note>
       </notes>
       <segment>
         <source>Assignee change mode</source>
@@ -12485,7 +12508,7 @@
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:61,63</note>
         <note category="location">src/app/features/automations/components/automation-rule-summary.component.ts:71,74</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:438</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:233,234</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:234,235</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-automation-diff.component.ts:219</note>
         <note category="description">Heading of the trigger part of the rule</note>
       </notes>
@@ -12613,7 +12636,7 @@
     </unit>
     <unit id="1341790877187548794">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:102,105</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:98,101</note>
         <note category="description">Explains that a bulk edit only touches the fields that were added</note>
       </notes>
       <segment>
@@ -12778,8 +12801,8 @@
     </unit>
     <unit id="7343642247493540451">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:609</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:673</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:610</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:674</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:63</note>
         <note category="description">Heading of the automation trigger step</note>
       </notes>
@@ -12836,7 +12859,7 @@
     </unit>
     <unit id="2529850425896361271">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:131,133</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:132,134</note>
         <note category="description">Eyebrow above the name of an automation being edited</note>
       </notes>
       <segment>
@@ -12977,7 +13000,7 @@
     </unit>
     <unit id="7047355952686823049">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:150</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:155</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -13016,7 +13039,7 @@
     <unit id="6151416851572883297">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:106,108</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:171,173</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:172,174</note>
         <note category="description">Marks an automation that is switched on</note>
       </notes>
       <segment>
@@ -13041,19 +13064,9 @@
         <source>Recently viewed pages</source>
       </segment>
     </unit>
-    <unit id="3899168401664549038">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:43,45</note>
-        <note category="description">Action that changes the task status</note>
-      </notes>
-      <segment>
-        <source>Set status</source>
-      </segment>
-    </unit>
     <unit id="4775132867725179808">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-priority-picker.component.ts:48</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:69,71</note>
         <note category="description">Accessible label for the control that changes a task&apos;s priority</note>
       </notes>
       <segment>
@@ -13096,24 +13109,6 @@
         <source>Deleted by</source>
       </segment>
     </unit>
-    <unit id="2644506605404311760">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:89,91</note>
-        <note category="description">Label of the set name field</note>
-      </notes>
-      <segment>
-        <source>Set name</source>
-      </segment>
-    </unit>
-    <unit id="1049377274416410844">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:93,95</note>
-        <note category="description">Placeholder text: Leave empty to keep the current name</note>
-      </notes>
-      <segment>
-        <source>Leave empty to keep the current name</source>
-      </segment>
-    </unit>
     <unit id="1049706183293561301">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:374,375</note>
@@ -13123,13 +13118,13 @@
         <source> ⏎ </source>
       </segment>
     </unit>
-    <unit id="6637148085275077583">
+    <unit id="3026841043341853938">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:101,103</note>
-        <note category="description">Label of the set description field</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:140,143</note>
+        <note category="description">Placeholder of the field that rewrites the task description in an update task action</note>
       </notes>
       <segment>
-        <source>Set description</source>
+        <source>New description</source>
       </segment>
     </unit>
     <unit id="4315118998450071076">
@@ -13139,15 +13134,6 @@
       </notes>
       <segment>
         <source>How this workspace is named, described and addressed.</source>
-      </segment>
-    </unit>
-    <unit id="7119306462815128114">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:105,107</note>
-        <note category="description">Placeholder text: Leave empty to keep the current description</note>
-      </notes>
-      <segment>
-        <source>Leave empty to keep the current description</source>
       </segment>
     </unit>
     <unit id="1754707392246942977">
@@ -13162,7 +13148,7 @@
     </unit>
     <unit id="1754733068810926535">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:324,325</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:299,300</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {1 field} other {<ph id="0" equiv="INTERPOLATION"/> fields}}</source>
@@ -13179,31 +13165,13 @@
         <source>Remove From Board</source>
       </segment>
     </unit>
-    <unit id="1756946564393679789">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:119,121</note>
-        <note category="description">Action that empties the task description</note>
-      </notes>
-      <segment>
-        <source> Clear description </source>
-      </segment>
-    </unit>
     <unit id="1758041683277838315">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:240</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:245</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
         <source>Task update actions need at least one field update.</source>
-      </segment>
-    </unit>
-    <unit id="1263525353518630430">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:127,129</note>
-        <note category="description">Label of the set owner field</note>
-      </notes>
-      <segment>
-        <source>Set owner</source>
       </segment>
     </unit>
     <unit id="1267184118353244642">
@@ -13215,15 +13183,6 @@
         <source>This workspace moves from /<ph id="0" equiv="CURRENT" disp="currentSlug"/> to /<ph id="1" equiv="NEXT" disp="nextSlug"/>.</source>
       </segment>
     </unit>
-    <unit id="2962980188258061625">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:134,136</note>
-        <note category="description">Option that leaves the task owner unchanged</note>
-      </notes>
-      <segment>
-        <source> Keep current owner </source>
-      </segment>
-    </unit>
     <unit id="2963979162586134182">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:468</note>
@@ -13231,24 +13190,6 @@
       </notes>
       <segment>
         <source>Checking <ph id="0" equiv="TOOL" disp="activity"/>…</source>
-      </segment>
-    </unit>
-    <unit id="3808003332483734444">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:151,155</note>
-        <note category="description">Action that removes the task owner</note>
-      </notes>
-      <segment>
-        <source>Clear owner</source>
-      </segment>
-    </unit>
-    <unit id="4936999816903178036">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:177,179</note>
-        <note category="description">Option that replaces the task assignees</note>
-      </notes>
-      <segment>
-        <source> Replace assignees </source>
       </segment>
     </unit>
     <unit id="4938565863335641780">
@@ -13289,18 +13230,9 @@
         <source>Throughput</source>
       </segment>
     </unit>
-    <unit id="2790722573443430248">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:454</note>
-        <note category="description">Placeholder of the assignees field when replacing assignees</note>
-      </notes>
-      <segment>
-        <source>Choose assignees; leave empty to unassign all</source>
-      </segment>
-    </unit>
     <unit id="8858497430333317910">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:204,205</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:64</note>
         <note category="description">Label of the add tags field</note>
       </notes>
       <segment>
@@ -13309,7 +13241,7 @@
     </unit>
     <unit id="6236311670364192011">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:218,219</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:69</note>
         <note category="description">Label of the remove tags field</note>
       </notes>
       <segment>
@@ -13326,19 +13258,9 @@
         <source>Automation</source>
       </segment>
     </unit>
-    <unit id="3474269564285715792">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:220,222</note>
-        <note category="description">Placeholder text: Choose tags to remove</note>
-      </notes>
-      <segment>
-        <source>Choose tags to remove</source>
-      </segment>
-    </unit>
     <unit id="8279959485865788028">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/pickers/task-estimate-picker.component.ts:98</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:254,256</note>
         <note category="description">Accessible label for the control that changes a task&apos;s estimate</note>
       </notes>
       <segment>
@@ -13392,10 +13314,10 @@
     </unit>
     <unit id="4975748273657042999">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:26</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:69,71</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:136</note>
-        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:15</note>
+        <note category="description">Plural noun for tags, used in the row summary</note>
       </notes>
       <segment>
         <source>tags</source>
@@ -13410,15 +13332,6 @@
         <source>assigned <ph id="0" equiv="PERSON" disp="FIRST"/></source>
       </segment>
     </unit>
-    <unit id="4993066231165110063">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:295,297</note>
-        <note category="description">Action that removes the task estimate</note>
-      </notes>
-      <segment>
-        <source> Clear estimate </source>
-      </segment>
-    </unit>
     <unit id="4995415456901189493">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-apply-progress.component.ts:99,102</note>
@@ -13429,15 +13342,6 @@
         <source>Stopping…</source>
       </segment>
     </unit>
-    <unit id="3003891067674753190">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:304,306</note>
-        <note category="description">Label of the move to sprint field</note>
-      </notes>
-      <segment>
-        <source>Move to sprint</source>
-      </segment>
-    </unit>
     <unit id="3008573030448240863">
       <notes>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:260</note>
@@ -13445,24 +13349,6 @@
       </notes>
       <segment>
         <source>Edited</source>
-      </segment>
-    </unit>
-    <unit id="6096337112846411396">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:311,313</note>
-        <note category="description">Option that leaves the task sprint unchanged</note>
-      </notes>
-      <segment>
-        <source> Keep current sprint </source>
-      </segment>
-    </unit>
-    <unit id="1262014541474769532">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:329,332</note>
-        <note category="description">Action that removes the task from its sprint</note>
-      </notes>
-      <segment>
-        <source> Move to backlog </source>
       </segment>
     </unit>
     <unit id="894073162382631591">
@@ -13501,33 +13387,6 @@
         <source>Exports you run appear here with a download link.</source>
       </segment>
     </unit>
-    <unit id="8951751805390485436">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:336,338</note>
-        <note category="description">Label of the move to board group field</note>
-      </notes>
-      <segment>
-        <source>Move to board group</source>
-      </segment>
-    </unit>
-    <unit id="2431549921365856140">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:342,344</note>
-        <note category="description">Option that leaves the board group unchanged</note>
-      </notes>
-      <segment>
-        <source> Keep current board group </source>
-      </segment>
-    </unit>
-    <unit id="8041787960786960687">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:367,369</note>
-        <note category="description">Option that leaves the date unchanged</note>
-      </notes>
-      <segment>
-        <source> Keep current date </source>
-      </segment>
-    </unit>
     <unit id="8044124817059226642">
       <notes>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:145</note>
@@ -13548,7 +13407,7 @@
     </unit>
     <unit id="1815539532540276970">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:371,373</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:366,367</note>
         <note category="description">Action that sets a specific date</note>
       </notes>
       <segment>
@@ -13557,7 +13416,7 @@
     </unit>
     <unit id="6295913046422808463">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:375,377</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:371,373</note>
         <note category="description">Date mode: a number of calendar days from the run date</note>
       </notes>
       <segment>
@@ -13594,7 +13453,7 @@
     </unit>
     <unit id="519136026111560472">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:380,382</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:377,379</note>
         <note category="description">Date mode: a number of working days from the run date</note>
       </notes>
       <segment>
@@ -13603,20 +13462,11 @@
     </unit>
     <unit id="1537678119914591602">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:384,385</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:381,382</note>
         <note category="description">Action that removes the date</note>
       </notes>
       <segment>
         <source>Clear date</source>
-      </segment>
-    </unit>
-    <unit id="4817914611213853415">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:404,405</note>
-        <note category="description">Label of the days from run date field</note>
-      </notes>
-      <segment>
-        <source>Days from run date</source>
       </segment>
     </unit>
     <unit id="4819261854771153538">
@@ -13639,7 +13489,7 @@
     </unit>
     <unit id="6544864607379277800">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:406,408</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:424</note>
         <note category="description">Explains how to set a date before the run date</note>
       </notes>
       <segment>
@@ -13662,7 +13512,7 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:129,133</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:42</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-date-field.component.ts:43</note>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:417</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:74</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:43</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -13782,8 +13632,8 @@
     </unit>
     <unit id="8505625387835214066">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:25</note>
-        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:14</note>
+        <note category="description">Kind of control a field brings, shown beside its name in the add-a-field menu</note>
       </notes>
       <segment>
         <source>number</source>
@@ -14577,7 +14427,7 @@
     </unit>
     <unit id="880590019506708092">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:367</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:360</note>
         <note category="description">Automation form validation error. COUNT is greater than one</note>
       </notes>
       <segment>
@@ -14740,6 +14590,7 @@
     <unit id="3715596725146409911">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:69</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:54</note>
         <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:85,86</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -14763,6 +14614,7 @@
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:154,158</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/parts/fields/task-estimate-field.component.ts:40</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
+        <note category="location">src/app/features/automations/models/task-update-fields.ts:84</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:240</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:91</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:46</note>
@@ -14780,6 +14632,15 @@
       </notes>
       <segment>
         <source>Notify task assignees</source>
+      </segment>
+    </unit>
+    <unit id="2793360884804797924">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:125,128</note>
+        <note category="description">Placeholder of the field that renames the task in an update task action</note>
+      </notes>
+      <segment>
+        <source>New task name</source>
       </segment>
     </unit>
     <unit id="2795454335379147011">
@@ -15411,7 +15272,7 @@
     <unit id="4712988804308845169">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:155</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:153,154</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:154,155</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment>
@@ -15486,7 +15347,7 @@
     </unit>
     <unit id="4497065029852292989">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:182</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:187</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -15917,7 +15778,7 @@
     </unit>
     <unit id="5661631483849837548">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:91,93</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:87,89</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {1 task selected} other {<ph id="0" equiv="INTERPOLATION"/> tasks selected}}</source>
@@ -16268,7 +16129,7 @@
     </unit>
     <unit id="3606426868450781810">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:324,333</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:299,308</note>
         <note category="description">Sums up a bulk edit: how many fields it writes, how many tasks it touches, and how many of those fields overwrite a value the tasks already hold</note>
       </notes>
       <segment>
@@ -16889,7 +16750,7 @@
     </unit>
     <unit id="6995352275393710245">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:138</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:143</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -17011,7 +16872,7 @@
     <unit id="2650015568553587457">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:205,206</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:642</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:643</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
       <segment>
@@ -17020,7 +16881,7 @@
     </unit>
     <unit id="2650065913803359151">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:288</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:270</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -17089,7 +16950,7 @@
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:207,209</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:82,84</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:41,44</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:62,64</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:65,67</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:64,66</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:105,107</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:110,112</note>
@@ -17463,7 +17324,7 @@
     </unit>
     <unit id="2330577642930707695">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:190,193</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:191,194</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:227,230</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:153,155</note>
         <note category="description">Dismisses a dialog without acting</note>
@@ -17474,7 +17335,7 @@
     </unit>
     <unit id="4930506384627295710">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:605</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:606</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:484</note>
         <note category="location">src/app/workspace.routes.ts:156</note>
         <note category="description">Heading of the automation settings step</note>
@@ -17494,8 +17355,8 @@
     </unit>
     <unit id="2079395509894825886">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:607</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:675</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:608</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:676</note>
         <note category="description">Heading of the automation conditions step</note>
       </notes>
       <segment>
@@ -17504,7 +17365,7 @@
     </unit>
     <unit id="428134870314022743">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:855</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:859</note>
         <note category="description">Error after failing to save an automation</note>
       </notes>
       <segment>
@@ -17672,7 +17533,7 @@
     </unit>
     <unit id="378048253639190257">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:205,207</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:206,208</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:112,114</note>
         <note category="description">Button that creates an automation</note>
       </notes>
@@ -17760,8 +17621,9 @@
     </unit>
     <unit id="27049200644012542">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:531</note>
-        <note category="description">Accessible label for the button that drops a field from a bulk edit. FIELD is the field&apos;s name</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:509</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:533</note>
+        <note category="description">Accessible label for the button that drops a field from an edit. FIELD is the field&apos;s name</note>
       </notes>
       <segment>
         <source>Remove <ph id="0" equiv="FIELD" disp="label"/></source>
@@ -18034,7 +17896,7 @@
     </unit>
     <unit id="1198874280513067132">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:353</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:346</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -18655,8 +18517,8 @@
     </unit>
     <unit id="223445078401835863">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:170</note>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:207</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:175</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:212</note>
         <note category="description">Automation form validation error. VARIABLES is a list of variable names</note>
       </notes>
       <segment>
@@ -18832,7 +18694,8 @@
     </unit>
     <unit id="7859140891394548585">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:265,266</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:263,264</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:284,285</note>
         <note category="description">Option that clears the task&apos;s sprint</note>
       </notes>
       <segment>
@@ -19329,6 +19192,15 @@
         <source> Save </source>
       </segment>
     </unit>
+    <unit id="3623173947443530349">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:628</note>
+        <note category="description">Says that an update task action keeps the task&apos;s current assignees</note>
+      </notes>
+      <segment>
+        <source>Adds these people alongside the task&apos;s current assignees.</source>
+      </segment>
+    </unit>
     <unit id="3628374603023447227">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:138,139</note>
@@ -19572,15 +19444,6 @@
         <source>Allow members to use the assistant</source>
       </segment>
     </unit>
-    <unit id="6501349384135486602">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:453</note>
-        <note category="description">Placeholder of the assignees field when adding assignees</note>
-      </notes>
-      <segment>
-        <source>Choose assignees to add</source>
-      </segment>
-    </unit>
     <unit id="8302075849472999986">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:97,98</note>
@@ -19638,7 +19501,7 @@
     <unit id="3762494602148654040">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:112,114</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:175,177</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:176,178</note>
         <note category="description">Marks an automation that is switched off</note>
       </notes>
       <segment>
@@ -19720,7 +19583,7 @@
     </unit>
     <unit id="3150641520485612968">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:277</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:259</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -19933,7 +19796,8 @@
     </unit>
     <unit id="3445720584036648434">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:375</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:349</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:415</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:73</note>
         <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:50,51</note>
         <note category="description">Placeholder in the box that searches tags</note>
@@ -19976,7 +19840,7 @@
     </unit>
     <unit id="8150823000382554673">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:126</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:131</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -21158,7 +21022,7 @@
     </unit>
     <unit id="3953140809261219704">
       <notes>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:60,61</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:63,64</note>
         <note category="description">Shown when a project fails to load</note>
       </notes>
       <segment>
@@ -21635,8 +21499,8 @@
     </unit>
     <unit id="4104465056226914375">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:27</note>
-        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:16</note>
+        <note category="description">Kind of control a field brings, shown beside its name in the add-a-field menu</note>
       </notes>
       <segment>
         <source>people</source>
@@ -22121,8 +21985,8 @@
     </unit>
     <unit id="3938396793871184620">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:24</note>
-        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:13</note>
+        <note category="description">Kind of control a field brings, shown beside its name in the add-a-field menu</note>
       </notes>
       <segment>
         <source>date</source>
@@ -22559,7 +22423,7 @@
     </unit>
     <unit id="8777970468396037432">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:138,141</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:139,142</note>
         <note category="description">Eyebrow above the name of an automation being created</note>
       </notes>
       <segment>
@@ -23199,6 +23063,15 @@
       </notes>
       <segment>
         <source>The import could not be started.</source>
+      </segment>
+    </unit>
+    <unit id="8244533996768612589">
+      <notes>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:284</note>
+        <note category="description">Automation form validation error. FIELD is the name of a field added to an update task action</note>
+      </notes>
+      <segment>
+        <source>Fill in <ph id="0" equiv="FIELD" disp="incomplete.label"/> or remove it from the task update.</source>
       </segment>
     </unit>
     <unit id="8246436377858718644">
@@ -25013,7 +24886,7 @@
     </unit>
     <unit id="7063429306122513331">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:416</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:409</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -25984,7 +25857,7 @@
     </unit>
     <unit id="1015257014958643666">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:681</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:682</note>
         <note category="description">Name of an automation action step. NUMBER is its position</note>
       </notes>
       <segment>
@@ -26919,7 +26792,8 @@
     </unit>
     <unit id="8211158909715788227">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:380</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:354</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:419</note>
         <note category="description">Shown when a workspace has no people to pick from</note>
       </notes>
       <segment>
@@ -27040,7 +26914,7 @@
     </unit>
     <unit id="5018155553239492864">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:155,157</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:156,158</note>
         <note category="description">Label of the automation name field</note>
       </notes>
       <segment>
@@ -27211,7 +27085,7 @@
     </unit>
     <unit id="5442271885711412161">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:118</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:123</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -27559,7 +27433,7 @@
     </unit>
     <unit id="8351348284027717620">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:423</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:416</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -28346,7 +28220,7 @@
     </unit>
     <unit id="5416102266216743499">
       <notes>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:34,36</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:37,39</note>
         <note category="description">Accessible label while a project loads</note>
       </notes>
       <segment>
@@ -28818,7 +28692,7 @@
     </unit>
     <unit id="9075144064524859377">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:190</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:195</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -28851,18 +28725,9 @@
         <source>new page,create,start</source>
       </segment>
     </unit>
-    <unit id="8837180097116489811">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:183,185</note>
-        <note category="description">Option that adds users to the existing task assignees</note>
-      </notes>
-      <segment>
-        <source> Add to assignees </source>
-      </segment>
-    </unit>
     <unit id="8839963009744223515">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:34,35</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:35,36</note>
         <note category="description">Shown when a member fails to load</note>
       </notes>
       <segment>
@@ -28871,7 +28736,7 @@
     </unit>
     <unit id="8327886049061327137">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:36,39</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:37,40</note>
         <note category="description">Explains why a member may fail to load</note>
       </notes>
       <segment>
@@ -28971,7 +28836,7 @@
     </unit>
     <unit id="3329689758676914315">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:100</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:105</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -29298,6 +29163,15 @@
         <source>Search is unavailable right now.</source>
       </segment>
     </unit>
+    <unit id="4844789346894899784">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:166,169</note>
+        <note category="description">Placeholder of the field that picks the task owner in an update task action</note>
+      </notes>
+      <segment>
+        <source>Choose a person</source>
+      </segment>
+    </unit>
     <unit id="8692634109890521682">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:37</note>
@@ -29410,8 +29284,8 @@
     </unit>
     <unit id="7982607155521959690">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:22</note>
-        <note category="description">Kind of control a bulk-edit field brings, shown beside its name</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:10</note>
+        <note category="description">Kind of control a field brings, shown beside its name in the add-a-field menu</note>
       </notes>
       <segment>
         <source>select</source>
@@ -29437,7 +29311,7 @@
     </unit>
     <unit id="2301916935238200801">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:337</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:330</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -30068,9 +29942,9 @@
     </unit>
     <unit id="1238583382012712938">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:90,95</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:146,148</note>
-        <note category="description">Button that unpicks everything in a bulk edit&apos;s tag or people picker</note>
+        <note category="location">src/app/static/components/collection-picker/collection-picker.component.ts:87,90</note>
+        <note category="description">Button that removes a date from a proposed change</note>
       </notes>
       <segment>
         <source> Clear </source>
@@ -30096,7 +29970,7 @@
     </unit>
     <unit id="6492831808763156510">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:671</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:672</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:45,48</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:91,94</note>
         <note category="description">Name of the automation setup step</note>
@@ -30225,7 +30099,7 @@
     </unit>
     <unit id="3504813719002568781">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:328,330</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:303,305</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {1 replaces an existing value} other {<ph id="0" equiv="INTERPOLATION"/> replace existing values}}</source>
@@ -30663,15 +30537,6 @@
         <source>It may have been archived, or the link is out of date.</source>
       </segment>
     </unit>
-    <unit id="1144387549786578693">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:165,167</note>
-        <note category="description">Action that changes the task assignees</note>
-      </notes>
-      <segment>
-        <source> Update assignees </source>
-      </segment>
-    </unit>
     <unit id="1146060538137839536">
       <notes>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:273</note>
@@ -30791,7 +30656,7 @@
     </unit>
     <unit id="7924500284044965062">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:178,181</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:174,177</note>
         <note category="description">Button that goes back to picking a due date instead of clearing it</note>
       </notes>
       <segment>
@@ -31322,8 +31187,8 @@
     </unit>
     <unit id="919084948543701932">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-collection-picker.component.ts:134</note>
-        <note category="description">How many entries are picked in a bulk edit&apos;s tag or people picker. COUNT is the number picked</note>
+        <note category="location">src/app/static/components/collection-picker/collection-picker.component.ts:121</note>
+        <note category="description">How many entries are picked in a tag or people picker. COUNT is the number picked</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="COUNT" disp="count"/> selected</source>
@@ -31460,7 +31325,8 @@
     </unit>
     <unit id="742574656933469666">
       <notes>
-        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:376</note>
+        <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:350</note>
+        <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:416</note>
         <note category="description">Placeholder in the box that searches people</note>
       </notes>
       <segment>
@@ -31705,7 +31571,7 @@
     </unit>
     <unit id="2084529408976136746">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:106</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:111</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -31799,7 +31665,7 @@
     </unit>
     <unit id="6107165812022500881">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:91</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:96</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>
@@ -31925,7 +31791,7 @@
     </unit>
     <unit id="1982024417006368651">
       <notes>
-        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:410</note>
+        <note category="location">src/app/features/automations/services/automation-rule-request-builder.service.ts:403</note>
         <note category="description">Automation form validation error</note>
       </notes>
       <segment>

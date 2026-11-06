@@ -133,6 +133,7 @@ export default defineConfig([
             // fixed-vocabulary inputs (enum-like), not prose
             'align',
             'appearance',
+            'appFormAppearance',
             'appFormShape',
             'appTooltipPosition',
             'cdkDropListOrientation',

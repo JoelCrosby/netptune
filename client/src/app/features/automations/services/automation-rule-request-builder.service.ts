@@ -20,6 +20,10 @@ import {
   maxTargetBranches,
 } from '@core/automations/automation.models';
 import { messageVariables } from '@core/automations/automation-copy';
+import {
+  TaskUpdateDraft,
+  incompleteTaskUpdateField,
+} from '../models/task-update-fields';
 
 export interface AutomationRuleDraft {
   projectId: number | null;
@@ -29,7 +33,7 @@ export interface AutomationRuleDraft {
   isEnabled: boolean;
   executionUserId: string | null;
   trigger: AutomationTrigger;
-  actions: AutomationAction[];
+  actions: TaskUpdateDraft[];
 }
 
 export type AutomationFormStep =
@@ -51,7 +55,8 @@ export class AutomationRuleRequestBuilder {
       validateScope(draft);
     const triggerError = validateTrigger(draft.trigger);
     const conditionsError = validateConditions(draft.trigger);
-    const actionsError = validateActions(actions);
+    const actionsError =
+      validateTaskUpdateRows(draft.actions) ?? validateActions(actions);
     const failure =
       toFailure(settingsError, 'settings') ??
       toFailure(triggerError, 'trigger') ??
@@ -240,29 +245,6 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
     return $localize`:Automation form validation error:Task update actions need at least one field update.`;
   }
 
-  const hasNoAssigneesToAdd = actions.some((action) => {
-    return (
-      action.type === AutomationActionType.updateTask &&
-      !!action.appendAssignees &&
-      !action.assigneeIds?.length
-    );
-  });
-
-  if (hasNoAssigneesToAdd) {
-    return $localize`:Automation form validation error:Choose at least one assignee to add.`;
-  }
-
-  const invalidDateUpdate = actions.some((action) => {
-    return (
-      action.type === AutomationActionType.updateTask &&
-      [action.startDate, action.dueDate].some(isIncompleteDateUpdate)
-    );
-  });
-
-  if (invalidDateUpdate) {
-    return $localize`:Automation form validation error:Complete each configured task date update.`;
-  }
-
   const invalidDelay = actions.some((action) => {
     return (
       action.type === AutomationActionType.deleteTask &&
@@ -289,6 +271,17 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
   }
 
   return null;
+}
+
+function validateTaskUpdateRows(actions: TaskUpdateDraft[]): string | null {
+  const incomplete = actions
+    .filter((action) => action.type === AutomationActionType.updateTask)
+    .map(incompleteTaskUpdateField)
+    .find((field) => field !== null);
+
+  if (!incomplete) return null;
+
+  return $localize`:Automation form validation error. FIELD is the name of a field added to an update task action:Fill in ${incomplete.label}:FIELD: or remove it from the task update.`;
 }
 
 function isIncompleteDateUpdate(

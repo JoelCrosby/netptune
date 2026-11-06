@@ -6,7 +6,6 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { BulkCollectionMode } from '@core/enums/bulk-collection-mode';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import {
@@ -18,7 +17,7 @@ import {
   SelectMenuOption,
 } from '@static/components/select-menu/select-menu.component';
 
-export interface BulkEditPickerOption extends FilterOption<string> {
+export interface CollectionPickerOption extends FilterOption<string> {
   pictureUrl?: string | null;
   isServiceAccount?: boolean;
 }
@@ -27,7 +26,7 @@ const modeButtonClass =
   'h-6.5 min-w-0 shrink-0 gap-1.5 rounded-none border-r border-foreground/14 px-0 pr-2 text-[13px] font-medium tracking-normal text-foreground/60 hover:bg-transparent hover:text-foreground';
 
 @Component({
-  selector: 'app-bulk-edit-collection-picker',
+  selector: 'app-collection-picker',
   imports: [
     AvatarComponent,
     FilterOptionListComponent,
@@ -60,15 +59,17 @@ const modeButtonClass =
         [listAriaLabel]="listAriaLabel()"
         [emptyMessage]="emptyMessage()"
         (toggled)="toggled.emit($event)">
-        <app-select-menu
-          searchPrefix
-          color="ghost"
-          xPosition="after"
-          [buttonClass]="modeButtonClass"
-          [options]="modeOptions"
-          [value]="mode()"
-          [ariaLabel]="modeAriaLabel()"
-          (valueChange)="modeChange.emit($event)" />
+        @if (modeOptions().length && mode() !== undefined) {
+          <app-select-menu
+            searchPrefix
+            color="ghost"
+            xPosition="after"
+            [buttonClass]="modeButtonClass"
+            [options]="modeOptions()"
+            [value]="mode()!"
+            [ariaLabel]="modeAriaLabel()"
+            (valueChange)="modeChange.emit($event)" />
+        }
 
         <span searchSuffix class="text-muted shrink-0 text-xs font-medium">
           {{ selectedCountLabel() }}
@@ -82,11 +83,7 @@ const modeButtonClass =
           class="shrink-0 px-0.5 font-medium disabled:cursor-default disabled:opacity-40 disabled:hover:no-underline"
           [disabled]="!selected().length"
           (click)="cleared.emit()">
-          <span
-            i18n="
-              Button that unpicks everything in a bulk edit's tag or people
-              picker
-            ">
+          <span i18n="Button that unpicks everything in a tag or people picker">
             Clear
           </span>
         </button>
@@ -94,19 +91,20 @@ const modeButtonClass =
     </div>
   `,
 })
-export class BulkEditCollectionPickerComponent {
-  readonly options = input.required<readonly BulkEditPickerOption[]>();
+export class CollectionPickerComponent<TMode = never> {
+  readonly options = input.required<readonly CollectionPickerOption[]>();
   readonly selected = input.required<readonly string[]>();
-  readonly mode = input.required<BulkCollectionMode>();
+  readonly modeOptions = input<readonly SelectMenuOption<TMode>[]>([]);
+  readonly mode = input<TMode>();
   readonly avatars = input(false);
   readonly searchPlaceholder = input.required<string>();
   readonly listAriaLabel = input.required<string>();
-  readonly modeAriaLabel = input.required<string>();
+  readonly modeAriaLabel = input<string>();
   readonly emptyMessage = input.required<string>();
 
   readonly toggled = output<string>();
   readonly cleared = output();
-  readonly modeChange = output<BulkCollectionMode>();
+  readonly modeChange = output<TMode>();
 
   // The list takes focus when it opens, which it cannot do until its own view exists. A dropdown
   // host only ever opens one after render; an inline one has to wait for the same moment.
@@ -115,23 +113,12 @@ export class BulkEditCollectionPickerComponent {
   protected readonly modeButtonClass = modeButtonClass;
   protected readonly listMaxHeightClass = 'max-h-34';
 
-  protected readonly modeOptions: SelectMenuOption<BulkCollectionMode>[] = [
-    {
-      value: BulkCollectionMode.add,
-      label: $localize`:Bulk edit mode that leaves a task's existing tags or assignees in place:Add to`,
-    },
-    {
-      value: BulkCollectionMode.replace,
-      label: $localize`:Bulk edit mode that swaps out a task's existing tags or assignees:Replace with`,
-    },
-  ];
-
   protected readonly selectedValues = computed(() => new Set(this.selected()));
 
   protected readonly selectedCountLabel = computed(() => {
     const count = this.selected().length;
 
-    return $localize`:How many entries are picked in a bulk edit's tag or people picker. COUNT is the number picked:${count}:COUNT: selected`;
+    return $localize`:How many entries are picked in a tag or people picker. COUNT is the number picked:${count}:COUNT: selected`;
   });
 
   constructor() {
