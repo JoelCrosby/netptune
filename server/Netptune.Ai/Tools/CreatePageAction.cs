@@ -12,6 +12,8 @@ namespace Netptune.Ai.Tools;
 
 public sealed class CreatePageAction : IAiToolAction
 {
+    public const string Change = "propose_create_page";
+
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
@@ -21,7 +23,7 @@ public sealed class CreatePageAction : IAiToolAction
         ChangeSet = changeSet;
     }
 
-    public string ChangeName => "propose_create_page";
+    public string ChangeName => Change;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Pages.Create };

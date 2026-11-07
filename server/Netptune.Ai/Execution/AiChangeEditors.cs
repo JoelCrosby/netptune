@@ -19,19 +19,22 @@ internal static class AiChangeEditors
         "repositoryUrl",
     };
 
-    private static readonly HashSet<string> MarkdownFields = new(StringComparer.Ordinal)
-    {
-        "description",
-        "body",
-        "comment",
-    };
+    // Only these are rich text in the app. Comments and every other description are plain text, which the
+    // rich editor would escape.
+    private static readonly HashSet<(string ToolName, string FieldName)> MarkdownFields =
+    [
+        (CreateTaskTool.ChangeName, "description"),
+        (UpdateTaskTool.UpdateChange, "description"),
+        (CreatePageAction.Change, "body"),
+        (UpdatePageBodyAction.Change, "body"),
+    ];
 
     public static AiChangeFieldEditor? Find(string toolName, string fieldName, JsonElement payload)
     {
         return toolName switch
         {
-            CreateTaskTool.ChangeName => ForCreatedTask(fieldName, payload),
-            UpdateTaskTool.UpdateChange => ForUpdatedTask(fieldName, payload),
+            CreateTaskTool.ChangeName => ForCreatedTask(toolName, fieldName, payload),
+            UpdateTaskTool.UpdateChange => ForUpdatedTask(toolName, fieldName, payload),
             AiTaskChangeDrafts.AssignChange => ForNamedField(fieldName, "assignees", AiChangeEditorKind.Users),
             AiTaskChangeDrafts.TagsChange => ForNamedField(fieldName, "tags", AiChangeEditorKind.Tags),
             AiTaskChangeDrafts.BoardGroupChange => ForMovedTask(
@@ -40,11 +43,11 @@ internal static class AiChangeEditors
                 AiChangeEditorKind.BoardGroup,
                 payload),
             SetTaskSprintTool.MoveChange => ForMovedTask(fieldName, "sprint", AiChangeEditorKind.Sprint, payload),
-            _ => ForText(fieldName, payload),
+            _ => ForText(toolName, fieldName, payload),
         };
     }
 
-    private static AiChangeFieldEditor? ForCreatedTask(string fieldName, JsonElement payload)
+    private static AiChangeFieldEditor? ForCreatedTask(string toolName, string fieldName, JsonElement payload)
     {
         var projectId = AiChangePayload.ReadInt(payload, "projectId");
         var isInExistingProject = projectId.HasValue;
@@ -59,11 +62,11 @@ internal static class AiChangeEditors
             "startDate" or "dueDate" => Clearable(AiChangeEditorKind.Date),
             "sprint" when isInExistingProject => Clearable(AiChangeEditorKind.Sprint, projectId),
             "boardGroup" when isInExistingProject => Clearable(AiChangeEditorKind.BoardGroup, projectId),
-            _ => ForText(fieldName, payload),
+            _ => ForText(toolName, fieldName, payload),
         };
     }
 
-    private static AiChangeFieldEditor? ForUpdatedTask(string fieldName, JsonElement payload)
+    private static AiChangeFieldEditor? ForUpdatedTask(string toolName, string fieldName, JsonElement payload)
     {
         return fieldName switch
         {
@@ -71,7 +74,7 @@ internal static class AiChangeEditors
             "priority" => Required(AiChangeEditorKind.Priority),
             "estimate" => Required(AiChangeEditorKind.Estimate),
             "startDate" or "dueDate" => Clearable(AiChangeEditorKind.Date),
-            _ => ForText(fieldName, payload),
+            _ => ForText(toolName, fieldName, payload),
         };
     }
 
@@ -103,7 +106,7 @@ internal static class AiChangeEditors
 
     // Only a field whose payload carries the same string under the same name can be rewritten as
     // text; anything else is applied from other keys and an edit to it would be silently dropped.
-    private static AiChangeFieldEditor? ForText(string fieldName, JsonElement payload)
+    private static AiChangeFieldEditor? ForText(string toolName, string fieldName, JsonElement payload)
     {
         var isTextField = TextFields.Contains(fieldName);
         var hasPayloadText = AiChangePayload.ReadString(payload, fieldName) is not null;
@@ -113,7 +116,7 @@ internal static class AiChangeEditors
             return null;
         }
 
-        var isMarkdown = MarkdownFields.Contains(fieldName);
+        var isMarkdown = MarkdownFields.Contains((toolName, fieldName));
 
         return Required(isMarkdown ? AiChangeEditorKind.Markdown : AiChangeEditorKind.Text);
     }

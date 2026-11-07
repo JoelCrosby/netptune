@@ -13,6 +13,8 @@ namespace Netptune.Ai.Tools;
 
 public sealed class UpdatePageBodyAction : IAiToolAction
 {
+    public const string Change = "propose_update_page_body";
+
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
@@ -22,7 +24,7 @@ public sealed class UpdatePageBodyAction : IAiToolAction
         ChangeSet = changeSet;
     }
 
-    public string ChangeName => "propose_update_page_body";
+    public string ChangeName => Change;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Pages.Update };

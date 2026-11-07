@@ -987,7 +987,7 @@
     </unit>
     <unit id="6980870776971861351">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:503</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:493</note>
         <note category="description">Byline under a page title naming who last edited it, when, and how long it takes to read</note>
       </notes>
       <segment state="translated">
@@ -2769,7 +2769,7 @@
     </unit>
     <unit id="6581559318022386664">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:175</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:188</note>
         <note category="description">Unit of an estimate of several story points</note>
       </notes>
       <segment state="initial">
@@ -2851,7 +2851,7 @@
     </unit>
     <unit id="468065363989009115">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:208,210</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:254,256</note>
         <note category="description">Accessible label for the field that rewrites a proposed value</note>
       </notes>
       <segment state="translated">
@@ -3431,7 +3431,7 @@
     </unit>
     <unit id="6949151938064817789">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:165</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:178</note>
         <note category="description">Shows a markdown diff as formatted text</note>
       </notes>
       <segment state="initial">
@@ -3668,7 +3668,7 @@
     </unit>
     <unit id="8842362805354087257">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:68,71</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:72,75</note>
         <note category="description">Shown on the field of a change while its value is rewritten</note>
       </notes>
       <segment state="translated">
@@ -4110,7 +4110,7 @@
     </unit>
     <unit id="1613971242435858090">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:117</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:107</note>
         <note category="description">Bubble menu action that has the assistant translate the selected text</note>
       </notes>
       <segment state="translated">
@@ -4190,7 +4190,7 @@
     </unit>
     <unit id="5319992322579592831">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:498</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:488</note>
         <note category="description">Byline under a folder title naming who last edited it and when</note>
       </notes>
       <segment state="translated">
@@ -4598,7 +4598,7 @@
     <unit id="7606163920237455199">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-estimate-diff.component.ts:23,28</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:255</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:305</note>
         <note category="description">Shown in place of an estimate a change removes</note>
       </notes>
       <segment state="initial">
@@ -5577,6 +5577,7 @@
     <unit id="7440923050870641719">
       <notes>
         <note category="location">src/app/features/pages/components/page-toolbar.component.ts:97,101</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:199</note>
         <note category="description">Accessible label for the switch between the rich and markdown editor</note>
       </notes>
       <segment state="translated">
@@ -7192,7 +7193,7 @@
     </unit>
     <unit id="9014422536639985797">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:772</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:762</note>
         <note category="description">Shown when a mentioned sprint or board in a page no longer exists or cannot be opened</note>
       </notes>
       <segment state="translated">
@@ -7283,7 +7284,7 @@
     </unit>
     <unit id="5635560755747598626">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:112</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:102</note>
         <note category="description">Bubble menu action that has the assistant shorten the selected text</note>
       </notes>
       <segment state="translated">
@@ -7601,7 +7602,7 @@
     </unit>
     <unit id="4320935807729548621">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:124</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:114</note>
         <note category="description">Bubble menu action that asks the assistant to turn the selected checklist into tasks</note>
       </notes>
       <segment state="translated">
@@ -11500,7 +11501,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-action-editor.component.ts:132,133</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:123</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:95,96</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:110,111</note>
         <note category="description">Label of the unit field</note>
       </notes>
       <segment state="translated">
@@ -11564,7 +11565,7 @@
         <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:197</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:179</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:192</note>
         <note category="description">Delay unit: hours</note>
       </notes>
       <segment state="translated">
@@ -12677,7 +12678,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:365</note>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:116</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:207</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:241</note>
         <note category="description">Diff layout showing before and after side by side</note>
       </notes>
       <segment state="translated">
@@ -15895,7 +15896,7 @@
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:112</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:714</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:211</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:245</note>
         <note category="description">Names the single column diff layout</note>
       </notes>
       <segment state="translated">
@@ -16177,7 +16178,7 @@
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:240</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:91</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:46</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:125,128</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:140,143</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
       <segment state="translated">
@@ -16391,7 +16392,7 @@
     </unit>
     <unit id="2493952048865975425">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:169</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:182</note>
         <note category="description">Shows a markdown diff as its raw markdown</note>
         <note category="meaning">Raw markdown view</note>
       </notes>
@@ -16514,6 +16515,7 @@
     <unit id="7153255681393081191">
       <notes>
         <note category="location">src/app/features/pages/components/page-toolbar.component.ts:329</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:195</note>
         <note category="description">Option that shows a page as raw markdown</note>
       </notes>
       <segment state="translated">
@@ -17152,7 +17154,7 @@
     </unit>
     <unit id="7253608290099852757">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:267,271</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:257,261</note>
         <note category="description">Button that discards local edits and loads the newer saved page</note>
       </notes>
       <segment state="translated">
@@ -19176,7 +19178,7 @@
     <unit id="2330577642930707695">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:191,194</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:227,230</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:273,276</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:153,155</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -20403,7 +20405,7 @@
     </unit>
     <unit id="1041184075712717008">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:173</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:186</note>
         <note category="description">Accessible label for the switch between formatted and raw markdown in a diff</note>
       </notes>
       <segment state="initial">
@@ -20740,7 +20742,7 @@
     </unit>
     <unit id="7869199587095613616">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:296,297</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:286,287</note>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:478</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:156</note>
         <note category="description">Placeholder in an empty page title</note>
@@ -21232,7 +21234,7 @@
     </unit>
     <unit id="3620188369327429839">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:236,241</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:282,287</note>
         <note category="description">Button that keeps an edit to a proposed value</note>
       </notes>
       <segment state="translated">
@@ -21331,6 +21333,16 @@
       <segment state="initial">
         <source>Undo this import</source>
         <target>Annuler cet import</target>
+      </segment>
+    </unit>
+    <unit id="1026517195095511268">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-proposal-editor.ts:89</note>
+        <note category="description">Placeholder for a query embedded in a page body the assistant proposes, shown while the body is edited</note>
+      </notes>
+      <segment state="translated">
+        <source>Embedded query</source>
+        <target>Requête intégrée</target>
       </segment>
     </unit>
     <unit id="1029077242272940476">
@@ -21467,7 +21479,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:209,210</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:199,200</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:394,397</note>
         <note category="description">Accessible label for closing the assistant result card</note>
       </notes>
@@ -21478,7 +21490,7 @@
     </unit>
     <unit id="3823999463060757067">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:107</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:97</note>
         <note category="description">Bubble menu action that has the assistant summarise the selected text</note>
       </notes>
       <segment state="translated">
@@ -22303,7 +22315,7 @@
     </unit>
     <unit id="1557588537287479588">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:182,184</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:172,174</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:27</note>
         <note category="description">Accessible label for the menu of tasks and pages to mention</note>
       </notes>
@@ -22536,7 +22548,7 @@
     </unit>
     <unit id="933361080941409912">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:298,300</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:288,290</note>
         <note category="description">Accessible label for the page title</note>
       </notes>
       <segment state="translated">
@@ -22630,7 +22642,7 @@
     <unit id="3565310608022478316">
       <notes>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:120</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:214</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:248</note>
         <note category="description">Names the diff layout that highlights changed words</note>
       </notes>
       <segment state="translated">
@@ -23114,7 +23126,7 @@
     </unit>
     <unit id="9180258231296737289">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:316,318</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:306,308</note>
         <note category="description">Placeholder in an empty page body</note>
       </notes>
       <segment state="translated">
@@ -24168,6 +24180,16 @@
       <segment state="translated">
         <source>Velocity</source>
         <target>Vélocité</target>
+      </segment>
+    </unit>
+    <unit id="3858319272981130485">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:225,228</note>
+        <note category="description">Placeholder in the editor that rewrites a proposed description or page body</note>
+      </notes>
+      <segment state="translated">
+        <source>Write the proposed text…</source>
+        <target>Rédigez le texte proposé…</target>
       </segment>
     </unit>
     <unit id="1971022799242079514">
@@ -27597,7 +27619,7 @@
     </unit>
     <unit id="3164972071980049830">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:249,252</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:239,242</note>
         <note category="description">Title of the notice shown when someone else saved the page first</note>
       </notes>
       <segment state="translated">
@@ -27677,7 +27699,7 @@
     </unit>
     <unit id="6652056720487527045">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:186,188</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:176,178</note>
         <note category="description">Shown in the mention menu when nothing matches what was typed</note>
       </notes>
       <segment state="translated">
@@ -28574,7 +28596,7 @@
     </unit>
     <unit id="3284697869924237097">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:178</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:191</note>
         <note category="description">Unit of a single hour estimate</note>
       </notes>
       <segment state="initial">
@@ -30272,7 +30294,7 @@
     </unit>
     <unit id="7639811500826292651">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:277,281</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:267,271</note>
         <note category="description">Button that saves local edits over the newer saved page</note>
       </notes>
       <segment state="translated">
@@ -31035,7 +31057,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:204,206</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:194,196</note>
         <note category="description">Shown while the assistant works on page text</note>
       </notes>
       <segment state="translated">
@@ -31326,7 +31348,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:478</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:148</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:113,114</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:128,129</note>
         <note category="description">Column heading for the size of an export file</note>
       </notes>
       <segment state="translated">
@@ -31474,7 +31496,7 @@
     </unit>
     <unit id="7752659744573788389">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:174</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-diff.ts:187</note>
         <note category="description">Unit of a single story point estimate</note>
       </notes>
       <segment state="initial">
@@ -32372,7 +32394,7 @@
     </unit>
     <unit id="7530911039577159922">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:217,219</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:207,209</note>
         <note category="description">Accessible label for the language page text is translated into</note>
       </notes>
       <segment state="translated">
@@ -32910,7 +32932,7 @@
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:53,58</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:100,104</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:132,134</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:89,91</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:101,103</note>
         <note category="description">Link that opens the automation editor</note>
       </notes>
       <segment state="translated">
@@ -33172,7 +33194,7 @@
     </unit>
     <unit id="1238583382012712938">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:146,148</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:161,163</note>
         <note category="location">src/app/static/components/collection-picker/collection-picker.component.ts:87,90</note>
         <note category="description">Button that removes a date from a proposed change</note>
       </notes>
@@ -34163,7 +34185,7 @@
     </unit>
     <unit id="4451682318497650150">
       <notes>
-        <note category="location">src/app/features/pages/components/page-editor.component.ts:254,257</note>
+        <note category="location">src/app/features/pages/components/page-editor.component.ts:244,247</note>
         <note category="description">Body of the notice shown when someone else saved the page first</note>
       </notes>
       <segment state="translated">
@@ -34750,6 +34772,16 @@
       <segment state="translated">
         <source>Filter by Tag</source>
         <target>Filtrer par étiquette</target>
+      </segment>
+    </unit>
+    <unit id="3992038152945317371">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:191</note>
+        <note category="description">Edits a proposed description or page body as formatted text</note>
+      </notes>
+      <segment state="translated">
+        <source>Rich text</source>
+        <target>Texte enrichi</target>
       </segment>
     </unit>
     <unit id="3992724065871693611">

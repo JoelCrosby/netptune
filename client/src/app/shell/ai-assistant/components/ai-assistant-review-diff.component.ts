@@ -5,10 +5,14 @@ import {
   linkedSignal,
   output,
 } from '@angular/core';
-import { AiChangeField } from '@core/models/ai-conversation';
+import {
+  AiChangeEditorKind,
+  AiChangeField,
+} from '@core/models/ai-conversation';
 import { AiChangeFieldEdit } from '@core/services/ai-api.service';
 import { LucidePencil } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
+import { EditorMode } from '@static/components/editor/editor.component';
 import {
   SegmentedControlComponent,
   SegmentedOption,
@@ -67,6 +71,14 @@ type AiMarkdownView = 'rendered' | 'source';
             i18n="Shown on the field of a change while its value is rewritten">
             Editing
           </span>
+          @if (isMarkdownEditor()) {
+            <app-segmented-control
+              variant="subtle"
+              class="-my-1"
+              [options]="editorViews"
+              [(value)]="view"
+              [ariaLabel]="editorViewGroupLabel" />
+          }
         } @else {
           @if (usesMode()) {
             <span class="text-muted text-[13px]">{{ modeLabel() }}</span>
@@ -99,6 +111,7 @@ type AiMarkdownView = 'rendered' | 'source';
           [proposedTags]="proposedTags()"
           [isSaving]="isSaving()"
           [error]="error()"
+          [editorMode]="editorMode()"
           (saved)="saved.emit($event)"
           (cancelled)="editCancelled.emit()" />
       } @else {
@@ -171,6 +184,27 @@ export class AiAssistantReviewDiffComponent {
   ];
 
   protected readonly viewGroupLabel = $localize`:Accessible label for the switch between formatted and raw markdown in a diff:Markdown view`;
+
+  protected readonly editorViews: SegmentedOption<AiMarkdownView>[] = [
+    {
+      value: 'rendered',
+      label: $localize`:Edits a proposed description or page body as formatted text:Rich text`,
+    },
+    {
+      value: 'source',
+      label: $localize`:Edits a proposed description or page body as raw markdown:Markdown`,
+    },
+  ];
+
+  protected readonly editorViewGroupLabel = $localize`:Accessible label for the switch between editing a proposed value as formatted text or as raw markdown:Editor mode`;
+
+  protected readonly isMarkdownEditor = computed(() => {
+    return this.field().editor?.kind === AiChangeEditorKind.markdown;
+  });
+
+  protected readonly editorMode = computed<EditorMode>(() => {
+    return this.view() === 'source' ? 'markdown' : 'rich';
+  });
 
   protected readonly label = computed(() => fieldLabel(this.field().name));
 

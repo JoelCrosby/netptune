@@ -226,6 +226,31 @@ public class AiChangeEditCatalogTests
         Catalog.FindEditor(change, "description")!.Kind.Should().Be(AiChangeEditorKind.Markdown);
     }
 
+    [Theory]
+    [InlineData("propose_create_page", """{"title":"Plan","body":"New"}""")]
+    [InlineData("propose_update_page_body", """{"pageId":5,"body":"New"}""")]
+    public void FindEditor_ShouldOfferAMarkdownEditorForAPageBody(string toolName, string payload)
+    {
+        var change = Change(toolName, "Page body", [AiChangeFields.Text("body", "Old", "New")], payload);
+
+        Catalog.FindEditor(change, "body")!.Kind.Should().Be(AiChangeEditorKind.Markdown);
+    }
+
+    [Theory]
+    [InlineData("propose_update_project", "description")]
+    [InlineData("propose_create_status", "description")]
+    [InlineData("propose_add_comment", "comment")]
+    [InlineData("propose_update_comment", "comment")]
+    public void FindEditor_ShouldOfferAPlainTextEditor_WhenTheAppStoresTheFieldAsPlainText(
+        string toolName,
+        string fieldName)
+    {
+        var payload = JsonSerializer.Serialize(new Dictionary<string, string> { [fieldName] = "New" });
+        var change = Change(toolName, "Update", [AiChangeFields.Text(fieldName, "Old", "New")], payload);
+
+        Catalog.FindEditor(change, fieldName)!.Kind.Should().Be(AiChangeEditorKind.Text);
+    }
+
     [Fact]
     public void FindEditor_ShouldOfferNoSprintEditor_WhenTheTaskIsInAProjectProposedInTheSameSet()
     {

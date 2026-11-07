@@ -1,4 +1,5 @@
 import {
+  AiChangeEditorKind,
   AiChangeField,
   AiChangeValue,
   AiChangeValueKind,
@@ -20,15 +21,27 @@ export type AiFieldDiffKind =
   | 'relation'
   | 'automation';
 
-const MARKDOWN_FIELDS = new Set(['description', 'body', 'comment']);
+const RICH_TEXT_FIELDS = new Set(['description', 'body']);
 
 // Priority and board group arrive as text; the server renders them before they reach a field.
 const CHOICE_TEXT_FIELDS = new Set(['priority', 'boardGroup']);
 
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})/;
 
+// The server only knows which fields are rich text through the editor it offers, and offers none when a
+// change removes the value.
+const isRichTextField = (field: AiChangeField): boolean => {
+  const editorKind = field.editor?.kind;
+
+  if (editorKind === undefined) {
+    return RICH_TEXT_FIELDS.has(field.name);
+  }
+
+  return editorKind === AiChangeEditorKind.markdown;
+};
+
 const textDiffKind = (field: AiChangeField): AiFieldDiffKind => {
-  if (MARKDOWN_FIELDS.has(field.name)) {
+  if (isRichTextField(field)) {
     return 'markdown';
   }
 

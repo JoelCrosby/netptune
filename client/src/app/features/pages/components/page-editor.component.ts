@@ -43,7 +43,6 @@ import {
   EditorComponent,
   EditorMode,
 } from '@static/components/editor/editor.component';
-import { MarkdownSyntax } from '@static/components/editor/editor-content';
 import { InlineSelectComponent } from '@static/components/inline-select/inline-select.component';
 import {
   EditorSelection,
@@ -57,7 +56,6 @@ import {
   createQueryEmbedExtension,
   QueryEmbedMount,
 } from '../editor/query-embed.extension';
-import { queryEmbedSyntax } from '../editor/query-embed-syntax';
 import {
   basicEditorCommands,
   EditorCommand,
@@ -75,10 +73,8 @@ import {
   PageReferenceDisplay,
   PageReferenceHost,
 } from '../editor/page-reference.extension';
-import {
-  PageReferenceAttrs,
-  pageReferenceSyntax,
-} from '../editor/page-reference-syntax';
+import { PageReferenceAttrs } from '../editor/page-reference-syntax';
+import { pageSyntax } from '../editor/page-syntax';
 import { ClientResponse } from '@core/models/client-response';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -87,12 +83,6 @@ import { PageTreeStore } from '../services/page-tree.store';
 import { PageDraft } from '../services/page-draft';
 import { PageFolderContentsComponent } from './page-folder-contents.component';
 import { PageMetaChipsComponent } from './page-meta-chips.component';
-
-// One shared instance, so the editor's cached lexer for it is built once for the whole app.
-const pageSyntax: MarkdownSyntax = {
-  inline: [pageReferenceSyntax],
-  block: [queryEmbedSyntax],
-};
 
 interface HoveredReference {
   attrs: PageReferenceAttrs;

@@ -1,9 +1,12 @@
 import {
   Component,
   computed,
+  EnvironmentInjector,
+  inject,
   input,
   linkedSignal,
   output,
+  viewChild,
 } from '@angular/core';
 import {
   EstimateType,
@@ -15,11 +18,18 @@ import {
   AiChangeEditorKind,
   AiChangeField,
 } from '@core/models/ai-conversation';
+import { TASK_DESCRIPTION_MAX_LENGTH } from '@core/models/project-task';
 import { AiChangeFieldEdit } from '@core/services/ai-api.service';
 import { LucideTriangleAlert } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
+import { CharacterLimitComponent } from '@static/components/character-limit/character-limit.component';
 import { DatePickerComponent } from '@static/components/date-picker/date-picker.component';
+import { basicEditorCommands } from '@static/components/editor/editor-commands';
+import {
+  EditorComponent,
+  EditorMode,
+} from '@static/components/editor/editor.component';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
 import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -37,6 +47,7 @@ import {
   isSameDraft,
   toFieldEdit,
 } from './ai-assistant-field-edit';
+import { proposalEditorConfig } from './ai-assistant-proposal-editor';
 import { AiAssistantMemberPickerComponent } from './ai-assistant-member-picker.component';
 import { AiAssistantSprintPickerComponent } from './ai-assistant-sprint-picker.component';
 import { AiAssistantStatusPickerComponent } from './ai-assistant-status-picker.component';
@@ -50,6 +61,8 @@ const estimateUnitOptions = estimateTypeOptions.map((option) => {
   return { value: ESTIMATE_TYPE_NAMES[option.value], label: option.label };
 });
 
+let nextLabelId = 0;
+
 @Component({
   selector: 'app-ai-assistant-field-editor',
   host: {
@@ -59,7 +72,9 @@ const estimateUnitOptions = estimateTypeOptions.map((option) => {
   imports: [
     ButtonComponent,
     CalloutComponent,
+    CharacterLimitComponent,
     DatePickerComponent,
+    EditorComponent,
     FormControlFieldComponent,
     FormControlInputDirective,
     FormSelectComponent,
@@ -193,13 +208,44 @@ const estimateUnitOptions = estimateTypeOptions.map((option) => {
           [isClearable]="isClearable()"
           (valueChange)="setValue($event)" />
       }
+      @case (kinds.markdown) {
+        <span class="sr-only" [id]="labelId">{{ label() }}</span>
+        <app-form-control-field
+          class="items-stretch px-3.5 py-1.5"
+          [invalid]="isOverLimit()"
+          [disabled]="isSaving()">
+          <app-editor
+            class="min-w-0 flex-1"
+            appearance="flat"
+            hostClass="text-[15px]/[26px]"
+            i18n-placeholder="
+              Placeholder in the editor that rewrites a proposed description or
+              page body
+            "
+            placeholder="Write the proposed text…"
+            [attr.aria-labelledby]="labelId"
+            [mode]="editorMode()"
+            [value]="draft().value ?? ''"
+            [syntax]="editorConfig().syntax"
+            [extensions]="editorConfig().extensions"
+            [commands]="commands"
+            [isReadOnly]="isSaving()"
+            (valueChange)="setValue($event)"
+            (loaded)="focusEditor()" />
+        </app-form-control-field>
+        @if (isTaskDescription()) {
+          <app-character-limit
+            [length]="draft().value?.length ?? 0"
+            [max]="descriptionMaxLength" />
+        }
+      }
       @default {
         <app-form-control-field class="px-2.5 py-1">
           <textarea
             appFormInput
             appAutofocus
             class="resize-y py-1.5 text-[15px] leading-relaxed!"
-            [rows]="kind() === kinds.markdown ? 10 : 5"
+            rows="5"
             [value]="draft().value ?? ''"
             [disabled]="isSaving()"
             i18n-aria-label="
@@ -243,6 +289,7 @@ export class AiAssistantFieldEditorComponent {
   readonly proposedTags = input<string[]>([]);
   readonly isSaving = input(false);
   readonly error = input<string | null>(null);
+  readonly editorMode = input<EditorMode>('rich');
 
   readonly saved = output<AiChangeFieldEdit>();
   readonly cancelled = output();
@@ -252,7 +299,13 @@ export class AiAssistantFieldEditorComponent {
   protected readonly estimateUnitOptions = estimateUnitOptions;
   protected readonly tShirtSizes = tShirtSizes;
   protected readonly alertIcon = LucideTriangleAlert;
+  protected readonly commands = basicEditorCommands;
+  protected readonly descriptionMaxLength = TASK_DESCRIPTION_MAX_LENGTH;
+  protected readonly labelId = `ai-field-editor-label-${nextLabelId++}`;
   protected readonly noEstimateLabel = $localize`:Shown in place of an estimate a change removes:No estimate`;
+
+  private readonly editor = viewChild(EditorComponent);
+  private readonly injector = inject(EnvironmentInjector);
 
   private readonly initial = computed(() => initialDraft(this.field()));
 
@@ -262,6 +315,25 @@ export class AiAssistantFieldEditorComponent {
 
   protected readonly kind = computed(() => {
     return this.field().editor?.kind ?? AiChangeEditorKind.text;
+  });
+
+  protected readonly isTaskDescription = computed(() => {
+    return this.field().name === 'description';
+  });
+
+  private readonly isPageBody = computed(() => this.field().name === 'body');
+
+  protected readonly editorConfig = computed(() => {
+    return proposalEditorConfig({
+      withQueryEmbeds: this.isPageBody(),
+      injector: this.injector,
+    });
+  });
+
+  protected readonly isOverLimit = computed(() => {
+    const length = this.draft().value?.length ?? 0;
+
+    return this.isTaskDescription() && length > this.descriptionMaxLength;
   });
 
   protected readonly isClearable = computed(() => {
@@ -286,7 +358,7 @@ export class AiAssistantFieldEditorComponent {
 
     const isChanged = !isSameDraft(draft, this.initial());
 
-    return isChanged && isDraftComplete(editor, draft);
+    return isChanged && !this.isOverLimit() && isDraftComplete(editor, draft);
   });
 
   protected setValue(value: string | null) {
@@ -326,9 +398,19 @@ export class AiAssistantFieldEditorComponent {
     this.saved.emit(toFieldEdit(this.field().name, editor, this.draft()));
   }
 
-  // Escape belongs to the editor while it is open, not to the dialog behind it.
+  protected focusEditor() {
+    this.editor()?.editor()?.commands.focus('end');
+  }
+
+  // Escape belongs to the editor while it is open, not to the dialog behind it. A menu inside the
+  // editor that closed on this Escape has already claimed it.
   protected cancel(event: Event) {
     event.stopPropagation();
+
+    if (event.defaultPrevented) {
+      return;
+    }
+
     this.cancelled.emit();
   }
 }
