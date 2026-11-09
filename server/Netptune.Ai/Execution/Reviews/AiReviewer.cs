@@ -164,6 +164,7 @@ public sealed class AiReviewer : IAiReviewer
             SpendRemaining = spend.Remaining,
             ToolKinds = ReviewToolKinds,
             CorrectsProposalClaims = false,
+            ReplyCorrection = CorrectUnreadableReply,
             ShowsThinking = true,
             MaxToolIterations = Options.ReviewMaxToolIterations,
             MaxTurnCharacters = Options.ReviewMaxTurnCharacters,
@@ -245,7 +246,34 @@ public sealed class AiReviewer : IAiReviewer
         var draft = AiReviewValidator.Validate(parsed.Reply, reviewContext, source.Categories);
         var storedRun = await StoreSucceededRun(record, draft);
 
+        if (parsed.WasRepaired)
+        {
+            Logger.LogInformation("Assistant review run {RunId} needed stray quotes repaired", storedRun.Id);
+        }
+
         yield return AiReviewStreamEvent.Completed(storedRun.Id);
+    }
+
+    private string? CorrectUnreadableReply(AiChatTurn turn)
+    {
+        var wasRefused = AiFinishReasons.IsRefusal(turn.FinishReason);
+        var isEmpty = string.IsNullOrWhiteSpace(turn.Text);
+
+        if (wasRefused || isEmpty)
+        {
+            return null;
+        }
+
+        var parsed = AiReviewReply.Parse(turn.Text);
+
+        if (parsed.Reply is not null)
+        {
+            return null;
+        }
+
+        Logger.LogInformation("Assistant review reply was unreadable, asking for it again: {Problem}", parsed.Problem);
+
+        return AiReviewPrompt.UnreadableReplyCorrection(parsed.Problem);
     }
 
     private static void Observe(AiStreamEvent streamEvent, AiRunContext runContext, ReviewOutcome outcome)

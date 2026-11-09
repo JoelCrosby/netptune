@@ -77,6 +77,26 @@ public class AiReviewProgressFeedTests
     }
 
     [Fact]
+    public void Observe_ShouldReadTheCorrectedReply_WithoutAnnouncingShownFindingsAgain()
+    {
+        var padding = new string('x', 200);
+        var rejected = $$$"""{"summary":"Ready.","findings":[{"category":"gap","title":"First","explanation":"{{{padding}}}"}},{"category":"gap"}""";
+        var corrected = """{"summary":"Ready.","findings":[{"category":"gap","title":"First"},{"category":"gap","title":"Second"}]}""";
+
+        var events = Run(
+            AiStreamEvent.Delta(rejected),
+            AiStreamEvent.ReplyReset(),
+            AiStreamEvent.Delta(corrected),
+            new AiStreamEvent { Type = AiStreamEventType.TurnCompleted });
+
+        events.Select(Describe).Should().Equal(
+            "Stage:writing",
+            "Summary:Ready.",
+            "Finding:First",
+            "Finding:Second");
+    }
+
+    [Fact]
     public void Observe_ShouldKeepABraceInProse_AsPartOfTheNote()
     {
         var events = Run(

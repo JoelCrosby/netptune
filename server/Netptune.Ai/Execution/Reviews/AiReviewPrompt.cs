@@ -54,9 +54,16 @@ public static class AiReviewPrompt
         + "{\"summary\":string,\"findings\":[{\"category\":string,\"title\":string,\"explanation\":string,"
         + "\"quote\":string|null,\"suggestion\":object|null,\"relatedTasks\":[string]}]}. summary is one or two sentences "
         + "on how ready the item is. title is a short phrase; explanation says why it matters; quote is the passage "
-        + "the finding is about, copied exactly, or null.";
+        + "the finding is about, copied exactly, or null. Escape every double quote inside a string as \\\".";
 
     private const string NeutralisedTagClose = "<\u200B/";
+
+    public static string UnreadableReplyCorrection(string? problem)
+    {
+        return $"Your reply could not be read as the review JSON: {problem} "
+            + "Send the whole review again as one valid JSON object in the shape you were given, with the same content. "
+            + "Do not call any tools. Write no prose and no code fences, and escape every double quote inside a string.";
+    }
 
     public static string Neutralise(string value)
     {

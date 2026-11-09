@@ -45,6 +45,8 @@ public sealed record AiRunContext
     // replies, where wording like "pending approval" means something else.
     public bool CorrectsProposalClaims { get; init; } = true;
 
+    public Func<AiChatTurn, string?>? ReplyCorrection { get; init; }
+
     public bool ShowsThinking { get; init; }
 
     public int? MaxToolIterations { get; init; }

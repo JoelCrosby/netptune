@@ -123,6 +123,106 @@ public class AiReviewReplyTests
     }
 
     [Fact]
+    public void Parse_ShouldReportTheSyntaxError_WhenAStrayBraceLeavesLaterFindingsParsable()
+    {
+        const string raw = """
+            {"summary":"Ready.","findings":[{"title":"A","suggestion":{"kind":"edit"}},"relatedTasks":[]},{"title":"B"}]}
+            """;
+
+        var parsed = AiReviewReply.Parse(raw);
+
+        parsed.Reply.Should().BeNull();
+        parsed.Problem.Should().NotBe("The JSON object had no summary or findings.");
+    }
+
+    [Fact]
+    public void Parse_ShouldRepairEveryTextFieldOfAFinding()
+    {
+        const string raw = """
+            {"summary":"Ok.","findings":[{"category":"gap","title":"The "a" title",
+            "explanation":"The "b" reason","quote":"The "c" passage",
+            "suggestion":{"kind":"edit","field":"description","find":null,"replace":"The "d" text"},
+            "relatedTasks":["netp-1"]}]}
+            """;
+
+        var finding = AiReviewReply.Parse(raw).Reply!.Findings!.Single();
+
+        finding.Title.Should().Be("The \"a\" title");
+        finding.Explanation.Should().Be("The \"b\" reason");
+        finding.Quote.Should().Be("The \"c\" passage");
+        finding.Suggestion!.Value.GetProperty("replace").GetString().Should().Be("The \"d\" text");
+        finding.Suggestion.Value.GetProperty("find").ValueKind.Should().Be(JsonValueKind.Null);
+        finding.RelatedTasks.Should().Equal("netp-1");
+    }
+
+    [Fact]
+    public void Parse_ShouldNotChangeAValidReply_ThatLooksLikeItNeedsRepair()
+    {
+        const string raw = """{"summary":"Say \"a\", \"b\": \"c\"} ] \\","findings":[]}""";
+
+        var parsed = AiReviewReply.Parse(raw);
+
+        parsed.Reply!.Summary.Should().Be("""Say "a", "b": "c"} ] \""");
+    }
+
+    [Fact]
+    public void Parse_ShouldKeepTheOriginalSyntaxError_WhenAStrayBraceCannotBeRepaired()
+    {
+        const string raw = """{"summary":"Ready.","findings":[{"title":"A"}},{"title":"The "b" one"}]}""";
+        const string withoutStrayQuotes = """{"summary":"Ready.","findings":[{"title":"A"}},{"title":"B"}]}""";
+
+        var parsed = AiReviewReply.Parse(raw);
+        var expected = AiReviewReply.Parse(withoutStrayQuotes);
+
+        parsed.Reply.Should().BeNull();
+        parsed.Problem.Should().Be(expected.Problem);
+    }
+
+    [Theory]
+    [InlineData("""{"summary":"Cut off "here""")]
+    [InlineData("""{"verdict":"The "a" one."}""")]
+    public void Parse_ShouldFail_WhenARepairWouldBeAGuess(string raw)
+    {
+        var parsed = AiReviewReply.Parse(raw);
+
+        parsed.Reply.Should().BeNull();
+        parsed.Problem.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public void Parse_ShouldNotCutTheReviewShort_WhenARepairClosesTheRootBeforeALineBreak()
+    {
+        const string raw = "{\"summary\":\"Ends with \"a\"}\n and more\",\"findings\":[{\"title\":\"Lost\"}]}";
+
+        var parsed = AiReviewReply.Parse(raw);
+
+        parsed.Reply.Should().BeNull();
+    }
+
+    [Fact]
+    public void Parse_ShouldFlagOnlyARepairedReply()
+    {
+        const string valid = """{"summary":"Ready.","findings":[]}""";
+        const string repairable = """{"summary":"The "a" one.","findings":[]}""";
+
+        AiReviewReply.Parse(valid).WasRepaired.Should().BeFalse();
+        AiReviewReply.Parse(repairable).WasRepaired.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Parse_ShouldNotLoseFindings_ByRepairingPastAStrayBrace()
+    {
+        const string raw = """
+            {"summary":"Ok.","findings":[{"category":"scope","title":"Split","suggestion":{"kind":"split","tasks":[{"name":"A","description":"B"}]}},"relatedTasks":[]},{"category":"gap","title":"Second","relatedTasks":[]},{"category":"gap","title":"Third","relatedTasks":[]}]}
+            """;
+
+        var parsed = AiReviewReply.Parse(raw);
+
+        parsed.Reply.Should().BeNull();
+        parsed.Problem.Should().NotBe("The JSON object had no summary or findings.");
+    }
+
+    [Fact]
     public void Parse_ShouldFindTheReview_AfterAnUnclosedBraceInTheProse()
     {
         const string raw = """Use { to open a block. {"summary":"Ready.","findings":[]}""";

@@ -72,6 +72,11 @@ internal sealed class AiReviewProgressFeed
                 events.AddRange(Drafts.Read(Reply.ToString()));
                 break;
 
+            case AiStreamEventType.ReplyReset:
+                Flush(events);
+                StartReplyAgain();
+                break;
+
             default:
                 Flush(events);
                 break;
@@ -90,6 +95,16 @@ internal sealed class AiReviewProgressFeed
         Flush(events);
 
         return events;
+    }
+
+    // The draft reader is kept so the findings already shown are not announced a second time.
+    private void StartReplyAgain()
+    {
+        Reply.Clear();
+        HeldBrace.Clear();
+        IsInReply = false;
+        IsAtLineStart = true;
+        DraftedCharacters = 0;
     }
 
     private void TakeText(string text, List<AiReviewStreamEvent> events)

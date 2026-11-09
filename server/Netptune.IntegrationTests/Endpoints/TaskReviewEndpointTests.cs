@@ -309,6 +309,85 @@ public sealed class TaskReviewEndpointTests
     }
 
     [Fact]
+    public async Task Run_ShouldAskForTheJsonAgain_WhenTheReplyIsMalformed()
+    {
+        var task = await CreateTask();
+
+        await SaveCredential();
+
+        try
+        {
+            var malformed = new AiChatTurn
+            {
+                Text = """{"summary":"Needs work.","findings":[{"title":"A"}},{"title":"B"}]}""",
+                Usage = new AiUsage { OutputTokens = 5 },
+            };
+
+            var corrected = new AiChatTurn
+            {
+                Text = """{"summary":"Needs work.","findings":[]}""",
+                Usage = new AiUsage { OutputTokens = 7 },
+            };
+
+            Script().Enqueue(malformed);
+            Script().Enqueue(corrected);
+
+            var frames = await Run(task.Id);
+            var requests = Script().Requests;
+
+            frames.Last().GetProperty("type").GetInt32().Should().Be((int)AiReviewStreamEventType.Completed);
+            requests.Should().HaveCount(2);
+            requests[1].Messages[^1].Text.Should().Contain("could not be read");
+
+            var latest = await Latest(task.Id);
+
+            latest.Current!.Run.Summary.Should().Be("Needs work.");
+
+            var usage = await LatestReviewUsage();
+
+            usage.OutputTokens.Should().Be(12);
+        }
+        finally
+        {
+            await DeleteCredentials(UserCredentials);
+            Script().Reset();
+        }
+    }
+
+    [Fact]
+    public async Task Run_ShouldRepairStrayQuotes_WithoutAskingTheModelAgain()
+    {
+        var task = await CreateTask();
+
+        await SaveCredential();
+
+        try
+        {
+            var strayQuotes = new AiChatTurn
+            {
+                Text = """{"summary":"Unclear what "full page" means.","findings":[]}""",
+                Usage = new AiUsage { OutputTokens = 5 },
+            };
+
+            Script().Enqueue(strayQuotes);
+
+            var frames = await Run(task.Id);
+
+            frames.Last().GetProperty("type").GetInt32().Should().Be((int)AiReviewStreamEventType.Completed);
+            Script().Requests.Should().ContainSingle();
+
+            var latest = await Latest(task.Id);
+
+            latest.Current!.Run.Summary.Should().Be("""Unclear what "full page" means.""");
+        }
+        finally
+        {
+            await DeleteCredentials(UserCredentials);
+            Script().Reset();
+        }
+    }
+
+    [Fact]
     public async Task Run_ShouldStoreAFailedRun_WhenTheReplyIsUnreadable()
     {
         var task = await CreateTask();
@@ -324,12 +403,14 @@ public sealed class TaskReviewEndpointTests
             };
 
             Script().Enqueue(unreadable);
+            Script().Enqueue(unreadable);
 
             var frames = await Run(task.Id);
             var failed = frames.Last();
 
             failed.GetProperty("type").GetInt32().Should().Be((int)AiReviewStreamEventType.Failed);
             failed.GetProperty("runId").GetInt32().Should().BePositive();
+            Script().Requests.Should().HaveCount(2);
 
             var latest = await Latest(task.Id);
 

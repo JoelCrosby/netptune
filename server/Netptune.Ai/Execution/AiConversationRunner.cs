@@ -45,7 +45,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
         var messages = new List<AiChatMessage>(context.History);
         var iteration = 0;
         var gatheredCharacters = 0;
-        var hasCorrectedClaim = false;
+        var hasCorrectedReply = false;
         var spent = new AiUsage();
         var maxToolIterations = context.MaxToolIterations ?? Options.MaxToolIterations;
         var maxTurnCharacters = context.MaxTurnCharacters ?? Options.MaxTurnCharacters;
@@ -139,18 +139,18 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (!hasToolCalls)
             {
-                var isUnbackedClaim = context.CorrectsProposalClaims
-                    && !hasCorrectedClaim
-                    && AiProposalClaim.IsUnbacked(turn.Text, ChangeSet.Changes.Count);
+                var hasRoundLeft = iteration < maxToolIterations;
+                var canCorrect = !hasCorrectedReply && hasRoundLeft && !IsOverSpendCap(context, usage);
+                var correction = canCorrect ? FindCorrection(context, turn) : null;
 
-                if (!isUnbackedClaim)
+                if (correction is null)
                 {
                     yield return new AiStreamEvent { Type = AiStreamEventType.TurnCompleted };
 
                     yield break;
                 }
 
-                hasCorrectedClaim = true;
+                hasCorrectedReply = true;
 
                 messages.Add(new AiChatMessage
                 {
@@ -162,7 +162,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                 messages.Add(new AiChatMessage
                 {
                     Role = AiMessageRole.User,
-                    Text = AiProposalClaim.Correction,
+                    Text = correction,
                 });
 
                 yield return AiStreamEvent.ReplyReset();
@@ -233,9 +233,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
                 yield break;
             }
 
-            var isOverSpendCap = context.SpendRemaining is { } remaining && usage.Cost >= remaining;
-
-            if (isOverSpendCap)
+            if (IsOverSpendCap(context, usage))
             {
                 yield return AiStreamEvent.Failed(AppText.AiSpendCapReachedDuringTurn, AiRunFailureCodes.SpendCap);
 
@@ -246,6 +244,19 @@ public sealed class AiConversationRunner : IAiConversationRunner
         var roundsReached = Localized.Format(AppText.AiErrorToolRoundsReached, maxToolIterations);
 
         yield return AiStreamEvent.Failed(roundsReached, AiRunFailureCodes.ToolRounds);
+    }
+
+    private static bool IsOverSpendCap(AiRunContext context, AiTokenUsageViewModel usage)
+    {
+        return context.SpendRemaining is { } remaining && usage.Cost >= remaining;
+    }
+
+    private string? FindCorrection(AiRunContext context, AiChatTurn turn)
+    {
+        var isUnbackedClaim = context.CorrectsProposalClaims
+            && AiProposalClaim.IsUnbacked(turn.Text, ChangeSet.Changes.Count);
+
+        return isUnbackedClaim ? AiProposalClaim.Correction : context.ReplyCorrection?.Invoke(turn);
     }
 
     private async Task<AiToolExecution> ExecuteTool(

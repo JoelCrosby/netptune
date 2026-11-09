@@ -492,6 +492,66 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldSendTheContextsCorrection_AndOnlyOnce()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with { ReplyCorrection = _ => "Send it again." };
+
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(2);
+        Provider.LastRequest!.Messages[^1].Text.Should().Be("Send it again.");
+        events.Should().ContainSingle(item => item.Type == AiStreamEventType.ReplyReset);
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+        context.Turns.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Run_ShouldAcceptTheReply_WhenTheContextHasNoCorrectionForIt()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with { ReplyCorrection = _ => null };
+
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1);
+        events.Should().NotContain(item => item.Type == AiStreamEventType.ReplyReset);
+    }
+
+    [Fact]
+    public async Task Run_ShouldKeepTheReply_WhenNoRoundIsLeftToCorrectIt()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with
+        {
+            MaxToolIterations = 1,
+            ReplyCorrection = _ => "Send it again.",
+        };
+
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1);
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+        context.Turns.Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task Run_ShouldKeepTheReply_WhenTheSpendCapIsReached()
+    {
+        var runner = CreateRunner([]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read) with
+        {
+            SpendRemaining = 0m,
+            ReplyCorrection = _ => "Send it again.",
+        };
+
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1);
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+    }
+
+    [Fact]
     public async Task Run_ShouldEndTheTurn_WhenTheModelAsksTheUserSomething()
     {
         var runner = CreateRunner([new AskQuestionTool(Questions, ChangeSet)]);

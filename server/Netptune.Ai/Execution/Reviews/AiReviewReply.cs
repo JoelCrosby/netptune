@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
+using Netptune.Core.Utilities;
 
 namespace Netptune.Ai.Execution.Reviews;
 
@@ -26,14 +27,36 @@ public sealed record AiReviewReply
             return AiReviewReplyParse.Failed("The reply was empty.");
         }
 
+        var parsed = ParseCandidates(raw, requiresEveryField: false);
+
+        if (parsed.Reply is not null)
+        {
+            return parsed;
+        }
+
+        var repaired = JsonRepair.EscapeStrayQuotes(raw);
+
+        if (repaired is null)
+        {
+            return parsed;
+        }
+
+        var repairedParse = ParseCandidates(repaired, requiresEveryField: true);
+
+        return repairedParse.Reply is null ? parsed : repairedParse with { WasRepaired = true };
+    }
+
+    private static AiReviewReplyParse ParseCandidates(string raw, bool requiresEveryField)
+    {
         var problem = "The reply contained no complete JSON object.";
+        string? syntaxProblem = null;
 
         foreach (var candidate in ObjectCandidates(raw))
         {
             try
             {
                 using var document = JsonDocument.Parse(candidate, DocumentOptions);
-                var reply = Read(document.RootElement);
+                var reply = Read(document.RootElement, requiresEveryField);
 
                 if (reply is not null)
                 {
@@ -44,11 +67,13 @@ public sealed record AiReviewReply
             }
             catch (JsonException exception)
             {
-                problem = exception.Message;
+                syntaxProblem ??= exception.Message;
             }
         }
 
-        return AiReviewReplyParse.Failed(problem);
+        // A stray brace ends the review early and leaves later findings as candidates of their own, so the
+        // first syntax error is the real one even when a later candidate parses.
+        return AiReviewReplyParse.Failed(syntaxProblem ?? problem);
     }
 
     // Models fence their JSON or wrap it in prose, and that prose can hold braces of its own, so each
@@ -135,7 +160,7 @@ public sealed record AiReviewReply
         return -1;
     }
 
-    private static AiReviewReply? Read(JsonElement root)
+    private static AiReviewReply? Read(JsonElement root, bool requiresEveryField)
     {
         if (root.ValueKind != JsonValueKind.Object)
         {
@@ -144,7 +169,9 @@ public sealed record AiReviewReply
 
         var summary = Property(root, "summary");
         var findings = Property(root, "findings");
-        var hasReviewShape = summary is not null || findings is not null;
+        var hasSummary = summary is not null;
+        var hasFindings = findings is not null;
+        var hasReviewShape = requiresEveryField ? hasSummary && hasFindings : hasSummary || hasFindings;
 
         if (!hasReviewShape)
         {
@@ -228,6 +255,8 @@ public sealed record AiReviewReplyParse
     public AiReviewReply? Reply { get; init; }
 
     public string? Problem { get; init; }
+
+    public bool WasRepaired { get; init; }
 
     public static AiReviewReplyParse Succeeded(AiReviewReply reply)
     {
