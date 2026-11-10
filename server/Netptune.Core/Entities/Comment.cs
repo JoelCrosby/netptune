@@ -13,6 +13,8 @@ public record Comment : WorkspaceEntity<int>
 
     public EntityType EntityType { get; set; }
 
+    public string? ExternalId { get; set; }
+
     #region NavigationProperties
 
     [JsonIgnore]

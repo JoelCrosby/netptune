@@ -65,6 +65,7 @@ public sealed record ImportPreviewResult
 public static class ImportDiagnosticCodes
 {
     public const string UnresolvedUser = "unresolved_user";
+    public const string UnresolvedLink = "unresolved_link";
     public const string UnresolvedStatus = "unresolved_status";
     public const string UnresolvedProject = "unresolved_project";
     public const string UnresolvedSprint = "unresolved_sprint";

@@ -351,21 +351,20 @@ public sealed class TaskRelationsEndpointTests
         return relationTypes.Single(relationType => relationType.Key == key);
     }
 
-    // Distinct tasks to link. Each test unlinks what it created, so they don't collide.
+    // Fresh tasks every time. Other suites import tasks with links into the same workspace, so a task
+    // picked from the list can already carry a parent or sit in a blocking chain.
     private async Task<List<TaskViewModel>> GetTasks(int count)
     {
-        var response = await Client.GetAsync("api/tasks?pageSize=50");
+        var tasks = new List<TaskViewModel>();
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        for (var index = 0; index < count; index++)
+        {
+            var created = await CreateTaskWithRelations($"Relation test task {index}", []);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+            created.IsSuccess.Should().BeTrue(created.Message);
+            tasks.Add(created.Payload!);
+        }
 
-        // Ordered by id so repeated calls pick the same tasks. The endpoint's default ordering is
-        // not something these tests should be leaning on.
-        var tasks = result.Payload!.Items.OrderBy(task => task.Id).ToList();
-
-        tasks.Should().HaveCountGreaterThanOrEqualTo(count);
-
-        return tasks.Take(count).ToList();
+        return tasks;
     }
 }

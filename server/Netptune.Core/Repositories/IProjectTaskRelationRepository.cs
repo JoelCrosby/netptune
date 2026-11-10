@@ -25,6 +25,10 @@ public interface IProjectTaskRelationRepository : IRepository<ProjectTaskRelatio
 
     Task<List<int>> GetReachableTaskIds(int relationTypeId, IReadOnlyCollection<int> fromTaskIds, CancellationToken cancellationToken = default);
 
+    Task<List<(int SourceTaskId, int TargetTaskId)>> GetEdgesFrom(int relationTypeId, IReadOnlyCollection<int> sourceTaskIds, CancellationToken cancellationToken = default);
+
+    Task<List<(int SourceTaskId, int TargetTaskId)>> GetReachableEdges(int relationTypeId, IReadOnlyCollection<int> fromTaskIds, CancellationToken cancellationToken = default);
+
     Task<List<ProjectTaskRelation>> GetForTaskAndType(int relationTypeId, int taskId, int? relatedTaskId, CancellationToken cancellationToken = default);
 
     Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);

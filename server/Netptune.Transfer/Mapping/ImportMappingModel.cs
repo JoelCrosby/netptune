@@ -47,7 +47,7 @@ public sealed record ImportUnknownPolicyModel
 
     public ImportUnknownPolicy BoardGroups { get; init; } = ImportUnknownPolicy.Create;
 
-    public ImportUnknownPolicy Sprints { get; init; } = ImportUnknownPolicy.Skip;
+    public ImportUnknownPolicy Sprints { get; init; } = ImportUnknownPolicy.Create;
 
     public ImportUnknownPolicy Projects { get; init; } = ImportUnknownPolicy.Fail;
 }

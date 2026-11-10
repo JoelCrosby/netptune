@@ -26,6 +26,10 @@ public class CommentEntityMap : WorkspaceEntityMap<Comment, int>
             .IsRequired();
 
         builder
+            .Property(comment => comment.ExternalId)
+            .HasMaxLength(256);
+
+        builder
             .HasIndex(comment => new { comment.WorkspaceId, comment.EntityType, comment.EntityId, comment.CreatedAt, comment.Id })
             .HasDatabaseName("ix_comments_workspace_entity_created_id");
 

@@ -73,7 +73,9 @@ export class ExportWizardService {
       (candidate) => candidate.key === this.recordType()
     );
 
-    return recordType?.fields ?? [];
+    const fields = recordType?.fields ?? [];
+
+    return fields.filter((field) => !field.isImportOnly);
   });
 
   readonly stepBlocker = computed<string | null>(() => {

@@ -8,5 +8,7 @@ public interface IImportSourceStore
 
     Task<Stream> Open(ImportSession session, CancellationToken cancellationToken = default);
 
+    Task<Stream?> OpenComments(ImportSession session, CancellationToken cancellationToken = default);
+
     Task Delete(string storageKey, CancellationToken cancellationToken = default);
 }

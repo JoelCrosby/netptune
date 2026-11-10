@@ -1,3 +1,4 @@
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.UnitOfWork;
@@ -8,10 +9,16 @@ namespace Netptune.Import;
 
 public sealed class ImportContext
 {
+    private const int DefaultSprintDays = 14;
+    private const int MaxSprintNameLength = 256;
+
     private readonly Dictionary<int, double> SortOrders;
     private readonly Dictionary<string, ProjectTask> ExistingByExternalId;
     private readonly Dictionary<string, ProjectTask> ExistingBySystemId;
     private readonly List<BoardGroup> Groups;
+    private readonly List<Status> TaskStatuses;
+    private readonly Dictionary<int, Sprint> SprintsById;
+    private readonly HashSet<int> HistoricalSprintIds = [];
 
     private int ScopeIdCursor;
     private int ScopeIdLimit;
@@ -22,12 +29,18 @@ public sealed class ImportContext
         ImportVocabulary vocabulary,
         IReadOnlyList<Status> statuses,
         List<BoardGroup> groups,
+        IReadOnlyList<Sprint> sprints,
         IReadOnlyList<ProjectTask> existingTasks)
     {
         Project = project;
         Board = board;
         Vocabulary = vocabulary;
         Groups = groups;
+        TaskStatuses = statuses
+            .Where(status => status.EntityType == EntityType.Task)
+            .OrderBy(status => status.SortOrder)
+            .ToList();
+        SprintsById = sprints.ToDictionary(sprint => sprint.Id);
 
         DefaultStatus = ResolveDefaultStatus(project, statuses);
         DefaultBoardGroup = groups.MinBy(group => group.SortOrder);
@@ -103,14 +116,71 @@ public sealed class ImportContext
     // own task numbers, so re-importing either a vendor export or a Netptune export finds its rows.
     public ProjectTask? FindExisting(ResolvedTaskRow row)
     {
-        if (string.IsNullOrWhiteSpace(row.SourceId))
+        return FindExisting(row.SourceId);
+    }
+
+    public ProjectTask? FindExisting(string? reference)
+    {
+        if (string.IsNullOrWhiteSpace(reference))
         {
             return null;
         }
 
-        var sourceId = row.SourceId.Trim().ToLowerInvariant();
+        var sourceId = reference.Trim().ToLowerInvariant();
 
         return ExistingByExternalId.GetValueOrDefault(sourceId) ?? ExistingBySystemId.GetValueOrDefault(sourceId);
+    }
+
+    public Status? FindStatusInCategory(string? categoryName)
+    {
+        var category = ImportStatusCategories.Parse(categoryName);
+
+        if (category is null)
+        {
+            return null;
+        }
+
+        if (DefaultStatus.Category == category)
+        {
+            return DefaultStatus;
+        }
+
+        return TaskStatuses.FirstOrDefault(status => status.Category == category);
+    }
+
+    public Sprint? FindSprint(string? name)
+    {
+        var sprintName = SprintName(name);
+
+        return Vocabulary.FindSprint(sprintName);
+    }
+
+    public Sprint? FindAssignableSprint(string? name)
+    {
+        var sprint = FindSprint(name);
+        var isAssignable = sprint is not null && AcceptsTasks(sprint);
+
+        return isAssignable ? sprint : null;
+    }
+
+    public Sprint? FindSprintById(int? sprintId)
+    {
+        if (sprintId is null)
+        {
+            return null;
+        }
+
+        return SprintsById.GetValueOrDefault(sprintId.Value);
+    }
+
+    // Closed sprints keep their membership, the same as adding to or removing from one is refused
+    // elsewhere. The exception is a sprint this import created closed to carry history.
+    public bool AcceptsTasks(Sprint sprint)
+    {
+        var isOpen = sprint.Status is SprintStatus.Planning or SprintStatus.Active;
+        var isImportedHistory = HistoricalSprintIds.Contains(sprint.Id);
+
+        return isOpen || isImportedHistory;
     }
 
     public async Task<Tag> CreateTag(
@@ -133,6 +203,52 @@ public sealed class ImportContext
         Vocabulary.Register(tag);
 
         return tag;
+    }
+
+    // Dates come from the first row that names the sprint. Only a sprint whose last day has passed is
+    // created complete; one still running stays in planning, so the import never starts a sprint.
+    public async Task<Sprint> CreateSprint(
+        INetptuneUnitOfWork unitOfWork,
+        ResolvedTaskRow row,
+        ImportApplyRequest request,
+        CancellationToken cancellationToken)
+    {
+        var name = SprintName(row.SprintValue)!;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var start = row.SprintStartDate ?? row.SprintEndDate?.AddDays(-DefaultSprintDays) ?? today;
+        var plannedEnd = row.SprintEndDate ?? start.AddDays(DefaultSprintDays);
+        var end = plannedEnd < start ? start : plannedEnd;
+        var startDate = start.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var endDate = end.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var hasEnded = end < today;
+
+        var sprint = new Sprint
+        {
+            Name = name,
+            Identifier = name.ToUrlSlug(appendUniqueId: true, maxLength: Sprint.IdentifierMaxLength),
+            StartDate = startDate,
+            EndDate = endDate,
+            Status = hasEnded ? SprintStatus.Completed : SprintStatus.Planning,
+            StartedAt = hasEnded ? startDate : null,
+            CompletedAt = hasEnded ? endDate : null,
+            ProjectId = Project.Id,
+            WorkspaceId = request.WorkspaceId,
+            OwnerId = request.UserId,
+            CreatedByUserId = request.UserId,
+        };
+
+        await unitOfWork.Sprints.AddAsync(sprint, cancellationToken);
+        await unitOfWork.CompleteAsync(cancellationToken);
+
+        Vocabulary.Register(sprint);
+        SprintsById[sprint.Id] = sprint;
+
+        if (hasEnded)
+        {
+            HistoricalSprintIds.Add(sprint.Id);
+        }
+
+        return sprint;
     }
 
     public async Task<BoardGroup> CreateBoardGroup(
@@ -161,6 +277,21 @@ public sealed class ImportContext
         DefaultBoardGroup ??= group;
 
         return group;
+    }
+
+    // Names are stored cut to the column's length, so lookups cut the same way or a long name would
+    // never match the sprint it created and every row would make another.
+    private static string? SprintName(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        var name = value.Trim();
+        var fitsColumn = name.Length <= MaxSprintNameLength;
+
+        return fitsColumn ? name : name[..MaxSprintNameLength].TrimEnd();
     }
 
     private static Status ResolveDefaultStatus(Project project, IReadOnlyList<Status> statuses)

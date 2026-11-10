@@ -191,6 +191,46 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         return taskIds.ToList();
     }
 
+    public async Task<List<(int SourceTaskId, int TargetTaskId)>> GetEdgesFrom(
+        int relationTypeId,
+        IReadOnlyCollection<int> sourceTaskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (sourceTaskIds.Count == 0)
+        {
+            return [];
+        }
+
+        var edges = await Entities
+            .AsNoTracking()
+            .Where(relation => relation.RelationTypeId == relationTypeId)
+            .Where(relation => sourceTaskIds.Contains(relation.SourceTaskId))
+            .Select(relation => new { relation.SourceTaskId, relation.TargetTaskId })
+            .ToListAsync(cancellationToken);
+
+        return edges.ConvertAll(edge => (edge.SourceTaskId, edge.TargetTaskId));
+    }
+
+    public async Task<List<(int SourceTaskId, int TargetTaskId)>> GetReachableEdges(
+        int relationTypeId,
+        IReadOnlyCollection<int> fromTaskIds,
+        CancellationToken cancellationToken = default)
+    {
+        var edges = new List<(int SourceTaskId, int TargetTaskId)>();
+        var visited = fromTaskIds.ToHashSet();
+        var frontier = visited.ToList();
+
+        while (frontier.Count > 0)
+        {
+            var level = await GetEdgesFrom(relationTypeId, frontier, cancellationToken);
+
+            edges.AddRange(level);
+            frontier = level.Select(edge => edge.TargetTaskId).Where(visited.Add).ToList();
+        }
+
+        return edges;
+    }
+
     public Task<List<ProjectTaskRelation>> GetForTaskAndType(
         int relationTypeId,
         int taskId,

@@ -89,7 +89,10 @@ public static class ExportDefinitionValidator
             return;
         }
 
-        var known = recordType.Fields.Select(field => field.Key).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var known = recordType.Fields
+            .Where(field => !field.IsImportOnly)
+            .Select(field => field.Key)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var fieldKey in definition.Fields)

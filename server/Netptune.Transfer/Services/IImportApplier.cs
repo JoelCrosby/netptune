@@ -40,6 +40,12 @@ public sealed record ImportCommitResult
     public int Skipped { get; init; }
 
     public int Failed { get; init; }
+
+    public int SprintsCreated { get; init; }
+
+    public int RelationsCreated { get; init; }
+
+    public int CommentsCreated { get; init; }
 }
 
 public sealed record ImportProgress

@@ -2620,4 +2620,80 @@ Please confirm your email address with the following link.</value>
     <value>Task description cannot exceed {0} characters</value>
     <comment>Error shown when a request cannot be completed</comment>
   </data>
+  <data name="ImportCommentOriginalAuthor" xml:space="preserve">
+    <value>Originally by {0}</value>
+    <comment>First line of a comment brought in by an import when its author is not a member. {0} is the original author's name</comment>
+  </data>
+  <data name="ImportUnresolvedLink" xml:space="preserve">
+    <value>'{0}' isn't in this import or the workspace, so it won't be linked</value>
+    <comment>Import preview warning for a parent or related task that cannot be found. {0} is the id the file gave</comment>
+  </data>
+  <data name="ImportUndoSprintInUse" xml:space="preserve">
+    <value>Sprint {0} has tasks the import didn't add, so it was left in place</value>
+    <comment>Reason an import undo kept a sprint it created. {0} is the sprint name</comment>
+  </data>
+  <data name="TransferFieldTaskSprintStartDate" xml:space="preserve">
+    <value>Sprint start date</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskSprintEndDate" xml:space="preserve">
+    <value>Sprint end date</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskStatusCategory" xml:space="preserve">
+    <value>Status category</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskParent" xml:space="preserve">
+    <value>Parent</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskBlockedBy" xml:space="preserve">
+    <value>Blocked by</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskBlocks" xml:space="preserve">
+    <value>Blocks</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskRelatedTo" xml:space="preserve">
+    <value>Related to</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskDuplicates" xml:space="preserve">
+    <value>Duplicates</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="TransferFieldTaskComments" xml:space="preserve">
+    <value>Comments</value>
+    <comment>Name of an import field</comment>
+  </data>
+  <data name="ImportProgressImportedRows" xml:space="preserve">
+    <value>Imported {0} rows</value>
+    <comment>Import progress message. {0} is the number of rows processed so far</comment>
+  </data>
+  <data name="ImportProgressLinkingTasks" xml:space="preserve">
+    <value>Linking tasks</value>
+    <comment>Import progress message shown while parent and related task links are written</comment>
+  </data>
+  <data name="ImportInvalidSprintDate" xml:space="preserve">
+    <value>'{0}' isn't a date, so the sprint will use default dates</value>
+    <comment>Import preview warning for an unreadable sprint start or end date. {0} is the value from the file</comment>
+  </data>
+  <data name="ImportSprintClosed" xml:space="preserve">
+    <value>Sprint {0} is closed, so tasks won't be added to it</value>
+    <comment>Import preview warning when a row names a completed or cancelled sprint. {0} is the sprint name</comment>
+  </data>
+  <data name="ImportUndoCommentChanged" xml:space="preserve">
+    <value>Comment {0} changed after the import and was left alone</value>
+    <comment>Reason an import undo kept a comment it created. {0} is the comment id</comment>
+  </data>
+  <data name="ImportProgressComplete" xml:space="preserve">
+    <value>Complete</value>
+    <comment>Progress text shown when an import finishes</comment>
+  </data>
+  <data name="ImportProgressFailed" xml:space="preserve">
+    <value>Failed</value>
+    <comment>Progress text shown when an import fails</comment>
+  </data>
 </root>

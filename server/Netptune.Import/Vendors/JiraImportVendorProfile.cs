@@ -36,7 +36,8 @@ public sealed class JiraImportVendorProfile : IImportVendorProfile
             Bind(profile, TaskFieldKeys.Sprint, "Sprint"),
             BindAny(profile, TaskFieldKeys.Assignees, ["Assignee", "Assignee Id"]),
             Bind(profile, TaskFieldKeys.CreatedBy, "Reporter"),
-            Bind(profile, TaskFieldKeys.Tags, "Labels"));
+            Bind(profile, TaskFieldKeys.Tags, "Labels"),
+            Bind(profile, TaskFieldKeys.Parent, "Parent"));
 
         return Build(TransferRecordTypes.Task, bindings, UpsertOn(TaskFieldKeys.SystemId));
     }

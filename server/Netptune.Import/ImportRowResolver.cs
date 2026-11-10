@@ -1,5 +1,6 @@
 using Netptune.Core.Constants;
 using Netptune.Core.Enums;
+using Netptune.Core.Localization;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Utilities;
 using Netptune.Transfer.Enums;
@@ -32,6 +33,22 @@ public sealed record ResolvedTaskRow
     public string? BoardGroupValue { get; init; }
 
     public string? SprintValue { get; init; }
+
+    public DateOnly? SprintStartDate { get; init; }
+
+    public DateOnly? SprintEndDate { get; init; }
+
+    public string? StatusCategoryValue { get; init; }
+
+    public string? ParentRef { get; init; }
+
+    public IReadOnlyList<string> BlockedByRefs { get; init; } = [];
+
+    public IReadOnlyList<string> BlocksRefs { get; init; } = [];
+
+    public IReadOnlyList<string> RelatedToRefs { get; init; } = [];
+
+    public IReadOnlyList<string> DuplicatesRefs { get; init; } = [];
 
     public IReadOnlyList<string> AssigneeValues { get; init; } = [];
 
@@ -101,6 +118,14 @@ public sealed class ImportRowResolver
             DueDate = dueDate,
             BoardGroupValue = Text(row, TaskFieldKeys.BoardGroup),
             SprintValue = Text(row, TaskFieldKeys.Sprint),
+            SprintStartDate = SprintDate(row, TaskFieldKeys.SprintStartDate, diagnostics),
+            SprintEndDate = SprintDate(row, TaskFieldKeys.SprintEndDate, diagnostics),
+            StatusCategoryValue = Text(row, TaskFieldKeys.StatusCategory),
+            ParentRef = NonBlank(Text(row, TaskFieldKeys.Parent)),
+            BlockedByRefs = Collection(row, TaskFieldKeys.BlockedBy),
+            BlocksRefs = Collection(row, TaskFieldKeys.Blocks),
+            RelatedToRefs = Collection(row, TaskFieldKeys.RelatedTo),
+            DuplicatesRefs = Collection(row, TaskFieldKeys.Duplicates),
             AssigneeValues = Collection(row, TaskFieldKeys.Assignees),
             TagValues = Collection(row, TaskFieldKeys.Tags),
             Diagnostics = diagnostics,
@@ -173,15 +198,38 @@ public sealed class ImportRowResolver
 
     private DateOnly? Date(ImportRow row, string fieldKey, List<ImportRowDiagnostic> diagnostics)
     {
-        var binding = FindBinding(fieldKey);
+        var value = Text(row, fieldKey);
+        var date = ParseDate(value);
+        var isInvalid = date is null && !string.IsNullOrWhiteSpace(value);
 
-        if (binding is null)
+        if (isInvalid)
         {
-            return null;
+            diagnostics.Add(Diagnostic(row, fieldKey, ImportDiagnosticSeverity.Error,
+                ImportDiagnosticCodes.InvalidDate, $"'{value}' is not a date.", value));
         }
 
-        var value = Text(row, fieldKey);
+        return date;
+    }
 
+    private DateOnly? SprintDate(ImportRow row, string fieldKey, List<ImportRowDiagnostic> diagnostics)
+    {
+        var value = Text(row, fieldKey);
+        var date = ParseDate(value);
+        var isInvalid = date is null && !string.IsNullOrWhiteSpace(value);
+
+        if (isInvalid)
+        {
+            var message = Localized.Format(AppText.ImportInvalidSprintDate, value);
+
+            diagnostics.Add(Diagnostic(row, fieldKey, ImportDiagnosticSeverity.Warning,
+                ImportDiagnosticCodes.InvalidDate, message, value));
+        }
+
+        return date;
+    }
+
+    private static DateOnly? ParseDate(string? value)
+    {
         if (string.IsNullOrWhiteSpace(value))
         {
             return null;
@@ -189,15 +237,7 @@ public sealed class ImportRowResolver
 
         var parsed = FieldValueParser.TryParseDate(value, out var date);
 
-        if (!parsed)
-        {
-            diagnostics.Add(Diagnostic(row, fieldKey, ImportDiagnosticSeverity.Error,
-                ImportDiagnosticCodes.InvalidDate, $"'{value}' is not a date.", value));
-
-            return null;
-        }
-
-        return date;
+        return parsed ? date : null;
     }
 
     private decimal? Number(ImportRow row, string fieldKey, List<ImportRowDiagnostic> diagnostics)
@@ -242,6 +282,11 @@ public sealed class ImportRowResolver
         }
 
         return priority;
+    }
+
+    private static string? NonBlank(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
     private ImportFieldBinding? FindBinding(string fieldKey)

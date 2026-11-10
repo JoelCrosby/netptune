@@ -66,6 +66,7 @@ export interface TransferField {
   isCollection: boolean;
   isRequiredForImport: boolean;
   isExportedByDefault: boolean;
+  isImportOnly: boolean;
   refType?: string;
   synonyms: string[];
   example?: string;

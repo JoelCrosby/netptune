@@ -5404,6 +5404,96 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Originally by {0}.
+        /// </summary>
+        public static string ImportCommentOriginalAuthor {
+            get {
+                return ResourceManager.GetString("ImportCommentOriginalAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; isn&apos;t a date, so the sprint will use default dates.
+        /// </summary>
+        public static string ImportInvalidSprintDate {
+            get {
+                return ResourceManager.GetString("ImportInvalidSprintDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete.
+        /// </summary>
+        public static string ImportProgressComplete {
+            get {
+                return ResourceManager.GetString("ImportProgressComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed.
+        /// </summary>
+        public static string ImportProgressFailed {
+            get {
+                return ResourceManager.GetString("ImportProgressFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Imported {0} rows.
+        /// </summary>
+        public static string ImportProgressImportedRows {
+            get {
+                return ResourceManager.GetString("ImportProgressImportedRows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linking tasks.
+        /// </summary>
+        public static string ImportProgressLinkingTasks {
+            get {
+                return ResourceManager.GetString("ImportProgressLinkingTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sprint {0} is closed, so tasks won&apos;t be added to it.
+        /// </summary>
+        public static string ImportSprintClosed {
+            get {
+                return ResourceManager.GetString("ImportSprintClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comment {0} changed after the import and was left alone.
+        /// </summary>
+        public static string ImportUndoCommentChanged {
+            get {
+                return ResourceManager.GetString("ImportUndoCommentChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sprint {0} has tasks the import didn&apos;t add, so it was left in place.
+        /// </summary>
+        public static string ImportUndoSprintInUse {
+            get {
+                return ResourceManager.GetString("ImportUndoSprintInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; isn&apos;t in this import or the workspace, so it won&apos;t be linked.
+        /// </summary>
+        public static string ImportUnresolvedLink {
+            get {
+                return ResourceManager.GetString("ImportUnresolvedLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Go to workspace.
         /// </summary>
         public static string InviteEmailAction {
@@ -5712,11 +5802,38 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blocked by.
+        /// </summary>
+        public static string TransferFieldTaskBlockedBy {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskBlockedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blocks.
+        /// </summary>
+        public static string TransferFieldTaskBlocks {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskBlocks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Board group.
         /// </summary>
         public static string TransferFieldTaskBoardGroup {
             get {
                 return ResourceManager.GetString("TransferFieldTaskBoardGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comments.
+        /// </summary>
+        public static string TransferFieldTaskComments {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskComments", resourceCulture);
             }
         }
         
@@ -5757,6 +5874,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicates.
+        /// </summary>
+        public static string TransferFieldTaskDuplicates {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Estimate type.
         /// </summary>
         public static string TransferFieldTaskEstimateType {
@@ -5784,6 +5910,15 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent.
+        /// </summary>
+        public static string TransferFieldTaskParent {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Priority.
         /// </summary>
         public static string TransferFieldTaskPriority {
@@ -5802,11 +5937,38 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Related to.
+        /// </summary>
+        public static string TransferFieldTaskRelatedTo {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskRelatedTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sprint.
         /// </summary>
         public static string TransferFieldTaskSprint {
             get {
                 return ResourceManager.GetString("TransferFieldTaskSprint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sprint end date.
+        /// </summary>
+        public static string TransferFieldTaskSprintEndDate {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskSprintEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sprint start date.
+        /// </summary>
+        public static string TransferFieldTaskSprintStartDate {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskSprintStartDate", resourceCulture);
             }
         }
         
@@ -5825,6 +5987,15 @@ namespace Netptune.Core.Localization {
         public static string TransferFieldTaskStatus {
             get {
                 return ResourceManager.GetString("TransferFieldTaskStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status category.
+        /// </summary>
+        public static string TransferFieldTaskStatusCategory {
+            get {
+                return ResourceManager.GetString("TransferFieldTaskStatusCategory", resourceCulture);
             }
         }
         

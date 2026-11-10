@@ -7,7 +7,9 @@ using Microsoft.Extensions.Options;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Localization;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Localization;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 using Netptune.Transfer;
@@ -30,6 +32,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
     private readonly INotificationDispatcher Notifications;
     private readonly ITransferJobNotifier Notifier;
     private readonly IActorContext Actor;
+    private readonly IUserLocaleReader Locales;
     private readonly TransferOptions Options;
     private readonly ILogger<ImportJobHandler> Logger;
 
@@ -41,6 +44,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         INotificationDispatcher notifications,
         ITransferJobNotifier notifier,
         IActorContext actor,
+        IUserLocaleReader locales,
         IOptions<TransferOptions> options,
         ILogger<ImportJobHandler> logger,
         IImportSessionRepository importSessions)
@@ -52,6 +56,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         Notifications = notifications;
         Notifier = notifier;
         Actor = actor;
+        Locales = locales;
         Options = options.Value;
         Logger = logger;
         ImportSessions = importSessions;
@@ -75,6 +80,10 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
             return default;
         }
 
+        var locale = await Locales.GetLocale(request.UserId, cancellationToken);
+
+        using var culture = CultureScope.Use(locale);
+
         try
         {
             await Commit(session, request, cancellationToken);
@@ -89,7 +98,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
 
             session.Stage = ImportStage.Failed;
             session.Error = exception.Message;
-            session.ProgressMessage = "Failed";
+            session.ProgressMessage = AppText.ImportProgressFailed;
 
             await UnitOfWork.CompleteAsync(cancellationToken);
 
@@ -147,7 +156,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
 
         session.Stage = ImportStage.Committed;
         session.ProgressPercent = 100;
-        session.ProgressMessage = "Complete";
+        session.ProgressMessage = AppText.ImportProgressComplete;
         session.CommittedAt = DateTime.UtcNow;
         session.Result = JsonSerializer.SerializeToDocument(result, JsonOptions.Default);
 

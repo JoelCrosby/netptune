@@ -68,6 +68,18 @@ public class VendorProfileTests
     }
 
     [Fact]
+    public async Task JiraMapping_ReadsTheParentIssueKey()
+    {
+        var profile = await Profile(VendorSamples.Jira);
+        var mapping = new JiraImportVendorProfile().BuildMapping(profile);
+        var rows = await Rows(VendorSamples.Jira, profile);
+        var resolver = new ImportRowResolver(mapping, profile.Columns.Select(column => column.Name).ToList());
+
+        resolver.Resolve(rows[0]).ParentRef.Should().BeNull();
+        resolver.Resolve(rows[1]).ParentRef.Should().Be("PROJ-101");
+    }
+
+    [Fact]
     public async Task AsanaMapping_BindsSectionsToBoardGroupsAndSplitsCommaSeparatedTags()
     {
         var profile = await Profile(VendorSamples.Asana);

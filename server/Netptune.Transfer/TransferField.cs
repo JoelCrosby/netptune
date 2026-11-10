@@ -14,6 +14,8 @@ public sealed record TransferField
 
     public bool IsExportedByDefault { get; init; }
 
+    public bool IsImportOnly { get; init; }
+
     public string? RefType { get; init; }
 
     public IReadOnlyList<string> Synonyms { get; init; } = [];

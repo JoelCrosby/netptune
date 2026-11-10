@@ -15,6 +15,8 @@ public static class TaskFieldKeys
     public const string DueDate = "task.due_date";
     public const string Project = "task.project";
     public const string Sprint = "task.sprint";
+    public const string SprintStartDate = "task.sprint_start_date";
+    public const string SprintEndDate = "task.sprint_end_date";
     public const string BoardGroup = "task.board_group";
     public const string Board = "task.board";
     public const string Owner = "task.owner";
@@ -23,6 +25,11 @@ public static class TaskFieldKeys
     public const string Flags = "task.flags";
     public const string Comments = "task.comments";
     public const string Relations = "task.relations";
+    public const string Parent = "task.parent";
+    public const string BlockedBy = "task.blocked_by";
+    public const string Blocks = "task.blocks";
+    public const string RelatedTo = "task.related_to";
+    public const string Duplicates = "task.duplicates";
     public const string CreatedBy = "task.created_by";
     public const string CreatedAt = "task.created_at";
     public const string UpdatedAt = "task.updated_at";

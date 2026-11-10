@@ -29,6 +29,9 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IArchiveImporter, ArchiveImporter>();
 
         services.AddTransient<IEntityUndoHandler, TaskEntityUndoHandler>();
+        services.AddTransient<IEntityUndoHandler, SprintEntityUndoHandler>();
+        services.AddTransient<IEntityUndoHandler, TaskRelationEntityUndoHandler>();
+        services.AddTransient<IEntityUndoHandler, CommentEntityUndoHandler>();
         services.AddTransient<EntityUndoCatalog>();
         services.AddTransient<IImportUndoService, ImportUndoService>();
 

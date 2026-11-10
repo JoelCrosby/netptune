@@ -78,6 +78,55 @@ public class ImportContextTests
         context.FindExisting(Row("PROJ-999")).Should().BeNull();
     }
 
+    [Fact]
+    public void FindStatusInCategory_ShouldPickTheFirstStatusInThatCategory()
+    {
+        var todo = TaskStatus(1, StatusCategory.Todo, sortOrder: 0);
+        var review = TaskStatus(2, StatusCategory.Active, sortOrder: 2);
+        var doing = TaskStatus(3, StatusCategory.Active, sortOrder: 1);
+        var context = StatusContext(defaultStatusId: null, todo, review, doing);
+
+        context.FindStatusInCategory("In Progress").Should().BeSameAs(doing);
+    }
+
+    [Fact]
+    public void FindStatusInCategory_ShouldPreferTheProjectDefault_WhenItIsInTheCategory()
+    {
+        var first = TaskStatus(1, StatusCategory.Todo, sortOrder: 0);
+        var projectDefault = TaskStatus(2, StatusCategory.Todo, sortOrder: 1);
+        var context = StatusContext(defaultStatusId: 2, first, projectDefault);
+
+        context.FindStatusInCategory("To Do").Should().BeSameAs(projectDefault);
+    }
+
+    [Fact]
+    public void FindStatusInCategory_ShouldReturnNull_WhenTheCategoryIsUnknownOrHasNoStatus()
+    {
+        var todo = TaskStatus(1, StatusCategory.Todo, sortOrder: 0);
+        var context = StatusContext(defaultStatusId: null, todo);
+
+        context.FindStatusInCategory("Waiting").Should().BeNull();
+        context.FindStatusInCategory("Done").Should().BeNull();
+        context.FindStatusInCategory(null).Should().BeNull();
+    }
+
+    [Fact]
+    public void FindStatusInCategory_ShouldIgnoreStatusesThatAreNotForTasks()
+    {
+        var todo = TaskStatus(1, StatusCategory.Todo, sortOrder: 0);
+        var pageDone = new Status
+        {
+            Id = 2,
+            Key = "s2",
+            Name = "S2",
+            Category = StatusCategory.Done,
+            EntityType = EntityType.Page,
+        };
+        var context = StatusContext(defaultStatusId: null, todo, pageDone);
+
+        context.FindStatusInCategory("Done").Should().BeNull();
+    }
+
     private static ResolvedTaskRow Row(string sourceId)
     {
         return new ResolvedTaskRow { RowNumber = 1, SourceId = sourceId };
@@ -89,7 +138,28 @@ public class ImportContextTests
         var board = new Board { Id = 1, ProjectId = 1 };
         var status = new Status { Id = 1, Key = "todo", Name = "Todo", Category = StatusCategory.Todo, EntityType = EntityType.Task };
 
-        return new ImportContext(project, board, Vocabulary(), [status], [], existingTasks ?? []);
+        return new ImportContext(project, board, Vocabulary(), [status], [], [], existingTasks ?? []);
+    }
+
+    private static Status TaskStatus(int id, StatusCategory category, int sortOrder)
+    {
+        return new Status
+        {
+            Id = id,
+            Key = $"s{id}",
+            Name = $"S{id}",
+            Category = category,
+            EntityType = EntityType.Task,
+            SortOrder = sortOrder,
+        };
+    }
+
+    private static ImportContext StatusContext(int? defaultStatusId, params Status[] statuses)
+    {
+        var project = new Project { Id = 1, Key = "acme", DefaultStatusId = defaultStatusId };
+        var board = new Board { Id = 1, ProjectId = 1 };
+
+        return new ImportContext(project, board, Vocabulary(), statuses, [], [], []);
     }
 
     private static ImportVocabulary Vocabulary()

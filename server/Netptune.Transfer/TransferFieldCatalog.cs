@@ -53,6 +53,15 @@ public static class TransferFieldCatalog
             },
             new TransferField
             {
+                Key = TaskFieldKeys.StatusCategory,
+                Name = "Status category",
+                ValueType = TransferValueType.Text,
+                IsImportOnly = true,
+                Synonyms = ["state category", "status category", "status type"],
+                Example = "In Progress",
+            },
+            new TransferField
+            {
                 Key = TaskFieldKeys.Priority,
                 Name = "Priority",
                 ValueType = TransferValueType.Enum,
@@ -117,6 +126,24 @@ public static class TransferFieldCatalog
             },
             new TransferField
             {
+                Key = TaskFieldKeys.SprintStartDate,
+                Name = "Sprint start date",
+                ValueType = TransferValueType.Date,
+                IsImportOnly = true,
+                Synonyms = ["sprint start", "iteration start", "iteration start date"],
+                Example = "2026-08-04",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.SprintEndDate,
+                Name = "Sprint end date",
+                ValueType = TransferValueType.Date,
+                IsImportOnly = true,
+                Synonyms = ["sprint end", "iteration end", "iteration finish", "iteration finish date"],
+                Example = "2026-08-18",
+            },
+            new TransferField
+            {
                 Key = TaskFieldKeys.BoardGroup,
                 Name = "Board group",
                 ValueType = TransferValueType.Ref,
@@ -174,6 +201,63 @@ public static class TransferFieldCatalog
                 IsExportedByDefault = true,
                 Synonyms = ["updated", "modified", "last updated", "last modified"],
                 Example = "2026-08-05T11:02:00Z",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.Parent,
+                Name = "Parent",
+                ValueType = TransferValueType.Text,
+                IsImportOnly = true,
+                Synonyms = ["parent", "parent id", "parent key", "parent issue"],
+                Example = "acme-3",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.BlockedBy,
+                Name = "Blocked by",
+                ValueType = TransferValueType.Text,
+                IsCollection = true,
+                IsImportOnly = true,
+                Synonyms = ["blocked by", "depends on", "predecessors", "predecessor"],
+                Example = "acme-4|acme-9",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.Blocks,
+                Name = "Blocks",
+                ValueType = TransferValueType.Text,
+                IsCollection = true,
+                IsImportOnly = true,
+                Synonyms = ["blocks", "successors", "successor"],
+                Example = "acme-12",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.RelatedTo,
+                Name = "Related to",
+                ValueType = TransferValueType.Text,
+                IsCollection = true,
+                IsImportOnly = true,
+                Synonyms = ["related", "related to", "relates to"],
+                Example = "acme-7",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.Duplicates,
+                Name = "Duplicates",
+                ValueType = TransferValueType.Text,
+                IsCollection = true,
+                IsImportOnly = true,
+                Synonyms = ["duplicates", "duplicate of"],
+                Example = "acme-2",
+            },
+            new TransferField
+            {
+                Key = TaskFieldKeys.Comments,
+                Name = "Comments",
+                ValueType = TransferValueType.Text,
+                IsImportOnly = true,
+                Synonyms = ["comments", "comment count"],
             },
         ],
     };

@@ -1969,4 +1969,61 @@ Bitte bestätige deine E-Mail-Adresse über den folgenden Link.</value>
   <data name="ErrorTaskDescriptionTooLong" xml:space="preserve">
     <value>Die Aufgabenbeschreibung darf {0} Zeichen nicht überschreiten</value>
   </data>
+  <data name="ImportCommentOriginalAuthor" xml:space="preserve">
+    <value>Ursprünglich von {0}</value>
+  </data>
+  <data name="ImportUnresolvedLink" xml:space="preserve">
+    <value>„{0}“ ist weder in diesem Import noch im Arbeitsbereich enthalten und wird daher nicht verknüpft</value>
+  </data>
+  <data name="ImportUndoSprintInUse" xml:space="preserve">
+    <value>Sprint {0} enthält Aufgaben, die der Import nicht hinzugefügt hat, und wurde daher beibehalten</value>
+  </data>
+  <data name="TransferFieldTaskSprintStartDate" xml:space="preserve">
+    <value>Sprint-Startdatum</value>
+  </data>
+  <data name="TransferFieldTaskSprintEndDate" xml:space="preserve">
+    <value>Sprint-Enddatum</value>
+  </data>
+  <data name="TransferFieldTaskStatusCategory" xml:space="preserve">
+    <value>Statuskategorie</value>
+  </data>
+  <data name="TransferFieldTaskParent" xml:space="preserve">
+    <value>Übergeordnet</value>
+  </data>
+  <data name="TransferFieldTaskBlockedBy" xml:space="preserve">
+    <value>Blockiert durch</value>
+  </data>
+  <data name="TransferFieldTaskBlocks" xml:space="preserve">
+    <value>Blockiert</value>
+  </data>
+  <data name="TransferFieldTaskRelatedTo" xml:space="preserve">
+    <value>Verwandt mit</value>
+  </data>
+  <data name="TransferFieldTaskDuplicates" xml:space="preserve">
+    <value>Duplikat von</value>
+  </data>
+  <data name="TransferFieldTaskComments" xml:space="preserve">
+    <value>Kommentare</value>
+  </data>
+  <data name="ImportProgressImportedRows" xml:space="preserve">
+    <value>{0} Zeilen importiert</value>
+  </data>
+  <data name="ImportProgressLinkingTasks" xml:space="preserve">
+    <value>Aufgaben werden verknüpft</value>
+  </data>
+  <data name="ImportInvalidSprintDate" xml:space="preserve">
+    <value>„{0}“ ist kein Datum, daher verwendet der Sprint die Standarddaten</value>
+  </data>
+  <data name="ImportSprintClosed" xml:space="preserve">
+    <value>Sprint {0} ist abgeschlossen, daher werden ihm keine Aufgaben hinzugefügt</value>
+  </data>
+  <data name="ImportUndoCommentChanged" xml:space="preserve">
+    <value>Kommentar {0} wurde nach dem Import geändert und daher beibehalten</value>
+  </data>
+  <data name="ImportProgressComplete" xml:space="preserve">
+    <value>Abgeschlossen</value>
+  </data>
+  <data name="ImportProgressFailed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
 </root>

@@ -102,6 +102,21 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
                 cancellationToken);
     }
 
+    public async Task<HashSet<string>> GetTaskCommentExternalIds(
+        int workspaceId,
+        IReadOnlyCollection<int> taskIds,
+        CancellationToken cancellationToken = default)
+    {
+        var keys = await Entities
+            .AsNoTracking()
+            .Where(comment => comment.WorkspaceId == workspaceId && comment.EntityType == EntityType.Task)
+            .Where(comment => taskIds.Contains(comment.EntityId) && comment.ExternalId != null)
+            .Select(comment => comment.EntityId + ":" + comment.ExternalId)
+            .ToListAsync(cancellationToken);
+
+        return keys.ToHashSet(StringComparer.Ordinal);
+    }
+
     private Expression<Func<Comment, CommentViewModel>> ToViewModel()
     {
         var commentEntityType = EventEntityTypes.From(EntityType.Comment);

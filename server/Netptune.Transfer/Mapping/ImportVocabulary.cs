@@ -81,6 +81,11 @@ public sealed class ImportVocabulary
         TagsByName[tag.Name.ToLowerInvariant()] = tag;
     }
 
+    public void Register(Sprint sprint)
+    {
+        SprintsByName[sprint.Name.ToLowerInvariant()] = sprint;
+    }
+
     public void Register(BoardGroup boardGroup)
     {
         BoardGroupsByName[boardGroup.Name.ToLowerInvariant()] = boardGroup;

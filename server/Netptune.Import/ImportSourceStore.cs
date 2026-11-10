@@ -7,6 +7,13 @@ namespace Netptune.Import;
 
 public sealed class ImportSourceStore : IImportSourceStore
 {
+    // One JSON object per line with task, id, authorEmail, authorName, createdAt and body. Only sources
+    // that fetch through an API write one. It lives in a sub-folder because the rows file keeps the
+    // uploader's file name, and an upload called comments.ndjson would otherwise be read as comments.
+    public const string CommentsFileName = "comments.ndjson";
+
+    private const string SidecarFolder = "sidecar";
+
     private readonly IStorageService Storage;
 
     public ImportSourceStore(IStorageService storage)
@@ -22,10 +29,11 @@ public sealed class ImportSourceStore : IImportSourceStore
         string contentType,
         CancellationToken cancellationToken = default)
     {
-        var storageKey = $"{PathConstants.ImportPath(workspaceSlug)}{publicId:N}/{fileName}";
+        var safeFileName = Path.GetFileName(fileName);
+        var storageKey = $"{PathConstants.ImportPath(workspaceSlug)}{publicId:N}/{safeFileName}";
         var uploadOptions = new StorageUploadOptions
         {
-            Name = fileName,
+            Name = safeFileName,
             Key = storageKey,
             ContentType = contentType,
             Access = StorageAccess.Private,
@@ -56,8 +64,22 @@ public sealed class ImportSourceStore : IImportSourceStore
         return buffer;
     }
 
+    public async Task<Stream?> OpenComments(ImportSession session, CancellationToken cancellationToken = default)
+    {
+        var source = await Storage.OpenReadAsync(CommentsKey(session.StorageKey), cancellationToken);
+
+        return source;
+    }
+
     public Task Delete(string storageKey, CancellationToken cancellationToken = default)
     {
-        return Storage.DeleteFileAsync(storageKey, cancellationToken);
+        return Storage.DeleteFilesAsync([storageKey, CommentsKey(storageKey)], cancellationToken);
+    }
+
+    public static string CommentsKey(string storageKey)
+    {
+        var folder = storageKey[..(storageKey.LastIndexOf('/') + 1)];
+
+        return $"{folder}{SidecarFolder}/{CommentsFileName}";
     }
 }

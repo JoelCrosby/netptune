@@ -118,9 +118,11 @@ public class TransferFieldCatalogTests
             .Should().Equal("task.name");
 
         task.Fields.Where(field => field.IsExportedByDefault).Should().NotBeEmpty();
-        task.Fields.Where(field => field.IsCollection)
+        task.Fields.Where(field => field.IsCollection && !field.IsImportOnly)
             .Select(field => field.Key)
             .Should().BeEquivalentTo("task.assignees", "task.tags");
+        task.Fields.Where(field => field.IsImportOnly)
+            .Should().OnlyContain(field => !field.IsExportedByDefault);
     }
 
     [Fact]

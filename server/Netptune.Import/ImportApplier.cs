@@ -1,10 +1,14 @@
 using System.Text.Json;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Sprints;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Localization;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -21,12 +25,22 @@ public sealed class ImportApplier : IImportApplier
 {
     private const int BatchSize = 500;
 
+    private static readonly string[] LinkFieldKeys =
+    [
+        TaskFieldKeys.Parent,
+        TaskFieldKeys.BlockedBy,
+        TaskFieldKeys.Blocks,
+        TaskFieldKeys.RelatedTo,
+        TaskFieldKeys.Duplicates,
+    ];
+
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IImportSessionRepository ImportSessions;
     private readonly IEnumerable<IImportSourceReader> Readers;
     private readonly IEventRecordWriter EventRecords;
     private readonly IEventPublisher EventPublisher;
     private readonly IActivityLogger Activity;
+    private readonly IImportSourceStore Store;
 
     public ImportApplier(
         INetptuneUnitOfWork unitOfWork,
@@ -34,7 +48,8 @@ public sealed class ImportApplier : IImportApplier
         IEventRecordWriter eventRecords,
         IEventPublisher eventPublisher,
         IImportSessionRepository importSessions,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        IImportSourceStore store)
     {
         UnitOfWork = unitOfWork;
         Readers = readers;
@@ -42,6 +57,7 @@ public sealed class ImportApplier : IImportApplier
         EventPublisher = eventPublisher;
         Activity = activity;
         ImportSessions = importSessions;
+        Store = store;
     }
 
     public async Task<ImportPreviewResult> Preview(ImportApplyRequest request, CancellationToken cancellationToken = default)
@@ -52,7 +68,10 @@ public sealed class ImportApplier : IImportApplier
         var samples = new List<ImportRowPreview>();
         var newTags = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var newGroups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var newSprints = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var invites = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var sourceIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var references = new List<(int RowNumber, string Reference)>();
         var counts = new ActionCounts();
         var totalRows = 0;
         var truncated = false;
@@ -72,6 +91,15 @@ public sealed class ImportApplier : IImportApplier
 
             counts.Add(action);
             CollectVocabularyGaps(resolved, request.Mapping, context, newTags, newGroups, invites, resolved.Diagnostics);
+            CollectNewSprint(resolved, request.Mapping, context, newSprints);
+            CollectClosedSprint(resolved, context);
+
+            if (resolved.SourceId is not null)
+            {
+                sourceIds.Add(resolved.SourceId.Trim());
+            }
+
+            references.AddRange(ImportLinks.From(resolved).Select(link => (resolved.RowNumber, link.Reference)));
 
             foreach (var diagnostic in resolved.Diagnostics)
             {
@@ -87,6 +115,19 @@ public sealed class ImportApplier : IImportApplier
             }
         }
 
+        // Rows past the cap were never read, so a reference to one of them would look missing.
+        var missingLinkTargets = truncated
+            ? Enumerable.Empty<ImportRowDiagnostic>()
+            : MissingLinkTargets(references, sourceIds, context);
+
+        foreach (var diagnostic in missingLinkTargets)
+        {
+            if (diagnostics.Count < ImportPreviewResult.MaxDiagnostics)
+            {
+                diagnostics.Add(diagnostic);
+            }
+        }
+
         return new ImportPreviewResult
         {
             TotalRows = totalRows,
@@ -96,7 +137,7 @@ public sealed class ImportApplier : IImportApplier
             WillError = counts.Failed,
             IsExtrapolated = truncated,
             Diagnostics = diagnostics,
-            NewEntities = BuildNewEntities(newTags, newGroups),
+            NewEntities = BuildNewEntities(newTags, newGroups, newSprints),
             UsersToInvite = invites.ToList(),
             SampleRows = samples,
         };
@@ -111,7 +152,7 @@ public sealed class ImportApplier : IImportApplier
         var resolver = new ImportRowResolver(request.Mapping, request.ColumnNames);
         var counts = new ActionCounts();
         var batch = new List<ResolvedTaskRow>(BatchSize);
-        var createdTaskIds = new List<int>();
+        var applied = new AppliedRows();
         var processed = 0;
 
         await foreach (var row in ReadRows(request, cancellationToken))
@@ -129,11 +170,11 @@ public sealed class ImportApplier : IImportApplier
                 continue;
             }
 
-            await ApplyBatch(batch, request, context, counts, createdTaskIds, cancellationToken);
+            await ApplyBatch(batch, request, context, counts, applied, cancellationToken);
             await reportProgress(new ImportProgress
             {
                 Percent = PercentDone(processed, request),
-                Message = $"Imported {processed} rows",
+                Message = Localized.Format(AppText.ImportProgressImportedRows, processed),
             }, cancellationToken);
 
             batch.Clear();
@@ -141,10 +182,25 @@ public sealed class ImportApplier : IImportApplier
 
         if (batch.Count > 0)
         {
-            await ApplyBatch(batch, request, context, counts, createdTaskIds, cancellationToken);
+            await ApplyBatch(batch, request, context, counts, applied, cancellationToken);
         }
 
-        await Announce(createdTaskIds, request, cancellationToken);
+        await reportProgress(new ImportProgress
+        {
+            Percent = 96,
+            Message = AppText.ImportProgressLinkingTasks,
+        }, cancellationToken);
+
+        var relationWriter = new ImportRelationWriter(UnitOfWork, ImportSessions);
+        var relations = await relationWriter.Write(
+            applied.Links,
+            reference => applied.TaskIdFor(reference) ?? context.FindExisting(reference)?.Id,
+            request,
+            cancellationToken);
+        var comments = await WriteComments(applied, context, request, cancellationToken);
+
+        await Announce(applied.CreatedTaskIds, request, cancellationToken);
+        await AnnounceSprints(applied.CreatedSprintIds, request);
 
         return new ImportCommitResult
         {
@@ -152,7 +208,47 @@ public sealed class ImportApplier : IImportApplier
             Updated = counts.Updated,
             Skipped = counts.Skipped,
             Failed = counts.Failed,
+            SprintsCreated = applied.CreatedSprintIds.Count,
+            RelationsCreated = relations,
+            CommentsCreated = comments,
         };
+    }
+
+    private async Task<int> WriteComments(
+        AppliedRows applied,
+        ImportContext context,
+        ImportApplyRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (applied.TaskIdsBySourceId.Count == 0)
+        {
+            return 0;
+        }
+
+        var source = await Store.OpenComments(request.Session, cancellationToken);
+
+        if (source is null)
+        {
+            return 0;
+        }
+
+        await using (source)
+        {
+            var writer = new ImportCommentWriter(UnitOfWork, ImportSessions);
+            var created = await writer.Write(source, applied.TaskIdsBySourceId, context, request, cancellationToken);
+
+            return created;
+        }
+    }
+
+    private async Task AnnounceSprints(IReadOnlyList<int> sprintIds, ImportApplyRequest request)
+    {
+        if (sprintIds.Count == 0)
+        {
+            return;
+        }
+
+        await EventPublisher.IndexSprints(sprintIds, request.WorkspaceSlug);
     }
 
     // Capped below 100 so the job handler's own "Complete" is what closes the bar out. Falls back to a
@@ -171,7 +267,7 @@ public sealed class ImportApplier : IImportApplier
         ImportApplyRequest request,
         ImportContext context,
         ActionCounts counts,
-        List<int> createdTaskIds,
+        AppliedRows applied,
         CancellationToken cancellationToken)
     {
         var writable = batch.Where(row => !row.HasErrors || request.SkipFailingRows).ToList();
@@ -190,9 +286,10 @@ public sealed class ImportApplier : IImportApplier
 
         await UnitOfWork.Transaction(async () =>
         {
-            var entries = new List<ImportSessionEntry>();
+            var entries = await CreateSprints(planned, context, request, applied, cancellationToken);
             var creations = new List<Creation>();
             var updates = new List<Update>();
+            var membershipEvents = new List<IEventWriteRequest>();
 
             foreach (var (row, action) in planned)
             {
@@ -204,7 +301,7 @@ public sealed class ImportApplier : IImportApplier
 
                 if (action == ImportRowAction.Update)
                 {
-                    var update = PrepareUpdate(row, context, request);
+                    var update = PrepareUpdate(row, context, request, membershipEvents);
 
                     if (update is null)
                     {
@@ -232,6 +329,7 @@ public sealed class ImportApplier : IImportApplier
                 update.Entry.EntityUpdatedAt = update.Task.UpdatedAt;
 
                 entries.Add(update.Entry);
+                applied.Record(update.Row, update.Task.Id);
             }
 
             foreach (var creation in creations)
@@ -240,7 +338,16 @@ public sealed class ImportApplier : IImportApplier
                 await ApplyTags(creation.Task, creation.Row, context, request, cancellationToken);
                 await WriteCreatedEvent(creation.Task, creation.Status, context, request, cancellationToken);
 
-                createdTaskIds.Add(creation.Task.Id);
+                var move = new SprintMove
+                {
+                    Task = creation.Task,
+                    Status = creation.Status,
+                    To = context.FindSprintById(creation.Task.SprintId),
+                };
+
+                membershipEvents.AddRange(MembershipEvents(move, request));
+                applied.CreatedTaskIds.Add(creation.Task.Id);
+                applied.Record(creation.Row, creation.Task.Id);
 
                 entries.Add(new ImportSessionEntry
                 {
@@ -251,9 +358,61 @@ public sealed class ImportApplier : IImportApplier
                 });
             }
 
+            await EventRecords.AppendRange(membershipEvents, cancellationToken);
             await ImportSessions.AddEntries(entries, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
+    }
+
+    // Created before any task in the batch is added, so their entries sit below the tasks' and undo,
+    // which works newest first, removes the tasks before the sprints they point at.
+    private async Task<List<ImportSessionEntry>> CreateSprints(
+        IReadOnlyList<PlannedRow> planned,
+        ImportContext context,
+        ImportApplyRequest request,
+        AppliedRows applied,
+        CancellationToken cancellationToken)
+    {
+        var entries = new List<ImportSessionEntry>();
+        var createsSprints = request.Mapping.UnknownPolicy.Sprints == ImportUnknownPolicy.Create;
+
+        if (!createsSprints)
+        {
+            return entries;
+        }
+
+        foreach (var (row, action) in planned)
+        {
+            var isWritten = action is ImportRowAction.Create or ImportRowAction.Update;
+            var isNewSprint = isWritten
+                && !string.IsNullOrWhiteSpace(row.SprintValue)
+                && context.FindSprint(row.SprintValue) is null;
+
+            if (!isNewSprint)
+            {
+                continue;
+            }
+
+            var sprint = await context.CreateSprint(UnitOfWork, row, request, cancellationToken);
+
+            if (sprint.Status == SprintStatus.Completed)
+            {
+                var lifecycle = HistoricalLifecycle(sprint, request);
+
+                await EventRecords.AppendRange(lifecycle, cancellationToken);
+            }
+
+            applied.CreatedSprintIds.Add(sprint.Id);
+            entries.Add(new ImportSessionEntry
+            {
+                SessionId = request.Session.Id,
+                EntityType = EventEntityTypes.From(EntityType.Sprint),
+                EntityId = sprint.Id,
+                Operation = ImportEntryOperation.Created,
+            });
+        }
+
+        return entries;
     }
 
     private async Task<Creation> PrepareCreate(
@@ -277,7 +436,7 @@ public sealed class ImportApplier : IImportApplier
             StartDate = row.StartDate,
             DueDate = row.DueDate,
             ExternalId = row.SourceId,
-            SprintId = context.Vocabulary.FindSprint(row.SprintValue)?.Id,
+            SprintId = context.FindAssignableSprint(row.SprintValue)?.Id,
             OwnerId = request.UserId,
             CreatedByUserId = request.UserId,
         };
@@ -293,7 +452,8 @@ public sealed class ImportApplier : IImportApplier
     private static Update? PrepareUpdate(
         ResolvedTaskRow row,
         ImportContext context,
-        ImportApplyRequest request)
+        ImportApplyRequest request,
+        List<IEventWriteRequest> membershipEvents)
     {
         var existing = context.FindExisting(row);
 
@@ -311,16 +471,35 @@ public sealed class ImportApplier : IImportApplier
             existing.EstimateValue,
             existing.StartDate,
             existing.DueDate,
+            existing.SprintId,
         }, JsonOptions.Default);
+
+        var status = ResolveStatus(row, context, request.Mapping);
+        var previousSprintId = existing.SprintId;
+        var nextSprintId = ResolveSprintId(existing, row, context);
 
         existing.Name = row.Name;
         existing.Description = row.Description ?? existing.Description;
-        existing.StatusId = ResolveStatus(row, context, request.Mapping).Id;
+        existing.StatusId = status.Id;
         existing.Priority = row.Priority ?? existing.Priority;
         existing.EstimateValue = row.EstimateValue ?? existing.EstimateValue;
         existing.StartDate = row.StartDate ?? existing.StartDate;
         existing.DueDate = row.DueDate ?? existing.DueDate;
+        existing.SprintId = nextSprintId;
         existing.ModifiedByUserId = request.UserId;
+
+        if (previousSprintId != nextSprintId)
+        {
+            var move = new SprintMove
+            {
+                Task = existing,
+                Status = status,
+                From = context.FindSprintById(previousSprintId),
+                To = context.FindSprintById(nextSprintId),
+            };
+
+            membershipEvents.AddRange(MembershipEvents(move, request));
+        }
 
         var entry = new ImportSessionEntry
         {
@@ -331,7 +510,108 @@ public sealed class ImportApplier : IImportApplier
             PreviousValues = previous,
         };
 
-        return new Update(entry, existing);
+        return new Update(row, entry, existing);
+    }
+
+    // Only tasks in the destination project can join its sprints, and a task already in a closed sprint
+    // stays there, as it would through the sprint endpoints.
+    private static int? ResolveSprintId(ProjectTask existing, ResolvedTaskRow row, ImportContext context)
+    {
+        var target = context.FindAssignableSprint(row.SprintValue);
+        var current = context.FindSprintById(existing.SprintId);
+        var isInDestinationProject = existing.ProjectId == context.Project.Id;
+        var isLockedInCurrentSprint = current is not null && !context.AcceptsTasks(current);
+        var canMove = target is not null && isInDestinationProject && !isLockedInCurrentSprint;
+
+        return canMove ? target!.Id : existing.SprintId;
+    }
+
+    // Mirrors the sprint endpoints: only an active sprint's membership is tracked, since a planning
+    // sprint's commitment is captured when it starts.
+    private static List<IEventWriteRequest> MembershipEvents(SprintMove move, ImportApplyRequest request)
+    {
+        var events = new List<IEventWriteRequest>();
+        var leftActiveSprint = move.From?.Status == SprintStatus.Active;
+        var joinedActiveSprint = move.To?.Status == SprintStatus.Active;
+
+        if (leftActiveSprint)
+        {
+            events.Add(MemberChange(move, move.From!, SprintMemberChanges.Removed, request));
+        }
+
+        if (joinedActiveSprint)
+        {
+            events.Add(MemberChange(move, move.To!, SprintMemberChanges.Added, request));
+        }
+
+        return events;
+    }
+
+    private static EventWriteRequest<ScopeMemberChangedPayload> MemberChange(
+        SprintMove move,
+        Sprint sprint,
+        string change,
+        ImportApplyRequest request)
+    {
+        var scope = new SprintScope(request.WorkspaceId, sprint.Id, sprint.ProjectId);
+        var member = new SprintMember
+        {
+            TaskId = move.Task.Id,
+            StatusId = move.Task.StatusId,
+            StatusCategory = move.Status.Category.ToString(),
+            EstimateType = move.Task.EstimateType?.ToString(),
+            EstimateValue = move.Task.EstimateValue,
+        };
+        var changed = SprintMemberEvents.Changed(scope, member, change);
+
+        return changed with { ActorUserId = request.UserId };
+    }
+
+    // A sprint created already finished gets the started and completed events the sprint endpoints
+    // would have written, dated to its own schedule, so reporting sees a whole lifecycle. The import
+    // has no record of what was committed, so both carry an empty commitment.
+    private static List<IEventWriteRequest> HistoricalLifecycle(Sprint sprint, ImportApplyRequest request)
+    {
+        var started = LifecycleEvent(sprint, "started", sprint.StartedAt!.Value, request);
+        var completed = LifecycleEvent(sprint, "completed", sprint.CompletedAt!.Value, request);
+
+        return [started, completed];
+    }
+
+    private static EventWriteRequest<ScopeLifecyclePayload> LifecycleEvent(
+        Sprint sprint,
+        string state,
+        DateTime occurredAt,
+        ImportApplyRequest request)
+    {
+        var isCompletion = state == "completed";
+
+        return new EventWriteRequest<ScopeLifecyclePayload>
+        {
+            WorkspaceId = request.WorkspaceId,
+            EventKey = EventKeys.ScopeLifecycleTransitioned,
+            SubjectType = EventEntityTypes.From(EntityType.Sprint),
+            SubjectId = sprint.Id.ToString(),
+            ActorUserId = request.UserId,
+            OccurredAt = occurredAt,
+            Payload = new ScopeLifecyclePayload
+            {
+                State = state,
+                PlannedStart = sprint.StartDate,
+                PlannedEnd = sprint.EndDate,
+                ActualStart = sprint.StartedAt,
+                CompletedAt = isCompletion ? sprint.CompletedAt : null,
+            },
+            References =
+            [
+                new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Scope,
+                    EntityType = EventEntityTypes.From(EntityType.Project),
+                    EntityId = sprint.ProjectId.ToString(),
+                },
+            ],
+        };
     }
 
     private async Task PlaceInBoardGroup(
@@ -409,6 +689,26 @@ public sealed class ImportApplier : IImportApplier
         ImportApplyRequest request,
         CancellationToken cancellationToken)
     {
+        var references = new List<EventReferenceInput>
+        {
+            new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Project),
+                EntityId = context.Project.Id.ToString(),
+            },
+        };
+
+        if (task.SprintId.HasValue)
+        {
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Sprint),
+                EntityId = task.SprintId.Value.ToString(),
+            });
+        }
+
         await EventRecords.Append(new EventWriteRequest<EntityCreatedPayload>
         {
             WorkspaceId = request.WorkspaceId,
@@ -421,16 +721,9 @@ public sealed class ImportApplier : IImportApplier
                 Name = task.Name,
                 StatusId = task.StatusId,
                 StatusCategory = status.Category.ToString(),
+                SprintId = task.SprintId,
             },
-            References =
-            [
-                new EventReferenceInput
-                {
-                    Role = EventReferenceRoles.Scope,
-                    EntityType = EventEntityTypes.From(EntityType.Project),
-                    EntityId = context.Project.Id.ToString(),
-                },
-            ],
+            References = references,
         }, cancellationToken);
     }
 
@@ -510,14 +803,24 @@ public sealed class ImportApplier : IImportApplier
 
         var groups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board!.Id, cancellationToken: cancellationToken);
         var members = await UnitOfWork.Users.GetWorkspaceUsers(request.WorkspaceSlug, true, cancellationToken);
-        var sprints = await UnitOfWork.Sprints.GetAllInWorkspace(workspaceId, cancellationToken: cancellationToken);
+        var workspaceSprints = await UnitOfWork.Sprints.GetAllInWorkspace(
+            workspaceId,
+            isReadonly: true,
+            cancellationToken: cancellationToken);
+        var sprints = workspaceSprints.Where(sprint => sprint.ProjectId == project.Id).ToList();
 
         // Only read when the mapping actually matches against existing rows. Without a dedupe key every
         // row is a create, and pulling the workspace's whole task table in to answer nothing is the
-        // single most expensive thing preview and commit do.
-        var existing = request.Mapping.Dedupe is null
-            ? []
-            : await UnitOfWork.Tasks.GetAllInWorkspace(workspaceId, cancellationToken: cancellationToken);
+        // single most expensive thing preview and commit do. Tracked only when updates can change them;
+        // links just need their ids, and tracking every task makes each save scan them all.
+        var dedupes = request.Mapping.Dedupe is not null;
+        var needsExisting = dedupes || BindsLinks(request.Mapping);
+        var existing = needsExisting
+            ? await UnitOfWork.Tasks.GetAllInWorkspace(
+                workspaceId,
+                isReadonly: !dedupes,
+                cancellationToken: cancellationToken)
+            : [];
 
         var vocabulary = new ImportVocabulary
         {
@@ -537,7 +840,72 @@ public sealed class ImportApplier : IImportApplier
                 .ToDictionary(group => group.Key, group => group.First()),
         };
 
-        return new ImportContext(project, board, vocabulary, statuses, groups, existing);
+        return new ImportContext(project, board, vocabulary, statuses, groups, sprints, existing);
+    }
+
+    private static bool BindsLinks(ImportMappingModel mapping)
+    {
+        return mapping.Bindings.Any(binding => LinkFieldKeys.Contains(binding.FieldKey, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static IEnumerable<ImportRowDiagnostic> MissingLinkTargets(
+        IEnumerable<(int RowNumber, string Reference)> references,
+        HashSet<string> sourceIds,
+        ImportContext context)
+    {
+        foreach (var (rowNumber, reference) in references)
+        {
+            var isKnown = sourceIds.Contains(reference.Trim()) || context.FindExisting(reference) is not null;
+
+            if (isKnown)
+            {
+                continue;
+            }
+
+            yield return new ImportRowDiagnostic
+            {
+                RowNumber = rowNumber,
+                Severity = ImportDiagnosticSeverity.Warning,
+                Code = ImportDiagnosticCodes.UnresolvedLink,
+                Message = Localized.Format(AppText.ImportUnresolvedLink, reference),
+                Value = reference,
+            };
+        }
+    }
+
+    private static void CollectNewSprint(
+        ResolvedTaskRow row,
+        ImportMappingModel mapping,
+        ImportContext context,
+        HashSet<string> newSprints)
+    {
+        var createsSprints = mapping.UnknownPolicy.Sprints == ImportUnknownPolicy.Create;
+        var isNewSprint = !string.IsNullOrWhiteSpace(row.SprintValue) && context.FindSprint(row.SprintValue) is null;
+
+        if (createsSprints && isNewSprint)
+        {
+            newSprints.Add(row.SprintValue!.Trim());
+        }
+    }
+
+    private static void CollectClosedSprint(ResolvedTaskRow row, ImportContext context)
+    {
+        var sprint = context.FindSprint(row.SprintValue);
+        var isClosed = sprint is not null && !context.AcceptsTasks(sprint);
+
+        if (!isClosed)
+        {
+            return;
+        }
+
+        row.Diagnostics.Add(new ImportRowDiagnostic
+        {
+            RowNumber = row.RowNumber,
+            Severity = ImportDiagnosticSeverity.Warning,
+            Code = ImportDiagnosticCodes.UnresolvedSprint,
+            Message = Localized.Format(AppText.ImportSprintClosed, sprint!.Name),
+            Value = row.SprintValue,
+        });
     }
 
     private static Status ResolveStatus(ResolvedTaskRow row, ImportContext context, ImportMappingModel mapping)
@@ -547,6 +915,13 @@ public sealed class ImportApplier : IImportApplier
         if (matched is not null)
         {
             return matched;
+        }
+
+        var byCategory = context.FindStatusInCategory(row.StatusCategoryValue);
+
+        if (byCategory is not null)
+        {
+            return byCategory;
         }
 
         var fallback = context.Vocabulary.FindStatus(mapping.Defaults.StatusKey);
@@ -628,12 +1003,16 @@ public sealed class ImportApplier : IImportApplier
         }
     }
 
-    private static List<ImportNewEntity> BuildNewEntities(HashSet<string> newTags, HashSet<string> newGroups)
+    private static List<ImportNewEntity> BuildNewEntities(
+        HashSet<string> newTags,
+        HashSet<string> newGroups,
+        HashSet<string> newSprints)
     {
         var tags = newTags.Select(name => new ImportNewEntity { EntityType = "tag", Name = name });
         var groups = newGroups.Select(name => new ImportNewEntity { EntityType = "board-group", Name = name });
+        var sprints = newSprints.Select(name => new ImportNewEntity { EntityType = "sprint", Name = name });
 
-        return tags.Concat(groups).ToList();
+        return tags.Concat(groups).Concat(sprints).ToList();
     }
 
     private static ImportRowPreview ToSample(ResolvedTaskRow row, ImportRowAction action)
@@ -657,7 +1036,51 @@ public sealed class ImportApplier : IImportApplier
 
     private sealed record Creation(ResolvedTaskRow Row, ProjectTask Task, Status Status);
 
-    private sealed record Update(ImportSessionEntry Entry, ProjectTask Task);
+    private sealed record Update(ResolvedTaskRow Row, ImportSessionEntry Entry, ProjectTask Task);
+
+    private sealed record SprintMove
+    {
+        public required ProjectTask Task { get; init; }
+
+        public required Status Status { get; init; }
+
+        public Sprint? From { get; init; }
+
+        public Sprint? To { get; init; }
+    }
+
+    private sealed class AppliedRows
+    {
+        public List<int> CreatedTaskIds { get; } = [];
+
+        public List<int> CreatedSprintIds { get; } = [];
+
+        public Dictionary<string, int> TaskIdsBySourceId { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public List<ImportLinks> Links { get; } = [];
+
+        public void Record(ResolvedTaskRow row, int taskId)
+        {
+            if (!string.IsNullOrWhiteSpace(row.SourceId))
+            {
+                TaskIdsBySourceId[row.SourceId.Trim()] = taskId;
+            }
+
+            var links = ImportLinks.From(row);
+
+            if (links.Count > 0)
+            {
+                Links.Add(new ImportLinks { TaskId = taskId, Links = links });
+            }
+        }
+
+        public int? TaskIdFor(string reference)
+        {
+            var found = TaskIdsBySourceId.TryGetValue(reference.Trim(), out var taskId);
+
+            return found ? taskId : null;
+        }
+    }
 
     private sealed class ActionCounts
     {

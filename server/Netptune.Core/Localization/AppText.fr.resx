@@ -1969,4 +1969,61 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="ErrorTaskDescriptionTooLong" xml:space="preserve">
     <value>La description de la tâche ne peut pas dépasser {0} caractères</value>
   </data>
+  <data name="ImportCommentOriginalAuthor" xml:space="preserve">
+    <value>Publié à l’origine par {0}</value>
+  </data>
+  <data name="ImportUnresolvedLink" xml:space="preserve">
+    <value>« {0} » ne figure ni dans cet import ni dans l’espace de travail ; il ne sera donc pas lié</value>
+  </data>
+  <data name="ImportUndoSprintInUse" xml:space="preserve">
+    <value>Le sprint {0} contient des tâches que l’import n’a pas ajoutées ; il a donc été conservé</value>
+  </data>
+  <data name="TransferFieldTaskSprintStartDate" xml:space="preserve">
+    <value>Date de début du sprint</value>
+  </data>
+  <data name="TransferFieldTaskSprintEndDate" xml:space="preserve">
+    <value>Date de fin du sprint</value>
+  </data>
+  <data name="TransferFieldTaskStatusCategory" xml:space="preserve">
+    <value>Catégorie de statut</value>
+  </data>
+  <data name="TransferFieldTaskParent" xml:space="preserve">
+    <value>Parent</value>
+  </data>
+  <data name="TransferFieldTaskBlockedBy" xml:space="preserve">
+    <value>Bloqué par</value>
+  </data>
+  <data name="TransferFieldTaskBlocks" xml:space="preserve">
+    <value>Bloque</value>
+  </data>
+  <data name="TransferFieldTaskRelatedTo" xml:space="preserve">
+    <value>Liée à</value>
+  </data>
+  <data name="TransferFieldTaskDuplicates" xml:space="preserve">
+    <value>Doublon de</value>
+  </data>
+  <data name="TransferFieldTaskComments" xml:space="preserve">
+    <value>Commentaires</value>
+  </data>
+  <data name="ImportProgressImportedRows" xml:space="preserve">
+    <value>{0} lignes importées</value>
+  </data>
+  <data name="ImportProgressLinkingTasks" xml:space="preserve">
+    <value>Liaison des tâches</value>
+  </data>
+  <data name="ImportInvalidSprintDate" xml:space="preserve">
+    <value>« {0} » n’est pas une date ; le sprint utilisera donc les dates par défaut</value>
+  </data>
+  <data name="ImportSprintClosed" xml:space="preserve">
+    <value>Le sprint {0} est clôturé ; les tâches n’y seront donc pas ajoutées</value>
+  </data>
+  <data name="ImportUndoCommentChanged" xml:space="preserve">
+    <value>Le commentaire {0} a été modifié après l’import ; il a donc été conservé</value>
+  </data>
+  <data name="ImportProgressComplete" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="ImportProgressFailed" xml:space="preserve">
+    <value>Échec</value>
+  </data>
 </root>
