@@ -210,6 +210,8 @@ public sealed class CompleteSourceControlConnectCommandHandler
         connection.GrantedCapabilities = result.GrantedCapabilities;
         connection.CredentialKind = result.CredentialKind;
         connection.Credential = result.ProtectedCredential;
+        connection.CredentialHint = result.CredentialHint;
+        connection.CredentialExpiresAt = result.CredentialExpiresAt;
         connection.ModifiedByUserId = userId;
 
         return connection;

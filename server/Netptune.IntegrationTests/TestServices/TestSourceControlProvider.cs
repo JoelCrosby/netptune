@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -19,9 +20,15 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
 
     public const string ChooseParameter = "choose";
 
+    public const string CredentialHintParameter = "credentialHint";
+
+    public const string CredentialExpiresAtParameter = "credentialExpiresAt";
+
     public const string InstallUrl = "https://scm.test/install";
 
     public SourceControlProvider Provider => SourceControlProvider.GitLab;
+
+    public ScmConnectMethod ConnectMethod => ScmConnectMethod.Redirect;
 
     public const string HeadSha = "1111111111111111111111111111111111111111";
     public const string ReadmeText = "# Test repository\nHello from the test provider.\n";
@@ -313,9 +320,11 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
 
     private sealed class TestConnector : ISourceControlConnector
     {
-        public ScmConnectStart BeginConnect(ScmConnectRequest request)
+        public ClientResponse<ScmConnectStart> BeginConnect(ScmConnectRequest request)
         {
-            return new ScmConnectStart($"https://scm.test/connect?workspace={request.WorkspaceId}");
+            var start = new ScmConnectStart($"https://scm.test/connect?workspace={request.WorkspaceId}");
+
+            return ClientResponse<ScmConnectStart>.Success(start);
         }
 
         public ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(
@@ -347,12 +356,26 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 ExternalAccountId = account,
                 Account = ToAccount(account),
                 CredentialKind = ScmCredentialKind.PersonalAccessToken,
+                CredentialHint = callback.Parameters.GetValueOrDefault(CredentialHintParameter),
+                CredentialExpiresAt = ReadCredentialExpiry(callback.Parameters),
                 GrantedCapabilities = Granted,
             };
 
             var connected = ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Connected(result));
 
             return ValueTask.FromResult(connected);
+        }
+
+        private static DateTime? ReadCredentialExpiry(IReadOnlyDictionary<string, string> parameters)
+        {
+            var expiresAt = parameters.GetValueOrDefault(CredentialExpiresAtParameter);
+
+            if (expiresAt is null)
+            {
+                return null;
+            }
+
+            return DateTime.Parse(expiresAt, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
         }
 
         private static ScmConnectChoice CreateChoice(IEnumerable<string> accounts)

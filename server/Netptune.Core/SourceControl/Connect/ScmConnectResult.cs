@@ -10,5 +10,9 @@ public sealed record ScmConnectResult
 
     public byte[]? ProtectedCredential { get; init; }
 
+    public string? CredentialHint { get; init; }
+
+    public DateTime? CredentialExpiresAt { get; init; }
+
     public SourceControlCapabilities GrantedCapabilities { get; init; }
 }

@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using FluentAssertions;
 
@@ -44,6 +46,19 @@ public sealed class SourceControlEndpointTests
         provider.Provider.Should().Be(SourceControlProvider.GitLab);
         provider.Terminology.PullRequest.Should().Be("Merge request");
         provider.Capabilities.Should().Contain("listRepositories");
+    }
+
+    [Fact]
+    public async Task Providers_ShouldSayHowEachProviderConnects()
+    {
+        var json = await Client.GetStringAsync("api/source-control/providers", TestContext.Current.CancellationToken);
+
+        using var document = JsonDocument.Parse(json);
+
+        var provider = document.RootElement.EnumerateArray().Single();
+        var connectMethod = provider.GetProperty("connectMethod").GetInt32();
+
+        connectMethod.Should().Be((int)ScmConnectMethod.Redirect);
     }
 
     [Fact]
@@ -100,6 +115,37 @@ public sealed class SourceControlEndpointTests
 
         second.Id.Should().Be(first.Id);
         connections.Count(connection => connection.AccountLogin == account).Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Connect_ShouldStoreTheCredentialHintAndExpiryTheProviderReturns()
+    {
+        var account = UniqueAccount();
+        var expiresAt = new DateTime(2027, 3, 31, 23, 59, 59, DateTimeKind.Utc);
+
+        var connection = await Connect(account, CredentialParameters("abcd", expiresAt));
+        var stored = await GetStoredConnection(connection.Id);
+
+        stored.CredentialHint.Should().Be("abcd");
+        stored.CredentialExpiresAt.Should().Be(expiresAt);
+    }
+
+    [Fact]
+    public async Task Connect_ShouldReplaceTheCredentialHintAndExpiryWhenTheSameAccountReconnects()
+    {
+        var account = UniqueAccount();
+        var firstExpiry = new DateTime(2027, 3, 31, 23, 59, 59, DateTimeKind.Utc);
+        var secondExpiry = new DateTime(2027, 9, 30, 23, 59, 59, DateTimeKind.Utc);
+
+        var first = await Connect(account, CredentialParameters("abcd", firstExpiry));
+        var second = await Connect(account, CredentialParameters("wxyz", secondExpiry));
+        var stored = await GetStoredConnection(second.Id);
+        var connections = await GetConnections();
+
+        second.Id.Should().Be(first.Id);
+        stored.CredentialHint.Should().Be("wxyz");
+        stored.CredentialExpiresAt.Should().Be(secondExpiry);
+        connections.Count(listed => listed.AccountLogin == account).Should().Be(1);
     }
 
     [Fact]
@@ -435,16 +481,22 @@ public sealed class SourceControlEndpointTests
         return Fixture.CreateNetptuneClientAs(ownerEmail!, slug);
     }
 
-    private async Task<HttpResponseMessage> PostComplete(string account, string code = "ok", HttpClient? client = null)
+    private async Task<HttpResponseMessage> PostComplete(
+        string account,
+        string code = "ok",
+        HttpClient? client = null,
+        Dictionary<string, string>? extraParameters = null)
     {
+        var parameters = new Dictionary<string, string>(extraParameters ?? [])
+        {
+            ["account"] = account,
+            ["code"] = code,
+        };
+
         var request = new CompleteSourceControlConnectRequest
         {
             Provider = SourceControlProvider.GitLab,
-            Parameters = new Dictionary<string, string>
-            {
-                ["account"] = account,
-                ["code"] = code,
-            },
+            Parameters = parameters,
         };
 
         var response = await (client ?? Client).PostAsJsonAsync(
@@ -455,15 +507,44 @@ public sealed class SourceControlEndpointTests
         return response;
     }
 
-    private async Task<SourceControlConnectionViewModel> Connect(string account, HttpClient? client = null)
+    private Task<SourceControlConnectionViewModel> Connect(string account, HttpClient? client = null)
     {
-        var response = await PostComplete(account, client: client);
+        return Connect(account, null, client);
+    }
+
+    private async Task<SourceControlConnectionViewModel> Connect(
+        string account,
+        Dictionary<string, string>? extraParameters,
+        HttpClient? client = null)
+    {
+        var response = await PostComplete(account, client: client, extraParameters: extraParameters);
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(
             TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, result.Message);
 
         return result.Payload!.Connection!;
+    }
+
+    private static Dictionary<string, string> CredentialParameters(string hint, DateTime expiresAt)
+    {
+        return new Dictionary<string, string>
+        {
+            [TestSourceControlProvider.CredentialHintParameter] = hint,
+            [TestSourceControlProvider.CredentialExpiresAtParameter] = expiresAt.ToString("O", CultureInfo.InvariantCulture),
+        };
+    }
+
+    private async Task<SourceControlConnection> GetStoredConnection(int connectionId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var connection = await context.SourceControlConnections
+            .AsNoTracking()
+            .SingleAsync(stored => stored.Id == connectionId, TestContext.Current.CancellationToken);
+
+        return connection;
     }
 
     private async Task<List<SourceControlConnectionViewModel>> GetConnections()

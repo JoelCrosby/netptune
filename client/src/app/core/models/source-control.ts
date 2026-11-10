@@ -6,6 +6,11 @@ export enum SourceControlProvider {
   gitLab = 2,
 }
 
+export enum ScmConnectMethod {
+  redirect = 0,
+  token = 1,
+}
+
 export enum ScmAccountType {
   organisation = 0,
   user = 1,
@@ -38,6 +43,7 @@ export interface ScmTerminology {
 
 export interface SourceControlProviderInfo {
   provider: SourceControlProvider;
+  connectMethod: ScmConnectMethod;
   terminology: ScmTerminology;
   capabilities: SourceControlCapability[];
 }

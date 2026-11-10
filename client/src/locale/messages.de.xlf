@@ -290,7 +290,7 @@
     </unit>
     <unit id="1854716882241348864">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:69</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:70</note>
         <note category="description">Summary of a workspace setup step whose current state could not be loaded</note>
       </notes>
       <segment state="initial">
@@ -700,6 +700,7 @@
     </unit>
     <unit id="8195124744855652290">
       <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:139</note>
         <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:230</note>
         <note category="description">Fallback when completing a source control connection fails</note>
       </notes>
@@ -1232,8 +1233,8 @@
     </unit>
     <unit id="4393935842883042759">
       <notes>
-        <note category="location">src/app/core/services/source-control-commands.service.ts:68</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:115</note>
+        <note category="location">src/app/core/services/source-control-commands.service.ts:90</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:120</note>
         <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:128</note>
         <note category="description">Shown when starting a source control connection fails</note>
       </notes>
@@ -2464,7 +2465,7 @@
     </unit>
     <unit id="7730041991995170578">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:196</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:223</note>
         <note category="description">Shown after a source control account is disconnected</note>
       </notes>
       <segment state="initial">
@@ -2646,7 +2647,7 @@
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:142</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:214</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:32</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:180</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:207</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
@@ -2656,6 +2657,7 @@
         <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:23</note>
         <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:375</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:67,70</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:227</note>
         <note category="description">Dismisses a dialog without acting</note>
@@ -2871,7 +2873,7 @@
     </unit>
     <unit id="1278052966909515685">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:55</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:56</note>
         <note category="description">Description of the repository step</note>
       </notes>
       <segment state="translated">
@@ -3281,7 +3283,7 @@
     <unit id="8636583097856189837">
       <notes>
         <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:94,96</note>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:95,97</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:96,98</note>
         <note category="description">Accessible label of the create workspace steps list</note>
       </notes>
       <segment state="translated">
@@ -3370,7 +3372,7 @@
     </unit>
     <unit id="5495168454905214621">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/export-wizard.service.ts:84</note>
+        <note category="location">src/app/features/data-transfer/services/export-wizard.service.ts:86</note>
         <note category="description">Explains why an export cannot leave the field step</note>
       </notes>
       <segment state="initial">
@@ -4604,6 +4606,16 @@
       <segment state="initial">
         <source>No estimate</source>
         <target>Keine Schätzung</target>
+      </segment>
+    </unit>
+    <unit id="4500000909421273576">
+      <notes>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:29</note>
+        <note category="description">Validation error when the expiry date of an access token has already passed</note>
+      </notes>
+      <segment state="initial">
+        <source>The expiry date has already passed.</source>
+        <target>Das Ablaufdatum ist bereits verstrichen.</target>
       </segment>
     </unit>
     <unit id="4501389782873056968">
@@ -5852,6 +5864,16 @@
         <target>Kein Status</target>
       </segment>
     </unit>
+    <unit id="7818798991847790282">
+      <notes>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:88</note>
+        <note category="description">Label of the optional field for the date an access token expires</note>
+      </notes>
+      <segment state="initial">
+        <source>Expiry date</source>
+        <target>Ablaufdatum</target>
+      </segment>
+    </unit>
     <unit id="7819314041543176992">
       <notes>
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:334,337</note>
@@ -6417,7 +6439,7 @@
     </unit>
     <unit id="8721973032922842150">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:54</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:55</note>
         <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:74</note>
         <note category="description">Title of the repository step</note>
       </notes>
@@ -7851,7 +7873,7 @@
     <unit id="5896927379604759167">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:107,110</note>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:383</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:388</note>
         <note category="description">Shown when no provider key is stored</note>
       </notes>
       <segment state="translated">
@@ -8052,7 +8074,7 @@
     <unit id="6307174276781140101">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:90,92</note>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:53</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:54</note>
         <note category="description">Label for the repository URL in the creation summary</note>
       </notes>
       <segment state="translated">
@@ -8084,6 +8106,7 @@
     <unit id="813263746069473514">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:149</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:66,68</note>
         <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:94,100</note>
         <note category="description">Button that connects web search</note>
       </notes>
@@ -8261,7 +8284,7 @@
     </unit>
     <unit id="9143363282559183905">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:410</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:415</note>
         <note category="description">Summary when the workspace has no AI key</note>
       </notes>
       <segment state="translated">
@@ -10220,6 +10243,16 @@
         <target> Aktualisiert <ph id="0" equiv="TIME" disp="{{ workspace().updatedAt | fromNow // i18n(ph=&quot;TIME&quot;) }}"/> </target>
       </segment>
     </unit>
+    <unit id="6319862504074456118">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:57,59</note>
+        <note category="description">Label of the field for an Azure DevOps personal access token</note>
+      </notes>
+      <segment state="initial">
+        <source>Personal access token</source>
+        <target>Persönliches Zugriffstoken</target>
+      </segment>
+    </unit>
     <unit id="1287089777017082490">
       <notes>
         <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:127,131</note>
@@ -10602,7 +10635,7 @@
     </unit>
     <unit id="3724068243287682962">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:63</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:64</note>
         <note category="description">Name of the team step in the back and next buttons</note>
       </notes>
       <segment state="translated">
@@ -13066,12 +13099,13 @@
     </unit>
     <unit id="5981012101929159464">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:61,62</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:44</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:66,67</note>
         <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:106,107</note>
-        <note category="description">Button that connects a source control provider</note>
+        <note category="description">Title of the dialog that connects a source control provider with a token</note>
       </notes>
       <segment state="initial">
-        <source>Connect <ph id="0" equiv="INTERPOLATION" disp="{{ providerName(provider) }}"/></source>
+        <source>Connect <ph id="0" equiv="INTERPOLATION" disp="{{ providerName }}"/></source>
         <target><ph id="0" equiv="INTERPOLATION" disp="{{ providerName(provider) }}"/> verbinden</target>
       </segment>
     </unit>
@@ -13766,7 +13800,7 @@
     </unit>
     <unit id="6918904936423737084">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:102,107</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:103,108</note>
         <note category="description">Button that leaves setup and opens the new workspace</note>
       </notes>
       <segment state="translated">
@@ -13932,7 +13966,7 @@
     </unit>
     <unit id="8666638429357399299">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:419</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:424</note>
         <note category="description">Summary of a stored AI key. PROVIDER is its name, HINT its last characters</note>
       </notes>
       <segment state="translated">
@@ -14478,7 +14512,7 @@
     </unit>
     <unit id="2642466038653346310">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:177</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:204</note>
         <note category="description">Title of the disconnect source control confirmation</note>
       </notes>
       <segment state="initial">
@@ -15282,6 +15316,16 @@
       <segment>
         <source> Re-read the file </source>
         <target> Datei erneut lesen </target>
+      </segment>
+    </unit>
+    <unit id="1593487004300420140">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:52,54</note>
+        <note category="description">Label of the field for the Azure DevOps organisation to connect</note>
+      </notes>
+      <segment state="initial">
+        <source>Organisation</source>
+        <target>Organisation</target>
       </segment>
     </unit>
     <unit id="1597412352196195331">
@@ -16159,7 +16203,7 @@
     </unit>
     <unit id="1845360736323199797">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:434</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:439</note>
         <note category="description">Summary when nobody has been invited to the workspace</note>
       </notes>
       <segment state="translated">
@@ -17216,7 +17260,7 @@
     </unit>
     <unit id="7614983501706369438">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:89,91</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:94,96</note>
         <note category="description">Explains who can enable source control providers</note>
       </notes>
       <segment state="initial">
@@ -17623,7 +17667,7 @@
     </unit>
     <unit id="2892430249366351671">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:60</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:61</note>
         <note category="description">Description of the AI assistant key step</note>
       </notes>
       <segment state="translated">
@@ -17783,7 +17827,7 @@
     </unit>
     <unit id="8004272395740026008">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:443</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:448</note>
         <note category="description">Summary when one person has been invited</note>
       </notes>
       <segment state="translated">
@@ -18217,6 +18261,16 @@
         <target>Aufgabe „<ph id="0" equiv="NAME" disp="name"/>“ erstellen</target>
       </segment>
     </unit>
+    <unit id="5844317599157264798">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:61,63</note>
+        <note category="description">Hint under the optional expiry date of a source control access token</note>
+      </notes>
+      <segment state="initial">
+        <source>Shown on the connection so you know when to replace it</source>
+        <target>Wird an der Verbindung angezeigt, damit Sie wissen, wann es ersetzt werden muss</target>
+      </segment>
+    </unit>
     <unit id="5845168339632458508">
       <notes>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:224</note>
@@ -18532,7 +18586,7 @@
     </unit>
     <unit id="6989103981760158096">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:395</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:400</note>
         <note category="description">Summary of a connected account and its linked repositories. ACCOUNT is its name, COUNT how many are linked</note>
       </notes>
       <segment state="translated">
@@ -19648,7 +19702,7 @@
     </unit>
     <unit id="9007078948220384866">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:203</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:230</note>
         <note category="description">Shown when disconnecting a source control account fails</note>
       </notes>
       <segment state="initial">
@@ -19840,7 +19894,7 @@
     </unit>
     <unit id="1077462869426882196">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:301</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:306</note>
         <note category="description">Position of the open step in workspace setup. STEP is its number, TOTAL the number of steps</note>
       </notes>
       <segment state="translated">
@@ -20031,6 +20085,16 @@
       <segment state="translated">
         <source>Automation enabled</source>
         <target>Automatisierung aktiviert</target>
+      </segment>
+    </unit>
+    <unit id="1612675124578229059">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:86,88</note>
+        <note category="description">Azure DevOps token scope for reading pipelines</note>
+      </notes>
+      <segment state="initial">
+        <source> Build (read) </source>
+        <target> Build (Lesen) </target>
       </segment>
     </unit>
     <unit id="5810814854864452102">
@@ -20863,6 +20927,16 @@
         <target>Zu den Assistenten-Unterhaltungen</target>
       </segment>
     </unit>
+    <unit id="1417693714872528491">
+      <notes>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:28</note>
+        <note category="description">Validation error when a required field of the access token form is empty</note>
+      </notes>
+      <segment state="initial">
+        <source>This field is required.</source>
+        <target>Dieses Feld ist erforderlich.</target>
+      </segment>
+    </unit>
     <unit id="4030757567682873742">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-planning-month/calendar-planning-month.component.ts:167</note>
@@ -21116,7 +21190,7 @@
     </unit>
     <unit id="6429537437237628039">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:65</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:66</note>
         <note category="description">Description of the invite teammates step</note>
       </notes>
       <segment state="translated">
@@ -22031,7 +22105,7 @@
     </unit>
     <unit id="6661267148539225484">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:49</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:50</note>
         <note category="description">Reassures that a workspace setup step can wait</note>
       </notes>
       <segment state="translated">
@@ -22213,6 +22287,7 @@
     <unit id="7593555694782789615">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:190</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:116,120</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:151</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:68</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes.component.ts:58,59</note>
@@ -23493,6 +23568,16 @@
       <segment state="translated">
         <source>Sprint remaining work and ideal burndown</source>
         <target>Verbleibende Sprint-Arbeit und idealer Burndown</target>
+      </segment>
+    </unit>
+    <unit id="3187502498792818660">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:97,101</note>
+        <note category="description">Explains that an Azure DevOps token must belong to one organisation</note>
+      </notes>
+      <segment state="initial">
+        <source> Scope the token to this one organisation, not to all accessible organisations. </source>
+        <target> Beschränken Sie das Token auf genau diese Organisation, nicht auf alle zugänglichen Organisationen. </target>
       </segment>
     </unit>
     <unit id="318764327084091382">
@@ -25050,6 +25135,16 @@
         <target>Roadmap-Zoom</target>
       </segment>
     </unit>
+    <unit id="2430369261275419556">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:89,93</note>
+        <note category="description">Azure DevOps token scope for reading projects and teams</note>
+      </notes>
+      <segment state="initial">
+        <source> Project and Team (read) </source>
+        <target> Projekt und Team (Lesen) </target>
+      </segment>
+    </unit>
     <unit id="2431779726507487762">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:85,87</note>
@@ -25510,7 +25605,7 @@
     </unit>
     <unit id="8235282277653107812">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:93,94</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:94,95</note>
         <note category="location">src/app/workspace.routes.ts:38</note>
         <note category="description">Eyebrow above the name of a workspace being set up</note>
       </notes>
@@ -25927,7 +26022,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:173</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:31,33</note>
         <note category="location">src/app/features/settings/views/workspace-assistant-view/workspace-assistant-view.component.ts:52,54</note>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:58</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:59</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:151,154</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:157,159</note>
@@ -26777,6 +26872,16 @@
       <segment state="translated">
         <source>Writing the reply…</source>
         <target>Antwort wird geschrieben…</target>
+      </segment>
+    </unit>
+    <unit id="290429681863961318">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:80,82</note>
+        <note category="description">Azure DevOps token scope for reading repositories</note>
+      </notes>
+      <segment state="initial">
+        <source> Code (read) </source>
+        <target> Code (Lesen) </target>
       </segment>
     </unit>
     <unit id="4584368643492582099">
@@ -28512,7 +28617,7 @@
     </unit>
     <unit id="5602212197098670157">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:76,78</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:81,83</note>
         <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:40,43</note>
         <note category="description">Shown when the source control settings cannot be loaded</note>
       </notes>
@@ -29726,7 +29831,7 @@
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:179</note>
         <note category="location">src/app/features/settings/settings.routes.ts:180</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:50,52</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:55,57</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:397</note>
         <note category="description">Breadcrumb for the workspace source control settings</note>
       </notes>
@@ -30324,7 +30429,7 @@
     </unit>
     <unit id="1310029489717814435">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:444</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:449</note>
         <note category="description">Summary of how many people have been invited. COUNT is that number</note>
       </notes>
       <segment state="translated">
@@ -30523,7 +30628,7 @@
     </unit>
     <unit id="5808520175871059661">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:59</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:60</note>
         <note category="description">Title of the AI assistant key step</note>
       </notes>
       <segment state="translated">
@@ -30889,7 +30994,7 @@
     </unit>
     <unit id="8695890183670129333">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:124,126</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:125,127</note>
         <note category="description">Confirms the workspace exists and the remaining steps can be skipped. NAME is the workspace name</note>
       </notes>
       <segment state="initial">
@@ -32434,7 +32539,7 @@
     </unit>
     <unit id="7543358363832842069">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:85,87</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:90,92</note>
         <note category="description">Shown when no source control provider is configured on the server</note>
       </notes>
       <segment state="initial">
@@ -32470,6 +32575,16 @@
       <segment state="initial">
         <source>select</source>
         <target>Auswahl</target>
+      </segment>
+    </unit>
+    <unit id="7983381297360999047">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:76,79</note>
+        <note category="description">Introduces the Azure DevOps scopes a personal access token needs</note>
+      </notes>
+      <segment state="initial">
+        <source> Create the token with these scopes: </source>
+        <target> Erstellen Sie das Token mit diesen Bereichen: </target>
       </segment>
     </unit>
     <unit id="7984088154288778834">
@@ -32788,7 +32903,7 @@
     </unit>
     <unit id="5087255234379846922">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:178</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:205</note>
         <note category="description">Explains what disconnecting a source control account does</note>
       </notes>
       <segment state="initial">
@@ -32855,6 +32970,16 @@
       <segment state="translated">
         <source>Copied</source>
         <target>Kopiert</target>
+      </segment>
+    </unit>
+    <unit id="2115913605779119787">
+      <notes>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:85</note>
+        <note category="description">Label of the field for an access token used to connect another service</note>
+      </notes>
+      <segment state="initial">
+        <source>Access token</source>
+        <target>Zugriffstoken</target>
       </segment>
     </unit>
     <unit id="2116113218403836033">
@@ -33265,6 +33390,16 @@
         <target>Sie folgen noch keinem Ort.</target>
       </segment>
     </unit>
+    <unit id="2602391712649193774">
+      <notes>
+        <note category="location">src/app/core/services/source-control-commands.service.ts:91</note>
+        <note category="description">Shown when finishing a source control connection fails</note>
+      </notes>
+      <segment state="initial">
+        <source>The connection could not be completed.</source>
+        <target>Die Verbindung konnte nicht abgeschlossen werden.</target>
+      </segment>
+    </unit>
     <unit id="2606613809220503712">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:41</note>
@@ -33483,7 +33618,7 @@
     </unit>
     <unit id="1357016527933073189">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:64</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:65</note>
         <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:86</note>
         <note category="description">Title of the invite teammates step</note>
       </notes>
@@ -33706,6 +33841,16 @@
         <target>Abmelden</target>
       </segment>
     </unit>
+    <unit id="3402416728329434286">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:83,85</note>
+        <note category="description">Azure DevOps token scope for reading work items</note>
+      </notes>
+      <segment state="initial">
+        <source> Work Items (read) </source>
+        <target> Arbeitselemente (Lesen) </target>
+      </segment>
+    </unit>
     <unit id="3407056172872902855">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:146,148</note>
@@ -33738,7 +33883,7 @@
     </unit>
     <unit id="7133842847032503421">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:394</note>
+        <note category="location">src/app/features/workspaces/views/workspace-setup-view/workspace-setup-view.component.ts:399</note>
         <note category="description">Summary of a connected account with one linked repository. ACCOUNT is its name</note>
       </notes>
       <segment state="translated">
@@ -34610,6 +34755,16 @@
         <target>Formularfortschritt</target>
       </segment>
     </unit>
+    <unit id="4871199974635323816">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:106,110</note>
+        <note category="description">Introduces the address where Azure DevOps tokens are created</note>
+      </notes>
+      <segment state="initial">
+        <source>Create it at</source>
+        <target>Erstellen Sie es unter</target>
+      </segment>
+    </unit>
     <unit id="4020116938479649149">
       <notes>
         <note category="location">src/app/static/components/table/table.component.ts:78,89</note>
@@ -34654,7 +34809,7 @@
     <unit id="2907016025519254862">
       <notes>
         <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:82,85</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:179</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:206</note>
         <note category="description">Button that removes a source control connection</note>
       </notes>
       <segment state="initial">

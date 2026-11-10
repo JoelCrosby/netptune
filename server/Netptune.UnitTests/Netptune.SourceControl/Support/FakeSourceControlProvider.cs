@@ -11,6 +11,8 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
 {
     public SourceControlProvider Provider { get; }
 
+    public ScmConnectMethod ConnectMethod => ScmConnectMethod.Redirect;
+
     public SourceControlCapabilities Capabilities =>
         SourceControlCapabilities.ListRepositories | SourceControlCapabilities.Webhooks;
 
@@ -39,9 +41,9 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
     {
         public int TokenRequests { get; private set; }
 
-        public ScmConnectStart BeginConnect(ScmConnectRequest request)
+        public ClientResponse<ScmConnectStart> BeginConnect(ScmConnectRequest request)
         {
-            return new ScmConnectStart("https://fake.example/connect");
+            return ClientResponse<ScmConnectStart>.Success(new ScmConnectStart("https://fake.example/connect"));
         }
 
         public ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(

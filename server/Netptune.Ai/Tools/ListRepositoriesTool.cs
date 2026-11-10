@@ -43,7 +43,7 @@ public sealed class ListRepositoriesTool : IAiTool
 
         if (repositories.Count == 0)
         {
-            return AiToolExecution.Success("No repositories are linked to this workspace.");
+            return AiToolExecution.Success("No readable repositories are linked to this workspace.");
         }
 
         var rows = repositories.Select(repository => new

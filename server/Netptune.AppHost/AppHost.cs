@@ -2,6 +2,8 @@
 
 using Netptune.AppHost;
 
+const string AzureDevOpsEnabledKey = "SourceControl__Providers__AzureDevOps__Enabled";
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var cache = builder
@@ -39,7 +41,8 @@ var jobs = builder
     .WithPostgres(postgresdb)
     .WithNats(nats)
     .WaitFor(meilisearch)
-    .WithReference(meilisearch);
+    .WithReference(meilisearch)
+    .WithEnvironment(AzureDevOpsEnabledKey, "true");
 
 var activity = builder
     .AddNetptuneProject<Projects.Netptune_ActivityServer>("activity")
@@ -57,6 +60,7 @@ var app = builder
     .WithNats(nats)
     .WaitFor(meilisearch)
     .WithReference(meilisearch)
+    .WithEnvironment(AzureDevOpsEnabledKey, "true")
     .WithExternalHttpEndpoints();
 
 var api = builder

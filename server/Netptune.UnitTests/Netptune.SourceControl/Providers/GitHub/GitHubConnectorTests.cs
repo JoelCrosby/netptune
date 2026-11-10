@@ -143,7 +143,7 @@ public sealed class GitHubConnectorTests : IDisposable
     [Fact]
     public void BeginConnect_ShouldSendTheBrowserToUserAuthorisationWithSignedState()
     {
-        var start = Harness.Connector.BeginConnect(new ScmConnectRequest(WorkspaceId, UserId));
+        var start = Harness.Connector.BeginConnect(new ScmConnectRequest(WorkspaceId, UserId)).Payload!;
 
         var redirect = new Uri(start.RedirectUrl);
         var query = ParseQuery(redirect);

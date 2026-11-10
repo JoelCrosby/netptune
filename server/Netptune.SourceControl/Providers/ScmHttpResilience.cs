@@ -5,12 +5,12 @@ using Microsoft.Extensions.Http.Resilience;
 using Polly;
 using Polly.Timeout;
 
-namespace Netptune.SourceControl.Providers.GitHub;
+namespace Netptune.SourceControl.Providers;
 
 // The service defaults retry 429s, honour Retry-After past their own total timeout, and share one
-// circuit breaker across every installation. GitHub's limits are per installation and reported to
-// the caller instead, so only idempotent requests are retried, and only for transient failures.
-internal static class GitHubResilience
+// circuit breaker across every connection. Provider limits are per installation or per user and are
+// reported to the caller instead, so only idempotent requests are retried, and only for transient failures.
+internal static class ScmHttpResilience
 {
     private const int MaxRetryAttempts = 2;
 

@@ -5,7 +5,7 @@ namespace Netptune.Core.SourceControl;
 
 public interface ISourceControlConnector
 {
-    ScmConnectStart BeginConnect(ScmConnectRequest request);
+    ClientResponse<ScmConnectStart> BeginConnect(ScmConnectRequest request);
 
     ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(ScmConnectCallback callback, CancellationToken cancellationToken);
 

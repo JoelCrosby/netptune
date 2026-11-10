@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
+  ScmConnectMethod,
   SourceControlConnection,
   SourceControlProviderInfo,
   sourceControlProviderNames,
@@ -17,6 +18,10 @@ import {
   SourceControlReposDialogComponent,
   SourceControlReposDialogData,
 } from '@settings/components/source-control/source-control-repos-dialog.component';
+import {
+  SourceControlTokenDialogComponent,
+  SourceControlTokenDialogData,
+} from '@settings/components/source-control/source-control-token-dialog.component';
 import { sourceControlProvidersResource } from '@core/resources/source-control.resource';
 import { sourceControlConnectionsResource } from '@core/resources/source-control.resource';
 import { SourceControlCommandsService } from '@core/services/source-control-commands.service';
@@ -152,6 +157,12 @@ export class WorkspaceSourceControlViewComponent {
   }
 
   protected beginConnect(provider: SourceControlProviderInfo) {
+    if (provider.connectMethod === ScmConnectMethod.token) {
+      void this.connectWithToken(provider);
+
+      return;
+    }
+
     const workspace = this.currentWorkspace.slug();
 
     if (!workspace) {
@@ -162,6 +173,22 @@ export class WorkspaceSourceControlViewComponent {
       this.commands.beginConnect({ workspace, provider: provider.provider }),
       { onError: (message) => this.snackbar.error(message) }
     );
+  }
+
+  private async connectWithToken(provider: SourceControlProviderInfo) {
+    const connection = await this.dialog.openForResult<
+      SourceControlConnection,
+      SourceControlTokenDialogData
+    >(SourceControlTokenDialogComponent, {
+      width: '520px',
+      data: { provider: provider.provider },
+    });
+
+    if (!connection) {
+      return;
+    }
+
+    this.openRepos(connection);
   }
 
   protected openRepos(connection: SourceControlConnection) {

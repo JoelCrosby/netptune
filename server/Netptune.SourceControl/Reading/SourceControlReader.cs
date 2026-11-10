@@ -49,7 +49,7 @@ internal sealed partial class SourceControlReader : ISourceControlReader
         var projectUrls = await UnitOfWork.Projects.GetRepositoryUrls(workspaceId, cancellationToken);
 
         var readable = repos
-            .Where(repo => Registry.IsEnabled(repo.Connection.Provider))
+            .Where(CanReadCommits)
             .Select(repo => new ScmReadableRepository
             {
                 FullName = repo.FullName,
@@ -65,6 +65,14 @@ internal sealed partial class SourceControlReader : ISourceControlReader
             .ToList();
 
         return readable;
+    }
+
+    private bool CanReadCommits(SourceControlRepo repo)
+    {
+        var connection = repo.Connection.ToScmConnection();
+        var capabilities = Registry.GetEffectiveCapabilities(connection);
+
+        return capabilities.HasFlag(SourceControlCapabilities.ReadCommits);
     }
 
     public Task<ClientResponse<ScmRepositoryFiles>> ListFiles(

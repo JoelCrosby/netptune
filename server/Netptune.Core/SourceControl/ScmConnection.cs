@@ -12,6 +12,8 @@ public sealed record ScmConnection
 
     public required string ExternalAccountId { get; init; }
 
+    public string AccountLogin { get; init; } = string.Empty;
+
     public ScmConnectionStatus Status { get; init; }
 
     public SourceControlCapabilities GrantedCapabilities { get; init; }
@@ -19,6 +21,8 @@ public sealed record ScmConnection
     public ScmCredentialKind CredentialKind { get; init; }
 
     public byte[]? ProtectedCredential { get; init; }
+
+    public DateTime? CredentialExpiresAt { get; init; }
 
     public byte[]? ProtectedWebhookSecret { get; init; }
 }

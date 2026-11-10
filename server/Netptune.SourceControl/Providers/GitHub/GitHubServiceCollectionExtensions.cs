@@ -32,7 +32,7 @@ internal static class GitHubServiceCollectionExtensions
 #pragma warning disable EXTEXP0001
         services.AddHttpClient(GitHubApi.ClientName)
             .RemoveAllResilienceHandlers()
-            .AddResilienceHandler(GitHubApi.ClientName, GitHubResilience.Configure);
+            .AddResilienceHandler(GitHubApi.ClientName, ScmHttpResilience.Configure);
 #pragma warning restore EXTEXP0001
 
         services.AddSingleton<GitHubApi>();

@@ -3559,6 +3559,69 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Netptune could not check that this token belongs to a Project Collection Administrator, because Azure DevOps refused to show the organisation&apos;s permissions to it. The organisation was not connected..
+        /// </summary>
+        public static string ErrorAzureDevOpsAdminCheckUnavailable {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsAdminCheckUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The expiry date must be a valid date that hasn&apos;t passed yet..
+        /// </summary>
+        public static string ErrorAzureDevOpsExpiryInvalid {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsExpiryInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only a Project Collection Administrator of the Azure DevOps organisation can connect it. Use a token created by an administrator..
+        /// </summary>
+        public static string ErrorAzureDevOpsNotAdministrator {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsNotAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps could not find an organisation named {0}..
+        /// </summary>
+        public static string ErrorAzureDevOpsOrganisationNotFound {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsOrganisationNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the Azure DevOps organisation&apos;s name or address, such as https://dev.azure.com/your-org..
+        /// </summary>
+        public static string ErrorAzureDevOpsOrganisationNotRecognised {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsOrganisationNotRecognised", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps rejected the personal access token. Check that it hasn&apos;t expired and that it&apos;s scoped to this organisation..
+        /// </summary>
+        public static string ErrorAzureDevOpsTokenRejected {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsTokenRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a personal access token..
+        /// </summary>
+        public static string ErrorAzureDevOpsTokenRequired {
+            get {
+                return ResourceManager.GetString("ErrorAzureDevOpsTokenRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Board group “{0}” belongs to a different project..
         /// </summary>
         public static string ErrorBoardGroupBelongsDifferentProject {
@@ -4518,6 +4581,15 @@ namespace Netptune.Core.Localization {
         public static string ErrorProjectWithIdNotFound {
             get {
                 return ResourceManager.GetString("ErrorProjectWithIdNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} connects with a personal access token, not a sign-in redirect..
+        /// </summary>
+        public static string ErrorProviderConnectsWithToken {
+            get {
+                return ResourceManager.GetString("ErrorProviderConnectsWithToken", resourceCulture);
             }
         }
         

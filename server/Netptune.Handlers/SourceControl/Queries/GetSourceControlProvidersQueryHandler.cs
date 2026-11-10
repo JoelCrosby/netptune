@@ -25,6 +25,7 @@ public sealed class GetSourceControlProvidersQueryHandler
             .Select(provider => new SourceControlProviderViewModel
             {
                 Provider = provider.Provider,
+                ConnectMethod = provider.ConnectMethod,
                 Terminology = provider.Terminology,
                 Capabilities = SourceControlCapabilityNames.From(provider.Capabilities),
             })

@@ -72,7 +72,7 @@ import { ProviderMarkComponent } from '@static/components/provider-mark.componen
           >
         </button>
       } @empty {
-        @for (provider of providers(); track provider.provider) {
+        @for (provider of redirectProviders(); track provider.provider) {
           <app-media-row [heading]="providerName(provider.provider)">
             <app-provider-mark
               mediaRowMedia
@@ -118,7 +118,7 @@ export class SetupRepositoryStepComponent {
 
   readonly workspace = input.required<string>();
   readonly returnTo = input.required<string>();
-  readonly providers = input.required<SourceControlProviderInfo[]>();
+  readonly redirectProviders = input.required<SourceControlProviderInfo[]>();
   readonly connections = input.required<SourceControlConnection[]>();
   readonly loadFailed = input(false);
 

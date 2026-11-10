@@ -2026,4 +2026,28 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="ImportProgressFailed" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="ErrorProviderConnectsWithToken" xml:space="preserve">
+    <value>{0} se conecta con un token de acceso personal, no mediante una redirección de inicio de sesión.</value>
+  </data>
+  <data name="ErrorAzureDevOpsOrganisationNotRecognised" xml:space="preserve">
+    <value>Introduce el nombre o la dirección de la organización de Azure DevOps, por ejemplo https://dev.azure.com/your-org.</value>
+  </data>
+  <data name="ErrorAzureDevOpsTokenRequired" xml:space="preserve">
+    <value>Introduce un token de acceso personal.</value>
+  </data>
+  <data name="ErrorAzureDevOpsExpiryInvalid" xml:space="preserve">
+    <value>La fecha de caducidad debe ser una fecha válida que aún no haya pasado.</value>
+  </data>
+  <data name="ErrorAzureDevOpsTokenRejected" xml:space="preserve">
+    <value>Azure DevOps rechazó el token de acceso personal. Comprueba que no haya caducado y que esté limitado a esta organización.</value>
+  </data>
+  <data name="ErrorAzureDevOpsOrganisationNotFound" xml:space="preserve">
+    <value>Azure DevOps no encontró ninguna organización llamada {0}.</value>
+  </data>
+  <data name="ErrorAzureDevOpsNotAdministrator" xml:space="preserve">
+    <value>Solo un administrador de la colección de proyectos de la organización de Azure DevOps puede conectarla. Usa un token creado por un administrador.</value>
+  </data>
+  <data name="ErrorAzureDevOpsAdminCheckUnavailable" xml:space="preserve">
+    <value>Netptune no pudo comprobar que este token pertenezca a un administrador de la colección de proyectos, porque Azure DevOps se negó a mostrarle los permisos de la organización. La organización no se conectó.</value>
+  </data>
 </root>

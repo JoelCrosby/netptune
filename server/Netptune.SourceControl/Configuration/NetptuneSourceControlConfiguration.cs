@@ -9,6 +9,7 @@ using Netptune.Core.SourceControl.Webhooks;
 using Netptune.SourceControl.Connect;
 using Netptune.SourceControl.Credentials;
 using Netptune.SourceControl.History;
+using Netptune.SourceControl.Providers.AzureDevOps;
 using Netptune.SourceControl.Providers.GitHub;
 using Netptune.SourceControl.Reading;
 using Netptune.SourceControl.Registry;
@@ -42,6 +43,7 @@ public static class NetptuneSourceControlConfiguration
         services.AddScoped<IScmWebhookProcessor, ScmWebhookProcessor>();
 
         services.AddGitHubSourceControl(configuration);
+        services.AddAzureDevOpsSourceControl(configuration);
 
         return services;
     }

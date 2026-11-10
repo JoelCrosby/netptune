@@ -60,7 +60,7 @@ internal sealed class GitHubConnector : ISourceControlConnector
 
     // Starts with user authorisation rather than the install page, because GitHub sends an account that
     // already has the App installed to its settings page and never redirects back.
-    public ScmConnectStart BeginConnect(ScmConnectRequest request)
+    public ClientResponse<ScmConnectStart> BeginConnect(ScmConnectRequest request)
     {
         var state = new ScmConnectState
         {
@@ -73,7 +73,9 @@ internal sealed class GitHubConnector : ISourceControlConnector
         var clientId = Uri.EscapeDataString(Options.ClientId);
         var escapedState = Uri.EscapeDataString(StateProtector.Protect(state));
 
-        return new ScmConnectStart($"{webBaseUrl}/login/oauth/authorize?client_id={clientId}&state={escapedState}");
+        var start = new ScmConnectStart($"{webBaseUrl}/login/oauth/authorize?client_id={clientId}&state={escapedState}");
+
+        return ClientResponse<ScmConnectStart>.Success(start);
     }
 
     public async ValueTask<ClientResponse<ScmConnectOutcome>> CompleteConnect(

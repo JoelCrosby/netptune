@@ -180,6 +180,25 @@ public sealed class SourceControlReaderTests : IDisposable
         repositories.Single().ProjectKeys.Should().Equal("API");
     }
 
+    [Fact]
+    public async Task ListRepositories_ShouldLeaveOutRepositoriesWhoseConnectionCannotReadCommits()
+    {
+        var listOnlyRepo = LinkedRepo();
+
+        listOnlyRepo.Id = 12;
+        listOnlyRepo.FullName = "acme/web";
+        listOnlyRepo.Connection.GrantedCapabilities = SourceControlCapabilities.ListRepositories;
+        var projects = Substitute.For<IProjectRepository>();
+
+        UnitOfWork.Projects.Returns(projects);
+        projects.GetRepositoryUrls(WorkspaceId, Arg.Any<CancellationToken>()).Returns([]);
+        Repos.GetReadableForWorkspace(WorkspaceId, Arg.Any<CancellationToken>()).Returns([LinkedRepo(), listOnlyRepo]);
+
+        var repositories = await Reader.ListRepositories(WorkspaceId, TestContext.Current.CancellationToken);
+
+        repositories.Select(repository => repository.FullName).Should().Equal("acme/api");
+    }
+
     public void Dispose()
     {
         Cache.Dispose();

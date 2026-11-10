@@ -42,8 +42,14 @@ public sealed class BeginSourceControlConnectCommandHandler
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var provider = Registry.Resolve(providerKind);
-        var start = provider.Connector.BeginConnect(new ScmConnectRequest(workspaceId, userId));
-        var viewModel = new SourceControlConnectStartViewModel(start.RedirectUrl);
+        var started = provider.Connector.BeginConnect(new ScmConnectRequest(workspaceId, userId));
+
+        if (!started.IsSuccess)
+        {
+            return ClientResponse<SourceControlConnectStartViewModel>.Failed(started.Message);
+        }
+
+        var viewModel = new SourceControlConnectStartViewModel(started.Payload!.RedirectUrl);
 
         return ClientResponse<SourceControlConnectStartViewModel>.Success(viewModel);
     }

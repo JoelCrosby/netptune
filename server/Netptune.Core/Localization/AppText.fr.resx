@@ -2026,4 +2026,28 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="ImportProgressFailed" xml:space="preserve">
     <value>Échec</value>
   </data>
+  <data name="ErrorProviderConnectsWithToken" xml:space="preserve">
+    <value>{0} se connecte avec un jeton d’accès personnel, pas par une redirection de connexion.</value>
+  </data>
+  <data name="ErrorAzureDevOpsOrganisationNotRecognised" xml:space="preserve">
+    <value>Saisissez le nom ou l’adresse de l’organisation Azure DevOps, par exemple https://dev.azure.com/your-org.</value>
+  </data>
+  <data name="ErrorAzureDevOpsTokenRequired" xml:space="preserve">
+    <value>Saisissez un jeton d’accès personnel.</value>
+  </data>
+  <data name="ErrorAzureDevOpsExpiryInvalid" xml:space="preserve">
+    <value>La date d’expiration doit être une date valide qui n’est pas encore passée.</value>
+  </data>
+  <data name="ErrorAzureDevOpsTokenRejected" xml:space="preserve">
+    <value>Azure DevOps a refusé le jeton d’accès personnel. Vérifiez qu’il n’a pas expiré et qu’il est limité à cette organisation.</value>
+  </data>
+  <data name="ErrorAzureDevOpsOrganisationNotFound" xml:space="preserve">
+    <value>Azure DevOps n’a trouvé aucune organisation nommée {0}.</value>
+  </data>
+  <data name="ErrorAzureDevOpsNotAdministrator" xml:space="preserve">
+    <value>Seul un administrateur de collection de projets de l’organisation Azure DevOps peut la connecter. Utilisez un jeton créé par un administrateur.</value>
+  </data>
+  <data name="ErrorAzureDevOpsAdminCheckUnavailable" xml:space="preserve">
+    <value>Netptune n’a pas pu vérifier que ce jeton appartient à un administrateur de collection de projets, car Azure DevOps a refusé de lui montrer les autorisations de l’organisation. L’organisation n’a pas été connectée.</value>
+  </data>
 </root>

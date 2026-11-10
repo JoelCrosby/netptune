@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
+import { ScmConnectMethod } from '@core/models/source-control';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { workspaceAiCredentialResource } from '@core/resources/ai-credential.resource';
 import {
@@ -133,7 +134,7 @@ const stepsBeforeSetup = 2;
             <app-setup-repository-step
               [workspace]="workspaceSlug()"
               [returnTo]="repositoryReturnUrl()"
-              [providers]="providerList()"
+              [redirectProviders]="redirectProviderList()"
               [connections]="connectionList()"
               [loadFailed]="sourceControlFailed()"
               (retry)="reloadSourceControl()" />
@@ -223,8 +224,12 @@ export class WorkspaceSetupViewComponent {
     return ['/', this.workspaceSlug(), 'projects'];
   });
 
-  protected readonly providerList = computed(() => {
-    return this.providers.hasValue() ? this.providers.value() : [];
+  protected readonly redirectProviderList = computed(() => {
+    const providers = this.providers.hasValue() ? this.providers.value() : [];
+
+    return providers.filter(
+      (provider) => provider.connectMethod === ScmConnectMethod.redirect
+    );
   });
 
   protected readonly connectionList = computed(() => {
@@ -254,7 +259,7 @@ export class WorkspaceSetupViewComponent {
 
   private readonly hasNoProviders = computed(() => {
     const hasLoaded = this.providers.hasValue() && !this.providers.isLoading();
-    const hasProviders = this.providerList().length > 0;
+    const hasProviders = this.redirectProviderList().length > 0;
     const hasConnections = this.connectionList().length > 0;
 
     return hasLoaded && !hasProviders && !hasConnections;

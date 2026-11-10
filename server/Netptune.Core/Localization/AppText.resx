@@ -2696,4 +2696,36 @@ Please confirm your email address with the following link.</value>
     <value>Failed</value>
     <comment>Progress text shown when an import fails</comment>
   </data>
+  <data name="ErrorProviderConnectsWithToken" xml:space="preserve">
+    <value>{0} connects with a personal access token, not a sign-in redirect.</value>
+    <comment>Error shown when a redirect connection is started for a provider that connects with a token. {0} is the provider</comment>
+  </data>
+  <data name="ErrorAzureDevOpsOrganisationNotRecognised" xml:space="preserve">
+    <value>Enter the Azure DevOps organisation's name or address, such as https://dev.azure.com/your-org.</value>
+    <comment>Error shown when the Azure DevOps organisation entered when connecting is not a name or address Netptune recognises</comment>
+  </data>
+  <data name="ErrorAzureDevOpsTokenRequired" xml:space="preserve">
+    <value>Enter a personal access token.</value>
+    <comment>Error shown when an Azure DevOps connection is submitted without a personal access token</comment>
+  </data>
+  <data name="ErrorAzureDevOpsExpiryInvalid" xml:space="preserve">
+    <value>The expiry date must be a valid date that hasn't passed yet.</value>
+    <comment>Error shown when the optional token expiry date entered when connecting Azure DevOps is not a valid future date</comment>
+  </data>
+  <data name="ErrorAzureDevOpsTokenRejected" xml:space="preserve">
+    <value>Azure DevOps rejected the personal access token. Check that it hasn't expired and that it's scoped to this organisation.</value>
+    <comment>Error shown when Azure DevOps rejects the personal access token entered when connecting</comment>
+  </data>
+  <data name="ErrorAzureDevOpsOrganisationNotFound" xml:space="preserve">
+    <value>Azure DevOps could not find an organisation named {0}.</value>
+    <comment>Error shown when Azure DevOps has no organisation with the name entered when connecting. {0} is the organisation name</comment>
+  </data>
+  <data name="ErrorAzureDevOpsNotAdministrator" xml:space="preserve">
+    <value>Only a Project Collection Administrator of the Azure DevOps organisation can connect it. Use a token created by an administrator.</value>
+    <comment>Error shown when the Azure DevOps token belongs to someone who is not a Project Collection Administrator</comment>
+  </data>
+  <data name="ErrorAzureDevOpsAdminCheckUnavailable" xml:space="preserve">
+    <value>Netptune could not check that this token belongs to a Project Collection Administrator, because Azure DevOps refused to show the organisation's permissions to it. The organisation was not connected.</value>
+    <comment>Error shown when Netptune cannot check whether the Azure DevOps token belongs to a Project Collection Administrator, so it refuses to connect</comment>
+  </data>
 </root>

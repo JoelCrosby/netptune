@@ -50,10 +50,12 @@ public sealed record SourceControlConnection : WorkspaceEntity<int>
             Provider = Provider,
             BaseUrl = BaseUrl,
             ExternalAccountId = ExternalAccountId,
+            AccountLogin = AccountLogin,
             Status = Status,
             GrantedCapabilities = GrantedCapabilities,
             CredentialKind = CredentialKind,
             ProtectedCredential = Credential,
+            CredentialExpiresAt = CredentialExpiresAt,
             ProtectedWebhookSecret = WebhookSecret,
         };
     }

@@ -14,6 +14,8 @@ internal sealed class GitHubSourceControlProvider : ISourceControlProvider
 
     public SourceControlProvider Provider => SourceControlProvider.GitHub;
 
+    public ScmConnectMethod ConnectMethod => ScmConnectMethod.Redirect;
+
     public SourceControlCapabilities Capabilities =>
         SourceControlCapabilities.ListRepositories
         | SourceControlCapabilities.ReadBranches

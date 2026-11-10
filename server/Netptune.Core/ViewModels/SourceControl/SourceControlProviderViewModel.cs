@@ -6,6 +6,8 @@ public sealed record SourceControlProviderViewModel
 {
     public SourceControlProvider Provider { get; init; }
 
+    public ScmConnectMethod ConnectMethod { get; init; }
+
     public required ScmTerminology Terminology { get; init; }
 
     public required List<string> Capabilities { get; init; }

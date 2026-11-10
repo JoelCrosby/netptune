@@ -3,11 +3,14 @@ import {
   PendingSourceControlConnect,
   writePendingSourceControlConnect,
 } from '@core/auth/pending-source-control-connect';
-import { SourceControlRepo } from '@core/models/source-control';
+import {
+  SourceControlProvider,
+  SourceControlRepo,
+} from '@core/models/source-control';
 import { SourceControlService } from '@core/services/source-control.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { requireSuccess } from '@core/util/rxjs-operators';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 // Unlinking a repository or disconnecting its account changes which links tasks show, so every
 // write here refreshes the task code links as well as the settings views.
@@ -29,6 +32,25 @@ export class SourceControlCommandsService {
         writePendingSourceControlConnect(pending);
         window.location.assign(redirectUrl);
       })
+    );
+  }
+
+  completeTokenConnect(
+    provider: SourceControlProvider,
+    parameters: Record<string, string>
+  ) {
+    return this.api.completeConnect(provider, parameters).pipe(
+      requireSuccess(),
+      map((response) => {
+        const connection = response.payload?.connection;
+
+        if (!connection) {
+          throw new Error(COMPLETE_FAILED);
+        }
+
+        return connection;
+      }),
+      tap(() => this.refresh())
     );
   }
 
@@ -66,3 +88,4 @@ export class SourceControlCommandsService {
 }
 
 const CONNECT_FAILED = $localize`:Shown when starting a source control connection fails:The connection could not be started.`;
+const COMPLETE_FAILED = $localize`:Shown when finishing a source control connection fails:The connection could not be completed.`;
