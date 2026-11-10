@@ -134,11 +134,7 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
             Body = Encoding.UTF8.GetBytes(delivery.Body),
         };
 
-        var connections = await UnitOfWork.SourceControlConnections.GetByExternalAccount(
-            delivery.Provider,
-            delivery.ExternalAccountId,
-            cancellationToken);
-
+        var connections = await GetConnections(delivery, cancellationToken);
         var observedAccounts = new List<ScmIdentity>();
 
         foreach (var connection in connections)
@@ -172,6 +168,32 @@ internal sealed class ScmWebhookProcessor : IScmWebhookProcessor
             cancellationToken);
 
         return changedWorkspaces;
+    }
+
+    // A delivery made to one connection's own webhook applies to that connection alone; its copies for
+    // other workspaces arrive through their own webhooks.
+    private async Task<List<SourceControlConnection>> GetConnections(
+        ScmWebhookDelivery delivery,
+        CancellationToken cancellationToken)
+    {
+        if (delivery.ConnectionId is not { } connectionId)
+        {
+            var connections = await UnitOfWork.SourceControlConnections.GetByExternalAccount(
+                delivery.Provider,
+                delivery.ExternalAccountId!,
+                cancellationToken);
+
+            return connections;
+        }
+
+        var connection = await UnitOfWork.SourceControlConnections.GetForWebhook(
+            delivery.Provider,
+            connectionId,
+            cancellationToken);
+
+        var belongsToConnection = connection is not null && connection.ExternalAccountId == delivery.ExternalAccountId;
+
+        return belongsToConnection ? [connection!] : [];
     }
 
     // The delivery is already committed, so a failed refresh only leaves open views stale until their

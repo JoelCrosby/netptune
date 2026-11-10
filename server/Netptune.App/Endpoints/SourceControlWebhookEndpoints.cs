@@ -21,11 +21,37 @@ public static class SourceControlWebhookEndpoints
             .AllowAnonymous()
             .RequireRateLimiting(RateLimiterConfiguration.WebhooksPolicyName);
 
+        // For providers that create a webhook, and its secret, for each connection.
+        builder.MapPost("/webhooks/source-control/{provider}/{connectionId:int}", HandleConnectionWebhook)
+            .WithTags("Source control webhooks")
+            .AllowAnonymous()
+            .RequireRateLimiting(RateLimiterConfiguration.WebhooksPolicyName);
+
         return builder;
     }
 
-    private static async Task<IResult> HandleWebhook(
+    private static Task<IResult> HandleWebhook(
         string provider,
+        HttpRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        return Receive(provider, null, request, mediator, cancellationToken);
+    }
+
+    private static Task<IResult> HandleConnectionWebhook(
+        string provider,
+        int connectionId,
+        HttpRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        return Receive(provider, connectionId, request, mediator, cancellationToken);
+    }
+
+    private static async Task<IResult> Receive(
+        string provider,
+        int? connectionId,
         HttpRequest request,
         IMediator mediator,
         CancellationToken cancellationToken)
@@ -55,7 +81,7 @@ public static class SourceControlWebhookEndpoints
             Headers = headers,
         };
 
-        var command = new ReceiveSourceControlWebhookCommand(providerKind, webhookRequest);
+        var command = new ReceiveSourceControlWebhookCommand(providerKind, webhookRequest, connectionId);
         var outcome = await mediator.Send(command, cancellationToken);
 
         return outcome switch
@@ -63,6 +89,7 @@ public static class SourceControlWebhookEndpoints
             SourceControlWebhookOutcome.NotEnabled => Results.NotFound(),
             SourceControlWebhookOutcome.InvalidSignature => Results.Unauthorized(),
             SourceControlWebhookOutcome.Unroutable => Results.BadRequest(),
+            SourceControlWebhookOutcome.ConnectionGone => Results.StatusCode(StatusCodes.Status410Gone),
             _ => Results.Accepted(),
         };
     }

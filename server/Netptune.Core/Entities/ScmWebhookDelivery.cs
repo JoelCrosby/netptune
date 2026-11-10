@@ -15,6 +15,8 @@ public sealed record ScmWebhookDelivery : KeyedEntity<long>
 
     public string? ExternalAccountId { get; init; }
 
+    public int? ConnectionId { get; init; }
+
     public required string Body { get; init; }
 
     public DateTime ReceivedAt { get; init; }

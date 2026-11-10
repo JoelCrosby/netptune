@@ -69,4 +69,16 @@ public class SourceControlConnectionRepository(DataContext context, IDbConnectio
             .Where(connection => connection.ExternalAccountId == externalAccountId && !connection.IsDeleted)
             .AnyAsync(cancellationToken);
     }
+
+    public Task<SourceControlConnection?> GetForWebhook(
+        SourceControlProvider provider,
+        int connectionId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(connection => connection.Workspace)
+            .Where(connection => connection.Id == connectionId && connection.Provider == provider)
+            .Where(connection => !connection.IsDeleted)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

@@ -15,6 +15,7 @@ using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Events;
 using Netptune.Core.SourceControl.History;
 using Netptune.Core.SourceControl.Models;
 using Netptune.Core.SourceControl.Webhooks;
@@ -588,6 +589,97 @@ public sealed class SourceControlTaskLinkTests
     }
 
     [Fact]
+    public async Task PullRequest_ShouldLinkOnlyTheRoutedWorkspace_WhenDeliveredToAConnectionsOwnWebhook()
+    {
+        var linuxClient = await CreateOwnerClient("linux");
+        var (account, netptuneRepo) = await ConnectWithLinkedRepo(Client);
+        var (_, linuxRepo) = await ConnectWithLinkedRepo(linuxClient, account);
+        var netptuneTask = await AnyTask();
+        var linuxTask = await AnyTask("linux");
+
+        await ProcessPullRequest(
+            account,
+            netptuneRepo.ExternalId,
+            "16",
+            $"Fix {netptuneTask.SystemId} and {linuxTask.SystemId}",
+            "Open",
+            connectionId: netptuneRepo.ConnectionId);
+
+        (await LinksForRepo(netptuneRepo.Id)).Select(link => link.TaskId).Should().Equal(netptuneTask.Id);
+        (await LinksForRepo(linuxRepo.Id)).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Processing_ShouldPublishAMergeTrigger_WhenAnUpdateMovesThePullRequestToMerged()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+
+        await ProcessPullRequest(account, repo.ExternalId, "17", $"Fix {task.SystemId}", "Open");
+
+        var published = await AutomationTriggerProbe.Published(
+            Fixture.Services,
+            trigger => trigger.TriggerType == AutomationTriggerType.PullRequestMerged
+                && trigger.TaskIds.Contains(task.Id),
+            () => ProcessPullRequest(
+                account,
+                repo.ExternalId,
+                "17",
+                $"Fix {task.SystemId}",
+                "Merged",
+                action: ScmPullRequestAction.Updated,
+                connectionId: repo.ConnectionId));
+
+        published.Should().BeTrue();
+        (await ActivityRecords(task.Id, EventKeys.SourceControlPullRequestMerged))
+            .Should().ContainSingle(record => ReadPayload(record, "repoFullName")!.StartsWith(account));
+    }
+
+    [Fact]
+    public async Task Processing_ShouldNotRecordAnotherOpening_WhenAnUpdateLeavesThePullRequestOpen()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+
+        await ProcessPullRequest(account, repo.ExternalId, "18", $"Fix {task.SystemId}", "Open");
+        await ProcessPullRequest(
+            account,
+            repo.ExternalId,
+            "18",
+            $"Retitled {task.SystemId}",
+            "Open",
+            action: ScmPullRequestAction.Updated,
+            connectionId: repo.ConnectionId);
+
+        (await ActivityRecords(task.Id, EventKeys.SourceControlPullRequestOpened))
+            .Should().ContainSingle(record => ReadPayload(record, "repoFullName")!.StartsWith(account));
+        (await LinksFor(task.Id, repo.Id)).Single().Title.Should().Be($"Retitled {task.SystemId}");
+    }
+
+    [Fact]
+    public async Task Processing_ShouldNotRecordAReopening_WhenAnOlderUpdateArrivesAfterTheMerge()
+    {
+        var (account, repo) = await ConnectWithLinkedRepo();
+        var task = await AnyTask();
+        var mergedAt = DateTimeOffset.UtcNow;
+
+        await ProcessPullRequest(account, repo.ExternalId, "19", $"Fix {task.SystemId}", "Merged", updatedAt: mergedAt);
+        await ProcessPullRequest(
+            account,
+            repo.ExternalId,
+            "19",
+            $"Fix {task.SystemId}",
+            "Open",
+            updatedAt: mergedAt.AddMinutes(-5),
+            action: ScmPullRequestAction.Updated,
+            connectionId: repo.ConnectionId);
+
+        (await ActivityRecords(task.Id, EventKeys.SourceControlPullRequestOpened))
+            .Should().NotContain(record => ReadPayload(record, "repoFullName")!.StartsWith(account));
+        (await LinksFor(task.Id, repo.Id)).Single().PullRequestState.Should().Be(ScmPullRequestState.Merged);
+    }
+
+    [Fact]
     public async Task TaskLinks_ShouldAttributeTheAuthorToTheMemberWhoMappedTheirUsername()
     {
         var (account, repo) = await ConnectWithLinkedRepo();
@@ -1104,15 +1196,18 @@ public sealed class SourceControlTaskLinkTests
         string? headSha = null,
         DateTimeOffset? updatedAt = null,
         string? author = null,
-        string? authorId = null)
+        string? authorId = null,
+        ScmPullRequestAction? action = null,
+        int? connectionId = null)
     {
         var sha = headSha is null ? string.Empty : $$""", "sha": "{{headSha}}" """;
         var updated = updatedAt is null ? string.Empty : $$""", "updatedAt": "{{updatedAt:O}}" """;
         var authorName = author is null ? string.Empty : $$""", "author": "{{author}}" """;
         var authorAccount = authorId is null ? string.Empty : $$""", "authorId": "{{authorId}}" """;
-        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "number": "{{number}}", "title": "{{title}}", "state": "{{state}}"{{sha}}{{updated}}{{authorName}}{{authorAccount}} }""";
+        var actionName = action is null ? string.Empty : $$""", "action": "{{action}}" """;
+        var body = $$"""{ "account": "{{account}}", "repo": "{{repoExternalId}}", "number": "{{number}}", "title": "{{title}}", "state": "{{state}}"{{sha}}{{updated}}{{authorName}}{{authorAccount}}{{actionName}} }""";
 
-        await Process(account, TestSourceControlProvider.PullRequestEvent, body);
+        await Process(account, TestSourceControlProvider.PullRequestEvent, body, connectionId);
     }
 
     private async Task ProcessCheckRun(
@@ -1130,9 +1225,9 @@ public sealed class SourceControlTaskLinkTests
         await Process(account, TestSourceControlProvider.CheckRunEvent, body);
     }
 
-    private async Task Process(string account, string eventName, string body)
+    private async Task Process(string account, string eventName, string body, int? connectionId = null)
     {
-        await PostDelivery(account, eventName, body);
+        await PostDelivery(account, eventName, body, connectionId);
 
         using var scope = Fixture.CreateScope();
         var processor = scope.ServiceProvider.GetRequiredService<IScmWebhookProcessor>();
@@ -1144,9 +1239,11 @@ public sealed class SourceControlTaskLinkTests
         }
     }
 
-    private async Task PostDelivery(string account, string eventName, string body)
+    private async Task PostDelivery(string account, string eventName, string body, int? connectionId = null)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, WebhookUrl);
+        var url = connectionId is null ? WebhookUrl : $"{WebhookUrl}/{connectionId}";
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, url);
 
         request.Content = new StringContent(body, Encoding.UTF8, "application/json");
         request.Headers.Add(TestSourceControlProvider.DeliveryHeader, Guid.NewGuid().ToString());

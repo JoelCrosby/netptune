@@ -10,4 +10,7 @@ public enum ScmPullRequestAction
     Merged = 5,
     Closed = 6,
     Reopened = 7,
+
+    // The provider didn't say what changed, so the action is worked out from the stored link state.
+    Updated = 8,
 }

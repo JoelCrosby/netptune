@@ -30,7 +30,7 @@ public sealed class SearchRepositoryCodeTool : IAiTool
 
     public bool IsAvailable(IReadOnlySet<string> permissions)
     {
-        return Reader.HasProviders && RequiredPermissions.All(permissions.Contains);
+        return Reader.CanSearchCode && RequiredPermissions.All(permissions.Contains);
     }
 
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(

@@ -27,6 +27,7 @@ public class ScmWebhookDeliveryRepository(DataContext context, IDbConnectionFact
             delivery.EventName,
             delivery.Action,
             delivery.ExternalAccountId,
+            delivery.ConnectionId,
             delivery.Body,
             delivery.ReceivedAt,
         };

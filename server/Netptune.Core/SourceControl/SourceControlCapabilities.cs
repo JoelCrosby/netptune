@@ -13,4 +13,5 @@ public enum SourceControlCapabilities
     // 1 << 5 was CreateBranch. Granted capabilities are stored as these bits, so it stays unused.
     Webhooks = 1 << 6,
     IssueSync = 1 << 7,
+    SearchCode = 1 << 8,
 }

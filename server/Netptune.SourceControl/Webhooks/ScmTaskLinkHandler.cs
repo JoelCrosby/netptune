@@ -42,12 +42,12 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
     }
 
     public async Task<bool> Handle(
-        ScmEvent scmEvent,
+        ScmEvent receivedEvent,
         SourceControlConnection connection,
         ScmEventSource source,
         CancellationToken cancellationToken)
     {
-        var repository = RepositoryOf(scmEvent);
+        var repository = RepositoryOf(receivedEvent);
         var repo = await UnitOfWork.SourceControlRepos.GetByExternalId(
             connection.Id,
             repository.ExternalId,
@@ -59,6 +59,8 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         {
             return false;
         }
+
+        var scmEvent = await ResolvePullRequestAction(receivedEvent, repo!, cancellationToken);
 
         if (scmEvent is ScmBranchDeleted deleted)
         {
@@ -77,6 +79,33 @@ internal sealed class ScmTaskLinkHandler : IScmEventHandler
         }
 
         return outcome.Changed;
+    }
+
+    // Read before the links are updated, which overwrites the state this compares against. A delivery
+    // older than the stored state changes nothing, so it counts as an edit.
+    private async Task<ScmEvent> ResolvePullRequestAction(
+        ScmEvent scmEvent,
+        SourceControlRepo repo,
+        CancellationToken cancellationToken)
+    {
+        if (scmEvent is not ScmPullRequestChanged { Action: ScmPullRequestAction.Updated } changed)
+        {
+            return scmEvent;
+        }
+
+        var pullRequest = changed.PullRequest;
+        var links = await UnitOfWork.TaskCodeLinks.GetForRefs(
+            repo.Id,
+            TaskCodeLinkKind.PullRequest,
+            [pullRequest.Number],
+            cancellationToken);
+
+        var latest = links.MaxBy(link => link.OccurredAt);
+        var isStale = latest is not null && pullRequest.UpdatedAt.UtcDateTime < latest.OccurredAt;
+        var previous = isStale ? pullRequest.State : latest?.PullRequestState;
+        var action = ScmPullRequestTransitions.Derive(previous, pullRequest.State);
+
+        return changed with { Action = action };
     }
 
     private async Task RecordActivity(

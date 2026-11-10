@@ -32,7 +32,8 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         | SourceControlCapabilities.ReadCommits
         | SourceControlCapabilities.ReadPullRequests
         | SourceControlCapabilities.ReadCheckRuns
-        | SourceControlCapabilities.Webhooks;
+        | SourceControlCapabilities.Webhooks
+        | SourceControlCapabilities.SearchCode;
 
     public SourceControlCapabilities Capabilities => Granted;
 
@@ -47,6 +48,8 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     public ISourceControlConnector Connector { get; } = new TestConnector();
 
     public ISourceControlClient Client { get; } = new TestClient();
+
+    public static ConcurrentBag<int> DisconnectedConnectionIds { get; } = [];
 
     // What a history sync reads back, keyed by repository external id, so each test seeds its own repo.
     public static ConcurrentDictionary<string, TestRepoHistory> Histories { get; } = new();
@@ -156,7 +159,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     }
 
     // The body names the repository by its external id, plus the pull request's number, title, state
-    // and optionally its head commit, when it was last updated, and its author's username and id.
+    // and optionally its head commit, when it was last updated, its author's username and id, and the action.
     private static ScmPullRequestChanged ReadPullRequest(ScmWebhookEnvelope envelope, ScmConnection connection)
     {
         using var document = JsonDocument.Parse(envelope.Body);
@@ -173,6 +176,10 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
         var updatedAt = root.TryGetProperty("updatedAt", out var updated)
             ? updated.GetDateTimeOffset()
             : envelope.ReceivedAt;
+        var defaultAction = state == ScmPullRequestState.Merged ? ScmPullRequestAction.Merged : ScmPullRequestAction.Opened;
+        var action = root.TryGetProperty("action", out var named)
+            ? Enum.Parse<ScmPullRequestAction>(named.GetString()!)
+            : defaultAction;
 
         return new ScmPullRequestChanged
         {
@@ -182,7 +189,7 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             WorkspaceId = connection.WorkspaceId,
             OccurredAt = envelope.ReceivedAt,
             Repository = new ScmRepositoryRef(repoId, connection.ExternalAccountId, repoId),
-            Action = state == ScmPullRequestState.Merged ? ScmPullRequestAction.Merged : ScmPullRequestAction.Opened,
+            Action = action,
             PullRequest = new ScmPullRequest
             {
                 ExternalId = number,
@@ -381,6 +388,13 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
             CancellationToken cancellationToken)
         {
             return ValueTask.FromResult(Granted);
+        }
+
+        public ValueTask Disconnect(ScmConnection connection, CancellationToken cancellationToken)
+        {
+            DisconnectedConnectionIds.Add(connection.Id);
+
+            return ValueTask.CompletedTask;
         }
     }
 

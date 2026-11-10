@@ -28,7 +28,6 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Tasks.Export,
         NetptunePermissions.Data.Export,
         NetptunePermissions.Files.Read,
-        NetptunePermissions.SourceControl.Read,
     };
 
     private static readonly IReadOnlySet<string> MemberPermissions = new HashSet<string>(ViewerPermissions)
@@ -65,6 +64,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Files.DeleteOwn,
         NetptunePermissions.Assistant.Use,
         NetptunePermissions.Assistant.UseWeb,
+        NetptunePermissions.SourceControl.Read,
     };
 
     private static readonly IReadOnlySet<string> AdminPermissions = new HashSet<string>(MemberPermissions)

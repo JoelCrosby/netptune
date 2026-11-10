@@ -34,6 +34,7 @@ public sealed class EndpointAuthorizationTests
         "/api/public/workspaces/{workspaceKey}",
         "/api/public/workspaces/{workspaceKey}/members",
         "/api/webhooks/source-control/{provider}",
+        "/api/webhooks/source-control/{provider}/{connectionId:int}",
         "/health/deps",
         "/health/live",
         "/health/ready",

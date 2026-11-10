@@ -153,6 +153,63 @@ public sealed class SourceControlWebhookEndpointTests
     }
 
     [Fact]
+    public async Task ConnectionWebhook_ShouldStoreTheDeliveryForThatConnection()
+    {
+        var account = await ConnectAccount();
+        var connectionId = await ConnectionIdOf(account);
+        var deliveryId = Guid.NewGuid().ToString();
+
+        var response = await PostWebhook(account, deliveryId, connectionId: connectionId);
+        var stored = (await StoredDeliveries(account)).Should().ContainSingle().Subject;
+
+        response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+        stored.ConnectionId.Should().Be(connectionId);
+        stored.DeliveryId.Should().Be($"{connectionId}:{deliveryId}");
+    }
+
+    [Fact]
+    public async Task ConnectionWebhook_ShouldReturnGone_AfterTheConnectionIsDisconnected()
+    {
+        var account = await ConnectAccount();
+        var connectionId = await ConnectionIdOf(account);
+
+        var disconnected = await Client.DeleteAsync(
+            $"api/source-control/connections/{connectionId}",
+            TestContext.Current.CancellationToken);
+        var response = await PostWebhook(account, Guid.NewGuid().ToString(), connectionId: connectionId);
+
+        disconnected.StatusCode.Should().Be(HttpStatusCode.OK);
+        TestSourceControlProvider.DisconnectedConnectionIds.Should().Contain(connectionId);
+        response.StatusCode.Should().Be(HttpStatusCode.Gone);
+        (await StoredDeliveries(account)).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ConnectionWebhook_ShouldRejectABadSignature()
+    {
+        var account = await ConnectAccount();
+        var connectionId = await ConnectionIdOf(account);
+
+        var response = await PostWebhook(account, Guid.NewGuid().ToString(), "forged", connectionId: connectionId);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await StoredDeliveries(account)).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ConnectionWebhook_ShouldAcknowledgeButNotStoreAnotherAccountsDelivery()
+    {
+        var account = await ConnectAccount();
+        var otherAccount = await ConnectAccount();
+        var connectionId = await ConnectionIdOf(account);
+
+        var response = await PostWebhook(otherAccount, Guid.NewGuid().ToString(), connectionId: connectionId);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+        (await StoredDeliveries(otherAccount)).Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Processing_ShouldApplyAnUninstallToTheConnection()
     {
         var account = await ConnectAccount();
@@ -261,9 +318,12 @@ public sealed class SourceControlWebhookEndpointTests
         string account,
         string deliveryId,
         string? signature = TestSourceControlProvider.ValidSignature,
-        string eventName = "push")
+        string eventName = "push",
+        int? connectionId = null)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, WebhookUrl);
+        var url = connectionId is null ? WebhookUrl : $"{WebhookUrl}/{connectionId}";
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, url);
 
         request.Content = new StringContent($$"""{ "account": "{{account}}" }""", Encoding.UTF8, "application/json");
         request.Headers.Add(TestSourceControlProvider.DeliveryHeader, deliveryId);
@@ -277,6 +337,19 @@ public sealed class SourceControlWebhookEndpointTests
         var response = await Anonymous.SendAsync(request, TestContext.Current.CancellationToken);
 
         return response;
+    }
+
+    private async Task<int> ConnectionIdOf(string account)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var connectionId = await context.SourceControlConnections
+            .Where(connection => connection.ExternalAccountId == account)
+            .Select(connection => connection.Id)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        return connectionId;
     }
 
     private async Task<List<ScmWebhookDelivery>> StoredDeliveries(string account)

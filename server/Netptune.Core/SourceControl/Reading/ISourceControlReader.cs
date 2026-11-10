@@ -7,6 +7,8 @@ public interface ISourceControlReader
 {
     bool HasProviders { get; }
 
+    bool CanSearchCode { get; }
+
     Task<List<ScmReadableRepository>> ListRepositories(int workspaceId, CancellationToken cancellationToken);
 
     Task<ClientResponse<ScmRepositoryFiles>> ListFiles(int workspaceId, string repository, string? reference, CancellationToken cancellationToken);

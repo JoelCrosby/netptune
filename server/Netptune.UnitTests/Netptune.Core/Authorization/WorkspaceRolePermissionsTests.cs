@@ -56,4 +56,14 @@ public class WorkspaceRolePermissionsTests
         WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Admin)
             .Should().Contain(NetptunePermissions.Pages.DeleteAny);
     }
+
+    [Fact]
+    public void SourceControlRead_ShouldStartAtMember()
+    {
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer)
+            .Should().NotContain(NetptunePermissions.SourceControl.Read);
+
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Member)
+            .Should().Contain(NetptunePermissions.SourceControl.Read);
+    }
 }

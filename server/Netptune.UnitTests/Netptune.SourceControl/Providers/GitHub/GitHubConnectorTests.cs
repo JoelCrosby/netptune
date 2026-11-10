@@ -136,6 +136,7 @@ public sealed class GitHubConnectorTests : IDisposable
             TestContext.Current.CancellationToken);
 
         granted.HasFlag(SourceControlCapabilities.ReadPullRequests).Should().BeTrue();
+        granted.HasFlag(SourceControlCapabilities.SearchCode).Should().BeTrue();
         Harness.Http.Requests.Single().Authorization.Should().StartWith("Bearer ey");
     }
 

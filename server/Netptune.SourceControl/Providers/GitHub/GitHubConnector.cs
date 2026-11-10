@@ -198,6 +198,12 @@ internal sealed class GitHubConnector : ISourceControlConnector
         return GitHubPermissions.ToCapabilities(installation.Permissions);
     }
 
+    // The app installation belongs to the GitHub account, which removes it on GitHub.
+    public ValueTask Disconnect(ScmConnection connection, CancellationToken cancellationToken)
+    {
+        return ValueTask.CompletedTask;
+    }
+
     private ClientResponse<ScmConnectState> ValidateState(ScmConnectCallback callback)
     {
         var protectedState = callback.Parameters.GetValueOrDefault("state");

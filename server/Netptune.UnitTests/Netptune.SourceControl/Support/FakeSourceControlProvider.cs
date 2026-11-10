@@ -70,6 +70,11 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
 
             return ValueTask.FromResult(granted);
         }
+
+        public ValueTask Disconnect(ScmConnection connection, CancellationToken cancellationToken)
+        {
+            return ValueTask.CompletedTask;
+        }
     }
 
     private sealed class FakeClient : ISourceControlClient

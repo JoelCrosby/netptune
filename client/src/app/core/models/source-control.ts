@@ -26,7 +26,8 @@ export type SourceControlCapability =
   | 'readPullRequests'
   | 'readCheckRuns'
   | 'webhooks'
-  | 'issueSync';
+  | 'issueSync'
+  | 'searchCode';
 
 export interface ScmTerminology {
   pullRequest: string;

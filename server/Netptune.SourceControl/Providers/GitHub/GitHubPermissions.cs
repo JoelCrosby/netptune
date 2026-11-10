@@ -22,7 +22,9 @@ internal static class GitHubPermissions
 
         if (canReadContents)
         {
-            capabilities |= SourceControlCapabilities.ReadBranches | SourceControlCapabilities.ReadCommits;
+            capabilities |= SourceControlCapabilities.ReadBranches
+                | SourceControlCapabilities.ReadCommits
+                | SourceControlCapabilities.SearchCode;
         }
 
         if (canReadPullRequests)

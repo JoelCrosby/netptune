@@ -99,6 +99,18 @@ public class RepositoryToolsTests
     }
 
     [Fact]
+    public void SearchTool_ShouldBeUnavailableWhenNoEnabledProviderCanSearchCode()
+    {
+        Reader.HasProviders.Returns(true);
+        Reader.CanSearchCode.Returns(false);
+
+        var tool = new SearchRepositoryCodeTool(Reader, Identity);
+        var available = tool.IsAvailable(new HashSet<string> { "source_control.read" });
+
+        available.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task ReadFile_ShouldRefuseABinaryFile()
     {
         GivenFile(text: null, isBinary: true);

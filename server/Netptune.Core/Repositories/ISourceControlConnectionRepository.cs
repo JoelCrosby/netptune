@@ -26,4 +26,6 @@ public interface ISourceControlConnectionRepository : IRepository<SourceControlC
     Task<List<SourceControlConnection>> GetByExternalAccount(SourceControlProvider provider, string externalAccountId, CancellationToken cancellationToken = default);
 
     Task<bool> HasExternalAccount(SourceControlProvider provider, string externalAccountId, CancellationToken cancellationToken = default);
+
+    Task<SourceControlConnection?> GetForWebhook(SourceControlProvider provider, int connectionId, CancellationToken cancellationToken = default);
 }

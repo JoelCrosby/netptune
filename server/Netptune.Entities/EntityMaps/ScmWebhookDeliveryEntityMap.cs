@@ -50,6 +50,10 @@ public sealed class ScmWebhookDeliveryEntityMap : KeyedEntityMap<ScmWebhookDeliv
             .HasDatabaseName("ix_scm_webhook_deliveries_provider_delivery");
 
         builder
+            .HasIndex(delivery => delivery.ConnectionId)
+            .HasDatabaseName("ix_scm_webhook_deliveries_connection_id");
+
+        builder
             .HasIndex(delivery => delivery.ReceivedAt)
             .HasFilter("processed_at IS NULL")
             .HasDatabaseName("ix_scm_webhook_deliveries_unprocessed");

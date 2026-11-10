@@ -1,8 +1,11 @@
 using Mediator;
 
+using Microsoft.Extensions.Logging;
+
 using Netptune.Core.Events;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.SourceControl;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.SourceControl.Commands;
@@ -15,15 +18,21 @@ public sealed class DisconnectSourceControlConnectionCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IEventRecordWriter EventRecords;
+    private readonly ISourceControlProviderRegistry Registry;
+    private readonly ILogger<DisconnectSourceControlConnectionCommandHandler> Logger;
 
     public DisconnectSourceControlConnectionCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        ISourceControlProviderRegistry registry,
+        ILogger<DisconnectSourceControlConnectionCommandHandler> logger)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         EventRecords = eventRecords;
+        Registry = registry;
+        Logger = logger;
     }
 
     public async ValueTask<ClientResponse> Handle(
@@ -42,6 +51,7 @@ public sealed class DisconnectSourceControlConnectionCommandHandler
             return ClientResponse.NotFound;
         }
 
+        var scmConnection = connection.ToScmConnection();
         var repos = await UnitOfWork.SourceControlRepos.GetForConnection(connection.Id, cancellationToken);
 
         foreach (var repo in repos)
@@ -65,6 +75,36 @@ public sealed class DisconnectSourceControlConnectionCommandHandler
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
+        await DisconnectFromProvider(scmConnection, cancellationToken);
+
         return ClientResponse.Success;
+    }
+
+    // After the commit and best effort, so an unreachable provider can't keep a workspace connected and a
+    // failed commit can't leave a connection whose webhooks are already gone. Webhooks left behind get
+    // 410 Gone from the deleted connection, which tells the provider to stop sending them.
+    private async Task DisconnectFromProvider(ScmConnection connection, CancellationToken cancellationToken)
+    {
+        var isEnabled = Registry.IsEnabled(connection.Provider);
+
+        if (!isEnabled)
+        {
+            return;
+        }
+
+        try
+        {
+            var connector = Registry.Resolve(connection.Provider).Connector;
+
+            await connector.Disconnect(connection, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(
+                exception,
+                "Disconnecting connection {ConnectionId} from {Provider} failed",
+                connection.Id,
+                connection.Provider);
+        }
     }
 }

@@ -36,6 +36,8 @@ internal sealed partial class SourceControlReader : ISourceControlReader
 
     public bool HasProviders => Registry.All.Count > 0;
 
+    public bool CanSearchCode => Registry.All.Any(provider => provider.Capabilities.HasFlag(SourceControlCapabilities.SearchCode));
+
     private sealed record ReadTarget(SourceControlRepo Repo, ScmConnectionContext Context, ISourceControlClient Client)
     {
         public ScmRepositoryRef Ref => new(Repo.ExternalId, Repo.Owner, Repo.Name);
@@ -154,7 +156,7 @@ internal sealed partial class SourceControlReader : ISourceControlReader
                 + "Remove the qualifier and search again."));
         }
 
-        return Read(workspaceId, repository, SourceControlCapabilities.ReadCommits, async target =>
+        return Read(workspaceId, repository, SourceControlCapabilities.SearchCode, async target =>
         {
             var matches = await target.Client.SearchCode(target.Context, target.Ref, query, cancellationToken);
 
