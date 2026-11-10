@@ -1,4 +1,5 @@
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 
 namespace Netptune.SourceControl.Providers.AzureDevOps;
 
@@ -26,9 +27,15 @@ internal sealed class AzureDevOpsSourceControlProvider : ISourceControlProvider
 
     public ISourceControlWebhookReader? WebhookReader => null;
 
-    public AzureDevOpsSourceControlProvider(AzureDevOpsConnector connector, AzureDevOpsSourceControlClient client)
+    public IScmConnectionChecker? ConnectionChecker { get; }
+
+    public AzureDevOpsSourceControlProvider(
+        AzureDevOpsConnector connector,
+        AzureDevOpsSourceControlClient client,
+        AzureDevOpsConnectionChecker connectionChecker)
     {
         Connector = connector;
         Client = client;
+        ConnectionChecker = connectionChecker;
     }
 }

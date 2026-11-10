@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.SourceControl;
@@ -15,11 +17,26 @@ public sealed record SourceControlAccountKey
     public required string ExternalAccountId { get; init; }
 }
 
+public sealed record SourceControlConnectionCheckRecord
+{
+    public int ConnectionId { get; init; }
+
+    public byte[]? CheckedCredential { get; init; }
+
+    public DateTime CheckedAt { get; init; }
+
+    public required JsonDocument Checks { get; init; }
+}
+
 public interface ISourceControlConnectionRepository : IRepository<SourceControlConnection, int>
 {
     Task<List<SourceControlConnection>> GetForWorkspace(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<SourceControlConnection?> GetOwned(int connectionId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<SourceControlConnection?> GetOwnedReadOnly(int connectionId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<bool> RecordCheck(SourceControlConnectionCheckRecord record, CancellationToken cancellationToken = default);
 
     Task<SourceControlConnection?> GetByAccount(SourceControlAccountKey key, CancellationToken cancellationToken = default);
 

@@ -700,7 +700,7 @@
     </unit>
     <unit id="8195124744855652290">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:139</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:424</note>
         <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:230</note>
         <note category="description">Fallback when completing a source control connection fails</note>
       </notes>
@@ -986,6 +986,16 @@
         <target>Ersetzt alle vorhandenen Tags der <ph id="0" equiv="TOTAL" disp="tasks.length"/> Aufgaben durch diese <ph id="1" equiv="COUNT" disp="selectedCount"/></target>
       </segment>
     </unit>
+    <unit id="697863902909244028">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:296,298</note>
+        <note category="description">Tells the user to fix the failed check in the provider. {0} is the provider name</note>
+      </notes>
+      <segment state="translated">
+        <source> Fix what the failed check describes in <ph id="0" equiv="INTERPOLATION" disp="{{ providerName }}"/>, then check again. </source>
+        <target>Beheben Sie in <ph id="0" equiv="INTERPOLATION" disp="{{ providerName }}"/>, was die fehlgeschlagene Prüfung beschreibt, und prüfen Sie dann erneut.</target>
+      </segment>
+    </unit>
     <unit id="6980870776971861351">
       <notes>
         <note category="location">src/app/features/pages/components/page-editor.component.ts:493</note>
@@ -1233,8 +1243,8 @@
     </unit>
     <unit id="4393935842883042759">
       <notes>
-        <note category="location">src/app/core/services/source-control-commands.service.ts:90</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:120</note>
+        <note category="location">src/app/core/services/source-control-commands.service.ts:102</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:124</note>
         <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:128</note>
         <note category="description">Shown when starting a source control connection fails</note>
       </notes>
@@ -2465,7 +2475,7 @@
     </unit>
     <unit id="7730041991995170578">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:223</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:272</note>
         <note category="description">Shown after a source control account is disconnected</note>
       </notes>
       <segment state="initial">
@@ -2643,11 +2653,12 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:100,103</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-api-credential-scopes-dialog.component.ts:104,107</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:165,168</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:358,360</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:142</note>
         <note category="location">src/app/features/settings/services/service-accounts-page.service.ts:214</note>
         <note category="location">src/app/features/settings/shared/entity-detail.ts:32</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:207</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:256</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:70,73</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:61,64</note>
@@ -2657,7 +2668,7 @@
         <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:23</note>
         <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:375</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
-        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:67,70</note>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:101,104</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:227</note>
         <note category="description">Dismisses a dialog without acting</note>
@@ -3341,6 +3352,16 @@
         <target>Ausgewählte Aufgaben löschen</target>
       </segment>
     </unit>
+    <unit id="5482268572400745383">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:455</note>
+        <note category="description">Note on the longest expiry an Azure DevOps token can have</note>
+      </notes>
+      <segment state="translated">
+        <source>up to 1 year</source>
+        <target>bis zu 1 Jahr</target>
+      </segment>
+    </unit>
     <unit id="548997937116395361">
       <notes>
         <note category="location">src/app/core/services/page-commands.service.ts:215</note>
@@ -3393,6 +3414,7 @@
     <unit id="5497627646066282315">
       <notes>
         <note category="location">src/app/app.routes.ts:29</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:146,150</note>
         <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:120,125</note>
         <note category="description">Page title while a source control connection completes</note>
       </notes>
@@ -3572,6 +3594,16 @@
       <segment state="translated">
         <source>The account could not be removed.</source>
         <target>Das Konto konnte nicht entfernt werden.</target>
+      </segment>
+    </unit>
+    <unit id="3118330198365386331">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:98,102</note>
+        <note category="description">Describes a connection&apos;s personal access token by its last four characters</note>
+      </notes>
+      <segment state="translated">
+        <source>Personal access token <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code class=&quot;font-mono&quot; &gt;" dispEnd="&lt;/code &gt;">••••<ph id="1" equiv="INTERPOLATION" disp="{{ connection.credentialHint }}"/></pc></source>
+        <target>Persönliches Zugriffstoken <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code class=&quot;font-mono&quot; &gt;" dispEnd="&lt;/code &gt;">••••<ph id="1" equiv="INTERPOLATION" disp="{{ connection.credentialHint }}"/></pc></target>
       </segment>
     </unit>
     <unit id="3118592863000722717">
@@ -3944,6 +3976,16 @@
       <segment state="translated">
         <source>Are you sure you wish to delete this tag</source>
         <target>Möchten Sie dieses Tag wirklich löschen</target>
+      </segment>
+    </unit>
+    <unit id="5924659487593659136">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:462</note>
+        <note category="description">Tag saying which feature needs the Azure DevOps Work Items scope</note>
+      </notes>
+      <segment state="translated">
+        <source>For imports</source>
+        <target>Für Importe</target>
       </segment>
     </unit>
     <unit id="6770769801335635194">
@@ -4610,7 +4652,7 @@
     </unit>
     <unit id="4500000909421273576">
       <notes>
-        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:29</note>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:35</note>
         <note category="description">Validation error when the expiry date of an access token has already passed</note>
       </notes>
       <segment state="initial">
@@ -4748,6 +4790,16 @@
       <segment state="translated">
         <source>Search, jump to a section, or type &gt; for commands…</source>
         <target>Suchen, zu einem Abschnitt springen oder &gt; für Befehle eingeben…</target>
+      </segment>
+    </unit>
+    <unit id="2954805443433527826">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:203,206</note>
+        <note category="description">Says who can create the Azure DevOps token. Custom defined is the Azure DevOps option name</note>
+      </notes>
+      <segment state="translated">
+        <source>You must be a Project Collection Administrator of the organisation. In the token page, choose <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Custom defined</pc> and match these settings.</source>
+        <target>Sie müssen Project Collection Administrator der Organisation sein. Wählen Sie auf der Token-Seite <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Custom defined</pc> und übernehmen Sie diese Einstellungen.</target>
       </segment>
     </unit>
     <unit id="2956098160626271284">
@@ -5260,7 +5312,7 @@
     </unit>
     <unit id="5851424994801012357">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:69,74</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:140,145</note>
         <note category="description">Badge on a source control connection the provider has suspended</note>
       </notes>
       <segment state="initial">
@@ -5866,7 +5918,7 @@
     </unit>
     <unit id="7818798991847790282">
       <notes>
-        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:88</note>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:127</note>
         <note category="description">Label of the optional field for the date an access token expires</note>
       </notes>
       <segment state="initial">
@@ -6043,6 +6095,16 @@
       <segment state="translated">
         <source>Search provider</source>
         <target>Suchanbieter</target>
+      </segment>
+    </unit>
+    <unit id="6759205696902713848">
+      <notes>
+        <note category="location">src/app/static/components/status-checklist/status-checklist.component.ts:38</note>
+        <note category="description">Screen reader label for a check that passed with a warning</note>
+      </notes>
+      <segment state="translated">
+        <source>Warning</source>
+        <target>Warnung</target>
       </segment>
     </unit>
     <unit id="6811068315125831753">
@@ -7335,6 +7397,16 @@
         <target>Status bearbeiten</target>
       </segment>
     </unit>
+    <unit id="5641408802363525119">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:177,184</note>
+        <note category="description">End of the hint for people without an Azure DevOps organisation</note>
+      </notes>
+      <segment state="translated">
+        <source>and come back. Azure DevOps asks for an Azure subscription when you create one, and the first five users are free.</source>
+        <target>und kommen Sie zurück. Azure DevOps verlangt beim Erstellen ein Azure-Abonnement, und die ersten fünf Benutzer sind kostenlos.</target>
+      </segment>
+    </unit>
     <unit id="3094546424333453555">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:249</note>
@@ -7685,7 +7757,7 @@
     </unit>
     <unit id="5858110625401609648">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:36,38</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:49,51</note>
         <note category="description">Explains what a source control connection is</note>
       </notes>
       <segment state="initial">
@@ -8106,7 +8178,7 @@
     <unit id="813263746069473514">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:149</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:66,68</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:394,402</note>
         <note category="location">src/app/features/source-control/views/source-control-callback-view/source-control-callback-view.component.ts:94,100</note>
         <note category="description">Button that connects web search</note>
       </notes>
@@ -8240,6 +8312,16 @@
       <segment state="translated">
         <source>Comment updated</source>
         <target>Kommentar aktualisiert</target>
+      </segment>
+    </unit>
+    <unit id="7248656477728488171">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:509</note>
+        <note category="description">Title of the placeholder shown while connection checks run. {0} is the provider name</note>
+      </notes>
+      <segment state="translated">
+        <source>Checking with <ph id="0" equiv="provider" disp="this.providerName"/></source>
+        <target>Prüfung mit <ph id="0" equiv="provider" disp="this.providerName"/></target>
       </segment>
     </unit>
     <unit id="7249772516873565478">
@@ -9959,6 +10041,17 @@
         <target>Zuständigkeit</target>
       </segment>
     </unit>
+    <unit id="2260867165135530722">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:174,179</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:83,88</note>
+        <note category="description">Button that opens the token dialog to give a connection a new token</note>
+      </notes>
+      <segment state="translated">
+        <source>Replace Token</source>
+        <target>Token ersetzen</target>
+      </segment>
+    </unit>
     <unit id="2262955156472438128">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-burndown-card.component.ts:44,45</note>
@@ -10245,7 +10338,7 @@
     </unit>
     <unit id="6319862504074456118">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:57,59</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:121,123</note>
         <note category="description">Label of the field for an Azure DevOps personal access token</note>
       </notes>
       <segment state="initial">
@@ -11658,6 +11751,17 @@
         <target>Tag hinzufügen</target>
       </segment>
     </unit>
+    <unit id="8412870208077922475">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:363,366</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:501</note>
+        <note category="description">Disabled button shown while connection checks run</note>
+      </notes>
+      <segment state="translated">
+        <source>Checking…</source>
+        <target>Wird geprüft…</target>
+      </segment>
+    </unit>
     <unit id="8414062594969817013">
       <notes>
         <note category="location">src/app/core/util/ai-review-copy.ts:47</note>
@@ -12091,6 +12195,16 @@
       <segment state="translated">
         <source>Chats</source>
         <target>Chats</target>
+      </segment>
+    </unit>
+    <unit id="6004901530920175327">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:350,352</note>
+        <note category="description">Shown while Netptune checks a token with the provider. {0} is the provider name</note>
+      </notes>
+      <segment state="translated">
+        <source> Checking with <ph id="0" equiv="INTERPOLATION" disp="{{ providerName }}"/>… </source>
+        <target> Prüfung mit <ph id="0" equiv="INTERPOLATION" disp="{{ providerName }}"/>… </target>
       </segment>
     </unit>
     <unit id="8734283461831058770">
@@ -12546,6 +12660,16 @@
         <target> Schritt <ph id="0" equiv="STEP" disp="{{ selectedIndex() + 1 // i18n(ph=&quot;STEP&quot;) }}"/> von <ph id="1" equiv="TOTAL" disp="{{ flowOrder().length // i18n(ph=&quot;TOTAL&quot;) }}"/> </target>
       </segment>
     </unit>
+    <unit id="5697157670923434360">
+      <notes>
+        <note category="location">src/app/static/components/status-checklist/status-checklist.component.ts:41</note>
+        <note category="description">Screen reader label for a check that is still running</note>
+      </notes>
+      <segment state="translated">
+        <source>Checking</source>
+        <target>Wird geprüft</target>
+      </segment>
+    </unit>
     <unit id="8383145857933967504">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:220,224</note>
@@ -12840,6 +12964,16 @@
         <target>Tage ab Ausführungsdatum</target>
       </segment>
     </unit>
+    <unit id="5763754748197380325">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:247,254</note>
+        <note category="description">Explains that Netptune checks the token and that Azure DevOps doesn&apos;t report its expiry date</note>
+      </notes>
+      <segment state="translated">
+        <source>Netptune checks the token before saving it. Azure DevOps doesn&apos;t tell Netptune the expiry date, so copy it from the token page if you want a reminder.</source>
+        <target>Netptune prüft das Token, bevor es gespeichert wird. Azure DevOps teilt Netptune das Ablaufdatum nicht mit; übernehmen Sie es von der Token-Seite, wenn Sie eine Erinnerung möchten.</target>
+      </segment>
+    </unit>
     <unit id="5764460420179405460">
       <notes>
         <note category="location">src/app/core/services/pin-commands.service.ts:77</note>
@@ -13099,7 +13233,7 @@
     </unit>
     <unit id="5981012101929159464">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:44</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:91</note>
         <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:66,67</note>
         <note category="location">src/app/features/workspaces/components/setup-steps/setup-repository-step.component.ts:106,107</note>
         <note category="description">Title of the dialog that connects a source control provider with a token</note>
@@ -14397,6 +14531,16 @@
         <target>Geltungsbereich</target>
       </segment>
     </unit>
+    <unit id="7045123878111147511">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:327,330</note>
+        <note category="description">Heading of the connection checks that must pass to connect</note>
+      </notes>
+      <segment state="translated">
+        <source>Required</source>
+        <target>Erforderlich</target>
+      </segment>
+    </unit>
     <unit id="7045726305292653146">
       <notes>
         <note category="location">src/app/features/pages/util/page-templates.ts:76</note>
@@ -14512,7 +14656,7 @@
     </unit>
     <unit id="2642466038653346310">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:204</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:253</note>
         <note category="description">Title of the disconnect source control confirmation</note>
       </notes>
       <segment state="initial">
@@ -14522,7 +14666,7 @@
     </unit>
     <unit id="2643772160333421542">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:56,60</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:69,73</note>
         <note category="description">Number of repositories linked through a source control connection</note>
       </notes>
       <segment state="initial">
@@ -14757,7 +14901,7 @@
     </unit>
     <unit id="4974769258684890058">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:107,109</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:245,247</note>
         <note category="description">Shown when a workspace has no source control connections</note>
       </notes>
       <segment state="initial">
@@ -14826,6 +14970,16 @@
       <segment state="translated">
         <source> Link Account </source>
         <target> Konto verknüpfen </target>
+      </segment>
+    </unit>
+    <unit id="8947475176219516530">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:111,114</note>
+        <note category="description">Badge counting the failed checks of a connection</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {1 failed} other {<ph id="0" equiv="INTERPOLATION"/> failed}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 fehlgeschlagen} other {<ph id="0" equiv="INTERPOLATION"/> fehlgeschlagen}}</target>
       </segment>
     </unit>
     <unit id="8949873009695123445">
@@ -14937,6 +15091,16 @@
       <segment state="translated">
         <source>Clear date</source>
         <target>Datum entfernen</target>
+      </segment>
+    </unit>
+    <unit id="1537894183136535574">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:222,224</note>
+        <note category="description">Hides a connection&apos;s check results</note>
+      </notes>
+      <segment state="translated">
+        <source>Hide checks</source>
+        <target>Prüfungen ausblenden</target>
       </segment>
     </unit>
     <unit id="4819261854771153538">
@@ -15178,6 +15342,16 @@
         <target>Tage vor dem Sprint-Enddatum</target>
       </segment>
     </unit>
+    <unit id="4700256538952348173">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:110,112</note>
+        <note category="description">Title of the step where the Azure DevOps token is pasted</note>
+      </notes>
+      <segment state="translated">
+        <source>Paste the token</source>
+        <target>Token einfügen</target>
+      </segment>
+    </unit>
     <unit id="4703848376604347254">
       <notes>
         <note category="location">src/app/features/profile/components/update-profile-image/update-profile-image.component.ts:43,45</note>
@@ -15320,8 +15494,9 @@
     </unit>
     <unit id="1593487004300420140">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:52,54</note>
-        <note category="description">Label of the field for the Azure DevOps organisation to connect</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:101,103</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:261,264</note>
+        <note category="description">Title of the step that names the Azure DevOps organisation to connect</note>
       </notes>
       <segment state="initial">
         <source>Organisation</source>
@@ -15416,6 +15591,16 @@
       </notes>
       <segment state="translated">
         <source>Change</source>
+        <target>Ändern</target>
+      </segment>
+    </unit>
+    <unit id="5830314630242453415">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:278,281</note>
+        <note category="description">Returns to the token form to change what was entered</note>
+      </notes>
+      <segment state="translated">
+        <source> Change </source>
         <target>Ändern</target>
       </segment>
     </unit>
@@ -17216,6 +17401,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:594</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:700</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:262</note>
+        <note category="location">src/app/static/components/status-checklist/status-checklist.component.ts:39</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment state="translated">
@@ -17241,6 +17427,7 @@
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:106</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:601</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:284</note>
+        <note category="location">src/app/static/components/status-checklist/status-checklist.component.ts:40</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment state="translated">
@@ -17603,6 +17790,16 @@
       <segment state="translated">
         <source>How far list, dashboard and report pages stretch across the window.</source>
         <target>Wie weit sich Listen-, Dashboard- und Berichtsseiten über das Fenster erstrecken.</target>
+      </segment>
+    </unit>
+    <unit id="3039940756451018621">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:270,271</note>
+        <note category="description">Label before the last characters of the token being checked</note>
+      </notes>
+      <segment state="translated">
+        <source>Token</source>
+        <target>Token</target>
       </segment>
     </unit>
     <unit id="5822400241112958496">
@@ -18261,16 +18458,6 @@
         <target>Aufgabe „<ph id="0" equiv="NAME" disp="name"/>“ erstellen</target>
       </segment>
     </unit>
-    <unit id="5844317599157264798">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:61,63</note>
-        <note category="description">Hint under the optional expiry date of a source control access token</note>
-      </notes>
-      <segment state="initial">
-        <source>Shown on the connection so you know when to replace it</source>
-        <target>Wird an der Verbindung angezeigt, damit Sie wissen, wann es ersetzt werden muss</target>
-      </segment>
-    </unit>
     <unit id="5845168339632458508">
       <notes>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:224</note>
@@ -18760,6 +18947,16 @@
         <target>Versionsverlauf</target>
       </segment>
     </unit>
+    <unit id="3642463309492812017">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:159,161</note>
+        <note category="description">Button that re-runs a connection&apos;s checks</note>
+      </notes>
+      <segment state="translated">
+        <source>Check Connection</source>
+        <target>Verbindung prüfen</target>
+      </segment>
+    </unit>
     <unit id="3646053136746522210">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:118</note>
@@ -18828,6 +19025,16 @@
       <segment state="translated">
         <source>Check your connection and try again.</source>
         <target>Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.</target>
+      </segment>
+    </unit>
+    <unit id="3201757024674302833">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:210,211</note>
+        <note category="description">When a connection&apos;s checks last ran, as a relative time</note>
+      </notes>
+      <segment state="translated">
+        <source>Last checked <ph id="0" equiv="INTERPOLATION" disp="{{ lastChecked(connection) }}"/></source>
+        <target>Zuletzt geprüft <ph id="0" equiv="INTERPOLATION" disp="{{ lastChecked(connection) }}"/></target>
       </segment>
     </unit>
     <unit id="3202007690147542060">
@@ -19522,6 +19729,16 @@
         <target> Andere E-Mail-Adresse verwenden </target>
       </segment>
     </unit>
+    <unit id="1406150209536059013">
+      <notes>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:135</note>
+        <note category="description">Shown when checking a source control connection fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The connection could not be checked.</source>
+        <target>Die Verbindung konnte nicht geprüft werden.</target>
+      </segment>
+    </unit>
     <unit id="1407560924967345762">
       <notes>
         <note category="location">src/app/core/transforms/entity-type.ts:28</note>
@@ -19702,7 +19919,7 @@
     </unit>
     <unit id="9007078948220384866">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:230</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:279</note>
         <note category="description">Shown when disconnecting a source control account fails</note>
       </notes>
       <segment state="initial">
@@ -19739,6 +19956,16 @@
       <segment state="translated">
         <source> Descending </source>
         <target>Absteigend</target>
+      </segment>
+    </unit>
+    <unit id="8646612082927114921">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:312,319</note>
+        <note category="description">Explains the choice when only optional connection checks have warnings</note>
+      </notes>
+      <segment state="translated">
+        <source> Add the missing scopes to the token now, or connect and add them later. Netptune re-checks when you choose Check Connection. </source>
+        <target>Fügen Sie die fehlenden Bereiche jetzt zum Token hinzu, oder verbinden Sie und fügen Sie sie später hinzu. Netptune prüft erneut, wenn Sie Verbindung prüfen wählen.</target>
       </segment>
     </unit>
     <unit id="661825300358772750">
@@ -20017,6 +20244,17 @@
         <target>Geändert</target>
       </segment>
     </unit>
+    <unit id="3555090147337707286">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:374,377</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:381,384</note>
+        <note category="description">Button that runs the connection checks again</note>
+      </notes>
+      <segment state="translated">
+        <source>Check again</source>
+        <target>Erneut prüfen</target>
+      </segment>
+    </unit>
     <unit id="3557530844157929330">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-banner.component.ts:83</note>
@@ -20085,16 +20323,6 @@
       <segment state="translated">
         <source>Automation enabled</source>
         <target>Automatisierung aktiviert</target>
-      </segment>
-    </unit>
-    <unit id="1612675124578229059">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:86,88</note>
-        <note category="description">Azure DevOps token scope for reading pipelines</note>
-      </notes>
-      <segment state="initial">
-        <source> Build (read) </source>
-        <target> Build (Lesen) </target>
       </segment>
     </unit>
     <unit id="5810814854864452102">
@@ -20929,7 +21157,7 @@
     </unit>
     <unit id="1417693714872528491">
       <notes>
-        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:28</note>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:34</note>
         <note category="description">Validation error when a required field of the access token form is empty</note>
       </notes>
       <segment state="initial">
@@ -21397,6 +21625,16 @@
       <segment state="translated">
         <source> Move <ph id="0" equiv="TASK_ID" disp="{{ data.task.systemId // i18n(ph=&quot;TASK_ID&quot;) }}"/> </source>
         <target> <ph id="0" equiv="TASK_ID" disp="{{ data.task.systemId // i18n(ph=&quot;TASK_ID&quot;) }}"/> verschieben </target>
+      </segment>
+    </unit>
+    <unit id="1023725175571759260">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:467</note>
+        <note category="description">Tag saying which feature needs the Azure DevOps Build scope</note>
+      </notes>
+      <segment state="translated">
+        <source>For build status</source>
+        <target>Für den Build-Status</target>
       </segment>
     </unit>
     <unit id="1023931309557040065">
@@ -22133,6 +22371,16 @@
         <target>Damit wird die Abfrage für alle entfernt, mit denen sie geteilt ist. Die aufgeführten Aufgaben bleiben unberührt.</target>
       </segment>
     </unit>
+    <unit id="4189709172826722100">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:306,309</note>
+        <note category="description">Headline when only optional connection checks have warnings</note>
+      </notes>
+      <segment state="translated">
+        <source>You can connect, but some features won&apos;t work.</source>
+        <target>Sie können verbinden, aber einige Funktionen werden nicht funktionieren.</target>
+      </segment>
+    </unit>
     <unit id="4953883075448493084">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:46,48</note>
@@ -22287,7 +22535,6 @@
     <unit id="7593555694782789615">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:190</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:116,120</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:151</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:68</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes.component.ts:58,59</note>
@@ -22346,6 +22593,16 @@
       <segment state="translated">
         <source>pushed <ph id="0" equiv="COUNT" disp="count"/> commits</source>
         <target>hat <ph id="0" equiv="COUNT" disp="count"/> Commits gepusht</target>
+      </segment>
+    </unit>
+    <unit id="1541369093323945540">
+      <notes>
+        <note category="location">src/app/static/components/status-checklist/status-checklist.component.ts:37</note>
+        <note category="description">Screen reader label for a check that passed</note>
+      </notes>
+      <segment state="translated">
+        <source>Passed</source>
+        <target>Bestanden</target>
       </segment>
     </unit>
     <unit id="1541678370896041349">
@@ -22508,6 +22765,16 @@
       <segment state="translated">
         <source>Not enough finished work yet.</source>
         <target>Noch nicht genug abgeschlossene Arbeit.</target>
+      </segment>
+    </unit>
+    <unit id="5916800642743638799">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:156,160</note>
+        <note category="description">Start of the hint for people without an Azure DevOps organisation</note>
+      </notes>
+      <segment state="translated">
+        <source>No organisation yet?</source>
+        <target>Noch keine Organisation?</target>
       </segment>
     </unit>
     <unit id="5917235910239060692">
@@ -23048,6 +23315,16 @@
         <target><ph id="0" equiv="APPLIED" disp="applied"/> von <ph id="1" equiv="TOTAL" disp="total"/> angewendet · <ph id="2" equiv="FAILED" disp="failed"/> fehlgeschlagen</target>
       </segment>
     </unit>
+    <unit id="80595322901747144">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:231,232</note>
+        <note category="description">Link that opens the Azure DevOps token page of an organisation in a new tab</note>
+      </notes>
+      <segment state="translated">
+        <source>Open token page for <ph id="0" equiv="INTERPOLATION" disp="{{ organisation() }}"/></source>
+        <target>Token-Seite für <ph id="0" equiv="INTERPOLATION" disp="{{ organisation() }}"/> öffnen</target>
+      </segment>
+    </unit>
     <unit id="8762019541565613143">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:158</note>
@@ -23570,16 +23847,6 @@
         <target>Verbleibende Sprint-Arbeit und idealer Burndown</target>
       </segment>
     </unit>
-    <unit id="3187502498792818660">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:97,101</note>
-        <note category="description">Explains that an Azure DevOps token must belong to one organisation</note>
-      </notes>
-      <segment state="initial">
-        <source> Scope the token to this one organisation, not to all accessible organisations. </source>
-        <target> Beschränken Sie das Token auf genau diese Organisation, nicht auf alle zugänglichen Organisationen. </target>
-      </segment>
-    </unit>
     <unit id="318764327084091382">
       <notes>
         <note category="location">src/app/static/components/user-select/user-select.component.ts:120,122</note>
@@ -23718,6 +23985,16 @@
       <segment state="translated">
         <source>Median cycle</source>
         <target>Medianer Zyklus</target>
+      </segment>
+    </unit>
+    <unit id="590930274766089738">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:106,109</note>
+        <note category="description">Title of the step that explains how to create an Azure DevOps personal access token</note>
+      </notes>
+      <segment state="translated">
+        <source>Create a personal access token</source>
+        <target>Persönliches Zugriffstoken erstellen</target>
       </segment>
     </unit>
     <unit id="5909761179824611083">
@@ -24619,6 +24896,16 @@
         <target>einen entfernten Benutzer</target>
       </segment>
     </unit>
+    <unit id="2779194971948401510">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:444</note>
+        <note category="description">Placeholder for the Azure DevOps organisation in the token settings table</note>
+      </notes>
+      <segment state="translated">
+        <source>your organisation</source>
+        <target>Ihre Organisation</target>
+      </segment>
+    </unit>
     <unit id="4257828580066254399">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:50,51</note>
@@ -25105,6 +25392,16 @@
         <target>Startdatum der Roadmap</target>
       </segment>
     </unit>
+    <unit id="7050008876857732344">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:485</note>
+        <note category="description">Expiry date of the token being checked. {0} is the date</note>
+      </notes>
+      <segment state="translated">
+        <source>expires <ph id="0" equiv="date" disp="date"/></source>
+        <target>läuft am <ph id="0" equiv="date" disp="date"/> ab</target>
+      </segment>
+    </unit>
     <unit id="7050417113599636550">
       <notes>
         <note category="location">src/app/core/services/page-commands.service.ts:224</note>
@@ -25133,16 +25430,6 @@
       <segment state="translated">
         <source>Roadmap zoom</source>
         <target>Roadmap-Zoom</target>
-      </segment>
-    </unit>
-    <unit id="2430369261275419556">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:89,93</note>
-        <note category="description">Azure DevOps token scope for reading projects and teams</note>
-      </notes>
-      <segment state="initial">
-        <source> Project and Team (read) </source>
-        <target> Projekt und Team (Lesen) </target>
       </segment>
     </unit>
     <unit id="2431779726507487762">
@@ -25261,6 +25548,16 @@
         <target>Einbezogen</target>
       </segment>
     </unit>
+    <unit id="1285528984799335938">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:125,127</note>
+        <note category="description">Label of the optional field for the date an Azure DevOps token expires</note>
+      </notes>
+      <segment state="translated">
+        <source>Expires on (optional)</source>
+        <target>Läuft ab am (optional)</target>
+      </segment>
+    </unit>
     <unit id="1286135493079382754">
       <notes>
         <note category="location">src/app/shared/components/source-control-repo-picker/source-control-repo-picker.component.ts:158</note>
@@ -25319,6 +25616,16 @@
       <segment state="translated">
         <source>Week</source>
         <target>Woche</target>
+      </segment>
+    </unit>
+    <unit id="5145380211253806073">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:130,133</note>
+        <note category="description">Button that checks an Azure DevOps token and connects when the checks pass</note>
+      </notes>
+      <segment state="translated">
+        <source>Check and connect</source>
+        <target>Prüfen und verbinden</target>
       </segment>
     </unit>
     <unit id="4776806173794348537">
@@ -26196,6 +26503,16 @@
         <target>Konten der Quellcodeverwaltung</target>
       </segment>
     </unit>
+    <unit id="3057779050839416530">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:114,116</note>
+        <note category="description">Label of the field for the Azure DevOps organisation to connect</note>
+      </notes>
+      <segment state="translated">
+        <source>Organisation name or URL</source>
+        <target>Name oder URL der Organisation</target>
+      </segment>
+    </unit>
     <unit id="5885532337718779371">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:42,45</note>
@@ -26874,16 +27191,6 @@
         <target>Antwort wird geschrieben…</target>
       </segment>
     </unit>
-    <unit id="290429681863961318">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:80,82</note>
-        <note category="description">Azure DevOps token scope for reading repositories</note>
-      </notes>
-      <segment state="initial">
-        <source> Code (read) </source>
-        <target> Code (Lesen) </target>
-      </segment>
-    </unit>
     <unit id="4584368643492582099">
       <notes>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:467</note>
@@ -26942,6 +27249,16 @@
       <segment state="translated">
         <source> The service account will be ready for a credential whenever you need one. </source>
         <target>Das Dienstkonto ist bereit, sobald Sie Zugangsdaten benötigen.</target>
+      </segment>
+    </unit>
+    <unit id="7318550125441956198">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:129,132</note>
+        <note category="description">Badge on a connection whose checks all passed</note>
+      </notes>
+      <segment state="translated">
+        <source>All checks passed</source>
+        <target>Alle Prüfungen bestanden</target>
       </segment>
     </unit>
     <unit id="7430110226379673413">
@@ -27208,6 +27525,16 @@
       <segment state="translated">
         <source> Edit Service Account </source>
         <target>Dienstkonto bearbeiten</target>
+      </segment>
+    </unit>
+    <unit id="8166888720056329385">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:335,339</note>
+        <note category="description">Heading of the connection checks only later features need</note>
+      </notes>
+      <segment state="translated">
+        <source>Used by later features</source>
+        <target>Von späteren Funktionen genutzt</target>
       </segment>
     </unit>
     <unit id="8169241385964351300">
@@ -28628,7 +28955,7 @@
     </unit>
     <unit id="5603033194044285473">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:94,97</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:196,199</note>
         <note category="location">src/app/features/settings/components/source-control/source-control-repos-dialog.component.ts:29,33</note>
         <note category="description">Button that opens the repository picker for a connection</note>
       </notes>
@@ -29282,6 +29609,16 @@
         <target>Orte anzeigen</target>
       </segment>
     </unit>
+    <unit id="2811466629700662959">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:226,228</note>
+        <note category="description">Shows a connection&apos;s check results</note>
+      </notes>
+      <segment state="translated">
+        <source>Show checks</source>
+        <target>Prüfungen anzeigen</target>
+      </segment>
+    </unit>
     <unit id="2812208926273686149">
       <notes>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:99,102</note>
@@ -29578,6 +29915,16 @@
         <target>Abfragen</target>
       </segment>
     </unit>
+    <unit id="6925280613213918905">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:290,293</note>
+        <note category="description">Headline when a required connection check failed</note>
+      </notes>
+      <segment state="translated">
+        <source>Netptune can&apos;t connect with this token.</source>
+        <target>Netptune kann mit diesem Token keine Verbindung herstellen.</target>
+      </segment>
+    </unit>
     <unit id="6928679808877898416">
       <notes>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:287</note>
@@ -29723,6 +30070,16 @@
       <segment state="translated">
         <source>New</source>
         <target>Neu</target>
+      </segment>
+    </unit>
+    <unit id="5282634162818972986">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:192,195</note>
+        <note category="description">Says who can create the Azure DevOps token for a named organisation. Custom defined is the Azure DevOps option name</note>
+      </notes>
+      <segment state="translated">
+        <source>You must be a Project Collection Administrator of <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ organisation }}"/></pc>. In the token page, choose <pc id="2" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Custom defined</pc> and match these settings.</source>
+        <target>Sie müssen Project Collection Administrator von <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ organisation }}"/></pc> sein. Wählen Sie auf der Token-Seite <pc id="2" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Custom defined</pc> und übernehmen Sie diese Einstellungen.</target>
       </segment>
     </unit>
     <unit id="8384225360105280028">
@@ -30295,6 +30652,16 @@
       <segment state="initial">
         <source>Applies to</source>
         <target>Gilt für</target>
+      </segment>
+    </unit>
+    <unit id="818847493017300906">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:450</note>
+        <note category="description">Note that the Azure DevOps token must not cover every organisation. All accessible organizations is the Azure DevOps option name</note>
+      </notes>
+      <segment state="translated">
+        <source>(not &quot;All accessible organizations&quot;)</source>
+        <target>(nicht „All accessible organizations“)</target>
       </segment>
     </unit>
     <unit id="818882206456622635">
@@ -31272,6 +31639,16 @@
         <target>Inhalt</target>
       </segment>
     </unit>
+    <unit id="4346070221284904148">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:120,123</note>
+        <note category="description">Badge counting the check warnings of a connection</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {1 warning} other {<ph id="0" equiv="INTERPOLATION"/> warnings}}</source>
+        <target>{VAR_PLURAL, plural, =1 {1 Warnung} other {<ph id="0" equiv="INTERPOLATION"/> Warnungen}}</target>
+      </segment>
+    </unit>
     <unit id="4347094825344030699">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:611</note>
@@ -31496,7 +31873,7 @@
     </unit>
     <unit id="5740900064270211020">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:111,117</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:249,255</note>
         <note category="description">Explains how to add the first source control connection</note>
       </notes>
       <segment state="initial">
@@ -32395,6 +32772,16 @@
         <target>Die Antwort des Assistenten konnte nicht gelesen werden.</target>
       </segment>
     </unit>
+    <unit id="4175725336747858014">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:215,219</note>
+        <note category="description">Heading of the table listing the settings for a new Azure DevOps token</note>
+      </notes>
+      <segment state="translated">
+        <source>Settings for the new token</source>
+        <target>Einstellungen für das neue Token</target>
+      </segment>
+    </unit>
     <unit id="4176159076663605915">
       <notes>
         <note category="location">src/app/features/profile/components/source-control-accounts/source-control-accounts.component.ts:73,77</note>
@@ -32567,6 +32954,16 @@
         <target>Ergebnisse</target>
       </segment>
     </unit>
+    <unit id="6037125484787749428">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:166,169</note>
+        <note category="description">Link that opens Azure DevOps to create an organisation</note>
+      </notes>
+      <segment state="translated">
+        <source>Create one in Azure DevOps</source>
+        <target>Erstellen Sie eine in Azure DevOps</target>
+      </segment>
+    </unit>
     <unit id="7982607155521959690">
       <notes>
         <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:10</note>
@@ -32575,16 +32972,6 @@
       <segment state="initial">
         <source>select</source>
         <target>Auswahl</target>
-      </segment>
-    </unit>
-    <unit id="7983381297360999047">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:76,79</note>
-        <note category="description">Introduces the Azure DevOps scopes a personal access token needs</note>
-      </notes>
-      <segment state="initial">
-        <source> Create the token with these scopes: </source>
-        <target> Erstellen Sie das Token mit diesen Bereichen: </target>
       </segment>
     </unit>
     <unit id="7984088154288778834">
@@ -32853,7 +33240,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-connections.component.ts:65,68</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:136</note>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:34,35</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:47,48</note>
         <note category="description">Heading of the assistant connections card</note>
       </notes>
       <segment state="translated">
@@ -32903,7 +33290,7 @@
     </unit>
     <unit id="5087255234379846922">
       <notes>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:205</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:254</note>
         <note category="description">Explains what disconnecting a source control account does</note>
       </notes>
       <segment state="initial">
@@ -32974,7 +33361,7 @@
     </unit>
     <unit id="2115913605779119787">
       <notes>
-        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:85</note>
+        <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:124</note>
         <note category="description">Label of the field for an access token used to connect another service</note>
       </notes>
       <segment state="initial">
@@ -33392,7 +33779,7 @@
     </unit>
     <unit id="2602391712649193774">
       <notes>
-        <note category="location">src/app/core/services/source-control-commands.service.ts:91</note>
+        <note category="location">src/app/core/services/source-control-commands.service.ts:103</note>
         <note category="description">Shown when finishing a source control connection fails</note>
       </notes>
       <segment state="initial">
@@ -33839,16 +34226,6 @@
       <segment state="initial">
         <source> Log out </source>
         <target>Abmelden</target>
-      </segment>
-    </unit>
-    <unit id="3402416728329434286">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:83,85</note>
-        <note category="description">Azure DevOps token scope for reading work items</note>
-      </notes>
-      <segment state="initial">
-        <source> Work Items (read) </source>
-        <target> Arbeitselemente (Lesen) </target>
       </segment>
     </unit>
     <unit id="3407056172872902855">
@@ -34755,16 +35132,6 @@
         <target>Formularfortschritt</target>
       </segment>
     </unit>
-    <unit id="4871199974635323816">
-      <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-token-dialog.component.ts:106,110</note>
-        <note category="description">Introduces the address where Azure DevOps tokens are created</note>
-      </notes>
-      <segment state="initial">
-        <source>Create it at</source>
-        <target>Erstellen Sie es unter</target>
-      </segment>
-    </unit>
     <unit id="4020116938479649149">
       <notes>
         <note category="location">src/app/static/components/table/table.component.ts:78,89</note>
@@ -34808,8 +35175,8 @@
     </unit>
     <unit id="2907016025519254862">
       <notes>
-        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:82,85</note>
-        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:206</note>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:184,187</note>
+        <note category="location">src/app/features/settings/views/workspace-source-control-view/workspace-source-control-view.component.ts:255</note>
         <note category="description">Button that removes a source control connection</note>
       </notes>
       <segment state="initial">
@@ -35383,6 +35750,16 @@
       <segment state="initial">
         <source>Leave without sending invites?</source>
         <target>Verlassen, ohne Einladungen zu senden?</target>
+      </segment>
+    </unit>
+    <unit id="9198133764691903630">
+      <notes>
+        <note category="location">src/app/features/settings/components/source-control/source-control-connections.component.ts:83,91</note>
+        <note category="description">Describes a connection&apos;s personal access token by its last four characters and its expiry date</note>
+      </notes>
+      <segment state="translated">
+        <source>Personal access token <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code class=&quot;font-mono&quot; &gt;" dispEnd="&lt;/code &gt;">••••<ph id="1" equiv="INTERPOLATION" disp="{{ connection.credentialHint }}"/></pc> · expires <ph id="2" equiv="INTERPOLATION_1" disp="{{ connection.credentialExpiresAt | date: &apos;mediumDate&apos; }}"/></source>
+        <target>Persönliches Zugriffstoken <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code class=&quot;font-mono&quot; &gt;" dispEnd="&lt;/code &gt;">••••<ph id="1" equiv="INTERPOLATION" disp="{{ connection.credentialHint }}"/></pc> · läuft ab am <ph id="2" equiv="INTERPOLATION_1" disp="{{ connection.credentialExpiresAt | date: &apos;mediumDate&apos; }}"/></target>
       </segment>
     </unit>
     <unit id="1978378776147370036">

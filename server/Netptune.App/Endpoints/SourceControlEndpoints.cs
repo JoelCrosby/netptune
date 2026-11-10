@@ -38,6 +38,10 @@ public static class SourceControlEndpoints
             .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
             .Broadcasts(WorkspaceEventScopes.SourceControl, WorkspaceEventScopes.CodeLinks);
 
+        group.MapPost("/connections/{connectionId:int}/check", HandleCheckConnection)
+            .RequireAuthorization(NetptunePermissions.SourceControl.Manage)
+            .Broadcasts(WorkspaceEventScopes.SourceControl);
+
         group.MapGet("/connections/{connectionId:int}/repos", HandleGetRepos)
             .RequireAuthorization(NetptunePermissions.SourceControl.Read);
 
@@ -107,6 +111,16 @@ public static class SourceControlEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DisconnectSourceControlConnectionCommand(connectionId), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleCheckConnection(
+        int connectionId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CheckSourceControlConnectionCommand(connectionId), cancellationToken);
 
         return result.ToResult();
     }

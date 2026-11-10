@@ -4,6 +4,7 @@ import { ClientResponse } from '@core/models/client-response';
 import {
   ScmRepoSyncResult,
   SourceControlConnectCompletion,
+  SourceControlConnection,
   SourceControlConnectStart,
   SourceControlIdentity,
   SourceControlProvider,
@@ -23,11 +24,19 @@ export class SourceControlService {
 
   completeConnect(
     provider: SourceControlProvider,
-    parameters: Record<string, string>
+    parameters: Record<string, string>,
+    acceptWarnings = false
   ) {
     return this.http.post<ClientResponse<SourceControlConnectCompletion>>(
       'api/source-control/connections/complete',
-      { provider, parameters }
+      { provider, parameters, acceptWarnings }
+    );
+  }
+
+  checkConnection(connectionId: number) {
+    return this.http.post<ClientResponse<SourceControlConnection>>(
+      `api/source-control/connections/${connectionId}/check`,
+      null
     );
   }
 

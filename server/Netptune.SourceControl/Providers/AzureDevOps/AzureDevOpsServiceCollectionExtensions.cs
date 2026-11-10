@@ -33,6 +33,7 @@ internal static class AzureDevOpsServiceCollectionExtensions
 #pragma warning restore EXTEXP0001
 
         services.AddSingleton<AzureDevOpsApi>();
+        services.AddSingleton<AzureDevOpsConnectionChecker>();
         services.AddSingleton<AzureDevOpsConnector>();
         services.AddSingleton<AzureDevOpsSourceControlClient>();
         services.AddSingleton<ISourceControlProvider, AzureDevOpsSourceControlProvider>();

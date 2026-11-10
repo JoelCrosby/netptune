@@ -3,7 +3,8 @@ import { cn } from './button/button.variants';
 import { listRowVariants } from './list-row.component';
 
 // A bordered row led by a picture or preview, with a heading, a description and
-// trailing actions that wrap underneath on narrow screens.
+// trailing actions that wrap underneath on narrow screens, and an optional
+// full-width footer.
 @Component({
   selector: 'app-media-row',
   host: { '[class]': 'hostClass()' },
@@ -21,6 +22,10 @@ import { listRowVariants } from './list-row.component';
 
     <div class="flex shrink-0 items-center gap-2 empty:hidden">
       <ng-content select="[mediaRowActions]" />
+    </div>
+
+    <div class="min-w-0 basis-full empty:hidden">
+      <ng-content select="[mediaRowFooter]" />
     </div>
 
     <ng-content select="[mediaRowOverlay]" />

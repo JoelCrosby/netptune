@@ -3,8 +3,11 @@ using System.Net;
 using FluentAssertions;
 
 using Netptune.Core.Localization;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 using Netptune.Core.SourceControl.Connect;
+using Netptune.SourceControl.Providers.AzureDevOps;
 using Netptune.UnitTests.Netptune.SourceControl.Support;
 
 using Xunit;
@@ -22,8 +25,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [InlineData("https://acme.visualstudio.com")]
     public async Task CompleteConnect_ShouldStoreTheBareOrganisationName(string organisation)
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         var callback = AzureDevOpsTestHarness.CreateCallback(organisation);
         var result = await Harness.Connector.CompleteConnect(callback, TestContext.Current.CancellationToken);
@@ -70,8 +72,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [Fact]
     public async Task CompleteConnect_ShouldValidateTheTokenWithBasicAuthAndAnEmptyUserName()
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
@@ -92,7 +93,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.Message.Should().Be(AppText.ErrorAzureDevOpsTokenRejected);
+        ShouldBeRefusedBy(result, AzureDevOpsConnectionChecker.TokenKey);
     }
 
     [Fact]
@@ -108,7 +109,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.Message.Should().Be(AppText.ErrorAzureDevOpsTokenRejected);
+        ShouldBeRefusedBy(result, AzureDevOpsConnectionChecker.TokenKey);
     }
 
     [Fact]
@@ -124,7 +125,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.Message.Should().Be(AppText.ErrorAzureDevOpsTokenRejected);
+        ShouldBeRefusedBy(result, AzureDevOpsConnectionChecker.TokenKey);
     }
 
     [Fact]
@@ -136,14 +137,13 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.Message.Should().Be(Localized.Format(AppText.ErrorAzureDevOpsOrganisationNotFound, "acme"));
+        ShouldBeRefusedBy(result, AzureDevOpsConnectionChecker.OrganisationKey);
     }
 
     [Fact]
     public async Task CompleteConnect_ShouldStoreTheInstanceIdTheEncryptedTokenItsHintAndExpiry()
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         var callback = AzureDevOpsTestHarness.CreateCallback(expiresOn: "2026-12-31");
         var result = await Harness.Connector.CompleteConnect(callback, TestContext.Current.CancellationToken);
@@ -166,8 +166,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [Fact]
     public async Task CompleteConnect_ShouldAcceptAnExpiryOfToday()
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         var callback = AzureDevOpsTestHarness.CreateCallback(expiresOn: "2026-11-10");
         var result = await Harness.Connector.CompleteConnect(callback, TestContext.Current.CancellationToken);
@@ -178,8 +177,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [Fact]
     public async Task CompleteConnect_ShouldAcceptYesterdaysUtcDateForUsersBehindUtc()
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         var callback = AzureDevOpsTestHarness.CreateCallback(expiresOn: "2026-11-09");
         var result = await Harness.Connector.CompleteConnect(callback, TestContext.Current.CancellationToken);
@@ -190,8 +188,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [Fact]
     public async Task CompleteConnect_ShouldLeaveTheExpiryEmptyWhenNoneIsGiven()
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         var result = await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
@@ -203,14 +200,13 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [Fact]
     public async Task CompleteConnect_ShouldAskTheCollectionSecurityNamespaceWhetherTheUserIsAnAdministrator()
     {
-        Harness.StubConnectionData();
-        Harness.StubAdministrator(isAdministrator: true);
+        Harness.StubPassingChecks();
 
         await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        var permissionCheck = Harness.Http.Requests.Last();
+        var permissionCheck = Harness.Http.Requests.First(request => request.Uri.AbsolutePath.Contains("permissions"));
 
         permissionCheck.Uri.PathAndQuery.Should().Be(AzureDevOpsTestHarness.AdministratorPath);
         permissionCheck.Authorization.Should().Be(AzureDevOpsTestHarness.BasicCredential());
@@ -219,15 +215,16 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [Fact]
     public async Task CompleteConnect_ShouldRefuseATokenThatIsNotAnAdministrators()
     {
-        Harness.StubConnectionData();
+        Harness.StubPassingChecks();
         Harness.StubAdministrator(isAdministrator: false);
 
         var result = await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be(AppText.ErrorAzureDevOpsNotAdministrator);
+        var administrator = ShouldBeRefusedBy(result, AzureDevOpsConnectionChecker.AdministratorKey);
+
+        administrator.Facts[AzureDevOpsConnectionChecker.ReasonFact].Should().Be(AzureDevOpsConnectionChecker.DeniedReason);
     }
 
     [Theory]
@@ -237,52 +234,79 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
     [InlineData(HttpStatusCode.NonAuthoritativeInformation)]
     public async Task CompleteConnect_ShouldRefuseWhenThePermissionCannotBeRead(HttpStatusCode status)
     {
-        Harness.StubConnectionData();
+        Harness.StubPassingChecks();
         Harness.Http.On(HttpMethod.Get, AzureDevOpsTestHarness.AdministratorPath, status);
+        Harness.Http.On(HttpMethod.Get, AzureDevOpsTestHarness.AdministratorFallbackPath, status);
 
         var result = await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Be(AppText.ErrorAzureDevOpsAdminCheckUnavailable);
+        ShouldBeRefusedAsAdministratorUnavailable(result);
     }
 
     [Fact]
     public async Task CompleteConnect_ShouldRefuseWhenThePermissionAnswerIsEmpty()
     {
-        Harness.StubConnectionData();
-        Harness.Http.On(
-            HttpMethod.Get,
-            AzureDevOpsTestHarness.AdministratorPath,
-            HttpStatusCode.OK,
-            """{ "count": 0, "value": [] }""");
+        Harness.StubPassingChecks();
+
+        foreach (var path in new[] { AzureDevOpsTestHarness.AdministratorPath, AzureDevOpsTestHarness.AdministratorFallbackPath })
+        {
+            Harness.Http.On(HttpMethod.Get, path, HttpStatusCode.OK, """{ "count": 0, "value": [] }""");
+        }
 
         var result = await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        result.Message.Should().Be(AppText.ErrorAzureDevOpsAdminCheckUnavailable);
+        ShouldBeRefusedAsAdministratorUnavailable(result);
     }
 
     [Fact]
-    public async Task CompleteConnect_ShouldThrowAProviderExceptionWithoutTheTokenWhenThePermissionCallFails()
+    public async Task CompleteConnect_ShouldRefuseWhenThePermissionCallFails()
     {
-        Harness.StubConnectionData();
-        Harness.Http.On(
-            HttpMethod.Get,
-            AzureDevOpsTestHarness.AdministratorPath,
-            HttpStatusCode.InternalServerError,
-            """{ "message": "Something went wrong" }""");
+        Harness.StubPassingChecks();
 
-        var connect = async () => await Harness.Connector.CompleteConnect(
+        foreach (var path in new[] { AzureDevOpsTestHarness.AdministratorPath, AzureDevOpsTestHarness.AdministratorFallbackPath })
+        {
+            Harness.Http.On(HttpMethod.Get, path, HttpStatusCode.InternalServerError, """{ "message": "Something went wrong" }""");
+        }
+
+        var result = await Harness.Connector.CompleteConnect(
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        var thrown = await connect.Should().ThrowAsync<ScmProviderException>();
+        ShouldBeRefusedAsAdministratorUnavailable(result);
+    }
 
-        thrown.Which.StatusCode.Should().Be(500);
-        thrown.Which.ToString().Should().NotContain(AzureDevOpsTestHarness.Token);
+    [Fact]
+    public async Task CompleteConnect_ShouldReturnTheChecksWithTheConnection()
+    {
+        Harness.StubPassingChecks();
+
+        var result = await Harness.Connector.CompleteConnect(
+            AzureDevOpsTestHarness.CreateCallback(),
+            TestContext.Current.CancellationToken);
+
+        result.Payload!.Connection.Should().NotBeNull();
+        result.Payload.Checks.Should().HaveCount(7);
+        result.Payload.Checks.Should().OnlyContain(check => check.Status == ScmConnectionCheckStatus.Passed);
+    }
+
+    [Fact]
+    public async Task CompleteConnect_ShouldStillOfferTheConnectionWhenOnlyAnOptionalScopeIsMissing()
+    {
+        Harness.StubPassingChecks();
+        Harness.Http.On(HttpMethod.Get, AzureDevOpsTestHarness.BuildsProbePath, HttpStatusCode.Unauthorized);
+
+        var result = await Harness.Connector.CompleteConnect(
+            AzureDevOpsTestHarness.CreateCallback(),
+            TestContext.Current.CancellationToken);
+
+        var builds = result.Payload!.Checks!.Single(check => check.Key == AzureDevOpsConnectionChecker.BuildsKey);
+
+        result.Payload.Connection.Should().NotBeNull();
+        builds.Status.Should().Be(ScmConnectionCheckStatus.Warning);
     }
 
     [Fact]
@@ -353,6 +377,7 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
         Harness.Provider.ConnectMethod.Should().Be(ScmConnectMethod.Token);
         Harness.Provider.Capabilities.Should().Be(SourceControlCapabilities.ListRepositories);
         Harness.Provider.WebhookReader.Should().BeNull();
+        Harness.Provider.ConnectionChecker.Should().BeSameAs(Harness.Checker);
     }
 
     public void Dispose()
@@ -374,6 +399,28 @@ public sealed class AzureDevOpsConnectorTests : IDisposable
             AzureDevOpsTestHarness.CreateCallback(),
             TestContext.Current.CancellationToken);
 
-        return result.Message!;
+        var details = result.Payload!.Checks!.Select(check => harness.Checker.Describe(check).Detail);
+
+        return string.Join(" ", details);
+    }
+
+    private static ScmConnectionCheck ShouldBeRefusedBy(ClientResponse<ScmConnectOutcome> result, string checkKey)
+    {
+        result.IsSuccess.Should().BeTrue(result.Message);
+        result.Payload!.Connection.Should().BeNull();
+
+        var check = result.Payload.Checks!.Single(candidate => candidate.Key == checkKey);
+
+        check.Status.Should().Be(ScmConnectionCheckStatus.Failed);
+
+        return check;
+    }
+
+    private static void ShouldBeRefusedAsAdministratorUnavailable(ClientResponse<ScmConnectOutcome> result)
+    {
+        var administrator = ShouldBeRefusedBy(result, AzureDevOpsConnectionChecker.AdministratorKey);
+        var reason = administrator.Facts[AzureDevOpsConnectionChecker.ReasonFact];
+
+        reason.Should().Be(AzureDevOpsConnectionChecker.UnavailableReason);
     }
 }

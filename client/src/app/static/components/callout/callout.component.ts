@@ -3,7 +3,7 @@ import { LucideDynamicIcon, type LucideIconInput } from '@lucide/angular';
 import { cva } from 'class-variance-authority';
 import { cn } from '../button/button.variants';
 
-export type CalloutColor = 'primary' | 'warn' | 'neutral';
+export type CalloutColor = 'primary' | 'warn' | 'caution' | 'neutral';
 
 const calloutVariants = cva(
   'flex items-start gap-2 rounded-md border px-3 py-2 text-sm',
@@ -12,6 +12,7 @@ const calloutVariants = cva(
       color: {
         primary: 'border-primary/40 bg-primary/5',
         warn: 'border-warn/40 bg-warn/5',
+        caution: 'border-amber-500/40 bg-amber-500/8',
         neutral: 'border-border bg-foreground/5',
       },
     },
@@ -24,6 +25,7 @@ const calloutVariants = cva(
 const iconColors: Record<CalloutColor, string> = {
   primary: 'text-primary',
   warn: 'text-warn',
+  caution: 'text-amber-600 dark:text-amber-300',
   neutral: 'text-foreground/60',
 };
 

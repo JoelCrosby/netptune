@@ -1,3 +1,5 @@
+using Netptune.Core.SourceControl.Checks;
+
 namespace Netptune.Core.SourceControl;
 
 public interface ISourceControlProvider
@@ -15,4 +17,6 @@ public interface ISourceControlProvider
     ISourceControlClient Client { get; }
 
     ISourceControlWebhookReader? WebhookReader { get; }
+
+    IScmConnectionChecker? ConnectionChecker { get; }
 }

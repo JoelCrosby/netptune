@@ -7,4 +7,6 @@ public sealed record CompleteSourceControlConnectRequest
     public SourceControlProvider Provider { get; init; }
 
     public Dictionary<string, string> Parameters { get; init; } = [];
+
+    public bool AcceptWarnings { get; init; }
 }

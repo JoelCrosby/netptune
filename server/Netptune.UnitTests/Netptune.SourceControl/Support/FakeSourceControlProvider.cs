@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 
 using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 using Netptune.Core.SourceControl.Connect;
 using Netptune.Core.SourceControl.Models;
 
@@ -31,6 +32,8 @@ public sealed class FakeSourceControlProvider : ISourceControlProvider
     public ISourceControlClient Client { get; } = new FakeClient();
 
     public ISourceControlWebhookReader? WebhookReader => null;
+
+    public IScmConnectionChecker? ConnectionChecker => null;
 
     public FakeSourceControlProvider(SourceControlProvider provider = SourceControlProvider.GitLab)
     {

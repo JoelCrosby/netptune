@@ -10,6 +10,7 @@ using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 using Netptune.Core.SourceControl.Connect;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.SourceControl;
@@ -27,6 +28,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
     private readonly ISourceControlProviderRegistry Registry;
     private readonly ISourceControlRepoSync RepoSync;
     private readonly IEventRecordWriter EventRecords;
+    private readonly TimeProvider Clock;
     private readonly ILogger<CompleteSourceControlConnectCommandHandler> Logger;
 
     public CompleteSourceControlConnectCommandHandler(
@@ -35,6 +37,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
         ISourceControlProviderRegistry registry,
         ISourceControlRepoSync repoSync,
         IEventRecordWriter eventRecords,
+        TimeProvider clock,
         ILogger<CompleteSourceControlConnectCommandHandler> logger)
     {
         UnitOfWork = unitOfWork;
@@ -42,6 +45,7 @@ public sealed class CompleteSourceControlConnectCommandHandler
         Registry = registry;
         RepoSync = repoSync;
         EventRecords = eventRecords;
+        Clock = clock;
         Logger = logger;
     }
 
@@ -86,14 +90,30 @@ public sealed class CompleteSourceControlConnectCommandHandler
             return ClientResponse<SourceControlConnectCompletionViewModel>.Success(choiceCompletion);
         }
 
+        var checks = outcome.Checks;
+        var checker = SourceControlConnectionMapper.FindChecker(Registry, request.Provider);
+        var checkViewModels = checks is null ? null : SourceControlConnectionMapper.ToCheckViewModels(checker, checks);
+        var isBlocked = IsBlockedByChecks(checks, request.AcceptWarnings);
+
+        if (outcome.Connection is null || isBlocked)
+        {
+            var refusedCompletion = new SourceControlConnectCompletionViewModel { Checks = checkViewModels };
+
+            return ClientResponse<SourceControlConnectCompletionViewModel>.Success(refusedCompletion);
+        }
+
+        var save = new ConnectionSave
+        {
+            Provider = request.Provider,
+            WorkspaceId = workspaceId,
+            UserId = userId,
+            Result = outcome.Connection,
+            Checks = checks,
+        };
+
         var connection = await UnitOfWork.Transaction(async () =>
         {
-            var saved = await SaveConnection(
-                request.Provider,
-                workspaceId,
-                userId,
-                outcome.Connection!,
-                cancellationToken);
+            var saved = await SaveConnection(save, cancellationToken);
 
             // Saved first so a new connection has the id the audit event refers to.
             await UnitOfWork.CompleteAsync(cancellationToken);
@@ -111,9 +131,26 @@ public sealed class CompleteSourceControlConnectCommandHandler
         var linkedRepos = await UnitOfWork.SourceControlRepos.GetLinkedForWorkspace(workspaceId, cancellationToken);
         var linkedCount = linkedRepos.Count(repo => repo.ConnectionId == connection.Id);
         var viewModel = SourceControlConnectionMapper.ToViewModel(connection, Registry, linkedCount);
-        var completion = new SourceControlConnectCompletionViewModel { Connection = viewModel };
+        var completion = new SourceControlConnectCompletionViewModel
+        {
+            Connection = viewModel,
+            Checks = checkViewModels,
+        };
 
         return ClientResponse<SourceControlConnectCompletionViewModel>.Success(completion);
+    }
+
+    private static bool IsBlockedByChecks(IReadOnlyList<ScmConnectionCheck>? checks, bool acceptWarnings)
+    {
+        if (checks is null)
+        {
+            return false;
+        }
+
+        var hasFailure = ScmConnectionChecks.HasFailure(checks);
+        var hasUnacceptedWarning = !acceptWarnings && ScmConnectionChecks.HasWarning(checks);
+
+        return hasFailure || hasUnacceptedWarning;
     }
 
     private async Task<SourceControlConnectChoiceViewModel> ToChoiceViewModel(
@@ -172,13 +209,13 @@ public sealed class CompleteSourceControlConnectCommandHandler
         }
     }
 
-    private async Task<SourceControlConnection> SaveConnection(
-        SourceControlProvider provider,
-        int workspaceId,
-        string userId,
-        ScmConnectResult result,
-        CancellationToken cancellationToken)
+    private async Task<SourceControlConnection> SaveConnection(ConnectionSave save, CancellationToken cancellationToken)
     {
+        var provider = save.Provider;
+        var workspaceId = save.WorkspaceId;
+        var userId = save.UserId;
+        var result = save.Result;
+
         var key = new SourceControlAccountKey
         {
             WorkspaceId = workspaceId,
@@ -214,6 +251,12 @@ public sealed class CompleteSourceControlConnectCommandHandler
         connection.CredentialExpiresAt = result.CredentialExpiresAt;
         connection.ModifiedByUserId = userId;
 
+        if (save.Checks is not null)
+        {
+            connection.LastCheckedAt = Clock.GetUtcNow().UtcDateTime;
+            connection.LastCheck = ScmConnectionChecks.ToJson(save.Checks);
+        }
+
         return connection;
     }
 
@@ -237,5 +280,18 @@ public sealed class CompleteSourceControlConnectCommandHandler
         {
             Logger.LogWarning(exception, "Repository sync after connecting {ConnectionId} failed", connection.Id);
         }
+    }
+
+    private sealed record ConnectionSave
+    {
+        public SourceControlProvider Provider { get; init; }
+
+        public int WorkspaceId { get; init; }
+
+        public required string UserId { get; init; }
+
+        public required ScmConnectResult Result { get; init; }
+
+        public IReadOnlyList<ScmConnectionCheck>? Checks { get; init; }
     }
 }

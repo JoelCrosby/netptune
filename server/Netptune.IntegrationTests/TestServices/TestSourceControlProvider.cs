@@ -5,6 +5,7 @@ using System.Text.Json;
 
 using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 using Netptune.Core.SourceControl.Connect;
 using Netptune.Core.SourceControl.Events;
 using Netptune.Core.SourceControl.Models;
@@ -23,6 +24,18 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     public const string CredentialHintParameter = "credentialHint";
 
     public const string CredentialExpiresAtParameter = "credentialExpiresAt";
+
+    public const string ChecksParameter = "checks";
+
+    public const string FailingChecks = "fail";
+
+    public const string WarningChecks = "warn";
+
+    public const string PassingChecks = "pass";
+
+    public const string RequiredCheckKey = "required";
+
+    public const string OptionalCheckKey = "optional";
 
     public const string InstallUrl = "https://scm.test/install";
 
@@ -61,7 +74,48 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
     // What a history sync reads back, keyed by repository external id, so each test seeds its own repo.
     public static ConcurrentDictionary<string, TestRepoHistory> Histories { get; } = new();
 
+    public static ConcurrentDictionary<int, Func<Task>> DuringCheck { get; } = new();
+
     public ISourceControlWebhookReader? WebhookReader { get; } = new TestWebhookReader();
+
+    public IScmConnectionChecker? ConnectionChecker { get; } = new TestConnectionChecker();
+
+    // The checks named by the connect callback; re-checking an existing connection always passes.
+    private static IReadOnlyList<ScmConnectionCheck> CreateChecks(string outcome)
+    {
+        var requiredStatus = outcome == FailingChecks ? ScmConnectionCheckStatus.Failed : ScmConnectionCheckStatus.Passed;
+        var optionalStatus = outcome == WarningChecks ? ScmConnectionCheckStatus.Warning : ScmConnectionCheckStatus.Passed;
+
+        return
+        [
+            new ScmConnectionCheck { Key = RequiredCheckKey, Status = requiredStatus },
+            new ScmConnectionCheck { Key = OptionalCheckKey, Status = optionalStatus },
+        ];
+    }
+
+    private sealed class TestConnectionChecker : IScmConnectionChecker
+    {
+        public async ValueTask<IReadOnlyList<ScmConnectionCheck>> Check(
+            ScmConnection connection,
+            CancellationToken cancellationToken)
+        {
+            var hasHook = DuringCheck.TryRemove(connection.Id, out var duringCheck);
+
+            if (hasHook)
+            {
+                await duringCheck!();
+            }
+
+            return CreateChecks(PassingChecks);
+        }
+
+        public ScmConnectionCheckDescription Describe(ScmConnectionCheck check)
+        {
+            var isRequired = check.Key == RequiredCheckKey;
+
+            return new ScmConnectionCheckDescription(check.Key, check.Status.ToString(), isRequired);
+        }
+    }
 
     public const string SignatureHeader = "X-Test-Signature";
     public const string DeliveryHeader = "X-Test-Delivery";
@@ -360,6 +414,17 @@ public sealed class TestSourceControlProvider : ISourceControlProvider
                 CredentialExpiresAt = ReadCredentialExpiry(callback.Parameters),
                 GrantedCapabilities = Granted,
             };
+
+            var checksOutcome = callback.Parameters.GetValueOrDefault(ChecksParameter);
+
+            if (checksOutcome is not null)
+            {
+                var checks = CreateChecks(checksOutcome);
+                var checkedConnection = checksOutcome == FailingChecks ? null : result;
+                var checkedOutcome = ScmConnectOutcome.Checked(checks, checkedConnection);
+
+                return ValueTask.FromResult(ClientResponse<ScmConnectOutcome>.Success(checkedOutcome));
+            }
 
             var connected = ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Connected(result));
 

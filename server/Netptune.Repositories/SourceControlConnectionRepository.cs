@@ -35,6 +35,34 @@ public class SourceControlConnectionRepository(DataContext context, IDbConnectio
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<SourceControlConnection?> GetOwnedReadOnly(
+        int connectionId,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(connection => connection.Id == connectionId)
+            .Where(connection => connection.WorkspaceId == workspaceId && !connection.IsDeleted)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    // Writes only while the credential is the one the checks ran with, so a token replaced mid-check
+    // keeps its own result rather than the old token's.
+    public async Task<bool> RecordCheck(
+        SourceControlConnectionCheckRecord record,
+        CancellationToken cancellationToken = default)
+    {
+        var updated = await Entities
+            .Where(connection => connection.Id == record.ConnectionId && !connection.IsDeleted)
+            .Where(connection => connection.Credential == record.CheckedCredential)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(connection => connection.LastCheckedAt, record.CheckedAt)
+                .SetProperty(connection => connection.LastCheck, record.Checks), cancellationToken);
+
+        return updated == 1;
+    }
+
     public Task<SourceControlConnection?> GetByAccount(
         SourceControlAccountKey key,
         CancellationToken cancellationToken = default)

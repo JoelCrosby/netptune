@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
@@ -33,6 +34,10 @@ public sealed record SourceControlConnection : WorkspaceEntity<int>
     public DateTime? CredentialExpiresAt { get; set; }
 
     public byte[]? WebhookSecret { get; set; }
+
+    public DateTime? LastCheckedAt { get; set; }
+
+    public JsonDocument? LastCheck { get; set; }
 
     #region NavigationProperties
 

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import {
@@ -33,7 +33,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ProviderMarkComponent } from '@static/components/provider-mark.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { first, switchMap } from 'rxjs';
+import { finalize, first, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-workspace-source-control-view',
@@ -96,7 +96,11 @@ import { first, switchMap } from 'rxjs';
             <app-source-control-connections
               [connections]="connectionList()"
               [canManage]="canManage()"
+              [tokenProviders]="tokenProviders()"
+              [checkingIds]="checkingIds()"
               (chooseRepos)="openRepos($event)"
+              (check)="checkConnection($event)"
+              (replaceToken)="replaceToken($event)"
               (disconnect)="disconnect($event)" />
           }
         </div>
@@ -125,6 +129,18 @@ export class WorkspaceSourceControlViewComponent {
 
   protected readonly providerList = computed(() => {
     return this.providers.hasValue() ? this.providers.value() : [];
+  });
+
+  protected readonly checkConnectionRequest = mutation({
+    fallbackError: $localize`:Shown when checking a source control connection fails:The connection could not be checked.`,
+  });
+
+  protected readonly checkingIds = signal<ReadonlySet<number>>(new Set());
+
+  protected readonly tokenProviders = computed(() => {
+    return this.providerList()
+      .filter((provider) => provider.connectMethod === ScmConnectMethod.token)
+      .map((provider) => provider.provider);
   });
 
   protected readonly connectionList = computed(() => {
@@ -175,12 +191,45 @@ export class WorkspaceSourceControlViewComponent {
     );
   }
 
+  protected checkConnection(connection: SourceControlConnection) {
+    this.checkingIds.update((ids) => new Set(ids).add(connection.id));
+    this.checkConnectionRequest.run(
+      this.commands
+        .checkConnection(connection.id)
+        .pipe(finalize(() => this.stopChecking(connection.id))),
+      { onError: (message) => this.snackbar.error(message) }
+    );
+  }
+
+  private stopChecking(connectionId: number) {
+    this.checkingIds.update((ids) => {
+      const next = new Set(ids);
+
+      next.delete(connectionId);
+
+      return next;
+    });
+  }
+
+  protected async replaceToken(connection: SourceControlConnection) {
+    await this.dialog.openForResult<
+      SourceControlConnection,
+      SourceControlTokenDialogData
+    >(SourceControlTokenDialogComponent, {
+      width: '600px',
+      data: {
+        provider: connection.provider,
+        existingOrganisation: connection.accountLogin,
+      },
+    });
+  }
+
   private async connectWithToken(provider: SourceControlProviderInfo) {
     const connection = await this.dialog.openForResult<
       SourceControlConnection,
       SourceControlTokenDialogData
     >(SourceControlTokenDialogComponent, {
-      width: '520px',
+      width: '600px',
       data: { provider: provider.provider },
     });
 

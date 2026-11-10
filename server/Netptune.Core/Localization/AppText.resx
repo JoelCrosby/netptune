@@ -2712,20 +2712,136 @@ Please confirm your email address with the following link.</value>
     <value>The expiry date must be a valid date that hasn't passed yet.</value>
     <comment>Error shown when the optional token expiry date entered when connecting Azure DevOps is not a valid future date</comment>
   </data>
-  <data name="ErrorAzureDevOpsTokenRejected" xml:space="preserve">
-    <value>Azure DevOps rejected the personal access token. Check that it hasn't expired and that it's scoped to this organisation.</value>
-    <comment>Error shown when Azure DevOps rejects the personal access token entered when connecting</comment>
+  <data name="ErrorProviderCannotCheckConnections" xml:space="preserve">
+    <value>Netptune can't check {0} connections.</value>
+    <comment>Error shown when connection checks are asked for a provider that has none. {0} is the provider</comment>
   </data>
-  <data name="ErrorAzureDevOpsOrganisationNotFound" xml:space="preserve">
-    <value>Azure DevOps could not find an organisation named {0}.</value>
-    <comment>Error shown when Azure DevOps has no organisation with the name entered when connecting. {0} is the organisation name</comment>
+  <data name="ErrorCouldNotCheckConnectionTryAgainShortly" xml:space="preserve">
+    <value>{0} could not be reached to check the connection. Try again shortly.</value>
+    <comment>Error shown when the provider can't be reached to check a connection. {0} is the provider</comment>
   </data>
-  <data name="ErrorAzureDevOpsNotAdministrator" xml:space="preserve">
-    <value>Only a Project Collection Administrator of the Azure DevOps organisation can connect it. Use a token created by an administrator.</value>
-    <comment>Error shown when the Azure DevOps token belongs to someone who is not a Project Collection Administrator</comment>
+  <data name="AzureDevOpsCheckOrganisationTitle" xml:space="preserve">
+    <value>Organisation found</value>
+    <comment>Title of the connection check that the Azure DevOps organisation exists</comment>
   </data>
-  <data name="ErrorAzureDevOpsAdminCheckUnavailable" xml:space="preserve">
-    <value>Netptune could not check that this token belongs to a Project Collection Administrator, because Azure DevOps refused to show the organisation's permissions to it. The organisation was not connected.</value>
-    <comment>Error shown when Netptune cannot check whether the Azure DevOps token belongs to a Project Collection Administrator, so it refuses to connect</comment>
+  <data name="AzureDevOpsCheckOrganisationPassed" xml:space="preserve">
+    <value>dev.azure.com/{0} exists.</value>
+    <comment>Detail of a passed organisation check. {0} is the organisation name</comment>
+  </data>
+  <data name="AzureDevOpsCheckOrganisationFailed" xml:space="preserve">
+    <value>Azure DevOps has no organisation called {0}. Check the name, or create the organisation first.</value>
+    <comment>Detail of a failed organisation check. {0} is the organisation name</comment>
+  </data>
+  <data name="AzureDevOpsCheckTokenTitle" xml:space="preserve">
+    <value>Token accepted</value>
+    <comment>Title of the connection check that Azure DevOps accepts the personal access token</comment>
+  </data>
+  <data name="AzureDevOpsCheckTokenPassed" xml:space="preserve">
+    <value>Signed in as {0}.</value>
+    <comment>Detail of a passed token check. {0} is the display name of the user the token belongs to</comment>
+  </data>
+  <data name="AzureDevOpsCheckTokenPassedWithoutName" xml:space="preserve">
+    <value>Azure DevOps accepted the token.</value>
+    <comment>Detail of a passed token check when Azure DevOps gives no user name</comment>
+  </data>
+  <data name="AzureDevOpsCheckTokenFailed" xml:space="preserve">
+    <value>Azure DevOps didn't accept the token. It may be mistyped, expired, revoked or made for another organisation. Create a token for {0} and paste it again.</value>
+    <comment>Detail of a failed token check. {0} is the organisation name</comment>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorTitle" xml:space="preserve">
+    <value>Organisation administrator</value>
+    <comment>Title of the connection check that the token belongs to a Project Collection Administrator</comment>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorPassed" xml:space="preserve">
+    <value>Project Collection Administrator.</value>
+    <comment>Detail of a passed administrator check</comment>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorFailed" xml:space="preserve">
+    <value>This account isn't a Project Collection Administrator of {0}. Ask an admin to connect, or to add you under Organization settings → Permissions.</value>
+    <comment>Detail of a failed administrator check. {0} is the organisation name. Organization settings and Permissions are Azure DevOps menu names</comment>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorUnavailable" xml:space="preserve">
+    <value>Azure DevOps wouldn't show the permissions of {0} to this token, so Netptune can't confirm it belongs to a Project Collection Administrator.</value>
+    <comment>Detail of an administrator check Azure DevOps wouldn't answer. {0} is the organisation name</comment>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesTitle" xml:space="preserve">
+    <value>Can read repositories</value>
+    <comment>Title of the connection check that the token can read repositories</comment>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesPassed" xml:space="preserve">
+    <value>{0} in {1}.</value>
+    <comment>Detail of a passed repositories check. {0} is the repository count phrase, {1} the project count phrase</comment>
+  </data>
+  <data name="AzureDevOpsRepositoryCountOne" xml:space="preserve">
+    <value>1 repository</value>
+    <comment>Count phrase for exactly one repository</comment>
+  </data>
+  <data name="AzureDevOpsRepositoryCountOther" xml:space="preserve">
+    <value>{0} repositories</value>
+    <comment>Count phrase for any number of repositories other than one. {0} is the count</comment>
+  </data>
+  <data name="AzureDevOpsProjectCountOne" xml:space="preserve">
+    <value>1 project</value>
+    <comment>Count phrase for exactly one project</comment>
+  </data>
+  <data name="AzureDevOpsProjectCountOther" xml:space="preserve">
+    <value>{0} projects</value>
+    <comment>Count phrase for any number of projects other than one. {0} is the count</comment>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesFailed" xml:space="preserve">
+    <value>The token is missing Code (Read). Edit the token in Azure DevOps and add it, then check again.</value>
+    <comment>Detail of a failed repositories check. Code (Read) is the Azure DevOps scope name</comment>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsTitle" xml:space="preserve">
+    <value>Can read work items</value>
+    <comment>Title of the connection check that the token can read work items</comment>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsPassed" xml:space="preserve">
+    <value>Needed to import Boards into Netptune.</value>
+    <comment>Detail of a passed work items check, saying what it is for</comment>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsWarning" xml:space="preserve">
+    <value>The token is missing Work Items (Read), so Boards can't be imported. Edit the token in Azure DevOps and add it, then check again.</value>
+    <comment>Detail of a work items check whose scope is missing. Work Items (Read) is the Azure DevOps scope name</comment>
+  </data>
+  <data name="AzureDevOpsCheckBuildsTitle" xml:space="preserve">
+    <value>Can read builds</value>
+    <comment>Title of the connection check that the token can read builds</comment>
+  </data>
+  <data name="AzureDevOpsCheckBuildsPassed" xml:space="preserve">
+    <value>Needed to show pipeline results on tasks.</value>
+    <comment>Detail of a passed builds check, saying what it is for</comment>
+  </data>
+  <data name="AzureDevOpsCheckBuildsWarning" xml:space="preserve">
+    <value>The token is missing Build (Read), so pipeline results won't show on tasks. Edit the token in Azure DevOps and add it, then check again.</value>
+    <comment>Detail of a builds check whose scope is missing. Build (Read) is the Azure DevOps scope name</comment>
+  </data>
+  <data name="AzureDevOpsCheckNoProjects" xml:space="preserve">
+    <value>No projects to check yet.</value>
+    <comment>Detail of a check skipped because the Azure DevOps organisation has no projects</comment>
+  </data>
+  <data name="AzureDevOpsCheckUnanswered" xml:space="preserve">
+    <value>Azure DevOps didn't answer this check. Try again shortly.</value>
+    <comment>Detail of a check Azure DevOps didn't answer</comment>
+  </data>
+  <data name="AzureDevOpsCheckSkipped" xml:space="preserve">
+    <value>Not checked, because an earlier check failed.</value>
+    <comment>Detail of a check that didn't run because one it depends on failed</comment>
+  </data>
+  <data name="AzureDevOpsCheckProjectsTitle" xml:space="preserve">
+    <value>Can read projects</value>
+    <comment>Title of the connection check that the token can read projects</comment>
+  </data>
+  <data name="AzureDevOpsCheckProjectsPassed" xml:space="preserve">
+    <value>Needed to find the projects to link and check.</value>
+    <comment>Detail of a passed projects check, saying what it is for</comment>
+  </data>
+  <data name="AzureDevOpsCheckProjectsFailed" xml:space="preserve">
+    <value>The token is missing Project and Team (Read). Edit the token in Azure DevOps and add it, then check again.</value>
+    <comment>Detail of a failed projects check. Project and Team (Read) is the Azure DevOps scope name</comment>
+  </data>
+  <data name="AzureDevOpsCheckTokenUnreadable" xml:space="preserve">
+    <value>Netptune can't read the stored token. Replace the token.</value>
+    <comment>Detail of a failed token check when the stored token can no longer be decrypted</comment>
   </data>
 </root>

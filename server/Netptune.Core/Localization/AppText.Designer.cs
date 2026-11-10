@@ -3406,6 +3406,285 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This account isn&apos;t a Project Collection Administrator of {0}. Ask an admin to connect, or to add you under Organization settings → Permissions..
+        /// </summary>
+        public static string AzureDevOpsCheckAdministratorFailed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckAdministratorFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Collection Administrator..
+        /// </summary>
+        public static string AzureDevOpsCheckAdministratorPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckAdministratorPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organisation administrator.
+        /// </summary>
+        public static string AzureDevOpsCheckAdministratorTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckAdministratorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps wouldn&apos;t show the permissions of {0} to this token, so Netptune can&apos;t confirm it belongs to a Project Collection Administrator..
+        /// </summary>
+        public static string AzureDevOpsCheckAdministratorUnavailable {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckAdministratorUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Needed to show pipeline results on tasks..
+        /// </summary>
+        public static string AzureDevOpsCheckBuildsPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckBuildsPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can read builds.
+        /// </summary>
+        public static string AzureDevOpsCheckBuildsTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckBuildsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The token is missing Build (Read), so pipeline results won&apos;t show on tasks. Edit the token in Azure DevOps and add it, then check again..
+        /// </summary>
+        public static string AzureDevOpsCheckBuildsWarning {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckBuildsWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No projects to check yet..
+        /// </summary>
+        public static string AzureDevOpsCheckNoProjects {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckNoProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps has no organisation called {0}. Check the name, or create the organisation first..
+        /// </summary>
+        public static string AzureDevOpsCheckOrganisationFailed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckOrganisationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dev.azure.com/{0} exists..
+        /// </summary>
+        public static string AzureDevOpsCheckOrganisationPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckOrganisationPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Organisation found.
+        /// </summary>
+        public static string AzureDevOpsCheckOrganisationTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckOrganisationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The token is missing Project and Team (Read). Edit the token in Azure DevOps and add it, then check again..
+        /// </summary>
+        public static string AzureDevOpsCheckProjectsFailed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckProjectsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Needed to find the projects to link and check..
+        /// </summary>
+        public static string AzureDevOpsCheckProjectsPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckProjectsPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can read projects.
+        /// </summary>
+        public static string AzureDevOpsCheckProjectsTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckProjectsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The token is missing Code (Read). Edit the token in Azure DevOps and add it, then check again..
+        /// </summary>
+        public static string AzureDevOpsCheckRepositoriesFailed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckRepositoriesFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} in {1}..
+        /// </summary>
+        public static string AzureDevOpsCheckRepositoriesPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckRepositoriesPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can read repositories.
+        /// </summary>
+        public static string AzureDevOpsCheckRepositoriesTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckRepositoriesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not checked, because an earlier check failed..
+        /// </summary>
+        public static string AzureDevOpsCheckSkipped {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckSkipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps didn&apos;t accept the token. It may be mistyped, expired, revoked or made for another organisation. Create a token for {0} and paste it again..
+        /// </summary>
+        public static string AzureDevOpsCheckTokenFailed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckTokenFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Signed in as {0}..
+        /// </summary>
+        public static string AzureDevOpsCheckTokenPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckTokenPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps accepted the token..
+        /// </summary>
+        public static string AzureDevOpsCheckTokenPassedWithoutName {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckTokenPassedWithoutName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token accepted.
+        /// </summary>
+        public static string AzureDevOpsCheckTokenTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckTokenTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Netptune can&apos;t read the stored token. Replace the token..
+        /// </summary>
+        public static string AzureDevOpsCheckTokenUnreadable {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckTokenUnreadable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure DevOps didn&apos;t answer this check. Try again shortly..
+        /// </summary>
+        public static string AzureDevOpsCheckUnanswered {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckUnanswered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Needed to import Boards into Netptune..
+        /// </summary>
+        public static string AzureDevOpsCheckWorkItemsPassed {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckWorkItemsPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can read work items.
+        /// </summary>
+        public static string AzureDevOpsCheckWorkItemsTitle {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckWorkItemsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The token is missing Work Items (Read), so Boards can&apos;t be imported. Edit the token in Azure DevOps and add it, then check again..
+        /// </summary>
+        public static string AzureDevOpsCheckWorkItemsWarning {
+            get {
+                return ResourceManager.GetString("AzureDevOpsCheckWorkItemsWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 project.
+        /// </summary>
+        public static string AzureDevOpsProjectCountOne {
+            get {
+                return ResourceManager.GetString("AzureDevOpsProjectCountOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} projects.
+        /// </summary>
+        public static string AzureDevOpsProjectCountOther {
+            get {
+                return ResourceManager.GetString("AzureDevOpsProjectCountOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 repository.
+        /// </summary>
+        public static string AzureDevOpsRepositoryCountOne {
+            get {
+                return ResourceManager.GetString("AzureDevOpsRepositoryCountOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} repositories.
+        /// </summary>
+        public static string AzureDevOpsRepositoryCountOther {
+            get {
+                return ResourceManager.GetString("AzureDevOpsRepositoryCountOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hi {0},.
         /// </summary>
         public static string EmailGreeting {
@@ -3559,15 +3838,6 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Netptune could not check that this token belongs to a Project Collection Administrator, because Azure DevOps refused to show the organisation&apos;s permissions to it. The organisation was not connected..
-        /// </summary>
-        public static string ErrorAzureDevOpsAdminCheckUnavailable {
-            get {
-                return ResourceManager.GetString("ErrorAzureDevOpsAdminCheckUnavailable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The expiry date must be a valid date that hasn&apos;t passed yet..
         /// </summary>
         public static string ErrorAzureDevOpsExpiryInvalid {
@@ -3577,38 +3847,11 @@ namespace Netptune.Core.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only a Project Collection Administrator of the Azure DevOps organisation can connect it. Use a token created by an administrator..
-        /// </summary>
-        public static string ErrorAzureDevOpsNotAdministrator {
-            get {
-                return ResourceManager.GetString("ErrorAzureDevOpsNotAdministrator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Azure DevOps could not find an organisation named {0}..
-        /// </summary>
-        public static string ErrorAzureDevOpsOrganisationNotFound {
-            get {
-                return ResourceManager.GetString("ErrorAzureDevOpsOrganisationNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Enter the Azure DevOps organisation&apos;s name or address, such as https://dev.azure.com/your-org..
         /// </summary>
         public static string ErrorAzureDevOpsOrganisationNotRecognised {
             get {
                 return ResourceManager.GetString("ErrorAzureDevOpsOrganisationNotRecognised", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Azure DevOps rejected the personal access token. Check that it hasn&apos;t expired and that it&apos;s scoped to this organisation..
-        /// </summary>
-        public static string ErrorAzureDevOpsTokenRejected {
-            get {
-                return ResourceManager.GetString("ErrorAzureDevOpsTokenRejected", resourceCulture);
             }
         }
         
@@ -3771,6 +4014,15 @@ namespace Netptune.Core.Localization {
         public static string ErrorCompletedSprintsCannotEdited {
             get {
                 return ResourceManager.GetString("ErrorCompletedSprintsCannotEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} could not be reached to check the connection. Try again shortly..
+        /// </summary>
+        public static string ErrorCouldNotCheckConnectionTryAgainShortly {
+            get {
+                return ResourceManager.GetString("ErrorCouldNotCheckConnectionTryAgainShortly", resourceCulture);
             }
         }
         
@@ -4581,6 +4833,15 @@ namespace Netptune.Core.Localization {
         public static string ErrorProjectWithIdNotFound {
             get {
                 return ResourceManager.GetString("ErrorProjectWithIdNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Netptune can&apos;t check {0} connections..
+        /// </summary>
+        public static string ErrorProviderCannotCheckConnections {
+            get {
+                return ResourceManager.GetString("ErrorProviderCannotCheckConnections", resourceCulture);
             }
         }
         

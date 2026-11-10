@@ -4,8 +4,8 @@ using System.Net;
 using Netptune.Core.Localization;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 using Netptune.Core.SourceControl.Connect;
-using Netptune.SourceControl.Providers.AzureDevOps.Dtos;
 
 namespace Netptune.SourceControl.Providers.AzureDevOps;
 
@@ -18,22 +18,19 @@ internal sealed class AzureDevOpsConnector : ISourceControlConnector
     public const SourceControlCapabilities GrantedCapabilities = SourceControlCapabilities.ListRepositories;
 
     private const string ExpiresOnFormat = "yyyy-MM-dd";
-    private const string ConnectionDataPath = "_apis/connectionData";
-
-    // The Collection security namespace, its GENERIC_WRITE bit, and the token for the whole organisation:
-    // only Project Collection Administrators hold it.
-    private const string CollectionAdministratorPath =
-        "_apis/permissions/3e65f728-f8bc-4ecd-8764-7e378b19bfa7/2?tokens=NAMESPACE:&api-version=7.1";
 
     private static readonly TimeOnly EndOfDay = new(23, 59, 59);
 
-    private readonly AzureDevOpsApi Api;
+    private readonly AzureDevOpsConnectionChecker Checker;
     private readonly IScmCredentialProtector CredentialProtector;
     private readonly TimeProvider Clock;
 
-    public AzureDevOpsConnector(AzureDevOpsApi api, IScmCredentialProtector credentialProtector, TimeProvider clock)
+    public AzureDevOpsConnector(
+        AzureDevOpsConnectionChecker checker,
+        IScmCredentialProtector credentialProtector,
+        TimeProvider clock)
     {
-        Api = api;
+        Checker = checker;
         CredentialProtector = credentialProtector;
         Clock = clock;
     }
@@ -77,26 +74,17 @@ internal sealed class AzureDevOpsConnector : ISourceControlConnector
             Token = token,
         };
 
-        var instance = await ReadInstance(credential, cancellationToken);
+        var run = await Checker.Run(credential, cancellationToken);
+        var hasFailure = ScmConnectionChecks.HasFailure(run.Checks);
 
-        if (!instance.IsSuccess)
+        if (hasFailure || run.InstanceId is null)
         {
-            return ClientResponse<ScmConnectOutcome>.Failed(instance.Message);
+            var refused = ScmConnectOutcome.Checked(run.Checks, null);
+
+            return ClientResponse<ScmConnectOutcome>.Success(refused);
         }
 
-        var administrator = await CheckAdministrator(credential, cancellationToken);
-
-        if (administrator == AdministratorCheck.Denied)
-        {
-            return ClientResponse<ScmConnectOutcome>.Failed(AppText.ErrorAzureDevOpsNotAdministrator);
-        }
-
-        if (administrator == AdministratorCheck.Unavailable)
-        {
-            return ClientResponse<ScmConnectOutcome>.Failed(AppText.ErrorAzureDevOpsAdminCheckUnavailable);
-        }
-
-        var instanceId = instance.Payload!.InstanceId!;
+        var instanceId = run.InstanceId;
 
         var result = new ScmConnectResult
         {
@@ -114,7 +102,9 @@ internal sealed class AzureDevOpsConnector : ISourceControlConnector
             GrantedCapabilities = GrantedCapabilities,
         };
 
-        return ClientResponse<ScmConnectOutcome>.Success(ScmConnectOutcome.Connected(result));
+        var connected = ScmConnectOutcome.Checked(run.Checks, result);
+
+        return ClientResponse<ScmConnectOutcome>.Success(connected);
     }
 
     public ValueTask<ScmAccessToken> GetAccessToken(ScmConnection connection, CancellationToken cancellationToken)
@@ -144,50 +134,6 @@ internal sealed class AzureDevOpsConnector : ISourceControlConnector
     public ValueTask Disconnect(ScmConnection connection, CancellationToken cancellationToken)
     {
         return ValueTask.CompletedTask;
-    }
-
-    private async Task<ClientResponse<AzureDevOpsConnectionDataDto>> ReadInstance(
-        AzureDevOpsCredential credential,
-        CancellationToken cancellationToken)
-    {
-        var request = credential.CreateRequest(ConnectionDataPath);
-        var response = await Api.Get<AzureDevOpsConnectionDataDto>(request, cancellationToken);
-
-        if (response.Kind == AzureDevOpsResponseKind.NotFound)
-        {
-            var message = Localized.Format(AppText.ErrorAzureDevOpsOrganisationNotFound, credential.Organisation);
-
-            return ClientResponse<AzureDevOpsConnectionDataDto>.Failed(message);
-        }
-
-        var instanceId = response.Payload?.InstanceId;
-        var hasInstance = response.IsSuccess && !string.IsNullOrWhiteSpace(instanceId);
-
-        if (!hasInstance)
-        {
-            return ClientResponse<AzureDevOpsConnectionDataDto>.Failed(AppText.ErrorAzureDevOpsTokenRejected);
-        }
-
-        return ClientResponse<AzureDevOpsConnectionDataDto>.Success(response.Payload!);
-    }
-
-    // A plain organisation member could otherwise attach the organisation to a workspace and show every
-    // workspace member what they can see. When the token can't read the permission, connecting is refused.
-    private async Task<AdministratorCheck> CheckAdministrator(
-        AzureDevOpsCredential credential,
-        CancellationToken cancellationToken)
-    {
-        var request = credential.CreateRequest(CollectionAdministratorPath);
-        var response = await Api.Get<AzureDevOpsListDto<bool>>(request, cancellationToken);
-        var answers = response.Payload?.Value ?? [];
-        var hasSingleAnswer = response.IsSuccess && answers.Count == 1;
-
-        if (!hasSingleAnswer)
-        {
-            return AdministratorCheck.Unavailable;
-        }
-
-        return answers[0] ? AdministratorCheck.Allowed : AdministratorCheck.Denied;
     }
 
     private ExpiryInput ReadExpiry(string? expiresOn)
@@ -232,10 +178,4 @@ internal sealed class AzureDevOpsConnector : ISourceControlConnector
 
     private sealed record ExpiryInput(bool IsValid, DateTime? ExpiresAt);
 
-    private enum AdministratorCheck
-    {
-        Allowed = 0,
-        Denied = 1,
-        Unavailable = 2,
-    }
 }

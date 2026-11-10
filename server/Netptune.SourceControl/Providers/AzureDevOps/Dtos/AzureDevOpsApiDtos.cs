@@ -10,7 +10,18 @@ internal sealed record AzureDevOpsListDto<T>
 internal sealed record AzureDevOpsConnectionDataDto
 {
     public string? InstanceId { get; init; }
+
+    public AzureDevOpsIdentityDto? AuthenticatedUser { get; init; }
 }
+
+internal sealed record AzureDevOpsIdentityDto
+{
+    public string? ProviderDisplayName { get; init; }
+
+    public string? CustomDisplayName { get; init; }
+}
+
+internal sealed record AzureDevOpsProbeDto;
 
 internal sealed record AzureDevOpsProjectDto
 {

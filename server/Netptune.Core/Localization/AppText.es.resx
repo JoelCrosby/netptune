@@ -2038,16 +2038,103 @@ Confirma tu dirección de correo electrónico con el siguiente enlace.</value>
   <data name="ErrorAzureDevOpsExpiryInvalid" xml:space="preserve">
     <value>La fecha de caducidad debe ser una fecha válida que aún no haya pasado.</value>
   </data>
-  <data name="ErrorAzureDevOpsTokenRejected" xml:space="preserve">
-    <value>Azure DevOps rechazó el token de acceso personal. Comprueba que no haya caducado y que esté limitado a esta organización.</value>
+  <data name="ErrorProviderCannotCheckConnections" xml:space="preserve">
+    <value>Netptune no puede comprobar las conexiones de {0}.</value>
   </data>
-  <data name="ErrorAzureDevOpsOrganisationNotFound" xml:space="preserve">
-    <value>Azure DevOps no encontró ninguna organización llamada {0}.</value>
+  <data name="ErrorCouldNotCheckConnectionTryAgainShortly" xml:space="preserve">
+    <value>No se pudo contactar con {0} para comprobar la conexión. Inténtalo de nuevo en breve.</value>
   </data>
-  <data name="ErrorAzureDevOpsNotAdministrator" xml:space="preserve">
-    <value>Solo un administrador de la colección de proyectos de la organización de Azure DevOps puede conectarla. Usa un token creado por un administrador.</value>
+  <data name="AzureDevOpsCheckOrganisationTitle" xml:space="preserve">
+    <value>Organización encontrada</value>
   </data>
-  <data name="ErrorAzureDevOpsAdminCheckUnavailable" xml:space="preserve">
-    <value>Netptune no pudo comprobar que este token pertenezca a un administrador de la colección de proyectos, porque Azure DevOps se negó a mostrarle los permisos de la organización. La organización no se conectó.</value>
+  <data name="AzureDevOpsCheckOrganisationPassed" xml:space="preserve">
+    <value>dev.azure.com/{0} existe.</value>
+  </data>
+  <data name="AzureDevOpsCheckOrganisationFailed" xml:space="preserve">
+    <value>Azure DevOps no tiene ninguna organización llamada {0}. Revisa el nombre o crea primero la organización.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenTitle" xml:space="preserve">
+    <value>Token aceptado</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenPassed" xml:space="preserve">
+    <value>Sesión iniciada como {0}.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenPassedWithoutName" xml:space="preserve">
+    <value>Azure DevOps aceptó el token.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenFailed" xml:space="preserve">
+    <value>Azure DevOps no aceptó el token. Puede que esté mal escrito, caducado, revocado o creado para otra organización. Crea un token para {0} y vuelve a pegarlo.</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorTitle" xml:space="preserve">
+    <value>Administrador de la organización</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorPassed" xml:space="preserve">
+    <value>Administrador de colección de proyectos.</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorFailed" xml:space="preserve">
+    <value>Esta cuenta no es administradora de colección de proyectos de {0}. Pide a un administrador que conecte, o que te añada en Organization settings → Permissions.</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorUnavailable" xml:space="preserve">
+    <value>Azure DevOps no mostró los permisos de {0} a este token, así que Netptune no puede confirmar que pertenece a un administrador de colección de proyectos.</value>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesTitle" xml:space="preserve">
+    <value>Puede leer repositorios</value>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesPassed" xml:space="preserve">
+    <value>{0} en {1}.</value>
+  </data>
+  <data name="AzureDevOpsRepositoryCountOne" xml:space="preserve">
+    <value>1 repositorio</value>
+  </data>
+  <data name="AzureDevOpsRepositoryCountOther" xml:space="preserve">
+    <value>{0} repositorios</value>
+  </data>
+  <data name="AzureDevOpsProjectCountOne" xml:space="preserve">
+    <value>1 proyecto</value>
+  </data>
+  <data name="AzureDevOpsProjectCountOther" xml:space="preserve">
+    <value>{0} proyectos</value>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesFailed" xml:space="preserve">
+    <value>Al token le falta Code (Read). Edita el token en Azure DevOps para añadirlo y vuelve a comprobar.</value>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsTitle" xml:space="preserve">
+    <value>Puede leer elementos de trabajo</value>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsPassed" xml:space="preserve">
+    <value>Necesario para importar Boards en Netptune.</value>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsWarning" xml:space="preserve">
+    <value>Al token le falta Work Items (Read), así que no se puede importar Boards. Edita el token en Azure DevOps para añadirlo y vuelve a comprobar.</value>
+  </data>
+  <data name="AzureDevOpsCheckBuildsTitle" xml:space="preserve">
+    <value>Puede leer compilaciones</value>
+  </data>
+  <data name="AzureDevOpsCheckBuildsPassed" xml:space="preserve">
+    <value>Necesario para mostrar los resultados de las canalizaciones en las tareas.</value>
+  </data>
+  <data name="AzureDevOpsCheckBuildsWarning" xml:space="preserve">
+    <value>Al token le falta Build (Read), así que los resultados de las canalizaciones no se mostrarán en las tareas. Edita el token en Azure DevOps para añadirlo y vuelve a comprobar.</value>
+  </data>
+  <data name="AzureDevOpsCheckNoProjects" xml:space="preserve">
+    <value>Todavía no hay proyectos que comprobar.</value>
+  </data>
+  <data name="AzureDevOpsCheckUnanswered" xml:space="preserve">
+    <value>Azure DevOps no respondió a esta comprobación. Inténtalo de nuevo en breve.</value>
+  </data>
+  <data name="AzureDevOpsCheckSkipped" xml:space="preserve">
+    <value>No comprobado porque falló una comprobación anterior.</value>
+  </data>
+  <data name="AzureDevOpsCheckProjectsTitle" xml:space="preserve">
+    <value>Puede leer proyectos</value>
+  </data>
+  <data name="AzureDevOpsCheckProjectsPassed" xml:space="preserve">
+    <value>Necesario para encontrar los proyectos que vincular y comprobar.</value>
+  </data>
+  <data name="AzureDevOpsCheckProjectsFailed" xml:space="preserve">
+    <value>Al token le falta Project and Team (Read). Edita el token en Azure DevOps para añadirlo y vuelve a comprobar.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenUnreadable" xml:space="preserve">
+    <value>Netptune no puede leer el token guardado. Sustituye el token.</value>
   </data>
 </root>

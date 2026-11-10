@@ -1,4 +1,5 @@
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
 
 namespace Netptune.SourceControl.Providers.GitHub;
 
@@ -32,6 +33,8 @@ internal sealed class GitHubSourceControlProvider : ISourceControlProvider
     public ISourceControlClient Client { get; }
 
     public ISourceControlWebhookReader? WebhookReader { get; }
+
+    public IScmConnectionChecker? ConnectionChecker => null;
 
     public GitHubSourceControlProvider(
         GitHubConnector connector,

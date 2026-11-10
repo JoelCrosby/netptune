@@ -2038,16 +2038,103 @@ Veuillez confirmer votre adresse e-mail à l’aide du lien ci-dessous.</value>
   <data name="ErrorAzureDevOpsExpiryInvalid" xml:space="preserve">
     <value>La date d’expiration doit être une date valide qui n’est pas encore passée.</value>
   </data>
-  <data name="ErrorAzureDevOpsTokenRejected" xml:space="preserve">
-    <value>Azure DevOps a refusé le jeton d’accès personnel. Vérifiez qu’il n’a pas expiré et qu’il est limité à cette organisation.</value>
+  <data name="ErrorProviderCannotCheckConnections" xml:space="preserve">
+    <value>Netptune ne peut pas vérifier les connexions {0}.</value>
   </data>
-  <data name="ErrorAzureDevOpsOrganisationNotFound" xml:space="preserve">
-    <value>Azure DevOps n’a trouvé aucune organisation nommée {0}.</value>
+  <data name="ErrorCouldNotCheckConnectionTryAgainShortly" xml:space="preserve">
+    <value>Impossible de joindre {0} pour vérifier la connexion. Réessayez dans un instant.</value>
   </data>
-  <data name="ErrorAzureDevOpsNotAdministrator" xml:space="preserve">
-    <value>Seul un administrateur de collection de projets de l’organisation Azure DevOps peut la connecter. Utilisez un jeton créé par un administrateur.</value>
+  <data name="AzureDevOpsCheckOrganisationTitle" xml:space="preserve">
+    <value>Organisation trouvée</value>
   </data>
-  <data name="ErrorAzureDevOpsAdminCheckUnavailable" xml:space="preserve">
-    <value>Netptune n’a pas pu vérifier que ce jeton appartient à un administrateur de collection de projets, car Azure DevOps a refusé de lui montrer les autorisations de l’organisation. L’organisation n’a pas été connectée.</value>
+  <data name="AzureDevOpsCheckOrganisationPassed" xml:space="preserve">
+    <value>dev.azure.com/{0} existe.</value>
+  </data>
+  <data name="AzureDevOpsCheckOrganisationFailed" xml:space="preserve">
+    <value>Azure DevOps n’a aucune organisation nommée {0}. Vérifiez le nom ou créez d’abord l’organisation.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenTitle" xml:space="preserve">
+    <value>Jeton accepté</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenPassed" xml:space="preserve">
+    <value>Connecté en tant que {0}.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenPassedWithoutName" xml:space="preserve">
+    <value>Azure DevOps a accepté le jeton.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenFailed" xml:space="preserve">
+    <value>Azure DevOps n’a pas accepté le jeton. Il est peut-être mal saisi, expiré, révoqué ou créé pour une autre organisation. Créez un jeton pour {0} et collez-le à nouveau.</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorTitle" xml:space="preserve">
+    <value>Administrateur de l’organisation</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorPassed" xml:space="preserve">
+    <value>Administrateur de collection de projets.</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorFailed" xml:space="preserve">
+    <value>Ce compte n’est pas administrateur de collection de projets de {0}. Demandez à un administrateur de se connecter, ou de vous ajouter dans Organization settings → Permissions.</value>
+  </data>
+  <data name="AzureDevOpsCheckAdministratorUnavailable" xml:space="preserve">
+    <value>Azure DevOps n’a pas montré les autorisations de {0} à ce jeton, donc Netptune ne peut pas confirmer qu’il appartient à un administrateur de collection de projets.</value>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesTitle" xml:space="preserve">
+    <value>Peut lire les dépôts</value>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesPassed" xml:space="preserve">
+    <value>{0} dans {1}.</value>
+  </data>
+  <data name="AzureDevOpsRepositoryCountOne" xml:space="preserve">
+    <value>1 dépôt</value>
+  </data>
+  <data name="AzureDevOpsRepositoryCountOther" xml:space="preserve">
+    <value>{0} dépôts</value>
+  </data>
+  <data name="AzureDevOpsProjectCountOne" xml:space="preserve">
+    <value>1 projet</value>
+  </data>
+  <data name="AzureDevOpsProjectCountOther" xml:space="preserve">
+    <value>{0} projets</value>
+  </data>
+  <data name="AzureDevOpsCheckRepositoriesFailed" xml:space="preserve">
+    <value>Il manque Code (Read) au jeton. Modifiez le jeton dans Azure DevOps pour l’ajouter, puis vérifiez à nouveau.</value>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsTitle" xml:space="preserve">
+    <value>Peut lire les éléments de travail</value>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsPassed" xml:space="preserve">
+    <value>Nécessaire pour importer Boards dans Netptune.</value>
+  </data>
+  <data name="AzureDevOpsCheckWorkItemsWarning" xml:space="preserve">
+    <value>Il manque Work Items (Read) au jeton, donc Boards ne peut pas être importé. Modifiez le jeton dans Azure DevOps pour l’ajouter, puis vérifiez à nouveau.</value>
+  </data>
+  <data name="AzureDevOpsCheckBuildsTitle" xml:space="preserve">
+    <value>Peut lire les builds</value>
+  </data>
+  <data name="AzureDevOpsCheckBuildsPassed" xml:space="preserve">
+    <value>Nécessaire pour afficher les résultats des pipelines sur les tâches.</value>
+  </data>
+  <data name="AzureDevOpsCheckBuildsWarning" xml:space="preserve">
+    <value>Il manque Build (Read) au jeton, donc les résultats des pipelines ne s’afficheront pas sur les tâches. Modifiez le jeton dans Azure DevOps pour l’ajouter, puis vérifiez à nouveau.</value>
+  </data>
+  <data name="AzureDevOpsCheckNoProjects" xml:space="preserve">
+    <value>Aucun projet à vérifier pour l’instant.</value>
+  </data>
+  <data name="AzureDevOpsCheckUnanswered" xml:space="preserve">
+    <value>Azure DevOps n’a pas répondu à cette vérification. Réessayez dans un instant.</value>
+  </data>
+  <data name="AzureDevOpsCheckSkipped" xml:space="preserve">
+    <value>Non vérifié, car une vérification précédente a échoué.</value>
+  </data>
+  <data name="AzureDevOpsCheckProjectsTitle" xml:space="preserve">
+    <value>Peut lire les projets</value>
+  </data>
+  <data name="AzureDevOpsCheckProjectsPassed" xml:space="preserve">
+    <value>Nécessaire pour trouver les projets à lier et à vérifier.</value>
+  </data>
+  <data name="AzureDevOpsCheckProjectsFailed" xml:space="preserve">
+    <value>Il manque Project and Team (Read) au jeton. Modifiez le jeton dans Azure DevOps pour l’ajouter, puis vérifiez à nouveau.</value>
+  </data>
+  <data name="AzureDevOpsCheckTokenUnreadable" xml:space="preserve">
+    <value>Netptune ne peut pas lire le jeton enregistré. Remplacez le jeton.</value>
   </data>
 </root>

@@ -37,20 +37,32 @@ export class SourceControlCommandsService {
 
   completeTokenConnect(
     provider: SourceControlProvider,
-    parameters: Record<string, string>
+    parameters: Record<string, string>,
+    acceptWarnings: boolean
   ) {
-    return this.api.completeConnect(provider, parameters).pipe(
+    return this.api.completeConnect(provider, parameters, acceptWarnings).pipe(
       requireSuccess(),
       map((response) => {
-        const connection = response.payload?.connection;
+        const completion = response.payload;
 
-        if (!connection) {
+        if (!completion) {
           throw new Error(COMPLETE_FAILED);
         }
 
-        return connection;
+        return completion;
       }),
-      tap(() => this.refresh())
+      tap((completion) => {
+        if (completion.connection) {
+          this.refresh();
+        }
+      })
+    );
+  }
+
+  checkConnection(connectionId: number) {
+    return this.api.checkConnection(connectionId).pipe(
+      requireSuccess(),
+      tap(() => this.workspaceRefresh.refresh(['sourceControl']))
     );
   }
 

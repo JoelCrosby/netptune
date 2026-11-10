@@ -68,6 +68,10 @@ public sealed class SourceControlConnectionEntityMap : WorkspaceEntityMap<Source
             .HasColumnType("bytea");
 
         builder
+            .Property(connection => connection.LastCheck)
+            .HasColumnType("jsonb");
+
+        builder
             .HasIndex(connection => new
             {
                 connection.WorkspaceId,

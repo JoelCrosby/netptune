@@ -48,6 +48,21 @@ export interface SourceControlProviderInfo {
   capabilities: SourceControlCapability[];
 }
 
+export enum ScmConnectionCheckStatus {
+  passed = 0,
+  warning = 1,
+  failed = 2,
+  skipped = 3,
+}
+
+export interface ScmConnectionCheck {
+  key: string;
+  status: ScmConnectionCheckStatus;
+  isRequired: boolean;
+  title: string;
+  detail: string;
+}
+
 export interface SourceControlConnection {
   id: number;
   provider: SourceControlProvider;
@@ -59,6 +74,11 @@ export interface SourceControlConnection {
   capabilities: SourceControlCapability[];
   linkedRepoCount: number;
   createdAt: string;
+  credentialHint: string | null;
+  credentialExpiresAt: string | null;
+  canCheck: boolean;
+  lastCheckedAt: string | null;
+  checks: ScmConnectionCheck[];
 }
 
 export interface SourceControlRepo {
@@ -158,6 +178,7 @@ export interface SourceControlConnectChoice {
 export interface SourceControlConnectCompletion {
   connection: SourceControlConnection | null;
   choice: SourceControlConnectChoice | null;
+  checks: ScmConnectionCheck[] | null;
 }
 
 export interface ScmRepoSyncResult {

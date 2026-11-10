@@ -14,6 +14,8 @@ using Netptune.Core.Events;
 using Netptune.Core.Requests.SourceControl;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.SourceControl;
+using Netptune.Core.SourceControl.Checks;
+using Netptune.Core.SourceControl.Connect;
 using Netptune.Core.ViewModels.SourceControl;
 using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;
@@ -157,6 +159,131 @@ public sealed class SourceControlEndpointTests
     }
 
     [Fact]
+    public async Task Connect_ShouldCreateNothingWhenARequiredCheckFails()
+    {
+        var account = UniqueAccount();
+        var checks = ChecksParameters(TestSourceControlProvider.FailingChecks);
+
+        var completion = await Complete(account, checks);
+        var connections = await GetConnections();
+
+        completion.Connection.Should().BeNull();
+        completion.Checks.Should().ContainSingle(check => check.Status == ScmConnectionCheckStatus.Failed && check.IsRequired);
+        connections.Should().NotContain(connection => connection.AccountLogin == account);
+    }
+
+    [Fact]
+    public async Task Connect_ShouldHoldBackAConnectionWithWarningsUntilTheyAreAccepted()
+    {
+        var account = UniqueAccount();
+        var checks = ChecksParameters(TestSourceControlProvider.WarningChecks);
+
+        var heldBack = await Complete(account, checks);
+        var connectionsBefore = await GetConnections();
+        var accepted = await Complete(account, checks, acceptWarnings: true);
+        var stored = await GetStoredConnection(accepted.Connection!.Id);
+
+        heldBack.Connection.Should().BeNull();
+        heldBack.Checks.Should().ContainSingle(check => check.Status == ScmConnectionCheckStatus.Warning && !check.IsRequired);
+        connectionsBefore.Should().NotContain(connection => connection.AccountLogin == account);
+        accepted.Connection.Checks.Should().HaveCount(2);
+        accepted.Connection.LastCheckedAt.Should().NotBeNull();
+        stored.LastCheckedAt.Should().NotBeNull();
+        stored.LastCheck!.RootElement.GetArrayLength().Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Connect_ShouldConnectAtOnceWhenEveryCheckPasses()
+    {
+        var completion = await Complete(UniqueAccount(), ChecksParameters(TestSourceControlProvider.PassingChecks));
+
+        completion.Connection.Should().NotBeNull();
+        completion.Connection!.CanCheck.Should().BeTrue();
+        completion.Checks.Should().OnlyContain(check => check.Status == ScmConnectionCheckStatus.Passed);
+    }
+
+    [Fact]
+    public async Task Check_ShouldRunTheChecksAndStoreTheResult()
+    {
+        var connection = await Connect(UniqueAccount());
+
+        var response = await Client.PostAsync(
+            $"api/source-control/connections/{connection.Id}/check",
+            null,
+            TestContext.Current.CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(
+            TestContext.Current.CancellationToken);
+        var stored = await GetStoredConnection(connection.Id);
+        var listed = (await GetConnections()).Single(listed => listed.Id == connection.Id);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, result.Message);
+        result.Payload!.LastCheckedAt.Should().NotBeNull();
+        result.Payload.Checks.Select(check => check.Key)
+            .Should()
+            .Equal(TestSourceControlProvider.RequiredCheckKey, TestSourceControlProvider.OptionalCheckKey);
+        stored.LastCheckedAt.Should().NotBeNull();
+        listed.Checks.Should().HaveCount(2);
+        listed.Status.Should().Be(ScmConnectionStatus.Active);
+    }
+
+    [Fact]
+    public async Task Check_ShouldNotOverwriteTheResultWhenTheTokenIsReplacedMidCheck()
+    {
+        var connection = await Connect(UniqueAccount());
+        var replacedCredential = new byte[] { 1, 2, 3, 4 };
+
+        TestSourceControlProvider.DuringCheck[connection.Id] = () => ReplaceCredential(connection.Id, replacedCredential);
+
+        var response = await Client.PostAsync(
+            $"api/source-control/connections/{connection.Id}/check",
+            null,
+            TestContext.Current.CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectionViewModel>>(
+            TestContext.Current.CancellationToken);
+        var stored = await GetStoredConnection(connection.Id);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, result!.Message);
+        result.Payload!.LastCheckedAt.Should().BeNull();
+        result.Payload.Checks.Should().BeEmpty();
+        stored.Credential.Should().Equal(replacedCredential);
+        stored.LastCheckedAt.Should().BeNull();
+        stored.LastCheck.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Check_ShouldBeRefusedForMembersWhoCannotManageSourceControl()
+    {
+        var connection = await Connect(UniqueAccount());
+        var member = SeedData.Users.ElementAt(2);
+        var memberClient = Fixture.CreateNetptuneClientAs(member.Email);
+
+        var response = await memberClient.PostAsync(
+            $"api/source-control/connections/{connection.Id}/check",
+            null,
+            TestContext.Current.CancellationToken);
+        var stored = await GetStoredConnection(connection.Id);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        stored.LastCheckedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Check_ShouldRefuseAConnectionWhoseProviderHasNoChecks()
+    {
+        var connection = await Connect(UniqueAccount());
+        var gitHubConnectionId = await AddGitHubConnection(connection.Id);
+
+        var response = await Client.PostAsync(
+            $"api/source-control/connections/{gitHubConnectionId}/check",
+            null,
+            TestContext.Current.CancellationToken);
+        var listed = (await GetConnections()).Single(listed => listed.Id == gitHubConnectionId);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        listed.CanCheck.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Connect_ShouldOfferOnlyTheAccountsTheWorkspaceHasNotConnected()
     {
         var connected = UniqueAccount();
@@ -276,11 +403,13 @@ public sealed class SourceControlEndpointTests
         var sync = await Client.PostAsync($"api/source-control/connections/{foreignConnection.Id}/sync", null, token);
         var link = await SetLinked(Client, foreignRepoId, isLinked: true);
         var disconnect = await Client.DeleteAsync($"api/source-control/connections/{foreignConnection.Id}", token);
+        var check = await Client.PostAsync($"api/source-control/connections/{foreignConnection.Id}/check", null, token);
 
         repos.StatusCode.Should().Be(HttpStatusCode.NotFound);
         sync.StatusCode.Should().Be(HttpStatusCode.NotFound);
         link.StatusCode.Should().Be(HttpStatusCode.NotFound);
         disconnect.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        check.StatusCode.Should().Be(HttpStatusCode.NotFound);
         (await GetRepos(foreignConnection.Id, foreignClient)).Should().NotBeEmpty("the owning workspace still has it");
     }
 
@@ -526,6 +655,62 @@ public sealed class SourceControlEndpointTests
         return result.Payload!.Connection!;
     }
 
+    private async Task<SourceControlConnectCompletionViewModel> Complete(
+        string account,
+        Dictionary<string, string> extraParameters,
+        bool acceptWarnings = false)
+    {
+        var parameters = new Dictionary<string, string>(extraParameters) { ["account"] = account, ["code"] = "ok" };
+        var request = new CompleteSourceControlConnectRequest
+        {
+            Provider = SourceControlProvider.GitLab,
+            Parameters = parameters,
+            AcceptWarnings = acceptWarnings,
+        };
+
+        var response = await Client.PostAsJsonAsync(
+            "api/source-control/connections/complete",
+            request,
+            TestContext.Current.CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SourceControlConnectCompletionViewModel>>(
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, result.Message);
+
+        return result.Payload!;
+    }
+
+    private static Dictionary<string, string> ChecksParameters(string outcome)
+    {
+        return new Dictionary<string, string> { [TestSourceControlProvider.ChecksParameter] = outcome };
+    }
+
+    private async Task<int> AddGitHubConnection(int sameWorkspaceConnectionId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var existing = await GetStoredConnection(sameWorkspaceConnectionId);
+        var account = UniqueAccount();
+
+        var connection = new SourceControlConnection
+        {
+            WorkspaceId = existing.WorkspaceId,
+            Provider = SourceControlProvider.GitHub,
+            ExternalAccountId = account,
+            AccountLogin = account,
+            AccountType = ScmAccountType.Organisation,
+            Status = ScmConnectionStatus.Active,
+            OwnerId = existing.OwnerId,
+            CreatedByUserId = existing.CreatedByUserId,
+        };
+
+        context.SourceControlConnections.Add(connection);
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        return connection.Id;
+    }
+
     private static Dictionary<string, string> CredentialParameters(string hint, DateTime expiresAt)
     {
         return new Dictionary<string, string>
@@ -533,6 +718,18 @@ public sealed class SourceControlEndpointTests
             [TestSourceControlProvider.CredentialHintParameter] = hint,
             [TestSourceControlProvider.CredentialExpiresAtParameter] = expiresAt.ToString("O", CultureInfo.InvariantCulture),
         };
+    }
+
+    private async Task ReplaceCredential(int connectionId, byte[] credential)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await context.SourceControlConnections
+            .Where(stored => stored.Id == connectionId)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(stored => stored.Credential, credential),
+                TestContext.Current.CancellationToken);
     }
 
     private async Task<SourceControlConnection> GetStoredConnection(int connectionId)

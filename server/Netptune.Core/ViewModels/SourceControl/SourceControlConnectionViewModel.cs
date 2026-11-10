@@ -23,5 +23,15 @@ public sealed record SourceControlConnectionViewModel
 
     public int LinkedRepoCount { get; init; }
 
+    public string? CredentialHint { get; init; }
+
+    public DateTime? CredentialExpiresAt { get; init; }
+
+    public bool CanCheck { get; init; }
+
+    public DateTime? LastCheckedAt { get; init; }
+
+    public List<ScmConnectionCheckViewModel> Checks { get; init; } = [];
+
     public DateTime CreatedAt { get; init; }
 }

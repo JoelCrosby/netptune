@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.App.Configuration;
+using Netptune.Core.Authorization;
 
 using Xunit;
 
@@ -82,6 +83,20 @@ public sealed class EndpointAuthorizationTests
             .ToList();
 
         signInLimitedRoutes.Should().Contain(ProviderLoginRoutes);
+    }
+
+    [Fact]
+    public void SourceControlConnectionCheck_ShouldRequireTheManagePermission()
+    {
+        var checkEndpoint = RouteEndpoints()
+            .Single(endpoint => endpoint.RoutePattern.RawText == "/api/source-control/connections/{connectionId:int}/check");
+
+        var policies = checkEndpoint.Metadata
+            .GetOrderedMetadata<IAuthorizeData>()
+            .Select(data => data.Policy)
+            .ToList();
+
+        policies.Should().Contain(NetptunePermissions.SourceControl.Manage);
     }
 
     [Fact]
