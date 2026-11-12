@@ -1,34 +1,42 @@
-import { ActivityActorPipe } from '@static/pipes/activity-actor.pipe';
-import { Component, computed, inject, input } from '@angular/core';
-import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSIONS } from '@core/auth/permissions';
+import { DialogRef } from '@angular/cdk/dialog';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+} from '@angular/core';
 import { EntityType } from '@core/models/entity-type';
 import {
   ActivityFeedRequest,
   activityResource,
 } from '@core/resources/activity.resource';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { ActivityPipe } from '@static/pipes/activity.pipe';
-import { ActivityTimeRangePipe } from '@static/pipes/activity-time-range.pipe';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import {
+  activityCategory,
+  activityCategoryCounts,
+  activityCategoryOptions,
+  ActivityTimelineCategory,
+  activityTimelineGroups,
+} from '@core/transforms/activity-timeline';
+import { clock } from '@core/util/clock';
 import { LucideActivity } from '@lucide/angular';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { EventTimelineComponent } from '@static/components/event-timeline/event-timeline.component';
+import { SegmentedControlComponent } from '@static/components/segmented-control/segmented-control.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TaskDetailService } from '../task-detail.service';
 
 @Component({
   selector: 'app-task-detail-activity-feed',
   imports: [
-    AvatarComponent,
     EmptyStateComponent,
-    FlatButtonComponent,
-    SpinnerComponent,
-    TooltipDirective,
-    ActivityPipe,
-    ActivityActorPipe,
-    ActivityTimeRangePipe,
+    EventTimelineComponent,
     LucideActivity,
+    SegmentedControlComponent,
+    SpinnerComponent,
+    StrokedButtonComponent,
   ],
   host: { class: 'flex flex-col gap-3' },
   template: `
@@ -36,51 +44,52 @@ import { TaskDetailService } from '../task-detail.service';
       <div class="flex justify-center p-4">
         <app-spinner diameter="24" />
       </div>
+    } @else if (!activities().length) {
+      <app-empty-state
+        compact
+        i18n-title="Heading shown when a task has no history"
+        title="There is no history for this task"
+        i18n-description="Explains why the task's history is empty"
+        description="Changes to the task will appear here">
+        <svg emptyStateIcon lucideActivity></svg>
+      </app-empty-state>
     } @else {
-      @for (activity of activities(); track activity.id) {
-        @let actor = activity | activityActor;
-        <div class="flex items-start gap-2.5">
-          <app-avatar
-            class="shrink-0"
-            size="sm"
-            [tooltip]="false"
-            [imageUrl]="actor.pictureUrl"
-            [name]="actor.name"
-            [isServiceAccount]="actor.isServiceAccount" />
-          <div class="min-w-0 text-[13px]/[20px]">
-            <span class="font-semibold">{{ actor.name }}</span>
-            @if (activity.agent) {
-              <span
-                class="text-muted ml-1 text-xs"
-                i18n="
-                  Precedes the assistant that made a change on the user's behalf
-                ">
-                via {{ activity.agent }}
-              </span>
-            }
-            <span
-              class="text-muted ml-1"
-              [appTooltip]="activity | activityTimeRange">
-              {{ activity | activity }}
-            </span>
-          </div>
-        </div>
-      } @empty {
+      <app-segmented-control
+        wrap
+        i18n-ariaLabel="Accessible label for the activity timeline type filter"
+        ariaLabel="Filter activity by type"
+        [options]="options()"
+        [(value)]="category" />
+
+      @if (groups().length) {
+        <app-event-timeline
+          class="-mx-4"
+          [surface]="surface"
+          [groups]="groups()" />
+      } @else {
         <app-empty-state
           compact
-          i18n-title="Heading shown when a task has no history"
-          title="There is no history for this task"
-          i18n-description="Explains why the task's history is empty"
-          description="Changes to the task will appear here">
-          <svg emptyStateIcon lucideActivity></svg>
-        </app-empty-state>
+          i18n-title="
+            Shown in an activity timeline when the type filter hides every
+            loaded entry
+          "
+          title="No activity matches this filter" />
       }
 
       @if (canLoadMore()) {
         <div class="flex justify-center pt-1">
-          <button app-flat-button color="ghost" (click)="loadMore()">
-            <span i18n="Button that loads the next page of activity">
-              Load more
+          <button
+            app-stroked-button
+            color="neutral"
+            size="small"
+            [disabled]="isLoading()"
+            (click)="loadMore()">
+            <span
+              i18n="
+                Button at the end of an activity timeline that loads older
+                entries
+              ">
+              Load older activity
             </span>
           </button>
         </div>
@@ -92,7 +101,20 @@ export class TaskDetailActivityFeedComponent {
   readonly enabled = input(true);
 
   private readonly taskDetail = inject(TaskDetailService);
-  readonly readActivity = hasPermission(PERMISSIONS.activity.read);
+  private readonly workspaceSlug = inject(CurrentWorkspaceService).slug;
+  private readonly now = clock(30_000);
+
+  private readonly dialogRef = inject(DialogRef, { optional: true });
+
+  protected readonly surface = this.dialogRef ? 'dialog' : 'background';
+
+  protected readonly category = linkedSignal<
+    number | undefined,
+    ActivityTimelineCategory
+  >({
+    source: this.taskDetail.taskId,
+    computation: () => 'all',
+  });
 
   private readonly request = computed<ActivityFeedRequest | null>(() => {
     const entityId = this.taskDetail.taskId();
@@ -106,7 +128,29 @@ export class TaskDetailActivityFeedComponent {
 
   readonly activities = this.resource.items;
   readonly loaded = this.resource.loaded;
+  readonly isLoading = this.resource.isLoading;
   readonly canLoadMore = this.resource.canLoadMore;
+
+  private readonly counts = computed(() => {
+    return activityCategoryCounts(this.activities());
+  });
+
+  protected readonly options = computed(() => {
+    return activityCategoryOptions(this.counts(), this.category());
+  });
+
+  protected readonly groups = computed(() => {
+    const category = this.category();
+    const visible = this.activities().filter((activity) => {
+      return category === 'all' || activityCategory(activity) === category;
+    });
+
+    return activityTimelineGroups(visible, {
+      workspaceSlug: this.workspaceSlug(),
+      scope: { kind: 'task' },
+      now: this.now(),
+    });
+  });
 
   loadMore() {
     this.resource.loadMore();

@@ -32,7 +32,7 @@ export interface EventTimelineRow {
   note?: string | null;
   subjectId?: string | null;
   subjectLink?: readonly unknown[] | null;
-  subjectLabel: string;
+  subjectLabel?: string | null;
   subjectStruck?: boolean;
   time: string;
   timeTitle: string;
@@ -148,28 +148,30 @@ const surfaceRingClasses: Record<EventTimelineSurface, string> = {
                   }
                 </p>
 
-                <div class="flex min-w-0 items-center gap-2 text-[12.5px]">
-                  @if (row.subjectId) {
-                    @if (row.subjectLink) {
-                      <a
-                        class="font-avatar text-foreground/70 hover:text-foreground shrink-0 text-[11.5px] underline-offset-2 hover:underline"
-                        [routerLink]="row.subjectLink"
-                        (click)="subjectClicked.emit(row)">
-                        {{ row.subjectId }}
-                      </a>
-                    } @else {
-                      <span
-                        class="font-avatar text-foreground/70 shrink-0 text-[11.5px]">
-                        {{ row.subjectId }}
-                      </span>
+                @if (row.subjectId || row.subjectLabel) {
+                  <div class="flex min-w-0 items-center gap-2 text-[12.5px]">
+                    @if (row.subjectId) {
+                      @if (row.subjectLink) {
+                        <a
+                          class="font-avatar text-foreground/70 hover:text-foreground shrink-0 text-[11.5px] underline-offset-2 hover:underline"
+                          [routerLink]="row.subjectLink"
+                          (click)="subjectClicked.emit(row)">
+                          {{ row.subjectId }}
+                        </a>
+                      } @else {
+                        <span
+                          class="font-avatar text-foreground/70 shrink-0 text-[11.5px]">
+                          {{ row.subjectId }}
+                        </span>
+                      }
                     }
-                  }
-                  <span
-                    class="text-foreground/50 min-w-0 truncate"
-                    [class.line-through]="row.subjectStruck">
-                    {{ row.subjectLabel }}
-                  </span>
-                </div>
+                    <span
+                      class="text-foreground/50 min-w-0 truncate"
+                      [class.line-through]="row.subjectStruck">
+                      {{ row.subjectLabel }}
+                    </span>
+                  </div>
+                }
 
                 @if (open && row.repeatTimes?.length) {
                   <ol class="mt-1 flex flex-col gap-0.5">

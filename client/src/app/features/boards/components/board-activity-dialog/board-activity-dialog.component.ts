@@ -20,9 +20,9 @@ import {
   activityCategory,
   activityCategoryCounts,
   activityCategoryOptions,
-  BoardActivityCategory,
-  boardActivityGroups,
-} from './board-activity-timeline';
+  ActivityTimelineCategory,
+  activityTimelineGroups,
+} from '@core/transforms/activity-timeline';
 
 export interface BoardActivityDialogData {
   boardId: number;
@@ -56,7 +56,7 @@ export interface BoardActivityDialogData {
     <div app-dialog-section divider="bottom" class="shrink-0 px-5 pb-3.5">
       <app-segmented-control
         wrap
-        i18n-ariaLabel="Accessible label for the board activity type filter"
+        i18n-ariaLabel="Accessible label for the activity timeline type filter"
         ariaLabel="Filter activity by type"
         [options]="options()"
         [(value)]="category" />
@@ -87,8 +87,8 @@ export interface BoardActivityDialogData {
             <app-empty-state
               compact
               i18n-title="
-                Shown in the board activity dialog when the selected type filter
-                hides every loaded entry
+                Shown in an activity timeline when the type filter hides every
+                loaded entry
               "
               title="No activity matches this filter" />
           </div>
@@ -104,8 +104,8 @@ export interface BoardActivityDialogData {
               (click)="loadMore()">
               <span
                 i18n="
-                  Button at the end of the board activity dialog that loads the
-                  next page of older entries
+                  Button at the end of an activity timeline that loads older
+                  entries
                 ">
                 Load older activity
               </span>
@@ -127,7 +127,7 @@ export class BoardActivityDialogComponent {
   private readonly now = clock(30_000);
 
   protected readonly historyIcon = LucideHistory;
-  protected readonly category = signal<BoardActivityCategory>('all');
+  protected readonly category = signal<ActivityTimelineCategory>('all');
 
   private readonly request = signal<ActivityFeedRequest>({
     entityType: EntityType.board,
@@ -155,9 +155,9 @@ export class BoardActivityDialogComponent {
       return category === 'all' || activityCategory(activity) === category;
     });
 
-    return boardActivityGroups(visible, {
+    return activityTimelineGroups(visible, {
       workspaceSlug: this.workspaceSlug(),
-      boardName: this.data.boardName,
+      scope: { kind: 'board', boardName: this.data.boardName },
       now: this.now(),
     });
   });

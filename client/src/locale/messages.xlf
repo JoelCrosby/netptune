@@ -49,7 +49,7 @@
     </unit>
     <unit id="8048662681212165766">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:432</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:432</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they accepted a finding from an assistant review. FINDING is its title</note>
       </notes>
       <segment>
@@ -97,8 +97,9 @@
     </unit>
     <unit id="7703187061908079501">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:110,119</note>
-        <note category="description">Button at the end of the board activity dialog that loads the next page of older entries</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:88,96</note>
+        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:110,116</note>
+        <note category="description">Button at the end of an activity timeline that loads older entries</note>
       </notes>
       <segment>
         <source> Load older activity </source>
@@ -106,7 +107,7 @@
     </unit>
     <unit id="7703284198794564632">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:498</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:498</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they moved a task to a board group. GROUP is the group&apos;s name</note>
       </notes>
       <segment>
@@ -559,7 +560,7 @@
     </unit>
     <unit id="803434940127970079">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:212</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:212</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and priority</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -1515,7 +1516,7 @@
     </unit>
     <unit id="7216628137707269895">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:206</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:206</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and description</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -1643,7 +1644,7 @@
     </unit>
     <unit id="526715278202678166">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:527</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:527</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s due date</note>
       </notes>
       <segment>
@@ -1814,7 +1815,7 @@
     </unit>
     <unit id="7545745913372577732">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:551</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:551</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they tagged a task</note>
       </notes>
       <segment>
@@ -1950,7 +1951,7 @@
     </unit>
     <unit id="3666455504940470204">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:395</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:395</note>
         <note category="description">Activity timeline entry after the code host&apos;s name when some checks failed. REFERENCE is a branch or commit, FAILED and TOTAL are numbers</note>
       </notes>
       <segment>
@@ -2205,7 +2206,7 @@
     </unit>
     <unit id="7726694195614515835">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:302</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:302</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they linked this task to another. TASK is the other task&apos;s id and RELATION says how they relate, as in blocks</note>
       </notes>
       <segment>
@@ -3234,7 +3235,7 @@
     </unit>
     <unit id="311040115859646678">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:204</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:204</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and priority</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -3579,7 +3580,7 @@
     </unit>
     <unit id="8569655067637366747">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:214</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:214</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and estimate</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -3719,7 +3720,7 @@
     </unit>
     <unit id="7193152316141960709">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:336</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:336</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they merged a pull request. PULL_REQUEST is its number and title</note>
       </notes>
       <segment>
@@ -3728,7 +3729,7 @@
     </unit>
     <unit id="7196996838241523478">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:445</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:445</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they dismissed a finding from an assistant review</note>
       </notes>
       <segment>
@@ -4027,7 +4028,7 @@
     </unit>
     <unit id="4854048028687013104">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:454</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:454</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they reopened a finding from an assistant review</note>
       </notes>
       <segment>
@@ -4432,7 +4433,7 @@
     </unit>
     <unit id="7057362319385794943">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:502</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:502</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they moved a task to another board group</note>
       </notes>
       <segment>
@@ -4771,7 +4772,6 @@
     <unit id="5688462374174490321">
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:130,132</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:83,86</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:263,266</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:58,64</note>
         <note category="description">Button that loads the next page of activity</note>
@@ -4991,7 +4991,7 @@
     </unit>
     <unit id="224349424172629810">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:222</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:222</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and sprint</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -5292,6 +5292,7 @@
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:67</note>
         <note category="location">src/app/core/tasks/task-columns.ts:107</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:695</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:52</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:20</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-property-chips.component.ts:71,73</note>
@@ -5299,7 +5300,6 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:65,66</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:137,141</note>
         <note category="location">src/app/features/automations/models/task-update-fields.ts:34</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:695</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:450</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:144</note>
@@ -5333,7 +5333,7 @@
     </unit>
     <unit id="8592932355603567140">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:558</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:558</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they tagged a task. TAG is the tag&apos;s name</note>
       </notes>
       <segment>
@@ -5702,10 +5702,10 @@
         <note category="location">src/app/core/automations/automation-copy.ts:68</note>
         <note category="location">src/app/core/automations/automation-copy.ts:126</note>
         <note category="location">src/app/core/tasks/task-columns.ts:137</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:707</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:50</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:113,115</note>
         <note category="location">src/app/features/automations/models/task-update-fields.ts:59</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:707</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:394</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
         <note category="description">Task field that an automation can watch for changes</note>
@@ -7252,7 +7252,7 @@
     </unit>
     <unit id="2570879316831026404">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:262</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:262</note>
         <note category="description">Activity timeline entry after the person&apos;s name for several fields changed at once, the status among them. FIELDS is a list such as name and priority</note>
       </notes>
       <segment>
@@ -7357,7 +7357,7 @@
     </unit>
     <unit id="3612175537854776017">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:220</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:220</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and tags</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -7966,9 +7966,9 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:613</note>
         <note category="location">src/app/core/automations/automation-copy.ts:73</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:703</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-fields.ts:45</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:132</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:703</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:91,92</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:146,147</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:72</note>
@@ -8708,7 +8708,7 @@
     </unit>
     <unit id="2656586998545560719">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:216</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:216</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and due date</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -9030,7 +9030,7 @@
     </unit>
     <unit id="9029168908672992601">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:604</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:604</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they edited a comment</note>
       </notes>
       <segment>
@@ -9246,7 +9246,7 @@
     </unit>
     <unit id="1674961966403193763">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:341</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:341</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they closed a pull request. PULL_REQUEST is its number and title</note>
       </notes>
       <segment>
@@ -9856,7 +9856,7 @@
     </unit>
     <unit id="6335675486723988642">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:594</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:594</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a file from a task. FILE is the file name</note>
       </notes>
       <segment>
@@ -10002,7 +10002,7 @@
     </unit>
     <unit id="3240772691701099823">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:370</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:370</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they pushed commits. COUNT is a number above one and BRANCH is the branch name</note>
       </notes>
       <segment>
@@ -10537,7 +10537,7 @@
     </unit>
     <unit id="7581539719940418794">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:552</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:552</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a tag from a task</note>
       </notes>
       <segment>
@@ -10653,7 +10653,7 @@
     </unit>
     <unit id="8411885200883366638">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:74,75</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:49,51</note>
         <note category="description">Explains why the task&apos;s history is empty</note>
       </notes>
       <segment>
@@ -10862,7 +10862,7 @@
     </unit>
     <unit id="4820439278939512139">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:568</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:568</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they took a task off a board. BOARD is the board&apos;s name</note>
       </notes>
       <segment>
@@ -10935,10 +10935,10 @@
     </unit>
     <unit id="1616102757855967475">
       <notes>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:691</note>
         <note category="location">src/app/core/util/pinned-task-filter.ts:40</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:253</note>
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:302</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:691</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:50</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:64</note>
@@ -10947,7 +10947,7 @@
         <note category="location">src/app/features/users/views/users-view/users-view.component.ts:51</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:667</note>
-        <note category="description">Pinned task filter showing every pin</note>
+        <note category="description">Activity timeline filter that shows every entry</note>
       </notes>
       <segment>
         <source>All</source>
@@ -12323,7 +12323,7 @@
     </unit>
     <unit id="5677150749343951328">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:436</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:436</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they accepted a finding from an assistant review</note>
       </notes>
       <segment>
@@ -12513,7 +12513,7 @@
     </unit>
     <unit id="4097574258722168230">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:418</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:418</note>
         <note category="description">Activity timeline entry after the person&apos;s name when an assistant review they ran raised one finding</note>
       </notes>
       <segment>
@@ -12577,7 +12577,7 @@
     </unit>
     <unit id="5329377036808589789">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:394</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:394</note>
         <note category="description">Activity timeline entry after the code host&apos;s name when its checks passed. REFERENCE is a branch or commit</note>
       </notes>
       <segment>
@@ -13560,7 +13560,7 @@
     </unit>
     <unit id="4986639328380085356">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:535</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:535</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they assigned someone to a task. PERSON is that person&apos;s name</note>
       </notes>
       <segment>
@@ -13588,7 +13588,7 @@
     </unit>
     <unit id="894073162382631591">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:587</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:587</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a file from a task</note>
       </notes>
       <segment>
@@ -14936,7 +14936,7 @@
     </unit>
     <unit id="2795454335379147011">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:72,73</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:47,48</note>
         <note category="description">Heading shown when a task has no history</note>
       </notes>
       <segment>
@@ -15148,7 +15148,7 @@
     </unit>
     <unit id="3695792553937943632">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:286</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:286</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they linked this task to another</note>
       </notes>
       <segment>
@@ -15240,7 +15240,7 @@
     </unit>
     <unit id="3261018859281870041">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:586</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:586</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they attached a file to a task</note>
       </notes>
       <segment>
@@ -15334,7 +15334,7 @@
     <unit id="5873012413476626725">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:110</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:572</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:572</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -15603,8 +15603,9 @@
     </unit>
     <unit id="5133088355060537607">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:56,60</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:60,63</note>
-        <note category="description">Accessible label for the board activity type filter</note>
+        <note category="description">Accessible label for the activity timeline type filter</note>
       </notes>
       <segment>
         <source>Filter activity by type</source>
@@ -16216,7 +16217,7 @@
     </unit>
     <unit id="2891379900607030905">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:475</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:475</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they restored a deleted task</note>
       </notes>
       <segment>
@@ -16360,7 +16361,7 @@
     </unit>
     <unit id="8002436648282060749">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:531</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:531</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s start date</note>
       </notes>
       <segment>
@@ -16762,7 +16763,7 @@
     </unit>
     <unit id="5845168339632458508">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:224</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:224</note>
         <note category="description">The board group of a task, listed in a merged activity timeline entry, as in updated name and group</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -16781,7 +16782,7 @@
     </unit>
     <unit id="5846332390771184932">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:387</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:387</note>
         <note category="description">Activity timeline entry after the code host&apos;s name when its checks passed</note>
       </notes>
       <segment>
@@ -16818,7 +16819,7 @@
     </unit>
     <unit id="5293563719217972880">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:208</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:208</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and assignees</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -16972,7 +16973,7 @@
     </unit>
     <unit id="2593763089859685916">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:612</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:612</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they switched something on</note>
       </notes>
       <segment>
@@ -17339,7 +17340,7 @@
     </unit>
     <unit id="8444272719785117681">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:616</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:616</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they switched something off</note>
       </notes>
       <segment>
@@ -17430,7 +17431,7 @@
     </unit>
     <unit id="5042643107387337360">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:540</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:540</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they took someone off a task. PERSON is that person&apos;s name</note>
       </notes>
       <segment>
@@ -17560,7 +17561,7 @@
     </unit>
     <unit id="979415550078360218">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:322</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:322</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they closed a pull request</note>
       </notes>
       <segment>
@@ -18477,7 +18478,7 @@
     </unit>
     <unit id="5817627395439792837">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:799</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:824</note>
         <note category="description">Follows the person in an activity entry and names the assistant that acted for them. AGENT is its name</note>
       </notes>
       <segment>
@@ -18820,7 +18821,7 @@
     </unit>
     <unit id="6470939722175548797">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:210</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:210</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and owner</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -19287,7 +19288,7 @@
     </unit>
     <unit id="4239919027327086685">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:294</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:294</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they linked this task to another. TASK is the other task&apos;s id</note>
       </notes>
       <segment>
@@ -19351,7 +19352,7 @@
     </unit>
     <unit id="5109975316769294941">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:523</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:523</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s estimate</note>
       </notes>
       <segment>
@@ -19952,7 +19953,7 @@
     </unit>
     <unit id="1300505856664758899">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:600</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:600</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they commented on a task</note>
       </notes>
       <segment>
@@ -20192,7 +20193,7 @@
     </unit>
     <unit id="3443720919153564516">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:635</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:635</note>
         <note category="description">Activity timeline entry after the person&apos;s name for a change the timeline has no wording for</note>
       </notes>
       <segment>
@@ -20522,7 +20523,7 @@
     </unit>
     <unit id="1541259119100510260">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:363</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:363</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they pushed commits. COUNT is a number above one</note>
       </notes>
       <segment>
@@ -20668,7 +20669,7 @@
     </unit>
     <unit id="591388663994959692">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:645</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:645</note>
         <note category="description">Follows an activity timeline entry that folds several edits together. COUNT is a number above one</note>
       </notes>
       <segment>
@@ -21008,7 +21009,7 @@
     </unit>
     <unit id="2199712883577343143">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:450</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:450</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they reopened a finding from an assistant review. FINDING is its title</note>
       </notes>
       <segment>
@@ -21162,7 +21163,7 @@
     </unit>
     <unit id="8052764268168560747">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:326</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:326</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they opened a pull request</note>
       </notes>
       <segment>
@@ -21263,7 +21264,7 @@
     </unit>
     <unit id="1059428081289395168">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:369</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:369</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they pushed one commit. BRANCH is the branch name</note>
       </notes>
       <segment>
@@ -21733,7 +21734,7 @@
     </unit>
     <unit id="6717972564796562666">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:412</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:412</note>
         <note category="description">Activity timeline entry after the person&apos;s name when an assistant review they ran failed</note>
       </notes>
       <segment>
@@ -21940,7 +21941,7 @@
     </unit>
     <unit id="588230151780724018">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:471</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:471</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they deleted a task or board</note>
       </notes>
       <segment>
@@ -22198,7 +22199,7 @@
     </unit>
     <unit id="2874160350204276776">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:507</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:507</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they renamed a task or board</note>
       </notes>
       <segment>
@@ -22615,7 +22616,7 @@
     </unit>
     <unit id="2779174231149333213">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:198</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:198</note>
         <note category="description">Stands in for a person who has since been removed from the workspace, in the activity timeline</note>
       </notes>
       <segment>
@@ -22795,7 +22796,7 @@
     </unit>
     <unit id="7670500955334396070">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:491</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:491</note>
         <note category="description">Activity timeline entry after the person&apos;s name when a status change moved a task to the board group mapped to that status. GROUP is the group&apos;s name, STATUS the new status</note>
       </notes>
       <segment>
@@ -23009,7 +23010,7 @@
     </unit>
     <unit id="750267453443059013">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:419</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:419</note>
         <note category="description">Activity timeline entry after the person&apos;s name for an assistant review they ran. COUNT is a number</note>
       </notes>
       <segment>
@@ -23917,9 +23918,9 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:622</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:715</note>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:20</note>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:715</note>
         <note category="location">src/app/features/pages/editor/page-editor-commands.ts:20</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-status-band.component.ts:87</note>
         <note category="location">src/app/features/settings/settings.routes.ts:172</note>
@@ -24199,8 +24200,9 @@
     </unit>
     <unit id="4375008545178374235">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:72,77</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-dialog.component.ts:93,98</note>
-        <note category="description">Shown in the board activity dialog when the selected type filter hides every loaded entry</note>
+        <note category="description">Shown in an activity timeline when the type filter hides every loaded entry</note>
       </notes>
       <segment>
         <source>No activity matches this filter</source>
@@ -24441,7 +24443,7 @@
     </unit>
     <unit id="7266541713615823497">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:699</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:699</note>
         <note category="description">Activity timeline filter for changes to task fields, comments, files and links</note>
       </notes>
       <segment>
@@ -24706,7 +24708,7 @@
     </unit>
     <unit id="4584368643492582099">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:467</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:467</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a task or board</note>
       </notes>
       <segment>
@@ -25316,7 +25318,7 @@
     </unit>
     <unit id="2752246135868888302">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:295</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:295</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a link to another task. TASK is the other task&apos;s id</note>
       </notes>
       <segment>
@@ -25645,7 +25647,7 @@
     </unit>
     <unit id="5000218922526498212">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:388</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:388</note>
         <note category="description">Activity timeline entry after the code host&apos;s name when some checks failed. FAILED and TOTAL are numbers</note>
       </notes>
       <segment>
@@ -26514,7 +26516,7 @@
     </unit>
     <unit id="2463581940082795449">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:267</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:267</note>
         <note category="description">Activity timeline entry after the person&apos;s name for several fields changed at once, ending with a move to a new status. FIELDS is a list such as name and priority</note>
       </notes>
       <segment>
@@ -26677,7 +26679,7 @@
     </unit>
     <unit id="2329189225567193595">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:519</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:519</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s priority</note>
       </notes>
       <segment>
@@ -26686,7 +26688,7 @@
     </unit>
     <unit id="2329216581321975995">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:303</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:303</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a link to another task. TASK is the other task&apos;s id and RELATION says how they related, as in blocks</note>
       </notes>
       <segment>
@@ -26732,7 +26734,6 @@
     <unit id="4274276168705525822">
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:90,91</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-activity-feed.component.ts:58,59</note>
         <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
       </notes>
       <segment>
@@ -27153,7 +27154,7 @@
     </unit>
     <unit id="6928679808877898416">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:287</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:287</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a link between this task and another</note>
       </notes>
       <segment>
@@ -27801,10 +27802,10 @@
     </unit>
     <unit id="8186013988289067040">
       <notes>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:719</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:252</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:281</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:719</note>
-        <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
+        <note category="description">Activity timeline filter for pull requests, commits and checks</note>
       </notes>
       <segment>
         <source>Code</source>
@@ -27930,7 +27931,7 @@
     </unit>
     <unit id="7645672961231881025">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:559</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:559</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they removed a tag from a task. TAG is the tag&apos;s name</note>
       </notes>
       <segment>
@@ -28010,7 +28011,7 @@
     </unit>
     <unit id="8340605781803467456">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:362</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:362</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they pushed one commit</note>
       </notes>
       <segment>
@@ -28372,7 +28373,7 @@
     </unit>
     <unit id="3411302376557713872">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:511</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:511</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a description</note>
       </notes>
       <segment>
@@ -28647,7 +28648,7 @@
     </unit>
     <unit id="6595587557099432031">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:318</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:318</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they merged a pull request</note>
       </notes>
       <segment>
@@ -29133,7 +29134,7 @@
     </unit>
     <unit id="5251151117970984677">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:815</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:835</note>
         <note category="description">Toggle that lists the times an action repeated, in the activity timeline. COUNT is a number above one</note>
       </notes>
       <segment>
@@ -29241,10 +29242,10 @@
     </unit>
     <unit id="6381490568322624964">
       <notes>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:711</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-code.component.ts:86</note>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:711</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:117</note>
-        <note category="description">Shown on a linked branch that was deleted</note>
+        <note category="description">Activity timeline filter for deleted or removed tasks</note>
       </notes>
       <segment>
         <source>Deleted</source>
@@ -29431,7 +29432,7 @@
     </unit>
     <unit id="512881793033435652">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:441</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:441</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they dismissed a finding from an assistant review. FINDING is its title</note>
       </notes>
       <segment>
@@ -29503,7 +29504,7 @@
     </unit>
     <unit id="3334908254318541410">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:794</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:819</note>
         <note category="description">Stands in for the person behind an activity entry when they are unknown</note>
       </notes>
       <segment>
@@ -29521,7 +29522,7 @@
     </unit>
     <unit id="3336081258669504751">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:254</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:254</note>
         <note category="description">Activity timeline entry after the person&apos;s name for several fields changed at once. FIELDS is a list such as name and priority</note>
       </notes>
       <segment>
@@ -29624,7 +29625,7 @@
     </unit>
     <unit id="8425772170860106247">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:218</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:218</note>
         <note category="description">A task field listed in a merged activity timeline entry, as in updated name and start date</note>
         <note category="meaning">activity field</note>
       </notes>
@@ -30684,7 +30685,7 @@
     </unit>
     <unit id="2607661686124127135">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:593</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:593</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they attached a file to a task. FILE is the file name</note>
       </notes>
       <segment>
@@ -30872,7 +30873,7 @@
     </unit>
     <unit id="1358102618855795038">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:479</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:479</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they reordered tasks on a board</note>
       </notes>
       <segment>
@@ -31234,7 +31235,7 @@
     </unit>
     <unit id="47594284251461137">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:515</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:515</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they changed a task&apos;s status</note>
       </notes>
       <segment>
@@ -32039,7 +32040,7 @@
     </unit>
     <unit id="3996463684190390375">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:346</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:346</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they opened a pull request. PULL_REQUEST is its number and title</note>
       </notes>
       <segment>
@@ -32203,7 +32204,7 @@
     </unit>
     <unit id="5460881514602921001">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:463</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:463</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they created a task or board</note>
       </notes>
       <segment>
@@ -32333,7 +32334,7 @@
     </unit>
     <unit id="2030696111699023666">
       <notes>
-        <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:608</note>
+        <note category="location">src/app/core/transforms/activity-timeline.ts:608</note>
         <note category="description">Activity timeline entry after the person&apos;s name when they deleted a comment</note>
       </notes>
       <segment>

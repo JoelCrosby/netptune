@@ -38,7 +38,7 @@ import { SegmentedOption } from '@static/components/segmented-control/segmented-
 import { type Tone } from '@static/components/tones';
 import { activityActor } from '@static/pipes/activity-actor.pipe';
 
-export type BoardActivityCategory =
+export type ActivityTimelineCategory =
   | 'all'
   | 'status'
   | 'edits'
@@ -48,11 +48,11 @@ export type BoardActivityCategory =
   | 'assistant'
   | 'code';
 
-type FilterCategory = Exclude<BoardActivityCategory, 'all'>;
+type FilterCategory = Exclude<ActivityTimelineCategory, 'all'>;
 
-export interface BoardActivityContext {
+export interface ActivityTimelineContext {
   workspaceSlug: string | undefined;
-  boardName: string;
+  scope: { kind: 'board'; boardName: string } | { kind: 'task' };
   now: Date;
 }
 
@@ -660,8 +660,8 @@ export const activityCategory = (
 
 export const activityCategoryCounts = (
   activities: ActivityViewModel[]
-): Record<BoardActivityCategory, number> => {
-  const counts: Record<BoardActivityCategory, number> = {
+): Record<ActivityTimelineCategory, number> => {
+  const counts: Record<ActivityTimelineCategory, number> = {
     all: activities.length,
     status: 0,
     edits: 0,
@@ -682,10 +682,10 @@ export const activityCategoryCounts = (
 };
 
 export const activityCategoryOptions = (
-  counts: Record<BoardActivityCategory, number>,
-  selected: BoardActivityCategory
-): SegmentedOption<BoardActivityCategory>[] => {
-  const options: SegmentedOption<BoardActivityCategory>[] = [
+  counts: Record<ActivityTimelineCategory, number>,
+  selected: ActivityTimelineCategory
+): SegmentedOption<ActivityTimelineCategory>[] => {
+  const options: SegmentedOption<ActivityTimelineCategory>[] = [
     {
       value: 'all',
       label: $localize`:Activity timeline filter that shows every entry:All`,
@@ -776,14 +776,39 @@ const toRuns = (activities: ActivityViewModel[]): Run[] => {
   return runs;
 };
 
-const toRow = (run: Run, context: BoardActivityContext): EventTimelineRow => {
+const subjectOf = (
+  activity: ActivityViewModel,
+  context: ActivityTimelineContext
+): Pick<
+  EventTimelineRow,
+  'subjectId' | 'subjectLink' | 'subjectLabel' | 'subjectStruck'
+> => {
+  const { scope } = context;
+
+  if (scope.kind === 'task') return {};
+
+  const isDeleted = activity.type === ActivityType.delete;
+  const taskSystemId = activity.taskSystemId;
+  const canLink = !!taskSystemId && !isDeleted && !!context.workspaceSlug;
+
+  return {
+    subjectId: taskSystemId ?? null,
+    subjectLink: canLink
+      ? ['/', context.workspaceSlug, 'tasks', taskSystemId]
+      : null,
+    subjectLabel: taskSystemId ? (activity.taskName ?? '') : scope.boardName,
+    subjectStruck: isDeleted,
+  };
+};
+
+const toRow = (
+  run: Run,
+  context: ActivityTimelineContext
+): EventTimelineRow => {
   const [activity] = run.items;
   const oldest = run.items[run.items.length - 1];
   const actor = activityActor(activity);
   const presentation = presentationOf(activity);
-  const isDeleted = activity.type === ActivityType.delete;
-  const taskSystemId = activity.taskSystemId;
-  const canLink = !!taskSystemId && !isDeleted && !!context.workspaceSlug;
   const count = run.items.length;
 
   return {
@@ -802,12 +827,7 @@ const toRow = (run: Run, context: BoardActivityContext): EventTimelineRow => {
     tone: presentation.tone,
     summary: run.phrase.summary,
     note: run.phrase.note,
-    subjectId: taskSystemId ?? null,
-    subjectLink: canLink
-      ? ['/', context.workspaceSlug, 'tasks', taskSystemId]
-      : null,
-    subjectLabel: taskSystemId ? (activity.taskName ?? '') : context.boardName,
-    subjectStruck: isDeleted,
+    ...subjectOf(activity, context),
     time: compactTime(activity.time, context.now),
     timeTitle: timeRange(oldest.firstTime, activity.time),
     repeatLabel:
@@ -818,9 +838,9 @@ const toRow = (run: Run, context: BoardActivityContext): EventTimelineRow => {
   };
 };
 
-export const boardActivityGroups = (
+export const activityTimelineGroups = (
   activities: ActivityViewModel[],
-  context: BoardActivityContext
+  context: ActivityTimelineContext
 ): EventTimelineGroup[] => {
   const groups: EventTimelineGroup[] = [];
 
