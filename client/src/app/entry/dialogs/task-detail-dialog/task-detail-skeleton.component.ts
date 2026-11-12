@@ -3,19 +3,10 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { TaskDetailLayoutService } from './task-detail-layout';
-import { TaskDetailRailService } from './task-detail-rail';
-import { DialogColumnsComponent } from '@static/components/dialog/dialog-columns.component';
-import { DialogRailComponent } from '@static/components/dialog/dialog-rail.component';
-import { DialogSectionComponent } from '@static/components/dialog/dialog-section.component';
 
 @Component({
   selector: 'app-task-detail-skeleton',
-  imports: [
-    DialogColumnsComponent,
-    DialogRailComponent,
-    DialogSectionComponent,
-    SkeletonComponent,
-  ],
+  imports: [SkeletonComponent],
   host: {
     class: 'flex h-full min-h-0 flex-col',
     role: 'status',
@@ -95,50 +86,33 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
         </div>
       </div>
 
-      <app-dialog-columns bodyClass="px-7 pt-5.5 pb-6">
-        <div class="flex flex-col gap-2.5">
-          @for (line of bodyRange; track $index) {
-            <app-skeleton class="h-4" [class]="lineWidth($index)" />
+      <div class="flex min-h-0 flex-1">
+        <div
+          class="border-foreground/8 flex w-[206px] shrink-0 flex-col gap-1.5 border-r p-2.5">
+          @for (item of navRange; track $index) {
+            <app-skeleton class="h-8 rounded-lg" />
+          }
+          <div
+            class="bg-foreground/8 mx-2.5 my-1.5 h-px"
+            aria-hidden="true"></div>
+          @for (item of attachedRange; track $index) {
+            <app-skeleton class="h-8 rounded-lg" />
           }
         </div>
 
-        <app-dialog-section dialogColumnsFooter divider="top" class="shrink-0">
-          <div class="flex h-[52px] items-center gap-2 px-5">
-            @for (tab of footerTabRange; track $index) {
-              <app-skeleton class="h-7 w-20 rounded-md" />
+        <div class="flex min-w-0 flex-1 flex-col">
+          <div
+            class="border-foreground/8 flex h-[46px] shrink-0 items-center border-b px-6">
+            <app-skeleton class="h-4 w-24" />
+          </div>
+
+          <div class="flex min-h-0 flex-1 flex-col gap-2.5 px-6 py-5">
+            @for (line of bodyRange; track $index) {
+              <app-skeleton class="h-4" [class]="lineWidth($index)" />
             }
           </div>
-        </app-dialog-section>
-
-        @if (showRail()) {
-          <app-dialog-rail [width]="rail.size.width()">
-            <div
-              class="border-foreground/8 flex h-[52px] shrink-0 items-center gap-2 border-b px-4">
-              <app-skeleton class="h-7 w-24 rounded-md" />
-              <app-skeleton class="h-7 w-20 rounded-md" />
-            </div>
-
-            <div class="flex min-h-0 flex-1 flex-col gap-4 px-4 py-3.5">
-              @for (comment of commentRange; track $index) {
-                <div class="flex gap-2.5">
-                  <app-skeleton class="h-7 w-7 shrink-0 rounded-full" />
-                  <div class="flex flex-1 flex-col gap-1.5">
-                    <app-skeleton class="h-3.5 w-24" />
-                    <app-skeleton class="h-3.5 w-full" />
-                    <app-skeleton class="h-3.5 w-2/3" />
-                  </div>
-                </div>
-              }
-            </div>
-
-            @if (canCreateComment()) {
-              <div class="border-foreground/8 shrink-0 border-t px-4 py-3">
-                <app-skeleton class="h-9 w-full rounded-lg" />
-              </div>
-            }
-          </app-dialog-rail>
-        }
-      </app-dialog-columns>
+        </div>
+      </div>
 
       <div
         class="border-foreground/8 flex h-10 shrink-0 items-center gap-4 border-t px-5">
@@ -150,26 +124,20 @@ import { DialogSectionComponent } from '@static/components/dialog/dialog-section
 })
 export class TaskDetailSkeletonComponent {
   private readonly layout = inject(TaskDetailLayoutService);
-  protected readonly rail = inject(TaskDetailRailService);
 
   protected readonly isDocument = computed(() => {
     return this.layout.layout() === 'document';
   });
 
-  private readonly readComments = hasPermission(PERMISSIONS.comments.read);
-  private readonly readActivity = hasPermission(PERMISSIONS.activity.read);
   protected readonly canCreateComment = hasPermission(
     PERMISSIONS.comments.create
   );
-  protected readonly showRail = computed(() => {
-    return this.readComments() || this.readActivity();
-  });
 
   readonly label = $localize`:Accessible label shown while a task loads:Loading task`;
   readonly chipRange = Array.from({ length: 4 });
   readonly bodyRange = Array.from({ length: 6 });
-  readonly footerTabRange = Array.from({ length: 3 });
-  readonly commentRange = Array.from({ length: 3 });
+  readonly navRange = Array.from({ length: 4 });
+  readonly attachedRange = Array.from({ length: 3 });
   readonly tabRange = Array.from({ length: 4 });
 
   lineWidth(index: number) {

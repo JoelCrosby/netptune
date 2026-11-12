@@ -5,11 +5,16 @@ import { SessionService } from '@core/services/session.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
-export type TaskDetailLayout = 'cockpit' | 'document';
+export type TaskDetailLayout = 'document' | 'sections';
 
-export const DEFAULT_TASK_DETAIL_LAYOUT: TaskDetailLayout = 'cockpit';
+export const DEFAULT_TASK_DETAIL_LAYOUT: TaskDetailLayout = 'sections';
 
-const layouts = new Set<string>(['cockpit', 'document']);
+const TASK_DETAIL_LAYOUTS: readonly TaskDetailLayout[] = [
+  'sections',
+  'document',
+];
+
+const layouts = new Set<string>(TASK_DETAIL_LAYOUTS);
 
 function isTaskDetailLayout(value: unknown): value is TaskDetailLayout {
   return typeof value === 'string' && layouts.has(value);
@@ -37,20 +42,12 @@ export class TaskDetailLayoutService {
     return isTaskDetailLayout(value) ? value : DEFAULT_TASK_DETAIL_LAYOUT;
   });
 
-  readonly otherLayout = computed<TaskDetailLayout>(() => {
-    return this.layout() === 'document' ? 'cockpit' : 'document';
-  });
-
   readonly canSwitch = computed(() => {
     return this.authenticated() && !this.isMobileView();
   });
 
   constructor() {
     this.preferences.ensureLoaded();
-  }
-
-  toggle() {
-    this.switchTo(this.otherLayout());
   }
 
   switchTo(layout: TaskDetailLayout) {

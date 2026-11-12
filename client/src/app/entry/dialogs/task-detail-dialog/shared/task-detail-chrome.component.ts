@@ -1,15 +1,18 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { RouterLink } from '@angular/router';
 import {
   Component,
   computed,
   effect,
   inject,
   input,
-  model,
   untracked,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import {
+  PinScopeMenuComponent,
+  PinScopeTarget,
+} from '@app/features/pins/components/pin-scope-menu.component';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { EntityType } from '@core/models/entity-type';
@@ -19,32 +22,32 @@ import { BoardViewService } from '@core/services/board-view.service';
 import { PinCommandsService } from '@core/services/pin-commands.service';
 import { SessionService } from '@core/services/session.service';
 import { isModifiedClick } from '@core/util/modified-click';
-import {
-  PinScopeMenuComponent,
-  PinScopeTarget,
-} from '@app/features/pins/components/pin-scope-menu.component';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import {
+  LucideCheck,
+  LucideDynamicIcon,
   LucideEllipsis,
   LucideExternalLink,
   LucideFileText,
-  LucidePanelRightClose,
-  LucidePanelRightOpen,
-  LucidePanelsTopLeft,
+  LucideIconInput,
+  LucidePanelLeft,
   LucidePin,
   LucideSparkles,
   LucideTrash2,
   LucideX,
 } from '@lucide/angular';
 import { SplitButtonComponent } from '@static/components/button/split-button.component';
+import { DividerComponent } from '@static/components/divider/divider.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
+import {
+  TaskDetailLayout,
+  TaskDetailLayoutService,
+} from '../task-detail-layout';
 import { HEADER_ICON_BUTTON } from '../task-detail-styles';
-import { TaskDetailLayoutService } from '../task-detail-layout';
 import { TaskDetailService } from '../task-detail.service';
-import { DividerComponent } from '@static/components/divider/divider.component';
 
 @Component({
   selector: 'app-task-detail-chrome',
@@ -58,12 +61,10 @@ import { DividerComponent } from '@static/components/divider/divider.component';
     MenuItemComponent,
     TaskScopeIdComponent,
     TooltipDirective,
+    LucideCheck,
+    LucideDynamicIcon,
     LucideEllipsis,
     LucideExternalLink,
-    LucideFileText,
-    LucidePanelRightClose,
-    LucidePanelRightOpen,
-    LucidePanelsTopLeft,
     LucideSparkles,
     LucideTrash2,
     LucideX,
@@ -105,35 +106,43 @@ import { DividerComponent } from '@static/components/divider/divider.component';
             [buttonClass]="iconButtonClass" />
         }
 
-        @if (showRailToggle()) {
-          <button
-            type="button"
-            [class]="iconButtonClass"
-            [attr.aria-pressed]="!railCollapsed()"
-            [attr.aria-label]="railLabel"
-            [appTooltip]="railLabel"
-            (click)="railCollapsed.set(!railCollapsed())">
-            @if (railCollapsed()) {
-              <svg lucidePanelRightOpen class="h-4 w-4"></svg>
-            } @else {
-              <svg lucidePanelRightClose class="h-4 w-4"></svg>
-            }
-          </button>
-        }
-
         @if (layout.canSwitch()) {
           <button
+            #layoutButton
             type="button"
             [class]="iconButtonClass"
-            [attr.aria-label]="switchLayoutLabel()"
-            [appTooltip]="switchLayoutLabel()"
-            (click)="layout.toggle()">
-            @if (layout.otherLayout() === 'cockpit') {
-              <svg lucidePanelsTopLeft class="h-4 w-4"></svg>
-            } @else {
-              <svg lucideFileText class="h-4 w-4"></svg>
-            }
+            aria-haspopup="menu"
+            [attr.aria-expanded]="layoutMenu.showing()"
+            i18n-aria-label="
+              Accessible label for the button that changes how the open task is
+              laid out
+            "
+            aria-label="Change layout"
+            i18n-appTooltip="
+              Tooltip on the button that changes how the open task is laid out
+            "
+            appTooltip="Change layout"
+            (click)="layoutMenu.toggle(layoutButton)">
+            <svg [lucideIcon]="layoutIcon()" class="h-4 w-4"></svg>
           </button>
+
+          <app-dropdown-menu #layoutMenu xPosition="before">
+            <div class="min-w-52">
+              @for (option of layoutOptions; track option.value) {
+                <button
+                  app-menu-item
+                  role="menuitemradio"
+                  [attr.aria-checked]="layout.layout() === option.value"
+                  (click)="layout.switchTo(option.value); layoutMenu.close()">
+                  <svg [lucideIcon]="option.icon" class="h-4 w-4"></svg>
+                  <span class="flex-1 truncate">{{ option.label }}</span>
+                  @if (layout.layout() === option.value) {
+                    <svg lucideCheck class="text-primary h-4 w-4"></svg>
+                  }
+                </button>
+              }
+            </div>
+          </app-dropdown-menu>
         }
 
         @if (dialogRef) {
@@ -214,8 +223,6 @@ export class TaskDetailChromeComponent {
   readonly showBreadcrumb = input(true);
   readonly showActivity = input(true);
   readonly showOverflow = input(true);
-  readonly showRailToggle = input(false);
-  readonly railCollapsed = model(false);
 
   readonly dialogRef = inject(DialogRef, { optional: true });
 
@@ -233,7 +240,6 @@ export class TaskDetailChromeComponent {
   readonly pinIcon = LucidePin;
   readonly personalScope = TaskPinScope.user;
   readonly pinMenuLabel = $localize`:Accessible label for the control that opens the pin scope menu:Choose where to pin`;
-  readonly railLabel = $localize`:Accessible label for the toggle that shows or hides the comments and history beside a task:Comments and history`;
 
   // Pinning always writes, even at the personal scope, so a signed-out reader of a public
   // workspace has nowhere to put a pin.
@@ -248,12 +254,28 @@ export class TaskDetailChromeComponent {
     return this.canDeleteTask() || this.canAskAssistant();
   });
 
-  readonly switchLayoutLabel = computed(() => {
-    if (this.layout.otherLayout() === 'cockpit') {
-      return $localize`:Accessible label for the button that switches the open task to the cockpit layout:Switch to cockpit layout`;
-    }
+  readonly layoutOptions: {
+    value: TaskDetailLayout;
+    label: string;
+    icon: LucideIconInput;
+  }[] = [
+    {
+      value: 'sections',
+      label: $localize`:Name of the sections task detail layout:Sections`,
+      icon: LucidePanelLeft,
+    },
+    {
+      value: 'document',
+      label: $localize`:Name of the document task detail layout:Document`,
+      icon: LucideFileText,
+    },
+  ];
 
-    return $localize`:Accessible label for the button that switches the open task to the document layout:Switch to document layout`;
+  readonly layoutIcon = computed(() => {
+    const current = this.layout.layout();
+    const option = this.layoutOptions.find((item) => item.value === current);
+
+    return option?.icon ?? LucidePanelLeft;
   });
 
   readonly breadcrumb = computed(() => {

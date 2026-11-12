@@ -308,8 +308,8 @@
     <unit id="3817498941817715969">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:609</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:276</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:251</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:280</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:110,112</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
@@ -753,7 +753,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:132,134</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:141,143</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:58,61</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -1040,7 +1040,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:233</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:393</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:396</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1588,7 +1588,7 @@
     </unit>
     <unit id="6120896617621566677">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:169</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:171</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:353</note>
         <note category="description">How many tasks a board group holds. COUNT is the number of tasks</note>
       </notes>
@@ -2632,15 +2632,6 @@
         <source>Steps: <ph id="0" equiv="count" disp="steps"/></source>
       </segment>
     </unit>
-    <unit id="1279691093154837242">
-      <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:312</note>
-        <note category="description">Command palette action that switches the task detail view to the cockpit layout</note>
-      </notes>
-      <segment>
-        <source>Use Cockpit Task Layout</source>
-      </segment>
-    </unit>
     <unit id="4686852710008865123">
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:215</note>
@@ -2743,7 +2734,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:408</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:411</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -2807,7 +2798,7 @@
     </unit>
     <unit id="996392855508119363">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:154</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:156</note>
         <note category="description">Marks a board group hidden from the current user&apos;s board</note>
       </notes>
       <segment>
@@ -4163,15 +4154,6 @@
         <source>Pin workspace</source>
       </segment>
     </unit>
-    <unit id="962282029591799382">
-      <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
-        <note category="description">Caption describing the cockpit task detail layout</note>
-      </notes>
-      <segment>
-        <source>Editable chip row under the title, comments docked beside the description.</source>
-      </segment>
-    </unit>
     <unit id="965218006709575156">
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:86,89</note>
@@ -4900,7 +4882,7 @@
     </unit>
     <unit id="4069090074861287198">
       <notes>
-        <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:202</note>
+        <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:205</note>
         <note category="description">Accessible label for the button that removes a selected tag. TAG is the tag&apos;s name</note>
       </notes>
       <segment>
@@ -5387,7 +5369,7 @@
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:86,88</note>
         <note category="location">src/app/entry/dialogs/tag-dialog/tag-dialog.component.ts:49,51</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:205,206</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:214,215</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
@@ -5463,8 +5445,8 @@
     <unit id="2041629809382689328">
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:103</note>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:46,49</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:223,225</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:48,51</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:226,228</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -5505,15 +5487,6 @@
       </notes>
       <segment>
         <source> Bulk edit tasks </source>
-      </segment>
-    </unit>
-    <unit id="6753797320809380334">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:256</note>
-        <note category="description">Accessible label for the button that switches the open task to the document layout</note>
-      </notes>
-      <segment>
-        <source>Switch to document layout</source>
       </segment>
     </unit>
     <unit id="6755348258793821260">
@@ -6258,6 +6231,15 @@
         <source>No runs match these filters</source>
       </segment>
     </unit>
+    <unit id="6160972322896689559">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:274</note>
+        <note category="description">Section holding a task&apos;s comments</note>
+      </notes>
+      <segment>
+        <source>Discussion</source>
+      </segment>
+    </unit>
     <unit id="6164296601931172481">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:162,165</note>
@@ -6334,7 +6316,7 @@
         <note category="location">src/app/core/automations/automation-copy.ts:66</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:255</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:256</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:55,57</note>
         <note category="location">src/app/features/automations/models/task-update-fields.ts:49</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:81,84</note>
@@ -7530,7 +7512,6 @@
     <unit id="3807699453257291879">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:612</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:278</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:246</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:91</note>
         <note category="description">Name of the comments permission group</note>
@@ -7660,8 +7641,8 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:627</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:435</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:275</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:247</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:279</note>
         <note category="description">Name of the files permission group</note>
       </notes>
       <segment>
@@ -7852,7 +7833,7 @@
     </unit>
     <unit id="814915282152803393">
       <notes>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:218</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:219</note>
         <note category="description">Accessible label for the control that opens the month picker. MONTH is the month shown</note>
       </notes>
       <segment>
@@ -8556,6 +8537,15 @@
       </notes>
       <segment>
         <source><ph id="0" equiv="COUNT" disp="count"/> columns</source>
+      </segment>
+    </unit>
+    <unit id="3301780277534029313">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:321</note>
+        <note category="description">Command palette action that switches the task detail view to the sections layout</note>
+      </notes>
+      <segment>
+        <source>Use Sections Task Layout</source>
       </segment>
     </unit>
     <unit id="3302832028736051011">
@@ -10362,7 +10352,7 @@
     </unit>
     <unit id="8614260097416227361">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:158</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:160</note>
         <note category="description">Marks a board group that contains no tasks</note>
       </notes>
       <segment>
@@ -10936,7 +10926,7 @@
     </unit>
     <unit id="7943500979556068029">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:183</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:185</note>
         <note category="description">Accessible label for a board group&apos;s overflow menu. NAME is the group name</note>
       </notes>
       <segment>
@@ -11071,6 +11061,15 @@
       </notes>
       <segment>
         <source> Optional </source>
+      </segment>
+    </unit>
+    <unit id="6181219532554667310">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:114,117</note>
+        <note category="description">Accessible name of the list that moves between a task&apos;s sections</note>
+      </notes>
+      <segment>
+        <source>Task sections</source>
       </segment>
     </unit>
     <unit id="6181907632373133266">
@@ -12487,7 +12486,7 @@
     </unit>
     <unit id="1527635909232386822">
       <notes>
-        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:46</note>
         <note category="description">Caption describing the document task detail layout</note>
       </notes>
       <segment>
@@ -13448,7 +13447,7 @@
     </unit>
     <unit id="2788952240401286243">
       <notes>
-        <note category="location">src/app/static/components/form-select-search/form-select-search.component.ts:87</note>
+        <note category="location">src/app/static/components/form-select-search/form-select-search.component.ts:91</note>
         <note category="description">Shown in a searchable select when no option matches the search</note>
       </notes>
       <segment>
@@ -13612,6 +13611,15 @@
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {1 failed} other {<ph id="0" equiv="INTERPOLATION"/> failed}}</source>
+      </segment>
+    </unit>
+    <unit id="894965666917873756">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:269</note>
+        <note category="description">Name of the document task detail layout</note>
+      </notes>
+      <segment>
+        <source>Document</source>
       </segment>
     </unit>
     <unit id="8949873009695123445">
@@ -14032,7 +14040,7 @@
     </unit>
     <unit id="8318489133130094433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:168</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:136</note>
         <note category="description">Accessible label shown while a task loads</note>
       </notes>
       <segment>
@@ -14701,7 +14709,7 @@
     <unit id="8805582001022257690">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:116,118</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:177,179</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:186,188</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
       <segment>
@@ -14837,7 +14845,7 @@
     </unit>
     <unit id="3702747701797275979">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:575</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:578</note>
         <note category="description">Command palette action that opens the manage-groups dialog for the open board</note>
       </notes>
       <segment>
@@ -15021,7 +15029,7 @@
     <unit id="4510676848705799339">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:84</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:187,189</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:196,198</note>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:182,185</note>
         <note category="description">Name of an automation action</note>
       </notes>
@@ -15584,8 +15592,8 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:274</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:248</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:278</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
@@ -15860,7 +15868,7 @@
     </unit>
     <unit id="9162543989422983557">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:569</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:572</note>
         <note category="description">Command palette action that creates a group on the open board</note>
       </notes>
       <segment>
@@ -18442,7 +18450,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:380</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:383</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment>
@@ -18910,7 +18918,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:243,244</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:246,247</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment>
@@ -18947,7 +18955,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:255,256</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:258,259</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment>
@@ -18965,7 +18973,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:385</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:388</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment>
@@ -18974,7 +18982,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:401</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:404</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment>
@@ -18993,8 +19001,8 @@
     <unit id="7107218117130409950">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:605</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:273</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:249</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:277</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
@@ -19414,6 +19422,15 @@
         <source>Docked</source>
       </segment>
     </unit>
+    <unit id="6425333040033977991">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:284</note>
+        <note category="description">Heading above the sections listing what is attached to a task</note>
+      </notes>
+      <segment>
+        <source>Attached</source>
+      </segment>
+    </unit>
     <unit id="6425467213960794982">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:50,52</note>
@@ -19535,7 +19552,7 @@
         <note category="location">src/app/core/util/dates.ts:89</note>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:124,127</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:181,184</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:330</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:332</note>
         <note category="description">Heading over the entries from today in a timeline</note>
       </notes>
       <segment>
@@ -19743,6 +19760,16 @@
       </notes>
       <segment>
         <source>Applies everywhere you sign in.</source>
+      </segment>
+    </unit>
+    <unit id="8631947054290096986">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:120,122</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:124,126</note>
+        <note category="description">Accessible label for the button that changes how the open task is laid out</note>
+      </notes>
+      <segment>
+        <source>Change layout</source>
       </segment>
     </unit>
     <unit id="8633968067722072928">
@@ -20152,15 +20179,6 @@
       </notes>
       <segment>
         <source>The triggering task&apos;s project is no longer available.</source>
-      </segment>
-    </unit>
-    <unit id="3875186816345392442">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:236</note>
-        <note category="description">Accessible label for the toggle that shows or hides the comments and history beside a task</note>
-      </notes>
-      <segment>
-        <source>Comments and history</source>
       </segment>
     </unit>
     <unit id="3878950936097270792">
@@ -20657,6 +20675,15 @@
         <source>· <ph id="0" equiv="COUNT" disp="count"/> edits</source>
       </segment>
     </unit>
+    <unit id="5914217416691126509">
+      <notes>
+        <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:47</note>
+        <note category="description">Caption describing the sections task detail layout</note>
+      </notes>
+      <segment>
+        <source>Title and actions stay put; a list on the left swaps the section beneath them.</source>
+      </segment>
+    </unit>
     <unit id="5914287100798497400">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:58,59</note>
@@ -20731,7 +20758,7 @@
     </unit>
     <unit id="117068237894470695">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:164,166</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:173,175</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,171</note>
         <note category="description">Accessible label for the button that opens the task&apos;s other actions</note>
       </notes>
@@ -22732,7 +22759,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:235</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:242</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment>
@@ -22927,7 +22954,7 @@
     </unit>
     <unit id="2987662557279760947">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:176</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:178</note>
         <note category="description">Accessible label for the button that shows a board group. NAME is the group name</note>
       </notes>
       <segment>
@@ -23585,6 +23612,15 @@
       </notes>
       <segment>
         <source>Delete Conversation</source>
+      </segment>
+    </unit>
+    <unit id="2471229163174544608">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:264</note>
+        <note category="description">Name of the sections task detail layout</note>
+      </notes>
+      <segment>
+        <source>Sections</source>
       </segment>
     </unit>
     <unit id="2477494455994379026">
@@ -24760,8 +24796,8 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:280</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:253</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:276</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:32</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:103,104</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:263</note>
@@ -25120,15 +25156,6 @@
       </notes>
       <segment>
         <source>Use an IANA timezone, for example Europe/London.</source>
-      </segment>
-    </unit>
-    <unit id="8925868438353175805">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:253</note>
-        <note category="description">Accessible label for the button that switches the open task to the cockpit layout</note>
-      </notes>
-      <segment>
-        <source>Switch to cockpit layout</source>
       </segment>
     </unit>
     <unit id="8927455770711141149">
@@ -25764,8 +25791,8 @@
     </unit>
     <unit id="6827887873610296004">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:145,147</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:149,150</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:154,156</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:158,159</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:83,85</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:87,88</note>
         <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
@@ -25975,15 +26002,6 @@
       </notes>
       <segment>
         <source>Ask anything about your pages…</source>
-      </segment>
-    </unit>
-    <unit id="7350302869398190224">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:182,185</note>
-        <note category="description">Accessible name of the handle that resizes the task comments and review sidebar</note>
-      </notes>
-      <segment>
-        <source>Resize sidebar</source>
       </segment>
     </unit>
     <unit id="7353862971881435414">
@@ -27547,7 +27565,7 @@
     </unit>
     <unit id="5031687880128878913">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:168</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:170</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:352</note>
         <note category="description">How many tasks a board group holds</note>
       </notes>
@@ -27783,8 +27801,8 @@
     </unit>
     <unit id="8186013988289067040">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:277</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:252</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:281</note>
         <note category="location">src/app/features/boards/components/board-activity-dialog/board-activity-timeline.ts:719</note>
         <note category="description">Tab listing the branches, commits and pull requests linked to a task</note>
       </notes>
@@ -27947,7 +27965,7 @@
     </unit>
     <unit id="1310920597312036563">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:177</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:179</note>
         <note category="description">Accessible label for the button that hides a board group. NAME is the group name</note>
       </notes>
       <segment>
@@ -28296,8 +28314,8 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:279</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:250</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:275</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:282</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
@@ -28335,7 +28353,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:303</note>
         <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:95,99</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -28565,7 +28583,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:280,282</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-cockpit.component.ts:142,144</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:152,154</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment>
@@ -28939,7 +28957,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:278</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:300</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:32,33</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:65,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:263</note>
@@ -29494,7 +29512,7 @@
     </unit>
     <unit id="3335455471343847900">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:321</note>
+        <note category="location">src/app/shell/global-commands.service.ts:312</note>
         <note category="description">Command palette action that switches the task detail view to the document layout</note>
       </notes>
       <segment>
@@ -30316,7 +30334,7 @@
     </unit>
     <unit id="5370787608590287385">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:150</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:152</note>
         <note category="description">Marks a board group that is both hidden and empty</note>
       </notes>
       <segment>
@@ -30693,8 +30711,9 @@
     </unit>
     <unit id="2614607010577950577">
       <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:273</note>
         <note category="location">src/app/shell/shell-menu-link.component.ts:149</note>
-        <note category="description">Sub-menu entry linking to the parent section&apos;s own page</note>
+        <note category="description">Section holding a task&apos;s description and remaining fields</note>
       </notes>
       <segment>
         <source>Overview</source>
@@ -31578,7 +31597,7 @@
     <unit id="9041444200911417888">
       <notes>
         <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:43</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:333</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:335</note>
         <note category="description">Badge on the chosen option tile</note>
       </notes>
       <segment>
@@ -31650,7 +31669,7 @@
     </unit>
     <unit id="6398969587818603892">
       <notes>
-        <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:24,25</note>
+        <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:26,27</note>
         <note category="location">src/app/static/components/dialog-wizard/dialog-wizard.component.ts:34,35</note>
         <note category="description">Accessible label for the button that closes a dialog</note>
       </notes>

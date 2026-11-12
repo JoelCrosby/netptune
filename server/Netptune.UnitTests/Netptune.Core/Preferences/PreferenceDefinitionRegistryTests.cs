@@ -50,10 +50,10 @@ public class PreferenceDefinitionRegistryTests
             item.Key == PreferenceKeys.AppearanceTaskDetailLayout);
 
         preference.ControlType.Should().Be("select");
-        preference.DefaultValue.GetString().Should().Be("cockpit");
+        preference.DefaultValue.GetString().Should().Be("sections");
         preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
         preference.Options.Select(option => option.Value)
-            .Should().Equal("cockpit", "document");
+            .Should().Equal("sections", "document");
     }
 
     [Fact]
@@ -82,21 +82,6 @@ public class PreferenceDefinitionRegistryTests
         preference.DefaultValue.GetString().Should().Be("centered");
         preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
         preference.Options.Select(option => option.Value).Should().Equal("centered", "full");
-    }
-
-    [Fact]
-    public void GetGroups_ReturnsTaskDetailRailCollapsedInternalDefinition()
-    {
-        var group = Registry.GetGroups().Single(group => group.Key == "appearance");
-
-        var preference = group.Preferences.Single(item =>
-            item.Key == PreferenceKeys.AppearanceTaskDetailRailCollapsed);
-
-        preference.ControlType.Should().Be("hidden");
-        preference.ValueType.Should().Be("boolean");
-        preference.DefaultValue.GetBoolean().Should().BeFalse();
-        preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
-        preference.Internal.Should().BeTrue();
     }
 
     [Fact]

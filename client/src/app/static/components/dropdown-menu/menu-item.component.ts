@@ -4,6 +4,7 @@ import { cn } from '../button/button.variants';
 
 // `warn` marks a destructive action such as delete or remove.
 export type MenuItemColor = 'default' | 'warn';
+export type MenuItemRole = 'menuitem' | 'menuitemradio' | 'menuitemcheckbox';
 
 const menuItemVariants = cva(
   'flex w-full items-center gap-3 px-3 py-2 text-sm text-left cursor-pointer select-none rounded-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline-none focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50',
@@ -24,10 +25,15 @@ const menuItemVariants = cva(
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[app-menu-item]',
   template: '<ng-content />',
-  host: { type: 'button', role: 'menuitem', '[class]': 'hostClass()' },
+  host: {
+    type: 'button',
+    '[attr.role]': 'role()',
+    '[class]': 'hostClass()',
+  },
 })
 export class MenuItemComponent {
   readonly color = input<MenuItemColor>('default');
+  readonly role = input<MenuItemRole>('menuitem');
   readonly class = input('');
 
   protected readonly hostClass = computed(() => {

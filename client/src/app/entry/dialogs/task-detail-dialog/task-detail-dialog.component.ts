@@ -1,8 +1,8 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, effect, inject, untracked } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { TaskDetailCockpitComponent } from './layouts/task-detail-cockpit.component';
 import { TaskDetailDocumentComponent } from './layouts/task-detail-document.component';
+import { TaskDetailSectionsComponent } from './layouts/task-detail-sections.component';
 import { TaskDetailLayoutService } from './task-detail-layout';
 import { TaskDetailService } from './task-detail.service';
 import { TaskDetailSkeletonComponent } from './task-detail-skeleton.component';
@@ -20,7 +20,7 @@ export interface TaskDetailDialogData {
           <app-task-detail-document />
         }
         @default {
-          <app-task-detail-cockpit />
+          <app-task-detail-sections />
         }
       }
     } @else {
@@ -29,8 +29,8 @@ export interface TaskDetailDialogData {
   `,
   host: { class: 'block h-full min-h-0' },
   imports: [
-    TaskDetailCockpitComponent,
     TaskDetailDocumentComponent,
+    TaskDetailSectionsComponent,
     TaskDetailSkeletonComponent,
   ],
   providers: [TaskDetailService],

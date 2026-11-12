@@ -308,15 +308,6 @@ export class GlobalCommandsService {
       execute: () => this.updatePreference(APPEARANCE_PAGE_WIDTH, 'centered'),
     },
     {
-      id: 'settings.taskLayout.cockpit',
-      label: $localize`:Command palette action that switches the task detail view to the cockpit layout:Use Cockpit Task Layout`,
-      group: 'settings',
-      icon: 'panels-top-left',
-      keywords: ['task layout', 'cockpit', 'task detail', 'appearance'],
-      available: () => this.canSwitchTaskLayoutTo('cockpit'),
-      execute: () => this.taskLayout.switchTo('cockpit'),
-    },
-    {
       id: 'settings.taskLayout.document',
       label: $localize`:Command palette action that switches the task detail view to the document layout:Use Document Task Layout`,
       group: 'settings',
@@ -324,6 +315,15 @@ export class GlobalCommandsService {
       keywords: ['task layout', 'document', 'task detail', 'appearance'],
       available: () => this.canSwitchTaskLayoutTo('document'),
       execute: () => this.taskLayout.switchTo('document'),
+    },
+    {
+      id: 'settings.taskLayout.sections',
+      label: $localize`:Command palette action that switches the task detail view to the sections layout:Use Sections Task Layout`,
+      group: 'settings',
+      icon: 'panel-left',
+      keywords: ['task layout', 'sections', 'task detail', 'appearance'],
+      available: () => this.canSwitchTaskLayoutTo('sections'),
+      execute: () => this.taskLayout.switchTo('sections'),
     },
     {
       id: 'actions.assistant',
@@ -374,9 +374,9 @@ export class GlobalCommandsService {
   }
 
   private canSwitchTaskLayoutTo(layout: TaskDetailLayout): boolean {
-    const isOtherLayout = this.taskLayout.otherLayout() === layout;
+    const isCurrentLayout = this.taskLayout.layout() === layout;
 
-    return this.taskLayout.canSwitch() && isOtherLayout;
+    return this.taskLayout.canSwitch() && !isCurrentLayout;
   }
 
   private setTheme(theme: Theme) {

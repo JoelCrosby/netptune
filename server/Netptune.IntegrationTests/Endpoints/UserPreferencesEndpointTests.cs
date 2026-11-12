@@ -80,9 +80,9 @@ public sealed class UserPreferencesEndpointTests
 
         preference.ControlType.Should().Be("select");
         preference.AllowedScopes.Should().Equal("global");
-        preference.DefaultValue.GetString().Should().Be("cockpit");
+        preference.DefaultValue.GetString().Should().Be("sections");
         preference.Options.Select(option => option.Value)
-            .Should().Equal("cockpit", "document");
+            .Should().Equal("sections", "document");
     }
 
     [Fact]

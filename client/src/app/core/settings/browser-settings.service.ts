@@ -22,7 +22,6 @@ export interface BrowserSettings {
   'ai.drafts': Record<string, string>;
   'ai.review.mode': DiffMode;
   'ai.review.listWidth': number;
-  'taskDetail.railWidth': number;
   'datatable.columns': Record<string, DatatableColumnPreference[]>;
 }
 

@@ -80,11 +80,11 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             Label = "Task detail layout",
             ControlType = "select",
             ValueType = "string",
-            DefaultValue = JsonSerializer.SerializeToElement("cockpit"),
+            DefaultValue = JsonSerializer.SerializeToElement("sections"),
             AllowedScopes = [PreferenceScopes.Global],
             Options =
             [
-                new() { Value = "cockpit", Label = "Cockpit" },
+                new() { Value = "sections", Label = "Sections" },
                 new() { Value = "document", Label = "Document" },
             ],
             Order = 20,
@@ -120,18 +120,6 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
                 new() { Value = "full", Label = "Full width" },
             ],
             Order = 40,
-        },
-        new()
-        {
-            Key = PreferenceKeys.AppearanceTaskDetailRailCollapsed,
-            GroupKey = "appearance",
-            Label = "Task detail sidebar collapsed",
-            ControlType = "hidden",
-            ValueType = "boolean",
-            DefaultValue = JsonSerializer.SerializeToElement(false),
-            AllowedScopes = [PreferenceScopes.Global],
-            Internal = true,
-            Order = 50,
         },
         new()
         {
