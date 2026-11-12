@@ -30,6 +30,7 @@ const disabledClasses = 'cursor-not-allowed opacity-55';
   template: `
     <app-checkbox
       class="pointer-events-none"
+      inert
       [checked]="checked()"
       [disabled]="disabled()" />
     <ng-content />

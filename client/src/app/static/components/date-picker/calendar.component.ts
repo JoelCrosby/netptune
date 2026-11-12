@@ -30,6 +30,8 @@ import {
   startOfCalendarMonth,
 } from './date-picker.utils';
 
+let nextCalendarId = 0;
+
 @Component({
   selector: 'app-calendar',
   imports: [
@@ -53,7 +55,7 @@ import {
           aria-label="Previous month"
           [disabled]="previousDisabled()"
           (click)="changeMonth(-1)">
-          <svg lucideChevronLeft class="h-4 w-4"></svg>
+          <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
         </button>
 
         <div class="flex items-center gap-1 text-sm font-semibold">
@@ -61,16 +63,16 @@ import {
             <button
               #monthTrigger
               type="button"
-              class="hover:bg-muted/60 focus-visible:ring-foreground/30 flex h-8 min-w-26 cursor-pointer items-center justify-center gap-1 rounded-sm px-2 outline-none focus-visible:ring-2"
-              aria-haspopup="listbox"
-              i18n-aria-label="
-                Accessible label for the control that opens the month picker
-              "
-              aria-label="Choose month"
+              class="hover:bg-muted/60 focus-visible:ring-primary flex h-8 min-w-26 cursor-pointer items-center justify-center gap-1 rounded-sm px-2 outline-none focus-visible:ring-2"
+              [attr.aria-label]="monthTriggerLabel()"
               [attr.aria-expanded]="monthMenuOpen()"
+              [attr.aria-controls]="monthMenuOpen() ? monthMenuId : null"
               (click)="toggleMonthMenu()">
               <span>{{ currentMonthName() }}</span>
-              <svg lucideChevronDown class="h-3.5 w-3.5 opacity-60"></svg>
+              <svg
+                lucideChevronDown
+                class="h-3.5 w-3.5 opacity-60"
+                aria-hidden="true"></svg>
             </button>
 
             @if (monthMenuOpen()) {
@@ -82,19 +84,23 @@ import {
                 (click)="closeMonthMenu()"></button>
               <div
                 class="absolute top-full left-1/2 z-20 mt-1 grid w-52 -translate-x-1/2 grid-cols-3 gap-1 rounded-md border border-neutral-200 bg-white p-1 shadow-xl dark:border-neutral-700 dark:bg-neutral-900"
-                role="listbox"
+                #monthMenu
+                role="group"
                 i18n-aria-label="Accessible name of the month picker list"
                 aria-label="Month"
+                [id]="monthMenuId"
                 (keydown.escape.prevent.stop)="closeMonthMenu()">
                 @for (month of months; track month.index) {
                   <button
                     type="button"
-                    class="hover:bg-muted/60 focus-visible:ring-foreground/30 h-8 cursor-pointer rounded-sm px-2 text-sm outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-30"
+                    class="hover:bg-muted/60 focus-visible:ring-primary h-8 cursor-pointer rounded-sm px-2 text-sm outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-30"
                     [class.bg-primary]="month.index === currentMonth()"
                     [class.text-white]="month.index === currentMonth()"
                     [disabled]="monthDisabled(month.index)"
-                    [attr.aria-selected]="month.index === currentMonth()"
-                    role="option"
+                    [attr.aria-current]="
+                      month.index === currentMonth() ? 'true' : null
+                    "
+                    [attr.aria-label]="month.long"
                     (click)="selectMonth(month.index)">
                     {{ month.short }}
                   </button>
@@ -116,7 +122,7 @@ import {
           aria-label="Next month"
           [disabled]="nextDisabled()"
           (click)="changeMonth(1)">
-          <svg lucideChevronRight class="h-4 w-4"></svg>
+          <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
         </button>
       </div>
 
@@ -125,35 +131,43 @@ import {
         class="grid grid-cols-7 gap-1"
         role="grid"
         [attr.aria-label]="monthLabel()">
-        @for (weekday of weekdays; track weekday.long) {
-          <div
-            class="text-muted-foreground flex h-8 items-center justify-center text-xs font-medium"
-            role="columnheader"
-            [attr.aria-label]="weekday.long"
-            [attr.title]="weekday.long">
-            {{ weekday.narrow }}
-          </div>
-        }
+        <div class="contents" role="row">
+          @for (weekday of weekdays; track weekday.long) {
+            <div
+              class="text-muted-foreground flex h-8 items-center justify-center text-xs font-medium"
+              role="columnheader"
+              [attr.aria-label]="weekday.long"
+              [attr.title]="weekday.long">
+              {{ weekday.narrow }}
+            </div>
+          }
+        </div>
 
-        @for (day of days(); track day.value) {
-          <button
-            type="button"
-            class="hover:bg-muted/60 focus-visible:ring-primary relative flex h-8 w-8 items-center justify-center rounded-sm text-sm outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-30"
-            [class.bg-primary]="day.selected"
-            [class.text-white]="day.selected"
-            [class.text-muted-foreground]="!day.currentMonth && !day.selected"
-            [class.ring-1]="day.today && !day.selected"
-            [class.ring-primary]="day.today && !day.selected"
-            [attr.data-date]="day.value"
-            [attr.aria-label]="dayAriaLabel(day)"
-            [attr.aria-selected]="day.selected"
-            [attr.tabindex]="isActive(day) ? 0 : -1"
-            [disabled]="day.disabled"
-            role="gridcell"
-            (click)="select(day)"
-            (keydown)="handleKeydown(day, $event)">
-            {{ day.date.getDate() }}
-          </button>
+        @for (week of weeks(); track week[0].value) {
+          <div class="contents" role="row">
+            @for (day of week; track day.value) {
+              <button
+                type="button"
+                class="hover:bg-muted/60 focus-visible:ring-primary relative flex h-8 w-8 items-center justify-center rounded-sm text-sm outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-30"
+                [class.bg-primary]="day.selected"
+                [class.text-white]="day.selected"
+                [class.text-muted-foreground]="
+                  !day.currentMonth && !day.selected
+                "
+                [class.ring-1]="day.today && !day.selected"
+                [class.ring-primary]="day.today && !day.selected"
+                [attr.data-date]="day.value"
+                [attr.aria-label]="dayAriaLabel(day)"
+                [attr.aria-selected]="day.selected"
+                [attr.tabindex]="isActive(day) ? 0 : -1"
+                [disabled]="day.disabled"
+                role="gridcell"
+                (click)="select(day)"
+                (keydown)="handleKeydown(day, $event)">
+                {{ day.date.getDate() }}
+              </button>
+            }
+          </div>
         }
       </div>
     </div>
@@ -168,6 +182,7 @@ export class CalendarComponent {
   readonly dateSelected = output<string>();
 
   private readonly grid = viewChild.required<ElementRef<HTMLElement>>('grid');
+  private readonly monthMenu = viewChild<ElementRef<HTMLElement>>('monthMenu');
   private readonly monthTrigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('monthTrigger');
   private readonly selectedDate = computed(() => parseDateValue(this.value()));
@@ -192,6 +207,17 @@ export class CalendarComponent {
       this.maxDate()
     )
   );
+  protected readonly weeks = computed(() => {
+    const days = this.days();
+
+    return Array.from({ length: Math.ceil(days.length / 7) }, (_, week) => {
+      return days.slice(week * 7, week * 7 + 7);
+    });
+  });
+  protected readonly monthMenuId = `calendar-month-menu-${nextCalendarId++}`;
+  protected readonly monthTriggerLabel = computed(() => {
+    return $localize`:Accessible label for the control that opens the month picker. MONTH is the month shown:${this.currentMonthName()}:MONTH:, choose month`;
+  });
   protected readonly monthLabel = computed(() =>
     new Intl.DateTimeFormat(this.locale, {
       month: 'long',
@@ -241,6 +267,20 @@ export class CalendarComponent {
 
   protected toggleMonthMenu(): void {
     this.monthMenuOpen.update((open) => !open);
+
+    if (this.monthMenuOpen()) {
+      setTimeout(() => this.focusCurrentMonth());
+    }
+  }
+
+  private focusCurrentMonth(): void {
+    const menu = this.monthMenu()?.nativeElement;
+    const current =
+      menu?.querySelector<HTMLElement>(
+        '[aria-current="true"]:not(:disabled)'
+      ) ?? menu?.querySelector<HTMLElement>('button:not(:disabled)');
+
+    current?.focus();
   }
 
   protected closeMonthMenu(): void {

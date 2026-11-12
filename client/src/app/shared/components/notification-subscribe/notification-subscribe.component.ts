@@ -69,6 +69,7 @@ const EVENT_OPTIONS: EventOption[] = [
         [icon]="isSubscribed() ? bellRingIcon : bellIcon"
         [color]="isSubscribed() ? 'primary' : undefined"
         [dot]="isSubscribed()"
+        [expanded]="menu.showing()"
         (action)="menu.toggle(el.nativeElement)" />
     } @else if (appearance() === 'icon') {
       <button

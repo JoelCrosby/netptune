@@ -6,6 +6,8 @@ import { cn } from '../button/button.variants';
 import {
   Component,
   HostListener,
+  Injector,
+  afterNextRender,
   computed,
   inject,
   input,
@@ -51,6 +53,7 @@ export type DropdownMenuOrigin = HTMLElement | { x: number; y: number };
 })
 export class DropdownMenuComponent implements OnDestroy {
   private overlay = inject(Overlay);
+  private injector = inject(Injector);
 
   readonly xPosition = input<DropdownMenuXPosition>('after');
   readonly panelRole = input('menu');
@@ -87,6 +90,8 @@ export class DropdownMenuComponent implements OnDestroy {
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.keydownEvents().subscribe((event) => this.onKeydown(event));
     this.showing.set(true);
+
+    afterNextRender(() => this.focusFirstItem(), { injector: this.injector });
   }
 
   closeAndFocusTrigger() {
@@ -101,10 +106,15 @@ export class DropdownMenuComponent implements OnDestroy {
 
   close() {
     const wasShowing = this.showing();
+    const hadFocus = this.panelHasFocus();
 
     this.overlayRef?.dispose();
     this.overlayRef = undefined;
     this.showing.set(false);
+
+    if (hadFocus && this.origin) {
+      focusTrigger(this.origin);
+    }
 
     if (wasShowing) {
       this.closed.emit();
@@ -129,6 +139,12 @@ export class DropdownMenuComponent implements OnDestroy {
 
     if (event.key === 'Escape') {
       event.preventDefault();
+      this.closeAndFocusTrigger();
+
+      return;
+    }
+
+    if (event.key === 'Tab' && this.panelRole() !== 'dialog') {
       this.closeAndFocusTrigger();
 
       return;
@@ -165,6 +181,18 @@ export class DropdownMenuComponent implements OnDestroy {
     }
 
     this.searchInput()?.focus();
+  }
+
+  private focusFirstItem() {
+    if (!this.showing() || this.panelHasFocus()) return;
+
+    this.focusableItems()[0]?.focus();
+  }
+
+  private panelHasFocus(): boolean {
+    const panel = this.overlayRef?.overlayElement;
+
+    return !!panel?.contains(activeElement());
   }
 
   private keyManager() {

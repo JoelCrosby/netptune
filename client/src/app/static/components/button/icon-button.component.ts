@@ -12,6 +12,7 @@ import {
   type IconButtonColor,
   type IconButtonSize,
 } from './button.variants';
+import { TooltipDirective } from '../../directives/tooltip.directive';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -28,6 +29,10 @@ export class IconButtonComponent {
   private readonly hostTitle = inject(new HostAttributeToken('title'), {
     optional: true,
   });
+  private readonly tooltip = inject(TooltipDirective, {
+    self: true,
+    optional: true,
+  });
 
   readonly color = input<IconButtonColor>('default');
   readonly size = input<IconButtonSize>('default');
@@ -35,7 +40,12 @@ export class IconButtonComponent {
   readonly ariaLabel = input<string | null>(null);
 
   @HostBinding('attr.aria-label') get accessibleName(): string | null {
-    return this.ariaLabel() ?? this.hostAriaLabel ?? this.hostTitle;
+    return (
+      this.ariaLabel() ??
+      this.hostAriaLabel ??
+      this.hostTitle ??
+      (this.tooltip?.appTooltip() || null)
+    );
   }
 
   @HostBinding('class') get className(): string {

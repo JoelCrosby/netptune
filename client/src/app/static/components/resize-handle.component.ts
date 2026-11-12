@@ -115,6 +115,15 @@ export class ResizeHandleComponent {
   }
 
   protected adjustWidth(event: KeyboardEvent) {
+    const bound = this.keyboardBound(event.key);
+
+    if (bound !== null) {
+      event.preventDefault();
+      this.widthChange.emit(bound);
+
+      return;
+    }
+
     const step = keyboardStep(event.key) * this.direction();
 
     if (step === 0) {
@@ -123,6 +132,18 @@ export class ResizeHandleComponent {
 
     event.preventDefault();
     this.widthChange.emit(this.width() + step);
+  }
+
+  private keyboardBound(key: string): number | null {
+    if (key === 'Home') {
+      return this.minWidth();
+    }
+
+    if (key === 'End') {
+      return this.maxWidth();
+    }
+
+    return null;
   }
 }
 

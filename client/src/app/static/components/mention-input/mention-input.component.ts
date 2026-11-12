@@ -2,6 +2,7 @@ import { CdkPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
   Component,
+  computed,
   ElementRef,
   effect,
   inject,
@@ -47,7 +48,7 @@ export interface MentionSubmitEvent {
   template: `
     <div class="nept-form-control mb-0 w-[inherit]">
       @if (label()) {
-        <label [for]="name()" appFormLabel>
+        <label [for]="controlId()" appFormLabel>
           {{ label() }}
         </label>
       }
@@ -65,11 +66,16 @@ export interface MentionSubmitEvent {
         <input
           #inputEl
           appFormInput
-          [id]="name()"
+          role="combobox"
+          aria-autocomplete="list"
+          [id]="controlId()"
           [value]="value()"
           [disabled]="disabled()"
           [attr.autocomplete]="autocomplete()"
           [attr.placeholder]="placeholder()"
+          [attr.aria-expanded]="dropdownOpen()"
+          [attr.aria-controls]="dropdownOpen() ? listId() : null"
+          [attr.aria-activedescendant]="activeOptionId()"
           [attr.aria-invalid]="ariaInvalid()"
           [attr.aria-describedby]="describedBy(!!hint())"
           [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
@@ -91,7 +97,7 @@ export interface MentionSubmitEvent {
       }
 
       @if (showErrors()) {
-        <div [id]="errorId()">
+        <div role="alert" [id]="errorId()">
           @for (error of errors(); track error.kind) {
             <app-form-error>
               {{ error.message }}
@@ -107,19 +113,26 @@ export interface MentionSubmitEvent {
 
     <ng-template cdkPortal>
       <div
-        class="bg-card border-border z-50 flex max-h-48 w-56 flex-col overflow-y-auto rounded border shadow-lg">
+        class="bg-card border-border z-50 flex max-h-48 w-56 flex-col overflow-y-auto rounded border shadow-lg"
+        i18n-aria-label="Accessible name of the list of people to mention"
+        aria-label="People to mention"
+        [id]="listId()"
+        [attr.role]="filteredUsers().length ? 'listbox' : 'status'">
         @for (user of filteredUsers(); track user.id) {
-          <button
+          <div
             class="hover:bg-hover flex cursor-pointer flex-row items-center gap-2 border-0 bg-transparent px-3 py-2 text-left text-sm"
+            role="option"
+            [id]="optionId($index)"
             [class.bg-hover]="keyboard.activeIndex() === $index"
-            (mousedown)="selectUser(user)">
+            [attr.aria-selected]="keyboard.activeIndex() === $index"
+            (mousedown)="$event.preventDefault(); selectUser(user)">
             <app-avatar
               size="sm"
               [name]="user.displayName"
               [imageUrl]="user.pictureUrl"
               [isServiceAccount]="user.isServiceAccount ?? false" />
             <span class="truncate">{{ user.displayName }}</span>
-          </button>
+          </div>
         } @empty {
           <div class="text-muted px-3 py-2 text-sm">
             <span i18n="Shown when a mention search matches nobody">
@@ -145,7 +158,7 @@ export class MentionInputComponent
   readonly prefix = input<string | null>();
   readonly autocomplete = input('off');
   readonly placeholder = input<string | null>(
-    'Add comment — type @ to mention'
+    $localize`:Default placeholder of a comment box that supports mentions:Add comment — type @ to mention`
   );
   readonly hint = input<string | null>();
   readonly loading = input<boolean | null>(false);
@@ -161,6 +174,18 @@ export class MentionInputComponent
   readonly mentionSubmit = output<MentionSubmitEvent>();
 
   filteredUsers = signal<AppUser[]>([]);
+
+  protected readonly dropdownOpen = signal(false);
+  protected readonly listId = computed(() => `${this.controlId()}-mentions`);
+  protected readonly activeOptionId = computed(() => {
+    const index = this.keyboard.activeIndex();
+
+    if (!this.dropdownOpen() || index < 0 || !this.filteredUsers().length) {
+      return null;
+    }
+
+    return this.optionId(index);
+  });
 
   readonly keyboard = new ListboxKeyboard({
     items: listboxOptions(this.filteredUsers),
@@ -244,6 +269,10 @@ export class MentionInputComponent
     el.focus();
   }
 
+  protected optionId(index: number): string {
+    return `${this.listId()}-${index}`;
+  }
+
   submit() {
     const text = this.value().trim();
     if (!text) return;
@@ -321,12 +350,14 @@ export class MentionInputComponent
       });
 
       this.overlayRef.attach(this.portal());
+      this.dropdownOpen.set(true);
     }
   }
 
   private closeDropdown() {
     this.overlayRef?.dispose();
     this.overlayRef = undefined;
+    this.dropdownOpen.set(false);
     this.filteredUsers.set([]);
   }
 

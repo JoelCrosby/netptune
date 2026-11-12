@@ -8,12 +8,14 @@ const visibleFromRatio = 0.9;
   selector: 'app-character-limit',
   imports: [DecimalPipe],
   template: `
-    @if (isVisible()) {
-      <div
-        class="text-xs font-medium tabular-nums"
-        [class.text-warn]="isOver()"
-        [class.text-foreground/50]="!isOver()"
-        aria-live="polite">
+    <div
+      class="text-xs font-medium tabular-nums"
+      [class.text-warn]="isOver()"
+      [class.text-muted]="!isOver()">
+      @if (isVisible() && !isOver()) {
+        {{ length() | number }} / {{ max() | number }}
+      }
+      <span aria-live="polite">
         @if (isOver()) {
           <span
             i18n="
@@ -28,11 +30,9 @@ const visibleFromRatio = 0.9;
             }}
             character limit
           </span>
-        } @else {
-          {{ length() | number }} / {{ max() | number }}
         }
-      </div>
-    }
+      </span>
+    </div>
   `,
 })
 export class CharacterLimitComponent {

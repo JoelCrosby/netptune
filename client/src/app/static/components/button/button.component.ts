@@ -19,13 +19,12 @@ export type {
     <button
       [type]="type()"
       [disabled]="disabled() || null"
-      class="inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 border-0 bg-transparent font-[inherit] text-inherit outline-none disabled:cursor-not-allowed disabled:opacity-40">
+      class="focus-visible:ring-foreground focus-visible:ring-offset-background inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-[inherit] border-0 bg-transparent font-[inherit] text-inherit outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40">
       <ng-content />
     </button>
   `,
   host: {
     '[class]': 'hostClass()',
-    '[attr.aria-disabled]': 'disabled() || null',
   },
   imports: [],
 })

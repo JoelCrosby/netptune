@@ -5,6 +5,7 @@ import { FormErrorComponent } from './form-error.component';
 @Component({
   selector: 'app-form-errors',
   imports: [FormErrorComponent],
+  host: { 'aria-live': 'polite' },
   template: `
     @if (formField(); as field) {
       @if (field().touched()) {

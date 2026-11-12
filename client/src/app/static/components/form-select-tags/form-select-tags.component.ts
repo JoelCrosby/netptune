@@ -24,7 +24,11 @@ import {
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
 import { FormSelectDropdownStyleDirective } from '../form-select/form-select.directives';
-import { hintIdFor } from '../form-control-a11y';
+import {
+  controlIdFor,
+  hintIdFor,
+  nextControlInstanceId,
+} from '../form-control-a11y';
 import { ListboxKeyboard } from '../listbox-keyboard';
 import { FormSelectTagsOptionComponent } from './form-select-tags-option.component';
 import { FormSelectTagsService } from './form-select-tags.service';
@@ -45,8 +49,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
   template: `
     <div class="nept-form-control mb-[1.4rem] w-[inherit]">
       @if (label()) {
-        <!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
-        <label appFormLabel>{{ label() }}</label>
+        <label [for]="inputId()" appFormLabel>{{ label() }}</label>
       }
 
       <app-form-control-field
@@ -65,13 +68,10 @@ import { FormSelectTagsService } from './form-select-tags.service';
               @if (!isReadonly()) {
                 <button
                   type="button"
-                  class="cursor-pointer border-0! bg-transparent! p-0! text-sm leading-none text-inherit opacity-70 hover:opacity-100"
-                  (click)="removeValue(option.value(), $event)"
-                  i18n-aria-label="
-                    Accessible label for the button that removes a selected tag
-                  "
-                  aria-label="Remove">
-                  &times;
+                  class="focus-visible:ring-primary relative inline-flex size-4 cursor-pointer items-center justify-center rounded-sm border-0! bg-transparent! p-0! text-sm leading-none text-inherit opacity-70 after:absolute after:-inset-1 after:content-[''] hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
+                  [attr.aria-label]="removeLabel(option.viewValue)"
+                  (click)="removeValue(option.value(), $event)">
+                  <span aria-hidden="true">&times;</span>
                 </button>
               }
             </span>
@@ -81,6 +81,12 @@ import { FormSelectTagsService } from './form-select-tags.service';
             #searchInput
             appFormInput
             class="w-auto! min-w-15 flex-1"
+            role="combobox"
+            aria-autocomplete="list"
+            [id]="inputId()"
+            [attr.aria-expanded]="isOpen()"
+            [attr.aria-controls]="listboxId"
+            [attr.aria-activedescendant]="activeOptionId()"
             [placeholder]="selectedOptions().length === 0 ? placeholder() : ''"
             [disabled]="disabled()"
             [readOnly]="isReadonly()"
@@ -108,7 +114,13 @@ import { FormSelectTagsService } from './form-select-tags.service';
         }
 
         <app-form-select-dropdown [reference]="dropreference.el">
-          <div appFormSelectDropdown class="menu-scale-in">
+          <div
+            appFormSelectDropdown
+            class="menu-scale-in"
+            role="listbox"
+            aria-multiselectable="true"
+            [id]="listboxId"
+            [attr.aria-label]="label() || placeholder() || null">
             <ng-content select="app-form-select-tags-option" />
           </div>
         </app-form-select-dropdown>
@@ -147,10 +159,15 @@ export class FormSelectTagsComponent<TValue> implements FormValueControl<
   readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
-  readonly hintId = computed(() => hintIdFor(this.name()));
+  readonly hintId = computed(() => hintIdFor(this.inputId()));
   readonly pending = input<boolean>(false);
 
   readonly searchQuery = signal<string>('');
+
+  readonly listboxId = `form-select-tags-${crypto.randomUUID()}`;
+  private readonly instanceId = nextControlInstanceId();
+  readonly inputId = computed(() => controlIdFor(this.name(), this.instanceId));
+  readonly isOpen = computed(() => this.dropdown().showing());
 
   readonly selectedOptions = computed(() => {
     const values = this.value();
@@ -169,13 +186,23 @@ export class FormSelectTagsComponent<TValue> implements FormValueControl<
     },
     select: (option) => this.toggleOption(option),
     openKeys: ['ArrowDown', 'ArrowUp', 'Enter'],
-    trapKeys: ['Tab'],
+    closeOnTab: true,
     skip: (option) => option.hiddenBySearch,
     wrap: true,
   });
 
+  readonly activeOptionId = computed(() => {
+    if (!this.isOpen()) return null;
+
+    return this.keyboard.activeItem?.id ?? null;
+  });
+
   constructor() {
     this.service.register(this);
+  }
+
+  removeLabel(tag: string): string {
+    return $localize`:Accessible label for the button that removes a selected tag. TAG is the tag's name:Remove ${tag}:TAG:`;
   }
 
   isSelected(value: TValue): boolean {

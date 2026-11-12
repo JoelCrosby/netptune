@@ -17,8 +17,9 @@ export class FilterToggleComponent {
 
   readonly className = computed(() => {
     return cn(
-      'border-border hover:bg-foreground/5 flex h-9 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm transition-colors',
-      this.pressed() && 'border-amber-400 bg-amber-400/10 text-amber-700',
+      'border-border hover:bg-foreground/5 focus-visible:ring-primary flex h-9 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm transition-colors outline-none focus-visible:ring-2',
+      this.pressed() &&
+        'border-amber-400 bg-amber-400/10 text-amber-700 dark:text-amber-300',
       this.class()
     );
   });

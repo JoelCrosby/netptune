@@ -18,7 +18,7 @@ import { LucideCheck } from '@lucide/angular';
   imports: [LucideCheck],
   host: {
     class:
-      'flex w-full items-center gap-3 px-3 py-2 text-sm text-left cursor-pointer select-none rounded-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline-none focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800 disabled:pointer-events-none disabled:opacity-50',
+      'flex w-full items-center gap-3 px-3 py-2 text-sm text-left cursor-pointer select-none rounded-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline-none focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50',
     role: 'menuitemcheckbox',
     '[attr.aria-checked]': 'checked()',
     '(click)': 'toggle()',

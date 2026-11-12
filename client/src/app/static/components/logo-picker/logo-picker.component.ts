@@ -12,7 +12,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
   template: `
     <button
       type="button"
-      class="relative block h-16 w-16 cursor-pointer rounded-[15px] focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none disabled:cursor-not-allowed"
+      class="focus-visible:ring-primary focus-visible:ring-offset-dialog-background relative block h-16 w-16 cursor-pointer rounded-[15px] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed"
       [appTooltip]="label()"
       [attr.aria-label]="label()"
       [disabled]="disabled()"
@@ -47,6 +47,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       class="sr-only"
       type="file"
       tabindex="-1"
+      aria-hidden="true"
       [attr.accept]="accept"
       [disabled]="disabled()"
       (change)="onInput($event)" />

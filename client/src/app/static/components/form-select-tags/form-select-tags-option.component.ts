@@ -14,6 +14,11 @@ import { FormSelectTagsService } from './form-select-tags.service';
 @Component({
   selector: 'app-form-select-tags-option',
   hostDirectives: [FormSelectOptionDirective],
+  host: {
+    role: 'option',
+    '[id]': 'id',
+    '[attr.aria-selected]': 'selected',
+  },
   template: ` <ng-content /> `,
 })
 export class FormSelectTagsOptionComponent<TValue> implements Highlightable {
@@ -23,6 +28,8 @@ export class FormSelectTagsOptionComponent<TValue> implements Highlightable {
   private element = inject(ElementRef);
 
   readonly value = input.required<TValue>();
+
+  readonly id = `form-select-tags-option-${crypto.randomUUID()}`;
 
   @HostBinding('class.selected')
   get selected(): boolean {

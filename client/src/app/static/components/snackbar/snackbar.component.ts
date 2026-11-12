@@ -31,12 +31,16 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
 
 @Component({
   selector: 'app-snackbar',
+  host: {
+    '(mouseenter)': 'snackbarService.hold(item().id)',
+    '(mouseleave)': 'snackbarService.release(item().id)',
+    '(focusin)': 'snackbarService.hold(item().id)',
+    '(focusout)': 'snackbarService.release(item().id)',
+  },
   imports: [IconButtonComponent, LucideDynamicIcon, LucideX],
   template: `
     <div
-      class="border-border bg-dialog-background flex items-center gap-3 rounded-xl border py-2 pr-2 pl-3 shadow-xl md:max-w-md md:min-w-80"
-      role="status"
-      aria-live="polite">
+      class="border-border bg-dialog-background flex items-center gap-3 rounded-xl border py-2 pr-2 pl-3 shadow-xl md:max-w-md md:min-w-80">
       @if (icon(); as icon) {
         <span
           class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
@@ -53,7 +57,7 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
       @if (item().action) {
         <button
           type="button"
-          class="text-primary shrink-0 rounded-md px-1.5 py-1 text-[13px] font-medium hover:underline"
+          class="text-primary focus-visible:ring-primary shrink-0 rounded-md px-1.5 py-1 text-[13px] font-medium hover:underline focus-visible:ring-2 focus-visible:outline-none"
           (click)="actionClicked.emit(item())">
           {{ item().action }}
         </button>
@@ -70,7 +74,7 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
         "
         aria-label="Dismiss"
         (click)="snackbarService.dismiss(item().id)">
-        <svg lucideX class="h-3.5 w-3.5"></svg>
+        <svg lucideX class="h-3.5 w-3.5" aria-hidden="true"></svg>
       </button>
     </div>
   `,

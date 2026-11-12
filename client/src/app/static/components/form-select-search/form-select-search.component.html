@@ -1,6 +1,6 @@
 <div class="nept-form-control w-[inherit] mb-[1.4rem]" [class.mb-0!]="noMargin()">
   @if (label()) {
-    <label [for]="name()" appFormLabel>
+    <label [for]="controlId()" appFormLabel>
       {{ label() }}
     </label>
   }
@@ -20,11 +20,13 @@
       #input
       appFormInput
       role="combobox"
+      aria-autocomplete="list"
       [attr.aria-expanded]="isOpen()"
       [attr.aria-controls]="listboxId"
       [attr.aria-activedescendant]="activeOptionId()"
+      [attr.aria-describedby]="hint() ? hintId() : null"
       [placeholder]="placeholder()"
-      [id]="name()"
+      [id]="controlId()"
       [value]="inputValue()"
       [disabled]="disabled()"
       [readOnly]="isReadonly()"
@@ -56,7 +58,8 @@
         appFormSelectDropdown
         class="menu-scale-in pr-0"
         [id]="listboxId"
-        role="listbox">
+        role="listbox"
+        [attr.aria-label]="label()">
         @if (filteredOptions().length) {
           <cdk-virtual-scroll-viewport
             class="custom-scroll min-h-10 w-full"
@@ -105,6 +108,6 @@
   </app-form-control-field>
 
   @if (hint()) {
-    <small appFormHint>{{ hint() }}</small>
+    <small [id]="hintId()" appFormHint>{{ hint() }}</small>
   }
 </div>

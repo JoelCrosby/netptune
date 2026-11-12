@@ -37,6 +37,7 @@ interface SuggestionRow {
     <ul
       role="listbox"
       [class]="listClass"
+      [id]="listId"
       [attr.aria-label]="ariaLabel()"
       (mousedown)="$event.preventDefault()"
       #list>
@@ -44,12 +45,13 @@ interface SuggestionRow {
         @if (row.groupStart) {
           <li
             role="presentation"
-            class="text-foreground/45 px-2 pt-1.5 pb-0.5 text-[11px] font-semibold tracking-[0.06em] uppercase">
+            class="text-muted px-2 pt-1.5 pb-0.5 text-[11px] font-semibold tracking-[0.06em] uppercase">
             {{ row.groupStart }}
           </li>
         }
         <li
           role="option"
+          [id]="optionId(row.index)"
           [class]="itemClass"
           [attr.data-index]="row.index"
           [attr.data-active]="row.index === activeIndex()"
@@ -61,13 +63,15 @@ interface SuggestionRow {
           }
           <span class="min-w-0 flex-1 truncate">{{ row.item.label }}</span>
           @if (row.item.hint) {
-            <span class="text-foreground/40 shrink-0 font-mono text-xs">{{
+            <span class="text-muted shrink-0 font-mono text-xs">{{
               row.item.hint
             }}</span>
           }
         </li>
       } @empty {
-        <li class="text-foreground/50 px-2 py-1.5">{{ emptyLabel() }}</li>
+        <li role="presentation" class="text-muted px-2 py-1.5">
+          {{ emptyLabel() }}
+        </li>
       }
     </ul>
   `,
@@ -81,6 +85,8 @@ export class SuggestionMenuComponent {
 
   readonly picked = output<number>();
   readonly hovered = output<number>();
+
+  readonly listId = `suggestion-menu-${crypto.randomUUID()}`;
 
   private readonly list = viewChild.required<ElementRef<HTMLElement>>('list');
 
@@ -104,6 +110,10 @@ export class SuggestionMenuComponent {
       return { item, index, groupStart };
     });
   });
+
+  optionId(index: number): string {
+    return `${this.listId}-option-${index}`;
+  }
 
   constructor() {
     afterRenderEffect(() => {

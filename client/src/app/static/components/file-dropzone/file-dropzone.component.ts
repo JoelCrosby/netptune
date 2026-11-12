@@ -3,6 +3,8 @@ import { formatBytes } from '@core/util/bytes';
 import { LucideUpload } from '@lucide/angular';
 import { FileDropDirective } from '@static/directives/file-drop.directive';
 
+let nextFileDropzoneId = 0;
+
 const defaultMaxFileSize = 50 * 1024 * 1024;
 
 @Component({
@@ -21,19 +23,22 @@ const defaultMaxFileSize = 50 * 1024 * 1024;
         #picker
         class="sr-only"
         type="file"
+        tabindex="-1"
+        aria-hidden="true"
         multiple
         [attr.accept]="acceptTypes() || null"
         [disabled]="disabled()"
         (change)="onInput($event)" />
       <button
         type="button"
-        class="text-primary inline-flex items-center gap-2 rounded px-3 py-2 hover:underline disabled:opacity-50"
+        class="text-primary focus-visible:ring-primary inline-flex items-center gap-2 rounded px-3 py-2 outline-none hover:underline focus-visible:ring-2 disabled:opacity-50"
         [disabled]="disabled()"
+        [attr.aria-describedby]="hintId"
         (click)="picker.click()">
-        <svg lucideUpload class="h-4 w-4"></svg>
+        <svg lucideUpload class="h-4 w-4" aria-hidden="true"></svg>
         <span i18n="Button that opens the file picker">Choose files</span>
       </button>
-      <p class="text-muted text-xs">
+      <p class="text-muted text-xs" [id]="hintId">
         <span
           i18n="
             Hint under the file picker. SIZE is a formatted byte limit such as
@@ -70,12 +75,13 @@ export class FileDropzoneComponent {
   protected readonly formatBytes = formatBytes;
 
   readonly disabled = input(false);
-  /** Comma-separated extension list for the picker, e.g. ".csv,.xlsx". */
+  // Comma-separated extension list for the picker, e.g. ".csv,.xlsx".
   readonly acceptTypes = input('');
   readonly maxBytes = input(defaultMaxFileSize);
   readonly remainingBytes = input<number>();
   readonly filesSelected = output<File[]>();
   readonly error = signal('');
+  protected readonly hintId = `file-dropzone-hint-${nextFileDropzoneId++}`;
 
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -89,7 +95,7 @@ export class FileDropzoneComponent {
     const rejected = files.length - valid.length;
     this.error.set(
       rejected
-        ? `${rejected} file(s) were empty or exceeded ${formatBytes(limit)}.`
+        ? $localize`:Error under a file picker. COUNT is how many files were rejected, SIZE a formatted byte limit such as 50 MB:${rejected}:COUNT: file(s) were empty or exceeded ${formatBytes(limit)}:SIZE:.`
         : ''
     );
 

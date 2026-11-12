@@ -106,6 +106,7 @@ interface DurationCopy {
           <div class="w-24">
             <app-form-input
               name="durationDays"
+              [inputId]="'durationDays'"
               type="number"
               [noMargin]="true"
               [required]="true"

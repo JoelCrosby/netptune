@@ -22,11 +22,15 @@ import {
       #editable
       class="hover:bg-hover box-border min-h-lh w-fit max-w-full rounded border-2 border-solid p-1 wrap-break-word transition-[min-width,background-color,border-color] duration-200 ease-out outline-none [font:inherit]"
       [attr.tabindex]="isInteractive() ? 0 : null"
+      [attr.role]="isInteractive() ? 'textbox' : null"
+      [attr.aria-label]="isInteractive() ? ariaLabel() : null"
       [attr.contenteditable]="isEditActive() ? 'plaintext-only' : null"
       [attr.aria-readonly]="isInteractive() ? null : 'true'"
       [style.min-width]="isEditActive() ? '16rem' : '0'"
       [style.border-color]="borderColor()"
       [class.cursor-text]="isInteractive()"
+      [class.focus-visible:ring-2]="!activeBorder()"
+      [class.focus-visible:ring-primary]="!activeBorder()"
       (mousedown)="onMouseDown()"
       (focus)="startEditing()"
       (blur)="onBlur()"
@@ -43,6 +47,9 @@ export class InlineEditInputComponent {
   readonly size = input<number>();
   readonly activeBorder = input<boolean | string | null>();
   readonly readonly = input<boolean>(false);
+  readonly ariaLabel = input(
+    $localize`:Default accessible name of a text that can be edited in place:Edit text`
+  );
 
   readonly submitted = output<string>();
 

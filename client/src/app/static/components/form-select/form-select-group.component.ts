@@ -9,7 +9,7 @@ import { Component, input } from '@angular/core';
   },
   template: `
     <div
-      class="text-foreground/50 px-[.4rem] pt-1 text-[11px] font-semibold tracking-[.04em] uppercase"
+      class="text-muted px-[.4rem] pt-1 text-[11px] font-semibold tracking-[.04em] uppercase"
       aria-hidden="true">
       {{ label() }}
     </div>

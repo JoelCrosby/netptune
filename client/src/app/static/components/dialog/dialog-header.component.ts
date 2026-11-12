@@ -3,6 +3,7 @@ import { LucideX } from '@lucide/angular';
 import { DialogCloseDirective } from '../../directives/dialog-close.directive';
 import { IconButtonComponent } from '../button/icon-button.component';
 import { cn } from '../button/button.variants';
+import { dialogTitleId } from './dialog-title-id';
 
 export type DialogHeaderDivider = 'none' | 'bottom';
 
@@ -19,11 +20,15 @@ export type DialogHeaderDivider = 'none' | 'bottom';
     @if (heading(); as heading) {
       @if (description(); as description) {
         <div class="flex min-w-0 flex-col">
-          <h2 class="truncate text-[17px] font-bold">{{ heading }}</h2>
+          <h2 class="truncate text-[17px] font-bold" [id]="titleId">
+            {{ heading }}
+          </h2>
           <p class="text-muted truncate text-[12.5px]">{{ description }}</p>
         </div>
       } @else {
-        <h2 class="truncate text-[13px] font-semibold">{{ heading }}</h2>
+        <h2 class="truncate text-[13px] font-semibold" [id]="titleId">
+          {{ heading }}
+        </h2>
       }
     }
 
@@ -52,6 +57,8 @@ export class DialogHeaderComponent {
   readonly divider = input<DialogHeaderDivider>('bottom');
   readonly showCloseButton = input(false, { transform: booleanAttribute });
   readonly class = input('');
+
+  protected readonly titleId = dialogTitleId(() => !!this.heading());
 
   protected readonly hostClass = computed(() => {
     return cn(

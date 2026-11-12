@@ -30,7 +30,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
       class="nept-form-control mb-[1.4rem] w-[inherit]"
       [class.mb-0!]="noMargin()">
       @if (label()) {
-        <label [for]="name()" appFormLabel [variant]="density()">
+        <label [for]="controlId()" appFormLabel [variant]="density()">
           {{ label() }}
         </label>
       }
@@ -48,14 +48,16 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
           <app-date-picker
             class="min-w-0 flex-1"
             appearance="bare"
-            [controlId]="name()"
+            [controlId]="controlId()"
             [value]="value()"
-            [placeholder]="placeholder() || 'Select date'"
-            [ariaLabel]="label() || 'Choose date'"
+            [placeholder]="placeholder() || datePlaceholder"
+            [ariaLabel]="label() || dateAriaLabel"
             [min]="min()"
             [max]="max()"
             [disabled]="disabled()"
             [required]="required()"
+            [ariaInvalid]="ariaInvalid()"
+            [ariaDescribedBy]="describedBy(!!hint())"
             [buttonClass]="prefix() ? 'px-0 pr-3' : 'px-3'"
             (valueChange)="value.set($event)"
             (touched)="touched.set(true)" />
@@ -63,7 +65,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
           <input
             #input
             appFormInput
-            [id]="name()"
+            [id]="controlId()"
             [value]="value()"
             [disabled]="disabled()"
             [required]="required()"
@@ -98,7 +100,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
       }
 
       @if (showErrors()) {
-        <div [id]="errorId()">
+        <div role="alert" [id]="errorId()">
           @for (error of errors(); track error.kind) {
             <app-form-error>
               {{ error.message }}
@@ -133,6 +135,9 @@ export class FormInputComponent extends AbstractFormValueControl {
   readonly density = input<FormControlDensity>('default');
 
   readonly input = viewChild<ElementRef>('input');
+
+  protected readonly datePlaceholder = $localize`:Placeholder of a date field with no date chosen:Select date`;
+  protected readonly dateAriaLabel = $localize`:Accessible name of a date field that has no visible label:Choose date`;
 
   readonly submitted = output<string>();
 

@@ -5,11 +5,18 @@ import {
   ValidationError,
   WithOptionalFieldTree,
 } from '@angular/forms/signals';
-import { describedByIds, errorIdFor, hintIdFor } from './form-control-a11y';
+import {
+  controlIdFor,
+  describedByIds,
+  errorIdFor,
+  hintIdFor,
+  nextControlInstanceId,
+} from './form-control-a11y';
 
 @Directive()
 export class AbstractFormValueControl implements FormValueControl<string> {
   readonly name = input<string>('');
+  readonly inputId = input<string | null>(null);
   readonly value = model('');
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);
@@ -22,14 +29,19 @@ export class AbstractFormValueControl implements FormValueControl<string> {
   readonly invalid = input<boolean>(false);
   readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
 
+  private readonly instanceId = nextControlInstanceId();
+
   readonly showErrors = computed(
     () => this.touched() && this.errors().length > 0
   );
-  readonly hintId = computed(() => hintIdFor(this.name()));
-  readonly errorId = computed(() => errorIdFor(this.name()));
+  readonly controlId = computed(() => {
+    return this.inputId() || controlIdFor(this.name(), this.instanceId);
+  });
+  readonly hintId = computed(() => hintIdFor(this.controlId()));
+  readonly errorId = computed(() => errorIdFor(this.controlId()));
   readonly ariaInvalid = computed(() => (this.showErrors() ? 'true' : null));
 
   describedBy(hasHint: boolean): string | null {
-    return describedByIds(this.name(), hasHint, this.showErrors());
+    return describedByIds(this.controlId(), hasHint, this.showErrors());
   }
 }

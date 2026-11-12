@@ -1,10 +1,15 @@
 import {
+  afterNextRender,
   Component,
   contentChildren,
   effect,
+  ElementRef,
+  inject,
+  Injector,
   input,
   model,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { StepComponent } from './step.component';
 
 @Component({
@@ -26,6 +31,13 @@ import { StepComponent } from './step.component';
                   index === activeIndex() ? 'step' : undefined
                 ">
                 {{ index + 1 }}
+                @if (index < activeIndex()) {
+                  <span
+                    class="sr-only"
+                    i18n="Screen reader text marking a finished wizard step">
+                    Completed
+                  </span>
+                }
               </span>
               <span
                 class="max-w-28 truncate text-xs"
@@ -58,6 +70,11 @@ export class StepperComponent {
   readonly mode = input<'vertical' | 'wizard'>('vertical');
   readonly activeIndex = model(0);
   readonly steps = contentChildren(StepComponent);
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
+  private renderedIndex: number | null = null;
 
   // The step you are on has to be the most prominent marker in the rail. Painting completed steps
   // solid and the current one as a faint outline read backwards: the last completed step looked
@@ -101,5 +118,34 @@ export class StepperComponent {
         });
       });
     });
+
+    effect(() => {
+      const index = this.activeIndex();
+      const previous = this.renderedIndex;
+
+      this.renderedIndex = index;
+
+      if (this.mode() !== 'wizard' || previous === null || previous === index) {
+        return;
+      }
+
+      afterNextRender(() => this.focusActiveStep(index), {
+        injector: this.injector,
+      });
+    });
+  }
+
+  // Moving between steps hides the button that was pressed, so focus would
+  // otherwise fall back to the document body.
+  private focusActiveStep(index: number) {
+    const focused = this.document.activeElement;
+    const isFocusInStepper =
+      !focused ||
+      focused === this.document.body ||
+      this.host.nativeElement.contains(focused);
+
+    if (!isFocusInStepper) return;
+
+    this.steps()[index]?.focus();
   }
 }

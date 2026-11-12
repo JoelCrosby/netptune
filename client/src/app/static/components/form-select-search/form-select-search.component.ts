@@ -36,6 +36,11 @@ import {
   FormSelectDropdownStyleDirective,
   FormSelectOptionDirective,
 } from '../form-select/form-select.directives';
+import {
+  controlIdFor,
+  hintIdFor,
+  nextControlInstanceId,
+} from '../form-control-a11y';
 import { ListboxKeyboard, listboxOptions } from '../listbox-keyboard';
 
 interface OptionTemplateContext<TOption> {
@@ -82,7 +87,9 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
   readonly prefix = input<string>();
   readonly placeholder = input<string>('');
   readonly hint = input<string>();
-  readonly emptyMessage = input<string>('No options found');
+  readonly emptyMessage = input<string>(
+    $localize`:Shown in a searchable select when no option matches the search:No options found`
+  );
   readonly itemSize = input<number>(40);
   readonly maxDropdownHeight = input<number>(288);
 
@@ -102,6 +109,11 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
   readonly invalid = input<boolean>(false);
   readonly pending = input<boolean>(false);
   readonly noMargin = input(false);
+  private readonly instanceId = nextControlInstanceId();
+  readonly controlId = computed(() =>
+    controlIdFor(this.name(), this.instanceId)
+  );
+  readonly hintId = computed(() => hintIdFor(this.controlId()));
 
   readonly searchQuery = signal('');
   readonly listboxId = `form-select-search-${crypto.randomUUID()}`;

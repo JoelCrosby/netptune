@@ -6,6 +6,7 @@ import { Component, input } from '@angular/core';
   template: `
     <span
       class="text-muted px-2 text-sm"
+      role="status"
       i18n="Count of selected rows. COUNT is the number selected">
       {{
         count() // i18n(ph="COUNT")

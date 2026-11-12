@@ -7,12 +7,11 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
   imports: [LucideX, IconButtonComponent],
   template: `
     <div
-      class="anchored-popup bg-card border-border w-80 max-w-[calc(100vw-2rem)] rounded-lg border p-3 shadow-lg"
-      role="status"
-      aria-live="polite">
+      class="anchored-popup bg-card border-border w-80 max-w-[calc(100vw-2rem)] rounded-lg border p-3 shadow-lg">
       <div class="flex items-start gap-2">
         <span
-          class="bg-hover text-muted flex h-7 w-7 shrink-0 items-center justify-center rounded-lg">
+          class="bg-hover text-muted flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
+          aria-hidden="true">
           <ng-content select="[popupIcon]" />
         </span>
 
@@ -29,7 +28,7 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
           "
           aria-label="Dismiss"
           (click)="dismissed.emit()">
-          <svg lucideX class="h-4 w-4"></svg>
+          <svg lucideX class="h-4 w-4" aria-hidden="true"></svg>
         </button>
       </div>
     </div>

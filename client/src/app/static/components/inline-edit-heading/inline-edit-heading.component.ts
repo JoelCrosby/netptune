@@ -18,7 +18,11 @@ import { cn } from '../button/button.variants';
   template: `
     <div
       #editable
-      tabindex="0"
+      [attr.tabindex]="isInteractive() ? 0 : null"
+      [attr.role]="isInteractive() ? 'textbox' : null"
+      [attr.aria-label]="isInteractive() ? ariaLabel() : null"
+      [attr.aria-invalid]="isDraftTooLong() ? 'true' : null"
+      [attr.aria-describedby]="isEditing() && maxLength() ? limitId() : null"
       [class]="headingClass()"
       [attr.contenteditable]="isEditing() ? 'plaintext-only' : null"
       [class.cursor-text]="isInteractive()"
@@ -34,7 +38,10 @@ import { cn } from '../button/button.variants';
 
     @if (maxLength(); as max) {
       @if (isEditing()) {
-        <app-character-limit [length]="draftLength()" [max]="max" />
+        <app-character-limit
+          [id]="limitId()"
+          [length]="draftLength()"
+          [max]="max" />
       }
     }
   `,
@@ -45,10 +52,15 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
 
   readonly textClass = input('px-4 py-4 text-2xl');
   readonly maxLength = input<number | null>(null);
+  readonly ariaLabel = input(
+    $localize`:Default accessible name of a heading that can be edited in place:Edit title`
+  );
+
+  protected readonly limitId = computed(() => `${this.controlId()}-limit`);
 
   protected readonly headingClass = computed(() => {
     return cn(
-      'font-overpass w-full rounded transition-colors outline-none',
+      'font-overpass focus-visible:ring-primary w-full rounded transition-colors outline-none focus-visible:ring-2',
       this.textClass()
     );
   });
@@ -63,7 +75,7 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
 
   protected readonly draftLength = signal(0);
 
-  private readonly isDraftTooLong = computed(() => {
+  protected readonly isDraftTooLong = computed(() => {
     const max = this.maxLength();
 
     return max !== null && this.draftLength() > max;

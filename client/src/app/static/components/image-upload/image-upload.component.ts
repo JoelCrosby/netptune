@@ -10,6 +10,8 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FileDropDirective } from '@static/directives/file-drop.directive';
 
+let nextImageUploadId = 0;
+
 export type ImageUploadShape = 'square' | 'circle' | 'wide';
 
 @Component({
@@ -43,7 +45,7 @@ export type ImageUploadShape = 'square' | 'circle' | 'wide';
         } @else {
           <div
             class="text-muted flex h-full w-full items-center justify-center">
-            <svg lucideImage class="h-6 w-6"></svg>
+            <svg lucideImage class="h-6 w-6" aria-hidden="true"></svg>
           </div>
         }
 
@@ -60,6 +62,8 @@ export type ImageUploadShape = 'square' | 'circle' | 'wide';
           #picker
           class="sr-only"
           type="file"
+          tabindex="-1"
+          aria-hidden="true"
           [attr.accept]="accept"
           [disabled]="isBusy()"
           (change)="onInput($event)" />
@@ -69,8 +73,9 @@ export type ImageUploadShape = 'square' | 'circle' | 'wide';
             app-stroked-button
             type="button"
             [disabled]="isBusy()"
+            [attr.aria-describedby]="hintId"
             (click)="picker.click()">
-            <svg lucideUpload class="mr-2 h-4 w-4"></svg>
+            <svg lucideUpload class="mr-2 h-4 w-4" aria-hidden="true"></svg>
             @if (imageUrl()) {
               <span i18n="Button that replaces an already uploaded image">
                 Replace
@@ -89,13 +94,13 @@ export type ImageUploadShape = 'square' | 'circle' | 'wide';
               type="button"
               [disabled]="isBusy()"
               (click)="removed.emit()">
-              <svg lucideTrash2 class="mr-2 h-4 w-4"></svg>
+              <svg lucideTrash2 class="mr-2 h-4 w-4" aria-hidden="true"></svg>
               <span i18n="Button that removes an uploaded image">Remove</span>
             </button>
           }
         </div>
 
-        <p class="text-muted mt-2 text-xs">
+        <p class="text-muted mt-2 text-xs" [id]="hintId">
           <span
             i18n="
               Hint under an image picker. SIZE is a formatted byte limit such as
@@ -106,11 +111,13 @@ export type ImageUploadShape = 'square' | 'circle' | 'wide';
           </span>
         </p>
 
-        @if (error()) {
-          <p class="text-destructive mt-2 text-sm" aria-live="polite">
-            {{ error() }}
-          </p>
-        }
+        <div role="alert">
+          @if (error()) {
+            <p class="text-destructive mt-2 text-sm">
+              {{ error() }}
+            </p>
+          }
+        </div>
       </div>
     </div>
   `,
@@ -128,6 +135,7 @@ export class ImageUploadComponent {
   protected readonly accept = brandingImageAccept;
   protected readonly maxBytesLabel = formatBytes(brandingImageMaxBytes);
   protected readonly error = signal('');
+  protected readonly hintId = `image-upload-hint-${nextImageUploadId++}`;
 
   protected readonly isBusy = computed(() => {
     return this.disabled() || this.uploading();

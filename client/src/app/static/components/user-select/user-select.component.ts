@@ -96,6 +96,10 @@ import {
               Placeholder in the box for searching workspace members
             "
             placeholder="Search.."
+            i18n-aria-label="
+              Accessible name of the box for searching workspace members
+            "
+            aria-label="Search members"
             [attr.aria-activedescendant]="activeDescendantId()"
             [formField]="searchForm.term" />
         </div>
@@ -133,15 +137,19 @@ export class UserSelectComponent {
   readonly value = model<UserSelectValue[]>([]);
   readonly compact = input(false);
   readonly disabled = input(false);
-  readonly label = input('Select Users');
-  readonly noResults = input('No results found...');
+  readonly label = input(
+    $localize`:Default prompt on the control that picks workspace members:Select Users`
+  );
+  readonly noResults = input(
+    $localize`:Shown when a workspace member search finds nobody:No results found...`
+  );
   readonly excludeServiceAccounts = input(false);
 
   readonly buttonClass = input('');
 
   protected readonly triggerClass = computed(() => {
     return cn(
-      'text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-default disabled:hover:bg-transparent',
+      'text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus-visible:ring-primary focus:outline-none focus-visible:ring-2 disabled:cursor-default disabled:hover:bg-transparent',
       this.buttonClass()
     );
   });

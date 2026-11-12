@@ -29,6 +29,7 @@ import {
       [icon]="lucideCircleDashed"
       [color]="selectedCount() ? 'primary' : undefined"
       [count]="selectedCount()"
+      [expanded]="menu.showing()"
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu panelRole="none" [panelClass]="'p-0'">

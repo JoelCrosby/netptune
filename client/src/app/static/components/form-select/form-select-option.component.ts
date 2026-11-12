@@ -14,6 +14,11 @@ import { FormSelectService } from './form-select.service';
 @Component({
   selector: 'app-form-select-option',
   hostDirectives: [FormSelectOptionDirective],
+  host: {
+    role: 'option',
+    '[id]': 'id',
+    '[attr.aria-selected]': 'selected',
+  },
   template: ` <ng-content /> `,
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {
@@ -22,6 +27,8 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
 
   readonly value = input<TValue>();
   readonly selectedLabel = input<string>();
+
+  readonly id = `form-select-option-${crypto.randomUUID()}`;
 
   @HostBinding('class.selected')
   get selected(): boolean {

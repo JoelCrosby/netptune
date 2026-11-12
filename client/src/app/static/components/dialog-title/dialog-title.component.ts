@@ -2,6 +2,7 @@ import { booleanAttribute, Component, input } from '@angular/core';
 import { LucideX } from '@lucide/angular';
 import { IconButtonComponent } from '../button/icon-button.component';
 import { DialogCloseDirective } from '../../directives/dialog-close.directive';
+import { dialogTitleId } from '../dialog/dialog-title-id';
 
 @Component({
   selector: 'app-dialog-title',
@@ -9,7 +10,9 @@ import { DialogCloseDirective } from '../../directives/dialog-close.directive';
   host: { class: 'block' },
   template: `
     <div class="relative" [class.mb-6]="!noMargin()">
-      <h1 class="m-0 pr-10 text-xl font-medium"><ng-content /></h1>
+      <h1 class="m-0 pr-10 text-xl font-medium" [id]="titleId">
+        <ng-content />
+      </h1>
       @if (subtitle()) {
         <p class="text-muted mt-1 pr-10 text-sm">{{ subtitle() }}</p>
       }
@@ -31,4 +34,6 @@ export class DialogTitleComponent {
   readonly subtitle = input<string | null>(null);
   readonly showCloseButton = input(false, { transform: booleanAttribute });
   readonly noMargin = input(false, { transform: booleanAttribute });
+
+  protected readonly titleId = dialogTitleId();
 }

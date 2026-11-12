@@ -61,11 +61,18 @@ function appendRows(
   expandedIds: ReadonlySet<number>,
   rows: TreeRow[]
 ) {
-  for (const node of siblings) {
+  for (const [index, node] of siblings.entries()) {
     const children = childrenByParent.get(node.id) ?? [];
     const expanded = expandedIds.has(node.id);
 
-    rows.push({ node, depth, childCount: children.length, expanded });
+    rows.push({
+      node,
+      depth,
+      position: index + 1,
+      siblingCount: siblings.length,
+      childCount: children.length,
+      expanded,
+    });
 
     if (expanded) {
       appendRows(children, depth + 1, childrenByParent, expandedIds, rows);

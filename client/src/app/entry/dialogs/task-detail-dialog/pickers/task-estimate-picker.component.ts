@@ -39,7 +39,7 @@ interface PendingEstimate {
       <ng-content />
     </button>
 
-    <app-dropdown-menu #menu>
+    <app-dropdown-menu #menu panelRole="dialog">
       <div class="w-56">
         <small class="text-muted block px-3 py-1 text-xs">
           <span i18n="Heading above the estimate-unit options">

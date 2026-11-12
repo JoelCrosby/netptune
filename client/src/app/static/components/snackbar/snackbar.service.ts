@@ -1,10 +1,13 @@
-import { Service, signal } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { inject, Service, signal } from '@angular/core';
 import { SnackbarConfig, SnackbarItem } from './snackbar.models';
 
 @Service()
 export class SnackbarService {
   readonly items = signal<SnackbarItem[]>([]);
 
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
+  private readonly timers = new Map<number, ReturnType<typeof setTimeout>>();
   private nextId = 0;
 
   open(
@@ -22,12 +25,31 @@ export class SnackbarService {
     };
 
     this.items.update((current) => [...current, item]);
-
-    if (item.duration > 0) {
-      setTimeout(() => this.dismiss(item.id), item.duration);
-    }
+    this.announce(item);
+    this.release(item.id);
 
     return item;
+  }
+
+  hold(id: number): void {
+    const timer = this.timers.get(id);
+
+    if (timer === undefined) return;
+
+    clearTimeout(timer);
+    this.timers.delete(id);
+  }
+
+  release(id: number): void {
+    const item = this.items().find((candidate) => candidate.id === id);
+
+    if (!item || item.duration <= 0) return;
+
+    this.hold(id);
+    this.timers.set(
+      id,
+      setTimeout(() => this.dismiss(id), item.duration)
+    );
   }
 
   success(
@@ -54,6 +76,16 @@ export class SnackbarService {
   }
 
   dismiss(id: number): void {
+    this.hold(id);
     this.items.update((current) => current.filter((item) => item.id !== id));
+  }
+
+  private announce(item: SnackbarItem): void {
+    const message = item.action
+      ? `${item.message} ${item.action}`
+      : item.message;
+    const politeness = item.type === 'error' ? 'assertive' : 'polite';
+
+    void this.liveAnnouncer.announce(message, politeness);
   }
 }

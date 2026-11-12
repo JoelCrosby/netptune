@@ -72,7 +72,7 @@ import { labelIdFor } from '../form-control-a11y';
       }
 
       @if (showErrors()) {
-        <div [id]="errorId()">
+        <div [id]="errorId()" role="alert">
           @for (error of errors(); track error.kind) {
             <app-form-error>
               {{ error.message }}

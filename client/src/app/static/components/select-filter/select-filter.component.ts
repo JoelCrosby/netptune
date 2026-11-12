@@ -39,6 +39,7 @@ function optionValue(value: string | number): string {
       [icon]="icon()"
       [color]="hasValue() ? 'primary' : undefined"
       [count]="hasValue() ? 1 : 0"
+      [expanded]="menu.showing()"
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu panelRole="none" [panelClass]="'p-0'">

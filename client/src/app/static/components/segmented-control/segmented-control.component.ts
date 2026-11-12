@@ -77,7 +77,7 @@ const optionVariants = cva(
       {
         variant: 'subtle',
         selected: false,
-        class: 'text-foreground/60 hover:text-foreground',
+        class: 'text-muted hover:text-foreground',
       },
     ],
     defaultVariants: {
@@ -107,7 +107,7 @@ const optionVariants = cva(
         }
         {{ option.label }}
         @if (option.count !== undefined) {
-          <span class="ml-1.5 opacity-70">{{ option.count }}</span>
+          <span class="ml-1.5 tabular-nums">{{ option.count }}</span>
         }
       </button>
     }

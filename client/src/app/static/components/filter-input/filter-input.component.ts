@@ -51,7 +51,7 @@ export type FilterInputAppearance = 'field' | 'bare' | 'compact';
         <button
           type="button"
           tabindex="-1"
-          class="text-muted hover:text-foreground flex h-4 w-4 shrink-0 items-center justify-center transition-colors"
+          class="text-muted hover:text-foreground relative flex h-4 w-4 shrink-0 items-center justify-center transition-colors after:absolute after:-inset-1 after:content-['']"
           i18n-aria-label="Accessible label for the button that clears a filter"
           aria-label="Clear filter"
           (click)="clear()">
@@ -71,7 +71,7 @@ export type FilterInputAppearance = 'field' | 'bare' | 'compact';
       </div>
     } @else if (appearance() === 'bare') {
       <div
-        class="border-border flex h-10.5 shrink-0 items-center gap-2.25 border-b px-3">
+        class="border-border focus-within:border-primary/60 flex h-10.5 shrink-0 items-center gap-2.25 border-b px-3">
         <ng-container [ngTemplateOutlet]="content" />
       </div>
     } @else {
@@ -95,7 +95,7 @@ export class FilterInputComponent {
   private readonly input =
     viewChild.required<ElementRef<HTMLInputElement>>('input');
 
-  /** Quieter and squarer than the default key cap, to suit a menu row. */
+  // Quieter and squarer than the default key cap, to suit a menu row.
   protected readonly keyHintClass =
     'min-w-0 shrink-0 rounded-sm border-[rgba(var(--foreground-rgb),0.14)] px-[5px] text-[10px] font-normal text-[rgba(var(--foreground-rgb),0.4)]';
 
@@ -113,9 +113,9 @@ export class FilterInputComponent {
   protected readonly inputClass = computed(() => {
     switch (this.appearance()) {
       case 'bare':
-        return 'text-foreground min-w-0 flex-1 p-0 font-[inherit] text-sm leading-none! placeholder:text-[rgba(var(--foreground-rgb),0.4)]';
+        return 'text-foreground min-w-0 flex-1 p-0 font-[inherit] text-sm leading-none! placeholder:text-muted';
       case 'compact':
-        return 'text-foreground min-w-0 flex-1 bg-transparent p-0 text-[13px] leading-none! outline-none placeholder:text-[rgba(var(--foreground-rgb),0.45)]';
+        return 'text-foreground min-w-0 flex-1 bg-transparent p-0 text-[13px] leading-none! outline-none placeholder:text-muted';
       default:
         return 'text-sm leading-none!';
     }

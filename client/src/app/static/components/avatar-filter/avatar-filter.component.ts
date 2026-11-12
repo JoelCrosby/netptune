@@ -19,19 +19,26 @@ export interface AvatarFilterOption {
       <div class="inline-flex flex-row-reverse items-center">
         @for (option of options(); track option.id) {
           <div
-            class="relative inline-flex not-last:-ml-3 hover:z-100"
+            class="relative inline-flex not-last:-ml-3 focus-within:z-100 hover:z-100"
             [style.z-index]="option.selected ? 99 : null">
-            <div
-              class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4"
+            <button
+              type="button"
+              class="bg-background focus-visible:ring-primary inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
               [class.border-transparent]="!option.selected"
-              [class.border-primary]="option.selected">
+              [class.border-primary]="option.selected"
+              [attr.aria-label]="
+                option.online
+                  ? presenceTooltip(option.displayName)
+                  : option.displayName
+              "
+              [attr.aria-pressed]="!!option.selected"
+              (click)="optionClicked.emit(option)">
               <app-avatar
                 size="lg"
                 [name]="option.displayName"
                 [imageUrl]="option.pictureUrl"
-                [isServiceAccount]="option.isServiceAccount ?? false"
-                (click)="optionClicked.emit(option)" />
-            </div>
+                [isServiceAccount]="option.isServiceAccount ?? false" />
+            </button>
             @if (option.online) {
               <span
                 class="border-background pointer-events-none absolute right-0.5 bottom-0.5 h-3 w-3 rounded-full border-2 bg-green-500"
@@ -43,7 +50,7 @@ export interface AvatarFilterOption {
     } @else if (emptyLabel()) {
       <div class="flex h-10 items-center">
         <div
-          class="text-foreground/50 px-2 text-sm font-medium whitespace-nowrap select-none">
+          class="text-muted px-2 text-sm font-medium whitespace-nowrap select-none">
           {{ emptyLabel() }}
         </div>
       </div>

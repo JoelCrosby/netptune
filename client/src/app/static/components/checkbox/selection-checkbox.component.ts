@@ -8,10 +8,19 @@ import { AbstractCheckableControl } from '../abstract-checkable-control';
   imports: [LucideCheck],
   template: `
     <label
-      class="inline-flex cursor-pointer items-center"
+      class="relative inline-flex cursor-pointer items-center before:absolute before:-inset-1"
       [class.cursor-not-allowed]="disabled()">
+      <input
+        type="checkbox"
+        class="peer sr-only"
+        [checked]="checked()"
+        [disabled]="disabled()"
+        [attr.aria-label]="label()"
+        [attr.aria-describedby]="ariaDescribedBy()"
+        (change)="onChanged($event)" />
+
       <span
-        class="flex h-4 w-4 items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
+        class="peer-focus-visible:ring-primary flex h-4 w-4 items-center justify-center rounded-[3px] border-2 transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
         [class.border-primary]="checked()"
         [class.bg-primary]="checked()"
         [class.border-foreground]="!checked()"
@@ -24,14 +33,6 @@ import { AbstractCheckableControl } from '../abstract-checkable-control';
             class="text-primary-foreground h-3 w-3"></svg>
         }
       </span>
-
-      <input
-        type="checkbox"
-        class="sr-only"
-        [checked]="checked()"
-        [disabled]="disabled()"
-        [attr.aria-label]="label()"
-        (change)="onChanged($event)" />
     </label>
   `,
 })

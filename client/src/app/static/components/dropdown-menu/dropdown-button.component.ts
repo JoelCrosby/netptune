@@ -23,7 +23,8 @@ export type DropdownButtonAppearance = 'flat' | 'stroked';
       type="button"
       [class]="className()"
       [disabled]="disabled()"
-      aria-haspopup="menu"
+      [attr.aria-haspopup]="panelRole() === 'dialog' ? 'dialog' : 'menu'"
+      [attr.aria-expanded]="menu.showing()"
       [attr.aria-label]="ariaLabel() || label()"
       (click)="menu.toggle(trigger)">
       <ng-content select="[buttonPrefix]" />
@@ -37,7 +38,7 @@ export type DropdownButtonAppearance = 'flat' | 'stroked';
       [panelRole]="panelRole()">
       @if (menuLabel(); as menuLabel) {
         <p
-          class="text-foreground/40 mx-2 mt-1.5 mb-2 text-[11px] font-semibold tracking-[0.06em] uppercase">
+          class="text-muted mx-2 mt-1.5 mb-2 text-[11px] font-semibold tracking-[0.06em] uppercase">
           {{ menuLabel }}
         </p>
       }

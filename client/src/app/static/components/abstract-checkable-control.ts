@@ -4,6 +4,7 @@ import { Directive, input, model, output } from '@angular/core';
 export abstract class AbstractCheckableControl {
   readonly checked = model(false);
   readonly disabled = input(false);
+  readonly ariaDescribedBy = input<string | null>(null);
   readonly changed = output<boolean>();
 
   protected onChanged(event: Event) {

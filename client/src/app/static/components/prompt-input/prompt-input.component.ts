@@ -25,7 +25,7 @@ let nextHintId = 0;
       }
       <input
         type="text"
-        class="placeholder:text-foreground/60 min-w-0 flex-1 bg-transparent text-sm outline-none"
+        class="placeholder:text-muted min-w-0 flex-1 bg-transparent text-sm outline-none"
         [placeholder]="placeholder()"
         [attr.aria-label]="ariaLabel()"
         [attr.aria-describedby]="hint() ? hintId : null"
@@ -34,7 +34,7 @@ let nextHintId = 0;
         #field />
       @if (hint()) {
         <span
-          class="text-foreground/60 shrink-0 text-xs max-md:sr-only"
+          class="text-muted shrink-0 text-xs max-md:sr-only"
           [class.sr-only]="!!text()"
           [id]="hintId"
           >{{ hint() }}</span
@@ -48,7 +48,7 @@ let nextHintId = 0;
         [ariaLabel]="submitLabel()"
         [title]="submitLabel()"
         [disabled]="!canSubmit()">
-        <svg lucideArrowUp class="h-4 w-4"></svg>
+        <svg lucideArrowUp class="h-4 w-4" aria-hidden="true"></svg>
       </button>
     </form>
   `,

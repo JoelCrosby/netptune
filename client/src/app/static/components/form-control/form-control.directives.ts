@@ -27,7 +27,7 @@ export class FormControlAppearanceDirective {
   selector: 'input[appFormInput], textarea[appFormInput], select[appFormInput]',
   host: {
     class:
-      'w-full appearance-none border-0 bg-transparent leading-10 text-inherit outline-none [font-family:inherit] [font-size:inherit] [font-weight:inherit] placeholder:opacity-60 disabled:text-foreground/40',
+      'w-full appearance-none border-0 bg-transparent leading-10 text-inherit outline-none [font-family:inherit] [font-size:inherit] [font-weight:inherit] placeholder:text-muted disabled:text-foreground/40',
   },
 })
 export class FormControlInputDirective {}
@@ -45,10 +45,10 @@ export class FormControlLabelDirective {
     const base = 'block w-[inherit] max-w-[inherit] font-medium';
 
     if (this.variant() === 'compact') {
-      return `${base} mb-1.5 text-xs tracking-[.04em] uppercase text-foreground/45`;
+      return `${base} mb-1.5 text-xs tracking-[.04em] uppercase text-muted`;
     }
 
-    return `${base} mb-[.4rem] text-[15px] tracking-[.125px] text-foreground/60`;
+    return `${base} mb-[.4rem] text-[15px] tracking-[.125px] text-muted`;
   });
 }
 
@@ -56,7 +56,7 @@ export class FormControlLabelDirective {
   selector: '[appFormHint]',
   host: {
     class:
-      'block mx-[.2rem] my-[.4rem] w-[inherit] max-w-[inherit] text-xs font-medium tracking-[.125px] text-foreground/60',
+      'block mx-[.2rem] my-[.4rem] w-[inherit] max-w-[inherit] text-xs font-medium tracking-[.125px] text-muted',
   },
 })
 export class FormControlHintDirective {}

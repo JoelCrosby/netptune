@@ -30,7 +30,9 @@ export interface AddFieldMenuOption<TKey extends string> {
     <button
       #trigger
       type="button"
-      class="border-foreground/24 text-primary hover:border-primary/50 hover:bg-primary/8 inline-flex h-10 cursor-pointer items-center gap-2 rounded-sm border border-dashed px-3.5 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-40"
+      class="border-foreground/24 text-primary hover:border-primary/50 hover:bg-primary/8 focus-visible:ring-primary inline-flex h-10 cursor-pointer items-center gap-2 rounded-sm border border-dashed px-3.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+      aria-haspopup="menu"
+      [attr.aria-expanded]="menu.showing()"
       [disabled]="!options().length"
       (click)="menu.toggle(trigger)">
       <svg lucidePlus class="h-4 w-4" aria-hidden="true"></svg>
@@ -46,7 +48,7 @@ export interface AddFieldMenuOption<TKey extends string> {
           type="button"
           (click)="added.emit(option.key); menu.close()">
           <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
-          <span class="text-foreground/40 font-mono text-[11px]">
+          <span class="text-muted font-mono text-[11px]">
             {{ kindLabels[option.kind] }}
           </span>
         </button>

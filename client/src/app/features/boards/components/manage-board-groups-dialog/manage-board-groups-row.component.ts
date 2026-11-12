@@ -42,6 +42,10 @@ export interface ManageBoardGroupRow {
         <app-inline-edit-input
           class="min-w-0 text-sm font-medium"
           activeBorder="true"
+          i18n-ariaLabel="
+            Accessible name of the inline field that renames a board group
+          "
+          ariaLabel="Group name"
           [value]="row().name"
           [size]="row().name.length"
           [disabled]="!canEdit()"

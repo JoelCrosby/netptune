@@ -29,7 +29,13 @@ import {
   FormControlPrefixDirective,
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
-import { describedByIds, errorIdFor, hintIdFor } from '../form-control-a11y';
+import {
+  controlIdFor,
+  describedByIds,
+  errorIdFor,
+  hintIdFor,
+  nextControlInstanceId,
+} from '../form-control-a11y';
 import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectDropdownStyleDirective } from './form-select.directives';
 import { FormSelectService } from './form-select.service';
@@ -56,7 +62,7 @@ import { ListboxKeyboard } from '../listbox-keyboard';
       class="nept-form-control mb-[1.4rem] w-[inherit]"
       [class.mb-0!]="noMargin()">
       @if (label()) {
-        <label [for]="name()" appFormLabel>
+        <label [for]="controlId()" appFormLabel>
           {{ label() }}
         </label>
       }
@@ -76,11 +82,16 @@ import { ListboxKeyboard } from '../listbox-keyboard';
           #input
           appFormInput
           [placeholder]="placeholder()"
-          [id]="name()"
+          [id]="controlId()"
           [value]="displayValue()"
           [disabled]="disabled()"
           class="grow cursor-pointer selection:bg-transparent"
           [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+          role="combobox"
+          aria-haspopup="listbox"
+          [attr.aria-expanded]="isOpen()"
+          [attr.aria-controls]="listboxId"
+          [attr.aria-activedescendant]="activeOptionId()"
           [attr.aria-invalid]="ariaInvalid()"
           [attr.aria-describedby]="describedBy()"
           readonly
@@ -110,7 +121,12 @@ import { ListboxKeyboard } from '../listbox-keyboard';
           [class]="chevronClass()"></svg>
 
         <app-form-select-dropdown [reference]="dropreference.el">
-          <div appFormSelectDropdown class="menu-scale-in">
+          <div
+            appFormSelectDropdown
+            class="menu-scale-in"
+            role="listbox"
+            [id]="listboxId"
+            [attr.aria-label]="label()">
             <ng-content
               select="app-form-select-option, app-form-select-group" />
           </div>
@@ -122,7 +138,7 @@ import { ListboxKeyboard } from '../listbox-keyboard';
       }
 
       @if (showErrors()) {
-        <div [id]="errorId()">
+        <div [id]="errorId()" role="alert">
           @for (error of errors(); track error.kind) {
             <app-form-error>
               {{ error.message }}
@@ -169,12 +185,16 @@ export class FormSelectComponent<
   readonly showErrors = computed(
     () => this.touched() && this.errors().length > 0
   );
-  readonly hintId = computed(() => hintIdFor(this.name()));
-  readonly errorId = computed(() => errorIdFor(this.name()));
+  private readonly instanceId = nextControlInstanceId();
+  readonly controlId = computed(() =>
+    controlIdFor(this.name(), this.instanceId)
+  );
+  readonly hintId = computed(() => hintIdFor(this.controlId()));
+  readonly errorId = computed(() => errorIdFor(this.controlId()));
   readonly ariaInvalid = computed(() => (this.showErrors() ? 'true' : null));
 
   describedBy(): string | null {
-    return describedByIds(this.name(), !!this.hint(), this.showErrors());
+    return describedByIds(this.controlId(), !!this.hint(), this.showErrors());
   }
   readonly pending = input<boolean>(false);
   readonly noMargin = input(false);
@@ -197,6 +217,8 @@ export class FormSelectComponent<
 
   isOpen = computed(() => this.dropdown().showing());
 
+  readonly listboxId = `form-select-${crypto.randomUUID()}`;
+
   readonly selectedOption = computed(() => {
     const value = this.value();
 
@@ -215,9 +237,16 @@ export class FormSelectComponent<
     select: (option) => this.selectOption(option),
     openKeys: ['Enter', ' ', 'ArrowDown', 'ArrowUp'],
     selectKeys: ['Enter', ' '],
-    trapKeys: ['PageUp', 'PageDown', 'Tab'],
+    trapKeys: ['PageUp', 'PageDown'],
+    closeOnTab: true,
     horizontal: true,
     wrap: true,
+  });
+
+  readonly activeOptionId = computed(() => {
+    if (!this.isOpen()) return null;
+
+    return this.keyboard.activeItem?.id ?? null;
   });
 
   constructor() {

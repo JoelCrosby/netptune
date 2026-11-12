@@ -1,9 +1,10 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, ElementRef, inject, input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-step',
   host: {
-    class: 'col-start-1 row-start-1 w-full min-w-0',
+    class: 'col-start-1 row-start-1 w-full min-w-0 outline-none',
+    '[attr.tabindex]': 'wizard() ? -1 : null',
     '[class.block]': '!wizard() || active()',
     '[class.hidden]': 'wizard() && !active()',
     '[attr.aria-hidden]': "wizard() && !active() ? 'true' : null",
@@ -48,6 +49,12 @@ export class StepComponent {
   readonly last = signal(false);
   readonly wizard = signal(false);
   readonly active = signal(true);
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  focus() {
+    this.host.nativeElement.focus();
+  }
 
   setState(state: StepState) {
     this.index.set(state.index);

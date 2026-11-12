@@ -37,6 +37,7 @@ import {
       [icon]="lucideArrowUpDown"
       [color]="isDefault() ? undefined : 'primary'"
       [dot]="!isDefault()"
+      [expanded]="menu.showing()"
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu>

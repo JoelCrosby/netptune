@@ -30,7 +30,7 @@ import { EntityListItem } from './entity-list.types';
       @if (actionLabel(); as label) {
         <button
           type="button"
-          class="bg-card hover:bg-card-hover border-border text-muted hover:text-primary focus-visible:text-primary flex h-11 w-full cursor-pointer items-center gap-2.5 border-t px-4 text-sm font-medium transition-colors outline-none"
+          class="bg-card hover:bg-card-hover border-border text-muted hover:text-primary focus-visible:text-primary focus-visible:ring-primary flex h-11 w-full cursor-pointer items-center gap-2.5 border-t px-4 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-inset"
           (click)="actionClick.emit()">
           <svg lucidePlus class="h-3.75 w-3.75" aria-hidden="true"></svg>
           <span>{{ label }}</span>

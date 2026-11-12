@@ -1,6 +1,8 @@
 import { Component, input, model } from '@angular/core';
 import { SwitchComponent } from './switch.component';
 
+let nextHintId = 0;
+
 @Component({
   selector: 'app-switch-field',
   imports: [SwitchComponent],
@@ -9,12 +11,13 @@ import { SwitchComponent } from './switch.component';
     <div class="min-w-0">
       <p class="text-sm font-medium">{{ label() }}</p>
       @if (hint()) {
-        <p class="text-muted text-xs">{{ hint() }}</p>
+        <p class="text-muted text-xs" [id]="hintId">{{ hint() }}</p>
       }
     </div>
 
     <app-switch
       [ariaLabel]="label()"
+      [ariaDescribedBy]="hint() ? hintId : null"
       [disabled]="disabled()"
       [(checked)]="checked" />
   `,
@@ -24,4 +27,6 @@ export class SwitchFieldComponent {
   readonly hint = input('');
   readonly disabled = input(false);
   readonly checked = model(false);
+
+  protected readonly hintId = `app-switch-field-hint-${nextHintId++}`;
 }

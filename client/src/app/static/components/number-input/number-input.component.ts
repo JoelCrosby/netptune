@@ -44,6 +44,7 @@ import {
         [attr.step]="step()"
         [attr.placeholder]="placeholder()"
         [attr.aria-label]="ariaLabel()"
+        [attr.aria-invalid]="invalid() || null"
         (input)="onInput($event)"
         (blur)="onBlur($event)" />
 

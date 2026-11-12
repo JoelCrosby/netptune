@@ -13,7 +13,7 @@ const ARROW_CLASSES: Record<TooltipPosition, string> = {
 @Component({
   selector: 'app-tooltip',
   template: `
-    <div class="pointer-events-none" role="tooltip">
+    <div role="tooltip">
       <div
         class="relative rounded-sm bg-(--tooltip-bg) px-2 py-1 text-sm font-medium whitespace-nowrap text-white/90 shadow-md dark:text-black/70">
         {{ text() }}

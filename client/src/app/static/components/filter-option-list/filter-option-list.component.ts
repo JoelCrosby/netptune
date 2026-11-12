@@ -108,7 +108,8 @@ export interface FilterOption<T> {
 
         @if (stickyOptions().length && renderedOptions().length) {
           <div
-            class="my-1 border-t border-neutral-200 dark:border-neutral-700"></div>
+            class="my-1 border-t border-neutral-200 dark:border-neutral-700"
+            role="presentation"></div>
         }
 
         @for (
@@ -146,7 +147,7 @@ export interface FilterOption<T> {
         @if (hiddenCount(); as hidden) {
           <button
             type="button"
-            class="text-muted hover:text-foreground w-full cursor-pointer px-3 py-2 text-center text-xs transition-colors"
+            class="text-muted hover:text-foreground focus-visible:ring-primary w-full cursor-pointer rounded-sm px-3 py-2 text-center text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
             (click)="loadMore()">
             {{ moreLabel(hidden) }}
           </button>
@@ -158,13 +159,19 @@ export interface FilterOption<T> {
               {{ emptyMessage() }}
             </p>
           </ng-content>
-        } @else if (!renderedOptions().length) {
+        } @else if (showNoResults()) {
           <p class="text-muted px-4 py-6 text-center text-sm">
             {{ noResultsMessage() }}
           </p>
         }
       </div>
     }
+
+    <span class="sr-only" role="status">
+      @if (showNoResults()) {
+        {{ noResultsMessage() }}
+      }
+    </span>
 
     <ng-template #marker let-selected>
       @if (multiple()) {
@@ -283,6 +290,14 @@ export class FilterOptionListComponent<T> {
 
   protected readonly hiddenCount = computed(() => {
     return this.filteredOptions().length - this.renderedOptions().length;
+  });
+
+  protected readonly showNoResults = computed(() => {
+    return (
+      !this.loading() &&
+      this.searchableOptions().length > 0 &&
+      this.renderedOptions().length === 0
+    );
   });
 
   private readonly navigableCount = computed(() => {

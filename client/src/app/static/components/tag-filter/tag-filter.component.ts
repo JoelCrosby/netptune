@@ -38,6 +38,7 @@ function tagValue(name: string): string {
       [icon]="lucideTag"
       [color]="activeCount() ? 'primary' : undefined"
       [count]="activeCount()"
+      [expanded]="menu.showing()"
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu panelRole="none" [panelClass]="'p-0'">

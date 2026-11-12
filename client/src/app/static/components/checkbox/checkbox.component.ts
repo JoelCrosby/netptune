@@ -19,11 +19,20 @@ const boxClasses: Record<CheckboxDensity, string> = {
   imports: [LucideCheck],
   template: `
     <label
-      class="flex cursor-pointer items-center"
+      class="relative flex cursor-pointer items-center before:absolute before:-inset-1"
       [class]="labelClass()"
       [class.cursor-not-allowed]="disabled()">
+      <input
+        type="checkbox"
+        class="peer sr-only"
+        [checked]="checked()"
+        [disabled]="disabled()"
+        [attr.aria-label]="ariaLabel()"
+        [attr.aria-describedby]="ariaDescribedBy()"
+        (change)="onChanged($event)" />
+
       <div
-        class="flex items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
+        class="peer-focus-visible:ring-primary flex items-center justify-center rounded-[3px] border-2 transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
         [class]="boxClass()"
         [class.border-primary]="checked()"
         [class.bg-primary]="checked()"
@@ -41,18 +50,12 @@ const boxClasses: Record<CheckboxDensity, string> = {
       <span class="select-none empty:hidden" [class.opacity-50]="disabled()">
         <ng-content />
       </span>
-
-      <input
-        type="checkbox"
-        class="sr-only"
-        [checked]="checked()"
-        [disabled]="disabled()"
-        (change)="onChanged($event)" />
     </label>
   `,
 })
 export class CheckboxComponent extends AbstractCheckableControl {
   readonly density = input<CheckboxDensity>('default');
+  readonly ariaLabel = input<string | null>(null);
 
   protected readonly labelClass = computed(() => labelClasses[this.density()]);
   protected readonly boxClass = computed(() => boxClasses[this.density()]);

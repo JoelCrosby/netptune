@@ -295,7 +295,7 @@ export const iconButtonVariants = cva(
 export type InlineButtonAppearance = 'plain' | 'lift' | 'underline' | 'soft';
 
 export const inlineButtonVariants = cva(
-  'inline-flex cursor-pointer select-none items-center gap-1.5 bg-transparent text-xs transition-colors focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  'relative inline-flex cursor-pointer select-none items-center gap-1.5 bg-transparent text-xs transition-colors after:absolute after:top-1/2 after:left-1/2 after:h-full after:min-h-6 after:w-full after:min-w-6 after:-translate-x-1/2 after:-translate-y-1/2 focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       color: {

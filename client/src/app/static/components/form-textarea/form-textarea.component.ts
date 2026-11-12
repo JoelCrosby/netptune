@@ -26,7 +26,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
       class="nept-form-control mb-[1.4rem] w-[inherit]"
       [class.mb-0!]="noMargin()">
       @if (label()) {
-        <label [for]="name()" appFormLabel>
+        <label [for]="controlId()" appFormLabel>
           {{ label() }}
         </label>
       }
@@ -43,7 +43,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
           #input
           appFormInput
           class="leading-[1.6rem]!"
-          [id]="name()"
+          [id]="controlId()"
           [value]="value()"
           [disabled]="disabled()"
           [required]="required()"
@@ -67,7 +67,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
       }
 
       @if (showErrors()) {
-        <div [id]="errorId()">
+        <div role="alert" [id]="errorId()">
           @for (error of errors(); track error.kind) {
             <app-form-error>
               {{ error.message }}

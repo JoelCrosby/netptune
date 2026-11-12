@@ -73,7 +73,7 @@ const MAX_VISIBLE_PEOPLE = 4;
 export class EntityListRowComponent {
   readonly item = input.required<EntityListItem>();
 
-  protected readonly linkClass = `${entityListColumnsClass} bg-card hover:bg-card-hover focus-visible:bg-card-hover min-h-15 py-2.5 transition-colors outline-none`;
+  protected readonly linkClass = `${entityListColumnsClass} bg-card hover:bg-card-hover focus-visible:bg-card-hover focus-visible:ring-primary min-h-15 py-2.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-inset`;
 
   protected readonly tileClass = computed(() => {
     return `${colorBackgroundClass(this.item().color)} h-8 w-8 text-white`;

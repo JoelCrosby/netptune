@@ -24,7 +24,7 @@ export type SelectableCardVariant = 'default' | 'feature';
 
       @if (variant() === 'feature') {
         <div
-          class="border-border from-primary/5 to-card peer-focus-visible:ring-primary/50 group hover:border-primary/50 relative h-full w-full overflow-hidden rounded-xl border bg-linear-to-b p-4 text-left transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-60"
+          class="border-border from-primary/5 to-card peer-focus-visible:ring-primary group hover:border-primary/50 relative h-full w-full overflow-hidden rounded-xl border bg-linear-to-b p-4 text-left transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-60"
           [class]="
             selected() ? 'border-primary ring-primary/20 shadow-xl ring-1' : ''
           ">
@@ -71,7 +71,7 @@ export type SelectableCardVariant = 'default' | 'feature';
         </div>
       } @else {
         <div
-          class="peer-focus-visible:ring-primary/50 flex w-full items-center gap-3 rounded-md border px-3 py-2.5 text-left transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-60"
+          class="peer-focus-visible:ring-primary flex w-full items-center gap-3 rounded-md border px-3 py-2.5 text-left transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-60"
           [class]="
             selected()
               ? 'border-primary bg-primary/5 text-foreground'

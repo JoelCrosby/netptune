@@ -2,8 +2,10 @@ import {
   booleanAttribute,
   Component,
   computed,
+  ElementRef,
   input,
   model,
+  viewChildren,
 } from '@angular/core';
 import { cn } from '../button/button.variants';
 
@@ -31,13 +33,16 @@ const groupClasses: Record<TabGroupVariant, string> = {
     '[class]': 'hostClass()',
   },
   template: `
-    @for (tab of tabs(); track tab.value) {
+    @for (tab of tabs(); track tab.value; let index = $index) {
       <button
+        #tabButton
         role="tab"
         type="button"
         [attr.aria-selected]="value() === tab.value"
+        [attr.tabindex]="tab.value === focusableValue() ? 0 : -1"
         [class]="tabClass(tab.value)"
-        (click)="value.set(tab.value)">
+        (click)="value.set(tab.value)"
+        (keydown)="onKeydown($event, index)">
         {{ tab.label }}
 
         @if (tab.badge !== undefined) {
@@ -60,6 +65,17 @@ export class TabGroupComponent {
   readonly stretch = input(false, { transform: booleanAttribute });
   readonly class = input('');
 
+  private readonly tabButtons =
+    viewChildren<ElementRef<HTMLButtonElement>>('tabButton');
+
+  protected readonly focusableValue = computed(() => {
+    const tabs = this.tabs();
+    const value = this.value();
+    const hasSelectedTab = tabs.some((tab) => tab.value === value);
+
+    return hasSelectedTab ? value : tabs[0]?.value;
+  });
+
   protected readonly hostClass = computed(() => {
     return cn(
       'flex items-center overflow-x-auto',
@@ -74,7 +90,7 @@ export class TabGroupComponent {
 
     if (this.variant() === 'default') {
       return cn(
-        'inline-flex shrink-0 cursor-pointer items-center gap-2 border-b-2 px-3 pt-1 pb-2.5 text-sm font-medium transition-colors focus-visible:outline-none',
+        'focus-visible:ring-primary inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-t-md border-b-2 px-3 pt-1 pb-2.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
         isActive
           ? 'border-primary text-foreground'
           : 'border-transparent text-muted hover:text-foreground hover:border-border'
@@ -87,7 +103,7 @@ export class TabGroupComponent {
         this.stretch() && 'flex-1 justify-center',
         isActive
           ? 'bg-foreground/8 text-foreground'
-          : 'text-foreground/60 hover:text-foreground'
+          : 'text-muted hover:text-foreground'
       );
     }
 
@@ -100,12 +116,44 @@ export class TabGroupComponent {
     );
   }
 
+  protected onKeydown(event: KeyboardEvent, index: number) {
+    const target = targetTabIndex(event.key, index, this.tabs().length);
+
+    if (target === null) return;
+
+    event.preventDefault();
+
+    const tab = this.tabs()[target];
+
+    this.value.set(tab.value);
+    this.tabButtons()[target]?.nativeElement.focus();
+  }
+
   protected badgeClass(tabValue: string | number | null): string {
     return cn(
       'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-medium',
       this.value() === tabValue
-        ? 'bg-primary text-white'
+        ? 'bg-primary text-primary-foreground'
         : 'bg-foreground/10 text-foreground'
     );
+  }
+}
+
+function targetTabIndex(
+  key: string,
+  index: number,
+  count: number
+): number | null {
+  switch (key) {
+    case 'ArrowRight':
+      return (index + 1) % count;
+    case 'ArrowLeft':
+      return (index - 1 + count) % count;
+    case 'Home':
+      return 0;
+    case 'End':
+      return count - 1;
+    default:
+      return null;
   }
 }

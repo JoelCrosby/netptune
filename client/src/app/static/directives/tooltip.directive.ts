@@ -1,10 +1,21 @@
+import { AriaDescriber } from '@angular/cdk/a11y';
+import { DOCUMENT } from '@angular/common';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { Directive, ElementRef, inject, input, OnDestroy } from '@angular/core';
+import {
+  afterRenderEffect,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+} from '@angular/core';
 import { TooltipComponent } from '../components/tooltip/tooltip.component';
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+
+const HOVER_HIDE_DELAY_MS = 100;
 
 const POSITIONS: Record<TooltipPosition, ConnectedPosition> = {
   top: {
@@ -41,7 +52,7 @@ const POSITIONS: Record<TooltipPosition, ConnectedPosition> = {
   selector: '[appTooltip]',
   host: {
     '(mouseenter)': 'show()',
-    '(mouseleave)': 'hide()',
+    '(mouseleave)': 'scheduleHide()',
     '(focusin)': 'show()',
     '(focusout)': 'hide()',
   },
@@ -51,12 +62,32 @@ export class TooltipDirective implements OnDestroy {
   appTooltipPosition = input<TooltipPosition>('top');
   appTooltipDisabled = input<boolean>(false);
 
-  private el = inject(ElementRef);
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
   private overlay = inject(Overlay);
+  private ariaDescriber = inject(AriaDescriber);
+  private document = inject(DOCUMENT);
 
   private overlayRef: OverlayRef | null = null;
+  private hideTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor() {
+    afterRenderEffect((onCleanup) => {
+      const text = this.appTooltip();
+
+      if (!text || this.appTooltipDisabled()) return;
+
+      const element = this.el.nativeElement;
+
+      this.ariaDescriber.describe(element, text, 'tooltip');
+      onCleanup(() => {
+        this.ariaDescriber.removeDescription(element, text, 'tooltip');
+      });
+    });
+  }
 
   show() {
+    this.clearHideTimer();
+
     const text = this.appTooltip();
     if (!text || this.appTooltipDisabled() || this.overlayRef) return;
 
@@ -75,12 +106,38 @@ export class TooltipDirective implements OnDestroy {
     const ref = this.overlayRef.attach(new ComponentPortal(TooltipComponent));
     ref.setInput('text', text);
     ref.setInput('position', position);
+
+    const pane = this.overlayRef.overlayElement;
+    pane.addEventListener('mouseenter', () => this.clearHideTimer());
+    pane.addEventListener('mouseleave', () => this.scheduleHide());
+
+    this.document.addEventListener('keydown', this.onDocumentKeydown);
   }
 
   hide() {
+    this.clearHideTimer();
+
     if (!this.overlayRef) return;
+
+    this.document.removeEventListener('keydown', this.onDocumentKeydown);
     this.overlayRef.dispose();
     this.overlayRef = null;
+  }
+
+  scheduleHide() {
+    this.clearHideTimer();
+    this.hideTimer = setTimeout(() => this.hide(), HOVER_HIDE_DELAY_MS);
+  }
+
+  private readonly onDocumentKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') this.hide();
+  };
+
+  private clearHideTimer() {
+    if (this.hideTimer === null) return;
+
+    clearTimeout(this.hideTimer);
+    this.hideTimer = null;
   }
 
   ngOnDestroy() {

@@ -24,6 +24,8 @@ import { SwitchComponent } from '../switch/switch.component';
 import { InlineButtonComponent } from '../button/inline-button.component';
 import { StrokedButtonComponent } from '../button/stroked-button.component';
 
+let nextListId = 0;
+
 export interface ToggleListRow {
   key: string;
   label: string;
@@ -152,6 +154,7 @@ export interface ToggleListChange {
                     @if (row.hint) {
                       <p
                         class="text-xs"
+                        [id]="hintId(group.key, row.key)"
                         [class.text-primary]="row.isHintHighlighted"
                         [class.text-muted]="!row.isHintHighlighted">
                         {{ row.hint }}
@@ -179,6 +182,9 @@ export interface ToggleListChange {
                     [checked]="row.checked"
                     [disabled]="row.isDisabled ?? false"
                     [ariaLabel]="row.ariaLabel"
+                    [ariaDescribedBy]="
+                      row.hint ? hintId(group.key, row.key) : null
+                    "
                     (changed)="
                       rowChanged.emit({ key: row.key, checked: $event })
                     " />
@@ -228,11 +234,19 @@ export class GroupedToggleListComponent<F extends string = string> {
 
   protected readonly expanded = signal<ReadonlySet<string>>(new Set());
 
+  private readonly listId = `app-grouped-toggle-list-${nextListId++}`;
+
   protected readonly isAnyGroupOpen = computed(() => {
     const expanded = this.expanded();
 
     return this.groups().some((group) => expanded.has(group.key));
   });
+
+  protected hintId(groupKey: string, rowKey: string): string {
+    const id = `${this.listId}-${groupKey}-${rowKey}-hint`;
+
+    return id.replace(/\s+/g, '-');
+  }
 
   protected toggleGroup(key: string) {
     toggleInSet(this.expanded, key);

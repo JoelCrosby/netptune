@@ -8,32 +8,34 @@ import { LucideChevronDown } from '@lucide/angular';
   imports: [LucideChevronDown],
   host: { class: 'flex flex-col gap-3' },
   template: `
-    <button
-      type="button"
-      class="focus-visible:ring-primary flex cursor-pointer items-center gap-2.5 rounded py-1 text-left focus-visible:ring-2 focus-visible:outline-none"
-      [attr.aria-expanded]="expanded()"
-      (click)="expanded.set(!expanded())">
-      <svg
-        lucideChevronDown
-        class="text-muted h-3.75 w-3.75 shrink-0 transition-transform duration-150"
-        [class.-rotate-90]="!expanded()"
-        aria-hidden="true"></svg>
+    <h2 class="flex">
+      <button
+        type="button"
+        class="focus-visible:ring-primary flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded py-1 text-left focus-visible:ring-2 focus-visible:outline-none"
+        [attr.aria-expanded]="expanded()"
+        (click)="expanded.set(!expanded())">
+        <svg
+          lucideChevronDown
+          class="text-muted h-3.75 w-3.75 shrink-0 transition-transform duration-150"
+          [class.-rotate-90]="!expanded()"
+          aria-hidden="true"></svg>
 
-      <h2 class="truncate text-[15px] font-semibold">{{ label() }}</h2>
+        <span class="truncate text-[15px] font-semibold">{{ label() }}</span>
 
-      @if (count() !== null) {
-        <span
-          class="bg-foreground/10 text-muted inline-flex h-5 shrink-0 items-center rounded-full px-1.75 text-[11.5px] font-semibold">
-          {{ count() }}
-        </span>
-      }
+        @if (count() !== null) {
+          <span
+            class="bg-foreground/10 text-muted inline-flex h-5 shrink-0 items-center rounded-full px-1.75 text-[11.5px] font-semibold">
+            {{ count() }}
+          </span>
+        }
 
-      <span class="bg-border h-px min-w-4 flex-1"></span>
+        <span class="bg-border h-px min-w-4 flex-1"></span>
 
-      @if (meta()) {
-        <span class="text-muted shrink-0 text-xs">{{ meta() }}</span>
-      }
-    </button>
+        @if (meta()) {
+          <span class="text-muted shrink-0 text-xs">{{ meta() }}</span>
+        }
+      </button>
+    </h2>
 
     @if (expanded()) {
       <ng-content />

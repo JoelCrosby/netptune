@@ -20,6 +20,8 @@ export interface TreeMove {
 export interface TreeRow {
   node: TreeNode;
   depth: number;
+  position: number;
+  siblingCount: number;
   childCount: number;
   expanded: boolean;
 }

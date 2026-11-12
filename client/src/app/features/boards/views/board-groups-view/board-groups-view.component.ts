@@ -219,6 +219,11 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
                       <app-inline-edit-heading
                         class="ml-2 block w-full min-w-0"
                         textClass="px-1.5 py-1 font-sans text-sm font-medium tracking-[.1px] break-words"
+                        i18n-ariaLabel="
+                          Accessible name of the inline field that renames a
+                          board group
+                        "
+                        ariaLabel="Group name"
                         [value]="group.name"
                         [isReadonly]="!isAuthenticated()"
                         (submitted)="onGroupNameSubmitted($event, group)" />

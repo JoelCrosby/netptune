@@ -1152,7 +1152,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:233</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:391</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:393</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1447,7 +1447,7 @@
     </unit>
     <unit id="3392062750241531265">
       <notes>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:93,96</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:95,98</note>
         <note category="description">Button that collapses every group in a toggle list</note>
       </notes>
       <segment state="translated">
@@ -1760,7 +1760,7 @@
     </unit>
     <unit id="6120896617621566677">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:167</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:169</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:353</note>
         <note category="description">How many tasks a board group holds. COUNT is the number of tasks</note>
       </notes>
@@ -2850,6 +2850,16 @@
         <target>Projekte geändert</target>
       </segment>
     </unit>
+    <unit id="3797319188161463762">
+      <notes>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:98</note>
+        <note category="description">Error under a file picker. COUNT is how many files were rejected, SIZE a formatted byte limit such as 50 MB</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="rejected"/> file(s) were empty or exceeded <ph id="1" equiv="SIZE" disp="formatBytes(limit)"/>.</source>
+        <target><ph id="0" equiv="COUNT" disp="rejected"/> Datei(en) waren leer oder größer als <ph id="1" equiv="SIZE" disp="formatBytes(limit)"/>.</target>
+      </segment>
+    </unit>
     <unit id="3797778920049399855">
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:213</note>
@@ -3022,7 +3032,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:406</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:408</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3093,7 +3103,7 @@
     </unit>
     <unit id="996392855508119363">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:152</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:154</note>
         <note category="description">Marks a board group hidden from the current user&apos;s board</note>
       </notes>
       <segment state="translated">
@@ -5410,6 +5420,16 @@
         <target>Logos und Hintergründe</target>
       </segment>
     </unit>
+    <unit id="4069090074861287198">
+      <notes>
+        <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:202</note>
+        <note category="description">Accessible label for the button that removes a selected tag. TAG is the tag&apos;s name</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove <ph id="0" equiv="TAG" disp="tag"/></source>
+        <target><ph id="0" equiv="TAG" disp="tag"/> entfernen</target>
+      </segment>
+    </unit>
     <unit id="4040806670191010035">
       <notes>
         <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:34,37</note>
@@ -5943,7 +5963,7 @@
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:74,75</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:440,443</note>
-        <note category="location">src/app/static/components/dialog/dialog-header.component.ts:43</note>
+        <note category="location">src/app/static/components/dialog/dialog-header.component.ts:48</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
       <segment state="translated">
@@ -6020,6 +6040,8 @@
     <unit id="2041629809382689328">
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:103</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:46,49</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:223,225</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -6166,6 +6188,16 @@
       <segment state="translated">
         <source>Separate branches with commas. End one with * to match every branch that starts with it. Leave empty for any branch.</source>
         <target>Trennen Sie Branches mit Kommas. Beenden Sie einen mit *, um alle Branches zu erfassen, die so beginnen. Leer lassen für jeden Branch.</target>
+      </segment>
+    </unit>
+    <unit id="2734706765457025315">
+      <notes>
+        <note category="location">src/app/static/components/inline-edit-input/inline-edit-input.component.ts:51</note>
+        <note category="description">Default accessible name of a text that can be edited in place</note>
+      </notes>
+      <segment state="translated">
+        <source>Edit text</source>
+        <target>Text bearbeiten</target>
       </segment>
     </unit>
     <unit id="2734780694152757859">
@@ -6718,6 +6750,16 @@
         <target>Wird blockiert von</target>
       </segment>
     </unit>
+    <unit id="1381000911274756701">
+      <notes>
+        <note category="location">src/app/static/components/stepper/stepper.component.ts:38,40</note>
+        <note category="description">Screen reader text marking a finished wizard step</note>
+      </notes>
+      <segment state="translated">
+        <source> Completed </source>
+        <target> Abgeschlossen </target>
+      </segment>
+    </unit>
     <unit id="1381483460665750099">
       <notes>
         <note category="location">src/app/entry/dialogs/status-dialog/status-dialog.component.ts:56,60</note>
@@ -6740,7 +6782,7 @@
     </unit>
     <unit id="1384666843214095488">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:163</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:164</note>
         <note category="description">Tooltip on the notify control when already subscribed. NAME is the board, sprint or project name</note>
       </notes>
       <segment state="initial">
@@ -8629,6 +8671,16 @@
         <target>Die Markierung konnte nicht aktualisiert werden</target>
       </segment>
     </unit>
+    <unit id="814915282152803393">
+      <notes>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:218</note>
+        <note category="description">Accessible label for the control that opens the month picker. MONTH is the month shown</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="MONTH" disp="this.currentMonthName()"/>, choose month</source>
+        <target><ph id="0" equiv="MONTH" disp="this.currentMonthName()"/>, Monat auswählen</target>
+      </segment>
+    </unit>
     <unit id="3904814018597094143">
       <notes>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:7,8</note>
@@ -8779,7 +8831,7 @@
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:48</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:92</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:357</note>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:53,54</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:54,55</note>
         <note category="description">Name of the tags permission group</note>
       </notes>
       <segment state="translated">
@@ -9925,7 +9977,7 @@
     </unit>
     <unit id="9028314484187319935">
       <notes>
-        <note category="location">src/app/static/components/reaction-picker/reaction-picker.component.ts:29,31</note>
+        <note category="location">src/app/static/components/reaction-picker/reaction-picker.component.ts:40,43</note>
         <note category="description">Accessible label for the button that opens the emoji picker for reacting to a comment</note>
       </notes>
       <segment state="translated">
@@ -11400,7 +11452,7 @@
     </unit>
     <unit id="8614260097416227361">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:156</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:158</note>
         <note category="description">Marks a board group that contains no tasks</note>
       </notes>
       <segment state="translated">
@@ -12036,7 +12088,7 @@
     </unit>
     <unit id="7943500979556068029">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:181</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:183</note>
         <note category="description">Accessible label for a board group&apos;s overflow menu. NAME is the group name</note>
       </notes>
       <segment state="translated">
@@ -12089,7 +12141,7 @@
     </unit>
     <unit id="6956620730780387566">
       <notes>
-        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:38,42</note>
+        <note category="location">src/app/static/components/add-field-menu/add-field-menu.component.ts:40,44</note>
         <note category="description">Button that adds another field to an edit</note>
       </notes>
       <segment state="initial">
@@ -12954,6 +13006,16 @@
         <target>Aktiviert</target>
       </segment>
     </unit>
+    <unit id="4817291221627019868">
+      <notes>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:141</note>
+        <note category="description">Default prompt on the control that picks workspace members</note>
+      </notes>
+      <segment state="translated">
+        <source>Select Users</source>
+        <target>Benutzer auswählen</target>
+      </segment>
+    </unit>
     <unit id="4817914611213853415">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:421</note>
@@ -13139,7 +13201,7 @@
     </unit>
     <unit id="2318416617601405241">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:104,106</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:109,111</note>
         <note category="description">Hint under an image picker. SIZE is a formatted byte limit such as 10 MiB</note>
       </notes>
       <segment state="translated">
@@ -14806,6 +14868,16 @@
         <target> Überarbeitung anfragen </target>
       </segment>
     </unit>
+    <unit id="2788952240401286243">
+      <notes>
+        <note category="location">src/app/static/components/form-select-search/form-select-search.component.ts:87</note>
+        <note category="description">Shown in a searchable select when no option matches the search</note>
+      </notes>
+      <segment state="translated">
+        <source>No options found</source>
+        <target>Keine Optionen gefunden</target>
+      </segment>
+    </unit>
     <unit id="2789470198117284549">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:28,30</note>
@@ -14984,7 +15056,7 @@
     </unit>
     <unit id="8949873009695123445">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:164</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:165</note>
         <note category="description">Tooltip on the notify control when already subscribed</note>
       </notes>
       <segment state="initial">
@@ -15005,6 +15077,7 @@
     <unit id="8044124817059226642">
       <notes>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:145</note>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:102,104</note>
         <note category="description">Placeholder in the box that searches workspace members</note>
       </notes>
       <segment state="initial">
@@ -15232,7 +15305,7 @@
     <unit id="7128285372981708185">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:57,60</note>
-        <note category="location">src/app/static/components/selection-actions/selection-actions.component.ts:10,14</note>
+        <note category="location">src/app/static/components/selection-actions/selection-actions.component.ts:11,15</note>
         <note category="description">How many watched fields are selected. COUNT is that number</note>
       </notes>
       <segment state="translated">
@@ -15252,8 +15325,8 @@
     </unit>
     <unit id="9213528202493805147">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:168</note>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:173</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:169</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:174</note>
         <note category="description">Label of the wait period before a rule runs</note>
       </notes>
       <segment state="translated">
@@ -15303,8 +15376,8 @@
     </unit>
     <unit id="4416908900883228528">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:178</note>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:183</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:179</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:184</note>
         <note category="description">Label of the notice given before a date</note>
       </notes>
       <segment state="translated">
@@ -15324,7 +15397,7 @@
     </unit>
     <unit id="4419785925408189157">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:76,78</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:81,83</note>
         <note category="description">Button that replaces an already uploaded image</note>
       </notes>
       <segment state="translated">
@@ -15334,7 +15407,7 @@
     </unit>
     <unit id="6045835040885627912">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:184</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:185</note>
         <note category="description">Suffix after a number of days, relative to sprint end</note>
       </notes>
       <segment state="translated">
@@ -15374,7 +15447,7 @@
     </unit>
     <unit id="4705684969760487201">
       <notes>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:214</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:221</note>
         <note category="description">Shown when a filter has no options at all</note>
       </notes>
       <segment state="translated">
@@ -15404,7 +15477,7 @@
     </unit>
     <unit id="8305060666501284978">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:120,123</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:121,124</note>
         <note category="description">Explains sprint-scoped rule behaviour</note>
       </notes>
       <segment state="translated">
@@ -15474,7 +15547,7 @@
     </unit>
     <unit id="7944522526823688756">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:179</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:180</note>
         <note category="description">Suffix after a number of days, relative to the due date</note>
       </notes>
       <segment state="translated">
@@ -16337,7 +16410,7 @@
     </unit>
     <unit id="3702747701797275979">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:573</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:575</note>
         <note category="description">Command palette action that opens the manage-groups dialog for the open board</note>
       </notes>
       <segment state="translated">
@@ -16611,7 +16684,7 @@
     </unit>
     <unit id="2490742431400447774">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:169</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:170</note>
         <note category="description">Tooltip on the control that subscribes to activity</note>
       </notes>
       <segment state="initial">
@@ -17468,7 +17541,7 @@
     </unit>
     <unit id="9162543989422983557">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:567</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:569</note>
         <note category="description">Command palette action that creates a group on the open board</note>
       </notes>
       <segment state="translated">
@@ -19079,7 +19152,7 @@
     </unit>
     <unit id="8079320989122636865">
       <notes>
-        <note category="location">src/app/static/components/character-limit/character-limit.component.ts:22,30</note>
+        <note category="location">src/app/static/components/character-limit/character-limit.component.ts:24,32</note>
         <note category="description">Shown under a text field when the text is longer than allowed</note>
       </notes>
       <segment state="translated">
@@ -19753,7 +19826,7 @@
     </unit>
     <unit id="1411404971171105228">
       <notes>
-        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:44,46</note>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:45,47</note>
         <note category="description">Shown when there are no statuses to filter by</note>
       </notes>
       <segment state="translated">
@@ -19899,7 +19972,7 @@
     </unit>
     <unit id="9004129266153989676">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-sort/board-group-sort.component.ts:62,65</note>
+        <note category="location">src/app/features/boards/components/board-group-sort/board-group-sort.component.ts:63,66</note>
         <note category="description">Sort direction, smallest or earliest first</note>
       </notes>
       <segment state="translated">
@@ -19950,7 +20023,7 @@
     </unit>
     <unit id="812295001573580722">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-sort/board-group-sort.component.ts:73,76</note>
+        <note category="location">src/app/features/boards/components/board-group-sort/board-group-sort.component.ts:74,77</note>
         <note category="description">Sort direction, largest or latest first</note>
       </notes>
       <segment state="translated">
@@ -20328,7 +20401,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:378</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:380</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -20344,6 +20417,16 @@
       <segment state="initial">
         <source>Completing closes <ph id="0" equiv="SPRINT" disp="sprintName"/>. Nothing carries over.</source>
         <target>Beim Abschließen wird <ph id="0" equiv="SPRINT" disp="sprintName"/> geschlossen. Nichts wird übertragen.</target>
+      </segment>
+    </unit>
+    <unit id="5815936665222001383">
+      <notes>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:144</note>
+        <note category="description">Shown when a workspace member search finds nobody</note>
+      </notes>
+      <segment state="translated">
+        <source>No results found...</source>
+        <target>Keine Ergebnisse gefunden…</target>
       </segment>
     </unit>
     <unit id="5817627395439792837">
@@ -20493,7 +20576,7 @@
     <unit id="5478121364779850827">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:128,132</note>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:172,174</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:175,177</note>
         <note category="description">Button that discards unsaved edits to the board</note>
       </notes>
       <segment state="translated">
@@ -20835,7 +20918,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:241,242</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:243,244</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -20876,7 +20959,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:253,254</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:255,256</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -20896,7 +20979,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:383</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:385</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -20906,7 +20989,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:399</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:401</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -21472,7 +21555,7 @@
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:113,114</note>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:115,117</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:53,56</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:55,58</note>
         <note category="description">Accessible label for the button that moves back one month</note>
       </notes>
       <segment state="translated">
@@ -21513,7 +21596,7 @@
     <unit id="6044719097380241880">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:197</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:347</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:362</note>
         <note category="description">Button that renders the next page of a filter&apos;s options. COUNT is how many options remain</note>
       </notes>
       <segment state="translated">
@@ -21526,7 +21609,7 @@
         <note category="location">src/app/core/util/dates.ts:89</note>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:124,127</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:181,184</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:292</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:330</note>
         <note category="description">Heading over the entries from today in a timeline</note>
       </notes>
       <segment state="translated">
@@ -21558,7 +21641,7 @@
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:138,139</note>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:140,142</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:116,119</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:122,125</note>
         <note category="description">Accessible label for the button that moves forward one month</note>
       </notes>
       <segment state="translated">
@@ -21655,6 +21738,17 @@
       <segment state="translated">
         <source>Embedded query</source>
         <target>Eingebettete Abfrage</target>
+      </segment>
+    </unit>
+    <unit id="1028701000606529578">
+      <notes>
+        <note category="location">src/app/static/components/date-picker/date-picker.component.ts:98</note>
+        <note category="location">src/app/static/components/form-input/form-input.component.ts:140</note>
+        <note category="description">Accessible name of a date field that has no visible label</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose date</source>
+        <target>Datum wählen</target>
       </segment>
     </unit>
     <unit id="1029077242272940476">
@@ -21885,7 +21979,7 @@
     </unit>
     <unit id="3755118663455824286">
       <notes>
-        <note category="location">src/app/static/components/logo-picker/logo-picker.component.ts:61</note>
+        <note category="location">src/app/static/components/logo-picker/logo-picker.component.ts:62</note>
         <note category="description">Tooltip and accessible label of a logo picker</note>
       </notes>
       <segment state="translated">
@@ -22142,7 +22236,7 @@
     </unit>
     <unit id="1168206319879732017">
       <notes>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:204,208</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:210,214</note>
         <note category="description">Button that clears the search and state filter of a list</note>
       </notes>
       <segment state="translated">
@@ -22235,7 +22329,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:349</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:415</note>
         <note category="location">src/app/features/pages/components/page-meta-chips.component.ts:73</note>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:50,51</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:51,52</note>
         <note category="description">Placeholder in the box that searches tags</note>
       </notes>
       <segment state="translated">
@@ -22393,7 +22487,7 @@
     </unit>
     <unit id="4954767167107168036">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:174</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:175</note>
         <note category="description">Suffix after a number of days without activity</note>
       </notes>
       <segment state="translated">
@@ -22789,7 +22883,7 @@
     </unit>
     <unit id="1295579971866134458">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:112,118</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:113,119</note>
         <note category="description">Explains that per-scope notifications still obey the personal notification settings</note>
       </notes>
       <segment state="initial">
@@ -23126,7 +23220,7 @@
     </unit>
     <unit id="2501989539336327542">
       <notes>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:80,83</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:85,88</note>
         <note category="description">Button that opens the image picker</note>
       </notes>
       <segment state="translated">
@@ -23686,7 +23780,7 @@
     </unit>
     <unit id="2365007418700389785">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:169</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:170</note>
         <note category="description">Suffix after a number of days without an assignee</note>
       </notes>
       <segment state="translated">
@@ -23849,7 +23943,7 @@
     </unit>
     <unit id="318764327084091382">
       <notes>
-        <note category="location">src/app/static/components/user-select/user-select.component.ts:120,122</note>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:124,126</note>
         <note category="description">Shown while workspace members are being searched</note>
       </notes>
       <segment state="translated">
@@ -24443,6 +24537,16 @@
         <target>hat umbenannt</target>
       </segment>
     </unit>
+    <unit id="1133994986091402323">
+      <notes>
+        <note category="location">src/app/static/components/inline-edit-heading/inline-edit-heading.component.ts:56</note>
+        <note category="description">Default accessible name of a heading that can be edited in place</note>
+      </notes>
+      <segment state="translated">
+        <source>Edit title</source>
+        <target>Titel bearbeiten</target>
+      </segment>
+    </unit>
     <unit id="1134043805497572295">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:258</note>
@@ -24708,7 +24812,7 @@
     </unit>
     <unit id="3932146926843084642">
       <notes>
-        <note category="location">src/app/static/components/number-input/number-input.component.ts:54,56</note>
+        <note category="location">src/app/static/components/number-input/number-input.component.ts:55,57</note>
         <note category="description">Accessible label for the button that raises a number</note>
       </notes>
       <segment state="translated">
@@ -25263,7 +25367,7 @@
     </unit>
     <unit id="2987662557279760947">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:174</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:176</note>
         <note category="description">Accessible label for the button that shows a board group. NAME is the group name</note>
       </notes>
       <segment state="translated">
@@ -25284,7 +25388,7 @@
     <unit id="928009341755063873">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:226</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:233</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:240</note>
         <note category="description">Keyboard key that closes the workspace menu, shown as a hint</note>
       </notes>
       <segment state="translated">
@@ -25651,7 +25755,7 @@
     <unit id="5403684285319082289">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:229</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:88</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:91,92</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -27012,7 +27116,7 @@
     </unit>
     <unit id="1918603297826248431">
       <notes>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:97,101</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:99,103</note>
         <note category="description">Button that expands every group in a toggle list</note>
       </notes>
       <segment state="translated">
@@ -28011,7 +28115,7 @@
     </unit>
     <unit id="2057462794608190902">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:95</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:96</note>
         <note category="description">Filters the list down to tasks that carry no tags</note>
       </notes>
       <segment state="translated">
@@ -28724,7 +28828,7 @@
     </unit>
     <unit id="595057067927295883">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:94,97</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:95,98</note>
         <note category="description">Heading above the per-scope notification event toggles</note>
       </notes>
       <segment state="translated">
@@ -29259,7 +29363,7 @@
     <unit id="2933395362711398504">
       <notes>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:141</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:217</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:224</note>
         <note category="description">Shown when a filter&apos;s search term matches no options</note>
       </notes>
       <segment state="translated">
@@ -30249,7 +30353,7 @@
     </unit>
     <unit id="8966831176355460987">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:42,46</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:47,51</note>
         <note category="description">Hint under the file picker. SIZE is a formatted byte limit such as 50 MB</note>
       </notes>
       <segment state="initial">
@@ -30383,7 +30487,7 @@
     </unit>
     <unit id="5031687880128878913">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:166</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:168</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:352</note>
         <note category="description">How many tasks a board group holds</note>
       </notes>
@@ -30591,6 +30695,17 @@
         <target>Tagesordnung, Notizen, Aufgaben</target>
       </segment>
     </unit>
+    <unit id="2671643902824593326">
+      <notes>
+        <note category="location">src/app/static/components/date-picker/date-picker.component.ts:95</note>
+        <note category="location">src/app/static/components/form-input/form-input.component.ts:139</note>
+        <note category="description">Placeholder of a date field with no date chosen</note>
+      </notes>
+      <segment state="translated">
+        <source>Select date</source>
+        <target>Datum auswählen</target>
+      </segment>
+    </unit>
     <unit id="1938867512450582406">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:33,36</note>
@@ -30603,7 +30718,7 @@
     </unit>
     <unit id="8182205560072943152">
       <notes>
-        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:40,41</note>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:41,42</note>
         <note category="description">Placeholder in the box that searches statuses</note>
       </notes>
       <segment state="translated">
@@ -30815,7 +30930,7 @@
     </unit>
     <unit id="1310920597312036563">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:175</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:177</note>
         <note category="description">Accessible label for the button that hides a board group. NAME is the group name</note>
       </notes>
       <segment state="translated">
@@ -31116,6 +31231,16 @@
       <segment state="translated">
         <source>cannot be applied</source>
         <target>kann nicht angewendet werden</target>
+      </segment>
+    </unit>
+    <unit id="2021494686787850394">
+      <notes>
+        <note category="location">src/app/static/components/mention-input/mention-input.component.ts:161</note>
+        <note category="description">Default placeholder of a comment box that supports mentions</note>
+      </notes>
+      <segment state="translated">
+        <source>Add comment — type @ to mention</source>
+        <target>Kommentar hinzufügen – @ eingeben, um jemanden zu erwähnen</target>
       </segment>
     </unit>
     <unit id="126074860850048964">
@@ -31774,6 +31899,16 @@
         <target>Projekt wird geladen</target>
       </segment>
     </unit>
+    <unit id="5416147143524910260">
+      <notes>
+        <note category="location">src/app/static/components/reaction-button/reaction-button.component.ts:39</note>
+        <note category="description">Accessible name of a reaction toggle. EMOJI is the reaction, COUNT how many people reacted</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="EMOJI" disp="value"/> reaction, <ph id="1" equiv="COUNT" disp="count"/></source>
+        <target>Reaktion <ph id="0" equiv="EMOJI" disp="value"/>, <ph id="1" equiv="COUNT" disp="count"/></target>
+      </segment>
+    </unit>
     <unit id="5423159811869417944">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-summary.ts:45</note>
@@ -32158,7 +32293,7 @@
     </unit>
     <unit id="9193114396045338651">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:129,135</note>
+        <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:130,136</note>
         <note category="description">Shown when a trigger needs no further settings</note>
       </notes>
       <segment state="translated">
@@ -33421,7 +33556,7 @@
     </unit>
     <unit id="5370787608590287385">
       <notes>
-        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:148</note>
+        <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:150</note>
         <note category="description">Marks a board group that is both hidden and empty</note>
       </notes>
       <segment state="translated">
@@ -33995,7 +34130,7 @@
     <unit id="4929778113156900100">
       <notes>
         <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:38,43</note>
-        <note category="location">src/app/static/components/tree/tree.component.ts:128</note>
+        <note category="location">src/app/static/components/tree/tree.component.ts:131</note>
         <note category="description">Label on the control that collapses the sidebar</note>
       </notes>
       <segment state="translated">
@@ -34027,7 +34162,7 @@
     <unit id="1359092845802014498">
       <notes>
         <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:49</note>
-        <note category="location">src/app/static/components/tree/tree.component.ts:127</note>
+        <note category="location">src/app/static/components/tree/tree.component.ts:130</note>
         <note category="description">Tooltip on the control that expands the collapsed sidebar</note>
       </notes>
       <segment state="translated">
@@ -34047,7 +34182,7 @@
     </unit>
     <unit id="6437922782751429973">
       <notes>
-        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:227</note>
+        <note category="location">src/app/static/components/grouped-toggle-list/grouped-toggle-list.component.ts:233</note>
         <note category="description">Suggests how to find items after a search found nothing</note>
       </notes>
       <segment state="translated">
@@ -34088,7 +34223,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:66,67</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:90</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:365</note>
-        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:42,43</note>
+        <note category="location">src/app/static/components/status-filter/status-filter.component.ts:43,44</note>
         <note category="description">Name of the statuses permission group</note>
       </notes>
       <segment state="translated">
@@ -34240,7 +34375,7 @@
     </unit>
     <unit id="3407663988318466862">
       <notes>
-        <note category="location">src/app/static/components/avatar-filter/avatar-filter.component.ts:57</note>
+        <note category="location">src/app/static/components/avatar-filter/avatar-filter.component.ts:64</note>
         <note category="description">Presence state appended after a person&apos;s name, e.g. &quot;Ada is online&quot;</note>
       </notes>
       <segment state="translated">
@@ -34250,7 +34385,7 @@
     </unit>
     <unit id="7133312887710601974">
       <notes>
-        <note category="location">src/app/static/components/avatar-filter/avatar-filter.component.ts:72</note>
+        <note category="location">src/app/static/components/avatar-filter/avatar-filter.component.ts:79</note>
         <note category="description">Tooltip on a presence dot. NAME is the person&apos;s display name and STATE is their presence, e.g. &quot;is online&quot;</note>
       </notes>
       <segment state="translated">
@@ -34304,9 +34439,9 @@
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:230,233</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:267,269</note>
-        <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
+        <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:30,31</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
-        <note category="location">src/app/static/components/snackbar/snackbar.component.ts:72,73</note>
+        <note category="location">src/app/static/components/snackbar/snackbar.component.ts:76,77</note>
         <note category="description">Action that dismisses a failed inline assistant prompt</note>
       </notes>
       <segment state="translated">
@@ -34456,7 +34591,7 @@
     </unit>
     <unit id="7909666899128311457">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:168</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:169</note>
         <note category="description">Tooltip on the control that subscribes to activity. NAME is the board, sprint or project name</note>
       </notes>
       <segment state="initial">
@@ -34542,6 +34677,16 @@
       <segment state="translated">
         <source> Workflow </source>
         <target>Workflow</target>
+      </segment>
+    </unit>
+    <unit id="2096775351242875006">
+      <notes>
+        <note category="location">src/app/static/components/mention-input/mention-input.component.ts:118,120</note>
+        <note category="description">Accessible name of the list of people to mention</note>
+      </notes>
+      <segment state="translated">
+        <source>People to mention</source>
+        <target>Zu erwähnende Personen</target>
       </segment>
     </unit>
     <unit id="2099366504914913515">
@@ -34796,16 +34941,6 @@
         <target>Die Seite konnte nicht verschoben werden.</target>
       </segment>
     </unit>
-    <unit id="2144933513054352536">
-      <notes>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:69,71</note>
-        <note category="description">Accessible label for the control that opens the month picker</note>
-      </notes>
-      <segment state="translated">
-        <source>Choose month</source>
-        <target>Monat auswählen</target>
-      </segment>
-    </unit>
     <unit id="9040182348182707115">
       <notes>
         <note category="location">src/app/features/workspaces/workspace-flow-steps.ts:80</note>
@@ -34819,7 +34954,7 @@
     <unit id="9041444200911417888">
       <notes>
         <note category="location">src/app/features/settings/components/appearance-preferences/appearance-preferences.component.ts:43</note>
-        <note category="location">src/app/static/components/date-picker/calendar.component.ts:295</note>
+        <note category="location">src/app/static/components/date-picker/calendar.component.ts:333</note>
         <note category="description">Badge on the chosen option tile</note>
       </notes>
       <segment state="translated">
@@ -34899,7 +35034,7 @@
     </unit>
     <unit id="6398969587818603892">
       <notes>
-        <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:23,24</note>
+        <note category="location">src/app/static/components/dialog-title/dialog-title.component.ts:24,25</note>
         <note category="location">src/app/static/components/dialog-wizard/dialog-wizard.component.ts:34,35</note>
         <note category="description">Accessible label for the button that closes a dialog</note>
       </notes>
@@ -34960,7 +35095,7 @@
     </unit>
     <unit id="7927073582775061981">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:34,36</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:39,41</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
       <segment state="translated">
@@ -34990,7 +35125,7 @@
     </unit>
     <unit id="4865868083675132195">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:56,59</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:61,64</note>
         <note category="description">Remaining upload allowance. SIZE is a formatted byte count such as 1.2 MB</note>
       </notes>
       <segment state="translated">
@@ -35017,8 +35152,7 @@
         <note category="location">src/app/features/workspaces/components/setup-steps/setup-team-step.component.ts:111,113</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/branding-preview/branding-preview.component.ts:46,49</note>
-        <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
-        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:93,96</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:98,101</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -35028,7 +35162,7 @@
     </unit>
     <unit id="4213825410774196775">
       <notes>
-        <note category="location">src/app/static/components/mention-input/mention-input.component.ts:126,129</note>
+        <note category="location">src/app/static/components/mention-input/mention-input.component.ts:139,142</note>
         <note category="description">Shown when a mention search matches nobody</note>
       </notes>
       <segment state="translated">
@@ -35060,9 +35194,10 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:52</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:138</note>
-        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:209</note>
+        <note category="location">src/app/static/components/filter-option-list/filter-option-list.component.ts:216</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
-        <note category="location">src/app/static/components/select-filter/select-filter.component.ts:70</note>
+        <note category="location">src/app/static/components/search-input/search-input.component.ts:41,42</note>
+        <note category="location">src/app/static/components/select-filter/select-filter.component.ts:71</note>
         <note category="description">Label of the export search filter</note>
       </notes>
       <segment state="translated">
@@ -35083,8 +35218,8 @@
     </unit>
     <unit id="8020170893392581081">
       <notes>
-        <note category="location">src/app/static/components/search-input/search-input.component.ts:50,51</note>
-        <note category="location">src/app/static/components/search-input/search-input.component.ts:52,54</note>
+        <note category="location">src/app/static/components/search-input/search-input.component.ts:59,60</note>
+        <note category="location">src/app/static/components/search-input/search-input.component.ts:61,63</note>
         <note category="description">Accessible label for the button that clears the search box</note>
       </notes>
       <segment state="translated">
@@ -35102,16 +35237,6 @@
         <target><ph id="0" equiv="COUNT" disp="count"/> ausgewählt</target>
       </segment>
     </unit>
-    <unit id="9191001255478046251">
-      <notes>
-        <note category="location">src/app/static/components/search-input/search-input.component.ts:61,67</note>
-        <note category="description">Accessible name of the magnifying-glass search icon</note>
-      </notes>
-      <segment state="translated">
-        <source>Search Icon</source>
-        <target>Suchsymbol</target>
-      </segment>
-    </unit>
     <unit id="9191370172271683407">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:219,221</note>
@@ -35124,7 +35249,7 @@
     </unit>
     <unit id="4870297096326513340">
       <notes>
-        <note category="location">src/app/static/components/stepper/stepper.component.ts:19,20</note>
+        <note category="location">src/app/static/components/stepper/stepper.component.ts:24,25</note>
         <note category="description">Accessible label for the multi-step form progress indicator</note>
       </notes>
       <segment state="translated">
@@ -35339,7 +35464,7 @@
     </unit>
     <unit id="6447840555676789898">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:62,64</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:63,65</note>
         <note category="description">Heading of the empty state in the tag filter</note>
       </notes>
       <segment state="translated">
@@ -35419,7 +35544,7 @@
     </unit>
     <unit id="4447140464620115564">
       <notes>
-        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:66,69</note>
+        <note category="location">src/app/static/components/tag-filter/tag-filter.component.ts:67,70</note>
         <note category="description">Explains why the tag filter is empty</note>
       </notes>
       <segment state="translated">

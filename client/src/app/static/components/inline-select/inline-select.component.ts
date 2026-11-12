@@ -61,6 +61,7 @@ let nextPanelId = 0;
           <button
             type="button"
             role="option"
+            tabindex="-1"
             [id]="panelId + '-' + index"
             class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-left text-sm transition-colors"
             [class.bg-foreground/10]="index === keyboard.activeIndex()"
@@ -101,6 +102,7 @@ export class InlineSelectComponent implements OnDestroy {
     select: (option) => this.select(option.value.value),
     openKeys: ['Enter', ' ', 'ArrowDown', 'ArrowUp'],
     selectKeys: ['Enter', ' '],
+    closeOnTab: true,
     homeAndEnd: true,
     typeahead: true,
   });

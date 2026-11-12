@@ -43,13 +43,18 @@ export type DatePickerAppearance = 'field' | 'flat' | 'bare';
       [id]="controlId()"
       [class]="triggerClass()"
       [disabled]="disabled()"
-      [attr.aria-label]="ariaLabel()"
+      [attr.aria-label]="triggerAriaLabel()"
       [attr.aria-expanded]="open()"
-      [attr.aria-required]="required()"
+      [attr.aria-required]="required() || null"
+      [attr.aria-invalid]="ariaInvalid()"
+      [attr.aria-describedby]="ariaDescribedBy()"
       aria-haspopup="dialog"
       (click)="toggle()">
       @if (showLeadingIcon()) {
-        <svg lucideCalendarDays class="h-4 w-4 shrink-0 opacity-70"></svg>
+        <svg
+          lucideCalendarDays
+          class="h-4 w-4 shrink-0 opacity-70"
+          aria-hidden="true"></svg>
       }
       <span
         class="min-w-0 flex-1 truncate text-left"
@@ -57,7 +62,10 @@ export type DatePickerAppearance = 'field' | 'flat' | 'bare';
         {{ displayText() }}
       </span>
       @if (showChevron()) {
-        <svg lucideChevronDown class="h-4 w-4 shrink-0 opacity-70"></svg>
+        <svg
+          lucideChevronDown
+          class="h-4 w-4 shrink-0 opacity-70"
+          aria-hidden="true"></svg>
       }
     </button>
 
@@ -83,8 +91,14 @@ export class DatePickerComponent implements OnDestroy {
   readonly value = model('');
   readonly controlId = input('');
   readonly label = input('');
-  readonly placeholder = input('Select date');
-  readonly ariaLabel = input('Choose date');
+  readonly placeholder = input(
+    $localize`:Placeholder of a date field with no date chosen:Select date`
+  );
+  readonly ariaLabel = input(
+    $localize`:Accessible name of a date field that has no visible label:Choose date`
+  );
+  readonly ariaInvalid = input<string | null>(null);
+  readonly ariaDescribedBy = input<string | null>(null);
   readonly min = input<string>();
   readonly max = input<string>();
   readonly disabled = input(false);
@@ -108,24 +122,33 @@ export class DatePickerComponent implements OnDestroy {
     cn(
       this.appearance() === 'flat'
         ? flatButtonVariants({ color: this.color() })
-        : 'flex h-10 w-full min-w-0 cursor-pointer items-center gap-2 px-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-foreground/30 disabled:pointer-events-none disabled:opacity-50',
+        : 'flex h-10 w-full min-w-0 cursor-pointer items-center gap-2 px-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50',
       this.appearance() === 'field' &&
         'border-border bg-form-field-background rounded-sm border-2',
       this.buttonClass()
     )
   );
-  protected readonly displayText = computed(() => {
+  private readonly valueText = computed(() => {
     const date = parseDateValue(this.value());
-    const value = date
-      ? new Intl.DateTimeFormat(this.locale, {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-        }).format(date)
-      : this.placeholder();
+
+    if (!date) {
+      return this.placeholder();
+    }
+
+    return new Intl.DateTimeFormat(this.locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).format(date);
+  });
+  protected readonly displayText = computed(() => {
     const label = this.label();
+    const value = this.valueText();
 
     return label ? `${label}: ${value}` : value;
+  });
+  protected readonly triggerAriaLabel = computed(() => {
+    return `${this.ariaLabel()}, ${this.displayText()}`;
   });
 
   toggle(): void {

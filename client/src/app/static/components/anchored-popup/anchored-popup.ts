@@ -1,10 +1,14 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { DOCUMENT } from '@angular/common';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   DestroyRef,
   ElementRef,
+  Injector,
   TemplateRef,
   ViewContainerRef,
+  afterNextRender,
   assertInInjectionContext,
   inject,
 } from '@angular/core';
@@ -29,6 +33,9 @@ export function anchoredPopup(
 
   const overlay = inject(Overlay);
   const viewContainer = inject(ViewContainerRef);
+  const liveAnnouncer = inject(LiveAnnouncer);
+  const document = inject(DOCUMENT);
+  const injector = inject(Injector);
 
   let overlayRef: OverlayRef | null = null;
   let timer: ReturnType<typeof setTimeout> | null = null;
@@ -42,8 +49,22 @@ export function anchoredPopup(
 
   const hide = () => {
     clearTimer();
+    document.removeEventListener('keydown', onKeydown);
     overlayRef?.dispose();
     overlayRef = null;
+  };
+
+  const onKeydown = (event: KeyboardEvent) => {
+    if (event.key !== 'Escape') return;
+
+    options.onTimeout?.();
+    hide();
+  };
+
+  const announce = (pane: HTMLElement) => {
+    const text = pane.textContent?.replace(/\s+/g, ' ').trim();
+
+    if (text) void liveAnnouncer.announce(text, 'polite');
   };
 
   const startTimer = () => {
@@ -96,6 +117,15 @@ export function anchoredPopup(
     });
 
     overlayRef.attach(new TemplatePortal(template, viewContainer));
+
+    const pane = overlayRef.overlayElement;
+    pane.addEventListener('mouseenter', clearTimer);
+    pane.addEventListener('focusin', clearTimer);
+    pane.addEventListener('mouseleave', startTimer);
+    pane.addEventListener('focusout', startTimer);
+    document.addEventListener('keydown', onKeydown);
+
+    afterNextRender(() => announce(pane), { injector });
 
     startTimer();
   };

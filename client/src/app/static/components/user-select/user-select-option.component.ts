@@ -10,6 +10,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
     <button
       type="button"
       role="option"
+      tabindex="-1"
       class="flex w-full cursor-pointer items-center gap-3 rounded-sm px-3 py-2 text-left text-sm transition-colors select-none hover:bg-neutral-100 focus-visible:outline-none dark:hover:bg-neutral-800"
       [id]="optionId()"
       [attr.aria-selected]="selected()"

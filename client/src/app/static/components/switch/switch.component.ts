@@ -5,7 +5,7 @@ import { AbstractCheckableControl } from '../abstract-checkable-control';
   selector: 'app-switch',
   template: `
     <label
-      class="inline-flex cursor-pointer items-center"
+      class="relative inline-flex cursor-pointer items-center before:absolute before:-inset-x-1 before:-inset-y-1.5"
       [class.cursor-not-allowed]="disabled()">
       <input
         type="checkbox"
@@ -14,11 +14,12 @@ import { AbstractCheckableControl } from '../abstract-checkable-control';
         [checked]="checked()"
         [disabled]="disabled()"
         [attr.aria-label]="ariaLabel()"
+        [attr.aria-describedby]="ariaDescribedBy()"
         (change)="onChanged($event)" />
 
       <span
         class="peer-focus-visible:ring-primary relative flex h-5.25 w-9.5 shrink-0 items-center rounded-full p-0.5 transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-disabled:opacity-50"
-        [class]="checked() ? 'bg-primary' : 'bg-foreground/20'">
+        [class]="checked() ? 'bg-primary' : 'bg-foreground/50'">
         <span
           class="block h-4.25 w-4.25 rounded-full transition-transform duration-150"
           [class]="

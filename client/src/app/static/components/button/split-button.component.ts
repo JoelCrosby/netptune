@@ -23,14 +23,15 @@ import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component'
       [class]="shellClass()">
       <button
         type="button"
-        class="hover:bg-foreground/5 inline-flex cursor-pointer items-center gap-1.5 px-2.5 text-[13px] font-medium transition-colors"
+        class="hover:bg-foreground/5 focus-visible:ring-primary inline-flex cursor-pointer items-center gap-1.5 px-2.5 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
         [attr.aria-pressed]="pressed()"
         [title]="label()"
         (click)="activated.emit()">
         <svg
           [lucideIcon]="icon()"
           class="h-3.5 w-3.5"
-          [class.fill-current]="iconFilled()"></svg>
+          [class.fill-current]="iconFilled()"
+          aria-hidden="true"></svg>
         <span>{{ label() }}</span>
       </button>
 
@@ -39,12 +40,13 @@ import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component'
       <button
         #caret
         type="button"
-        class="hover:bg-foreground/5 inline-flex cursor-pointer items-center px-1.75 transition-colors"
+        class="hover:bg-foreground/5 focus-visible:ring-primary inline-flex cursor-pointer items-center px-1.75 transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
         aria-haspopup="menu"
+        [attr.aria-expanded]="menu.showing()"
         [attr.aria-label]="menuLabel()"
         [title]="menuLabel()"
         (click)="menu.toggle(caret)">
-        <svg lucideChevronDown class="h-3.25 w-3.25"></svg>
+        <svg lucideChevronDown class="h-3.25 w-3.25" aria-hidden="true"></svg>
       </button>
     </span>
 

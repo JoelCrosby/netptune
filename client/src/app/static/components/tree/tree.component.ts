@@ -42,10 +42,7 @@ interface DropTarget {
       [attr.aria-label]="ariaLabel()">
       @for (row of rows(); track row.node.id; let index = $index) {
         <li
-          role="treeitem"
-          [attr.aria-level]="row.depth + 1"
-          [attr.aria-expanded]="row.childCount ? row.expanded : null"
-          [attr.aria-selected]="row.node.id === selectedId()"
+          role="none"
           [class]="rowClass(row)"
           [style.padding-left.px]="indent(row)"
           (dragover)="onDragOver($event, row)"
@@ -55,7 +52,7 @@ interface DropTarget {
             <button
               type="button"
               tabindex="-1"
-              class="text-foreground/45 hover:text-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded"
+              class="text-muted hover:text-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded"
               [class.invisible]="!row.childCount"
               [attr.aria-label]="row.expanded ? collapseLabel : expandLabel"
               (click)="onToggle(row)">
@@ -68,12 +65,18 @@ interface DropTarget {
 
           <a
             data-tree-link
+            role="treeitem"
             class="flex h-full min-w-0 flex-1 items-center outline-none"
+            [attr.aria-level]="row.depth + 1"
+            [attr.aria-setsize]="row.siblingCount"
+            [attr.aria-posinset]="row.position"
+            [attr.aria-expanded]="row.childCount ? row.expanded : null"
+            [attr.aria-selected]="row.node.id === selectedId()"
             [class]="isLarge() ? 'gap-3' : 'gap-2'"
             [routerLink]="row.node.link"
             [queryParams]="row.node.queryParams ?? null"
             [draggable]="draggable()"
-            [attr.tabindex]="index === focusIndex() ? 0 : -1"
+            [attr.tabindex]="index === tabbableIndex() ? 0 : -1"
             (focus)="focusIndex.set(index)"
             (keydown)="onKeydown($event, row, index)"
             (dragstart)="onDragStart($event, row)"
@@ -84,7 +87,7 @@ interface DropTarget {
               [class]="iconClass(row)"></svg>
             <span class="min-w-0 flex-1 truncate">{{ row.node.label }}</span>
             @if (row.childCount && !row.expanded) {
-              <span class="text-foreground/40 text-[11.5px] tabular-nums">
+              <span class="text-muted text-[11.5px] tabular-nums">
                 {{ row.childCount }}
               </span>
             }
@@ -139,6 +142,10 @@ export class TreeComponent {
     return buildTreeRows(this.nodes(), expandedIds);
   });
 
+  protected readonly tabbableIndex = computed(() => {
+    return Math.min(this.focusIndex(), this.rows().length - 1);
+  });
+
   protected readonly isNested = computed(() => {
     return this.nodes().some((node) => node.parentId !== null);
   });
@@ -155,7 +162,7 @@ export class TreeComponent {
     const isTarget = target?.id === row.node.id;
 
     return cn(
-      'group text-foreground/75 hover:bg-foreground/5 relative flex items-center gap-1 rounded-md pr-1.5 text-sm',
+      'group text-foreground/75 hover:bg-foreground/5 has-[a:focus-visible]:ring-primary relative flex items-center gap-1 rounded-md pr-1.5 text-sm has-[a:focus-visible]:ring-2',
       this.isLarge() ? 'h-9' : 'h-8',
       selected &&
         'bg-primary/10 text-primary hover:bg-primary/15 font-semibold',

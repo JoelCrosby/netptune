@@ -66,7 +66,7 @@ const heightClasses: Record<FilterFacetHeight, string> = {
           @if (selectedCount() > 0) {
             <button
               type="button"
-              class="text-muted hover:text-foreground text-xs transition-colors"
+              class="text-muted hover:text-foreground focus-visible:ring-primary relative cursor-pointer rounded-sm text-xs transition-colors after:absolute after:-inset-1 after:content-[''] focus-visible:ring-2 focus-visible:outline-none"
               (click)="cleared.emit()">
               <span i18n="Button that clears one group of filters">Clear</span>
             </button>
@@ -115,7 +115,7 @@ const heightClasses: Record<FilterFacetHeight, string> = {
         @if (hiddenCount(); as hidden) {
           <button
             type="button"
-            class="text-muted hover:text-foreground border-border w-full cursor-pointer border-t px-4 py-2 text-center text-xs transition-colors"
+            class="text-muted hover:text-foreground border-border focus-visible:ring-primary w-full cursor-pointer border-t px-4 py-2 text-center text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
             (click)="loadMore()">
             {{ moreLabel(hidden) }}
           </button>
