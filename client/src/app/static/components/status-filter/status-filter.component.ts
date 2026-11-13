@@ -7,6 +7,7 @@ import {
   output,
 } from '@angular/core';
 import { Status } from '@core/models/status';
+import { summariseFilterValues } from '@core/util/filter-summary';
 import { LucideCircleDashed } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
@@ -26,10 +27,16 @@ import {
     <app-filter-action-button
       i18n-label="Label on the control that filters tasks by status"
       label="Filter by Status"
+      i18n-shortLabel="Short label beside the status filter icon"
+      shortLabel="Status"
       [icon]="lucideCircleDashed"
       [color]="selectedCount() ? 'primary' : undefined"
+      [value]="summary()"
       [count]="selectedCount()"
+      [clearable]="selectedCount() > 0"
+      [clearLabel]="clearLabel"
       [expanded]="menu.showing()"
+      (cleared)="cleared.emit()"
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu panelRole="none" [panelClass]="'p-0'">
@@ -58,6 +65,19 @@ export class StatusFilterComponent {
   readonly selectedCount = input(0);
 
   readonly toggled = output<number>();
+  readonly cleared = output();
+
+  protected readonly clearLabel = $localize`:Accessible label for the button that clears the status filter:Clear the status filter`;
+
+  protected readonly summary = computed(() => {
+    const selected = this.selected();
+
+    const names = this.statuses()
+      .filter((status) => selected.has(status.id))
+      .map((status) => status.name);
+
+    return summariseFilterValues(names);
+  });
 
   protected readonly options = computed<FilterOption<number>[]>(() => {
     return this.statuses().map((status) => ({

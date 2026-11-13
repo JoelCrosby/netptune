@@ -14,6 +14,7 @@ import {
   linkedSignal,
   OnDestroy,
   signal,
+  viewChild,
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -40,6 +41,8 @@ import {
 } from '@boards/components/create-board-group/create-board-group.component';
 import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
 import { NotificationScope } from '@core/models/notification-subscription';
+import { NotificationSubscriptionsService } from '@core/services/notification-subscriptions.service';
+import { BoardActivityDialogComponent } from '@boards/components/board-activity-dialog/board-activity-dialog.component';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
@@ -67,8 +70,11 @@ import { HeaderAction } from '@core/types/header-action';
 import { brandingImageUrl } from '@core/util/branding';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
+  LucideBell,
+  LucideBellRing,
   LucideEllipsisVertical,
   LucideEyeOff,
+  LucideHistory,
   LucideFileDown,
   LucideFileUp,
   LucideSettings2,
@@ -139,17 +145,29 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
       @if (boardGroupsLoaded()) {
         <app-page-header
           toolbar
+          fillContent
           [title]="boardName()"
+          [count]="taskCount()"
           [logoUrl]="boardLogoUrl()"
           [titleEditable]="isAuthenticated()"
           [overflowActions]="isAuthenticated() ? secondaryActions() : []"
           (titleSubmitted)="onTitleSubmitted($event)">
           <app-board-switcher titleSuffix />
 
-          <div class="flex flex-wrap items-center gap-3">
+          <div class="flex min-w-0 flex-1 items-center gap-3">
             <app-board-group-header />
           </div>
         </app-page-header>
+
+        @if (board(); as board) {
+          <app-notification-subscribe
+            #boardNotify
+            appearance="hidden"
+            xPosition="before"
+            [scope]="notificationScope.board"
+            [scopeEntityId]="board.id"
+            [scopeName]="board.name" />
+        }
       } @else if (showSkeleton()) {
         <app-page-header toolbar aria-hidden="true">
           <app-skeleton titleSuffix class="h-7 w-40" />
@@ -292,9 +310,29 @@ export class BoardGroupsViewComponent implements OnDestroy {
   private boardBackground = inject(BoardBackgroundService);
 
   isAuthenticated = inject(SessionService).isAuthenticated;
+
+  private readonly isPublicViewer = inject(SessionService).isPublicViewer;
+  private readonly subscriptions = inject(NotificationSubscriptionsService);
+  private readonly notify = viewChild<NotificationSubscribeComponent>(
+    'boardNotify'
+  );
+  private readonly readActivity = hasPermission(PERMISSIONS.activity.read);
+
+  private readonly isSubscribed = computed(() => {
+    const boardId = this.board()?.id;
+
+    if (boardId === undefined) return false;
+
+    const subscription = this.subscriptions.find(
+      NotificationScope.board,
+      boardId
+    );
+
+    return (subscription?.events ?? 0) !== 0;
+  });
   readonly notificationScope = NotificationScope;
   readonly dragStartDelay = BOARD_DRAG_START_DELAY;
-  readonly toolbarIconRange = Array.from({ length: 5 });
+  readonly toolbarIconRange = Array.from({ length: 4 });
 
   private readonly isMobileView = inject(LayoutService).isMobileView;
   readonly groupDragging = signal(false);
@@ -351,6 +389,12 @@ export class BoardGroupsViewComponent implements OnDestroy {
       }));
   });
 
+  taskCount = computed(() => {
+    return this.visibleGroups().reduce((total, group) => {
+      return total + group.tasks.length;
+    }, 0);
+  });
+
   statuses = statusResource();
   statusMap = computed(() => {
     return new Map(this.statuses.value().map((status) => [status.id, status]));
@@ -390,6 +434,22 @@ export class BoardGroupsViewComponent implements OnDestroy {
         icon: LucideEyeOff,
       },
     ];
+
+    if (this.readActivity()) {
+      actions.push({
+        label: $localize`:Overflow action that opens the board activity feed:Show activity`,
+        click: () => this.onActivityClicked(),
+        icon: LucideHistory,
+      });
+    }
+
+    if (!this.isPublicViewer()) {
+      actions.push({
+        label: $localize`:Overflow action that opens the notification settings for this board:Notify me`,
+        click: (origin) => this.onNotifyClicked(origin),
+        icon: this.isSubscribed() ? LucideBellRing : LucideBell,
+      });
+    }
 
     if (this.canImportTasks()) {
       actions.push({
@@ -580,6 +640,26 @@ export class BoardGroupsViewComponent implements OnDestroy {
         execute: () => this.onManageGroupsClicked(),
       },
     ];
+  }
+
+  onActivityClicked() {
+    const board = this.board();
+
+    if (!board) return;
+
+    this.dialog.open(BoardActivityDialogComponent, {
+      width: BoardActivityDialogComponent.width,
+      height: BoardActivityDialogComponent.height,
+      panelClass: BoardActivityDialogComponent.panelClass,
+      data: { boardId: board.id, boardName: board.name },
+      autoFocus: false,
+    });
+  }
+
+  onNotifyClicked(origin?: HTMLElement) {
+    if (!origin) return;
+
+    this.notify()?.open(origin);
   }
 
   onManageGroupsClicked() {

@@ -11,6 +11,7 @@ import { StatusFilterComponent } from '@static/components/status-filter/status-f
       [statuses]="statuses.value()"
       [selected]="selected()"
       [selectedCount]="selectedCount()"
+      (cleared)="onCleared()"
       (toggled)="onToggled($event)" />
   `,
 })
@@ -24,6 +25,10 @@ export class TaskListStatusComponent {
   );
 
   readonly selectedCount = computed(() => this.selected().size);
+
+  onCleared() {
+    this.filterRoute.set('statusIds', []);
+  }
 
   onToggled(status: number) {
     const selected = new Set(this.selected());

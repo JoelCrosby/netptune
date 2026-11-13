@@ -22,6 +22,14 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
           {{ title() }}
         </h1>
       }
+      @if (titleEditable()) {
+        <app-inline-edit-input
+          [class]="titleClass() + ' cursor-pointer'"
+          activeBorder="true"
+          [value]="title()"
+          [size]="title()?.length"
+          (submitted)="titleSubmitted.emit($event)"></app-inline-edit-input>
+      }
       @if (count() !== null && count() !== undefined) {
         <span
           [class]="countClass"
@@ -32,20 +40,12 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
           {{ count() }}
         </span>
       }
-      @if (titleEditable()) {
-        <app-inline-edit-input
-          [class]="titleClass() + ' cursor-pointer'"
-          activeBorder="true"
-          [value]="title()"
-          [size]="title()?.length"
-          (submitted)="titleSubmitted.emit($event)"></app-inline-edit-input>
-      }
 
       <div [class]="suffixClass">
         <ng-content select="[titleSuffix]" />
       </div>
 
-      <div [class]="contentClass">
+      <div [class]="contentClass()">
         <ng-content />
       </div>
     </div>
@@ -59,6 +59,7 @@ export class PageHeaderTitleComponent {
   readonly logoUrl = input<string | null>(null);
 
   readonly compact = input(false, { transform: booleanAttribute });
+  readonly fillContent = input(false, { transform: booleanAttribute });
 
   readonly titleSubmitted = output<string>();
 
@@ -74,5 +75,9 @@ export class PageHeaderTitleComponent {
   protected readonly suffixClass =
     'flex shrink-0 flex-row items-center gap-1 empty:hidden';
 
-  protected readonly contentClass = 'ml-3 flex flex-row items-center gap-3';
+  protected readonly contentClass = computed(() => {
+    const base = 'ml-3 flex min-w-0 flex-row items-center gap-3';
+
+    return this.fillContent() ? `${base} flex-1` : base;
+  });
 }

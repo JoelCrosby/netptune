@@ -4,27 +4,20 @@ import { BoardGroupUsersComponent } from '@boards/components/board-group-users/b
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
 import { BoardGroupSortComponent } from '@boards/components/board-group-sort/board-group-sort.component';
 import { BoardGroupStatusComponent } from '@boards/components/board-group-status/board-group-status.component';
-import { BoardGroupHiddenNoticeComponent } from '@boards/components/board-group-hidden-notice/board-group-hidden-notice.component';
-import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
-import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
+import { BoardGroupColumnsComponent } from '@boards/components/board-group-columns/board-group-columns.component';
+import { BoardFiltersDialogComponent } from '@boards/components/board-filters-dialog/board-filters-dialog.component';
 import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-filter-container.component';
-import { NotificationSubscribeComponent } from '@shared/components/notification-subscribe/notification-subscribe.component';
-import { NotificationScope } from '@core/models/notification-subscription';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
-import { BoardActivityDialogComponent } from '@boards/components/board-activity-dialog/board-activity-dialog.component';
-import { BoardViewModel } from '@core/models/view-models/board-view-model';
-import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { LucideHistory } from '@lucide/angular';
-import { toolbarButtonVariants } from '@static/components/button/button.variants';
+import { LucideListFilter } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
+import { ToolbarButtonComponent } from '@static/components/button/toolbar-button.component';
 import { PERMISSIONS } from '@app/core/auth/permissions';
-import { BoardViewService } from '@core/services/board-view.service';
-import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { DialogService } from '@core/services/dialog.service';
-import { SessionService } from '@core/services/session.service';
-import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 @Component({
   selector: 'app-board-group-header',
+  host: { class: 'block min-w-0 flex-1' },
   imports: [
     BoardGroupsSearchComponent,
     BoardGroupUsersComponent,
@@ -32,99 +25,95 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
     BoardGroupStatusComponent,
     BoardGroupSortComponent,
     BoardGroupHeaderSeperatorComponent,
-    BoardGroupHiddenNoticeComponent,
-    NotificationSubscribeComponent,
-    TooltipDirective,
-    LucideHistory,
+    BoardGroupColumnsComponent,
+    BadgeComponent,
+    ToolbarButtonComponent,
+    LucideListFilter,
   ],
   template: `
-    <div class="flex flex-row items-center gap-2">
+    <div
+      class="@container -my-1.5 flex min-w-0 flex-row items-center gap-2 overflow-x-auto py-1.5">
       <app-board-group-header-seperator />
       <app-board-groups-search />
-      <app-board-group-header-seperator />
-      <app-board-group-users />
 
-      <app-board-group-header-seperator />
+      <app-board-group-header-seperator class="hidden @2xl:block" />
+      <app-board-group-users class="hidden @2xl:block" />
 
-      @if (readTags()) {
-        <app-tag-filter-container />
+      @if (showFilters()) {
+        <app-board-group-header-seperator class="hidden @2xl:block" />
+
+        <div class="hidden flex-row items-center gap-1 @2xl:flex">
+          @if (readTags()) {
+            <app-tag-filter-container />
+          }
+
+          @if (readStatus()) {
+            <app-board-group-status />
+          }
+
+          @if (hasFilters()) {
+            <button app-toolbar-button (click)="onClearFiltersClicked()">
+              <span i18n="Button that removes every filter applied to the board">
+                Clear all
+              </span>
+            </button>
+          }
+        </div>
       }
 
-      @if (readStatus()) {
-        <app-board-group-status />
-      }
-
-      <app-board-group-sort />
-
-      @if (board(); as board) {
-        @if (!isPublicViewer()) {
-          <app-notification-subscribe
-            appearance="toolbar"
-            [scope]="notificationScope.board"
-            [scopeEntityId]="board.id"
-            [scopeName]="board.name" />
+      <button
+        app-toolbar-button
+        class="@2xl:hidden"
+        (click)="onOpenFiltersClicked()">
+        <svg lucideListFilter class="h-4 w-4" aria-hidden="true"></svg>
+        <span i18n="Button that opens the board filters on a small screen">
+          Filter
+        </span>
+        @if (activeFilterCount(); as count) {
+          <app-badge color="primary">{{ count }}</app-badge>
         }
+      </button>
 
-        @if (readActivity()) {
-          <button
-            type="button"
-            [class]="activityButtonClass"
-            i18n-appTooltip="Tooltip on the button that opens the activity feed"
-            appTooltip="Show activity"
-            i18n-aria-label="Accessible label for the activity feed icon"
-            aria-label="Show activity"
-            (click)="onActivityClicked(board)">
-            <svg lucideHistory class="h-4 w-4" aria-hidden="true"></svg>
-          </button>
-        }
-      }
+      <app-board-group-header-seperator class="hidden @2xl:block" />
 
-      <app-board-group-hidden-notice
-        [count]="hiddenCount()"
-        (manage)="onManageGroupsClicked()" />
+      <div class="hidden flex-row items-center gap-1 @2xl:flex">
+        <app-board-group-sort />
+        <app-board-group-columns />
+      </div>
     </div>
   `,
 })
 export class BoardGroupHeaderComponent {
-  private preferences = inject(UserPreferencesService);
   private dialog = inject(DialogService);
+  private readonly filterRoute = taskFilterRoute();
 
-  protected readonly board = inject(BoardViewService).board;
-  protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
-
-  protected readonly notificationScope = NotificationScope;
-  protected readonly activityButtonClass = toolbarButtonVariants({
-    color: 'neutral',
-  });
-  protected readonly readActivity = hasPermission(PERMISSIONS.activity.read);
-
-  hiddenCount = computed(() => {
-    const boardId = this.board()?.id;
-
-    if (boardId === undefined) return 0;
-
-    const value = this.preferences.effectiveValueFor(BOARDS_HIDDEN_GROUP_IDS);
-
-    return hiddenGroupIdsForBoard(value, boardId).length;
-  });
+  protected readonly hasFilters = this.filterRoute.hasFilters;
 
   readStatus = hasPermission(PERMISSIONS.statuses.read);
 
   readTags = hasPermission(PERMISSIONS.tags.read);
 
-  onActivityClicked(board: BoardViewModel) {
-    this.dialog.open(BoardActivityDialogComponent, {
-      width: BoardActivityDialogComponent.width,
-      height: BoardActivityDialogComponent.height,
-      panelClass: BoardActivityDialogComponent.panelClass,
-      data: { boardId: board.id, boardName: board.name },
-      autoFocus: false,
-    });
+  protected readonly showFilters = computed(() => {
+    return this.readTags() || this.readStatus();
+  });
+
+  protected readonly activeFilterCount = computed(() => {
+    const filters = this.filterRoute.filters();
+
+    const byTag = !!filters.tags?.length || filters.hasTags !== undefined;
+    const byUser = !!filters.users?.length;
+    const byStatus = !!filters.statuses?.length;
+
+    return [byTag, byUser, byStatus].filter(Boolean).length;
+  });
+
+  onClearFiltersClicked() {
+    this.filterRoute.clear();
   }
 
-  onManageGroupsClicked() {
-    this.dialog.open(ManageBoardGroupsDialogComponent, {
-      width: '640px',
+  onOpenFiltersClicked() {
+    this.dialog.open(BoardFiltersDialogComponent, {
+      width: '420px',
       maxWidth: 'calc(100vw - 32px)',
     });
   }

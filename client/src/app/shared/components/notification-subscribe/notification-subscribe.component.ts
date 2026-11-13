@@ -23,7 +23,6 @@ import {
   DropdownMenuXPosition,
 } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
-import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
 
 interface EventOption {
   event: NotificationSubscriptionEvent;
@@ -53,7 +52,6 @@ const EVENT_OPTIONS: EventOption[] = [
   selector: 'app-notification-subscribe',
   imports: [
     DropdownMenuComponent,
-    FilterActionButtonComponent,
     IconButtonComponent,
     LucideBell,
     LucideBellRing,
@@ -63,15 +61,7 @@ const EVENT_OPTIONS: EventOption[] = [
   // getBoundingClientRect, and an element generating no box measures as a zero rect at the
   // top-left of the viewport.
   template: `
-    @if (appearance() === 'toolbar') {
-      <app-filter-action-button
-        [label]="buttonLabel()"
-        [icon]="isSubscribed() ? bellRingIcon : bellIcon"
-        [color]="isSubscribed() ? 'primary' : undefined"
-        [dot]="isSubscribed()"
-        [expanded]="menu.showing()"
-        (action)="menu.toggle(el.nativeElement)" />
-    } @else if (appearance() === 'icon') {
+    @if (appearance() === 'icon') {
       <button
         app-icon-button
         type="button"
@@ -122,7 +112,7 @@ export class NotificationSubscribeComponent {
   readonly scopeName = input<string>();
   // `hidden` renders no trigger of its own: a host that already owns one — an overflow menu row,
   // say — calls `open` with the element the panel should hang off.
-  readonly appearance = input<'toolbar' | 'icon' | 'hidden'>('icon');
+  readonly appearance = input<'icon' | 'hidden'>('icon');
   readonly xPosition = input<DropdownMenuXPosition>('after');
 
   // Board columns carry one of these each, so an unsubscribed bell stays out of the way until the

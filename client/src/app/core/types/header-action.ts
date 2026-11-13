@@ -3,7 +3,7 @@ import { MenuItemColor } from '@static/components/dropdown-menu/menu-item.compon
 
 export interface HeaderAction {
   label: string;
-  click?: () => void;
+  click?: (overflowTrigger?: HTMLElement) => void;
   icon?: LucideIconInput;
   color?: MenuItemColor;
   isLink?: boolean;

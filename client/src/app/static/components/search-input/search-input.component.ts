@@ -1,10 +1,12 @@
 import {
   Component,
   effect,
+  ElementRef,
   input,
   output,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import {
   FormField,
@@ -33,6 +35,7 @@ import { LucideSearch, LucideX } from '@lucide/angular';
         termForm.term().valid()
       ">
       <input
+        #field
         type="text"
         i18n-placeholder="Placeholder in the search box"
         placeholder="Search"
@@ -69,6 +72,8 @@ import { LucideSearch, LucideX } from '@lucide/angular';
   `,
 })
 export class SearchInputComponent {
+  private readonly field = viewChild<ElementRef<HTMLInputElement>>('field');
+
   readonly term = input<string | null | undefined>('');
   readonly searchChange = output<string | null>();
 
@@ -96,6 +101,10 @@ export class SearchInputComponent {
         }
       });
     });
+  }
+
+  focus() {
+    this.field()?.nativeElement.focus();
   }
 
   onSubmit() {

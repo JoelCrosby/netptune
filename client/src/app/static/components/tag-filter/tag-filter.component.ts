@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
+import { summariseFilterValues } from '@core/util/filter-summary';
 import { LucideTag } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
@@ -35,10 +36,16 @@ function tagValue(name: string): string {
     <app-filter-action-button
       i18n-label="Label on the control that filters tasks by tag"
       label="Filter by Tag"
+      i18n-shortLabel="Short label beside the tag filter icon"
+      shortLabel="Tags"
       [icon]="lucideTag"
       [color]="activeCount() ? 'primary' : undefined"
+      [value]="summary()"
       [count]="activeCount()"
+      [clearable]="activeCount() > 0"
+      [clearLabel]="clearLabel"
       [expanded]="menu.showing()"
+      (cleared)="cleared.emit()"
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu panelRole="none" [panelClass]="'p-0'">
@@ -85,9 +92,24 @@ export class TagFilterComponent {
 
   readonly toggled = output<Selected<Tag>>();
   readonly untaggedChange = output<boolean>();
+  readonly cleared = output();
+
+  protected readonly clearLabel = $localize`:Accessible label for the button that clears the tag filter:Clear the tag filter`;
 
   readonly activeCount = computed(() => {
     return this.selectedCount() + (this.untagged() ? 1 : 0);
+  });
+
+  protected readonly summary = computed(() => {
+    if (this.untagged()) {
+      return $localize`:Filters the list down to tasks that carry no tags:Untagged`;
+    }
+
+    const names = this.tags()
+      .filter((tag) => tag.selected)
+      .map((tag) => tag.name);
+
+    return summariseFilterValues(names);
   });
 
   protected readonly options = computed<FilterOption<string>[]>(() => {

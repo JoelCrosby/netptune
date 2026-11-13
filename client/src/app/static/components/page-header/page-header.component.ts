@@ -24,6 +24,7 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
             [logoUrl]="logoUrl()"
             [count]="count()"
             [compact]="toolbar()"
+            [fillContent]="fillContent()"
             (titleSubmitted)="titleSubmitted.emit($event)">
             <ng-content select="[titleSuffix]" ngProjectAs="[titleSuffix]" />
             <ng-content />
@@ -64,6 +65,7 @@ export class PageHeaderComponent {
   readonly logoUrl = input<string | null>(null);
 
   readonly toolbar = input(false, { transform: booleanAttribute });
+  readonly fillContent = input(false, { transform: booleanAttribute });
   readonly filtersLabel = input<string | null>(null);
 
   readonly actionClick = output();

@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   booleanAttribute,
   computed,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { LucideDynamicIcon, LucideEllipsis } from '@lucide/angular';
@@ -26,6 +28,7 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
       }
       @if (overflowActions().length) {
         <button
+          #overflowTrigger
           app-stroked-button
           [class]="overflowButtonClass()"
           i18n-aria-label="
@@ -40,7 +43,7 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
             <button
               app-menu-item
               [color]="action.color ?? 'default'"
-              (click)="action.click && action.click(); menu.close()">
+              (click)="menu.close(); onOverflowAction(action)">
               @if (action.icon) {
                 <svg
                   [lucideIcon]="action.icon"
@@ -82,6 +85,14 @@ export class PageHeaderActionsComponent {
   readonly compact = input(false, { transform: booleanAttribute });
 
   readonly actionClick = output();
+
+  private readonly overflowTrigger = viewChild('overflowTrigger', {
+    read: ElementRef<HTMLElement>,
+  });
+
+  protected onOverflowAction(action: HeaderAction) {
+    action.click?.(this.overflowTrigger()?.nativeElement);
+  }
 
   protected readonly containerClass = computed(() => {
     const base = 'flex flex-row flex-wrap items-center';

@@ -11,6 +11,7 @@ import { StatusFilterComponent } from '@static/components/status-filter/status-f
       [statuses]="statuses.value()"
       [selected]="selected()"
       [selectedCount]="selectedCount()"
+      (cleared)="onCleared()"
       (toggled)="onToggled($event)" />
   `,
 })
@@ -25,6 +26,10 @@ export class BoardGroupStatusComponent {
 
   readonly selected = computed(() => new Set(this.selectedIds()));
   readonly selectedCount = computed(() => this.selectedIds().length);
+
+  onCleared() {
+    this.filters.update({ statuses: [] });
+  }
 
   onToggled(status: number) {
     const selected = this.selectedIds();

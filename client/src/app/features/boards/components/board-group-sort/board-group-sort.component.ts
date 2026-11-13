@@ -14,6 +14,7 @@ import { FilterActionButtonComponent } from '@static/components/filter-action-bu
 import {
   BoardTaskSortDirection,
   BoardTaskSortField,
+  boardTaskSortFieldLabels,
   boardTaskSortFieldOptions,
   boardTaskSortForBoard,
   DEFAULT_BOARD_TASK_SORT,
@@ -34,8 +35,9 @@ import {
     <app-filter-action-button
       i18n-label="Button that opens the task sort options"
       label="Sort tasks"
-      [icon]="lucideArrowUpDown"
+      [icon]="sortIcon()"
       [color]="isDefault() ? undefined : 'primary'"
+      [value]="sortLabel()"
       [dot]="!isDefault()"
       [expanded]="menu.showing()"
       (action)="menu.toggle(el.nativeElement)" />
@@ -87,7 +89,6 @@ export class BoardGroupSortComponent {
   readonly el = inject(ElementRef);
   private readonly preferences = inject(UserPreferencesService);
 
-  readonly lucideArrowUpDown = LucideArrowUpDown;
   readonly fieldOptions = boardTaskSortFieldOptions;
 
   private readonly board = inject(BoardViewService).board;
@@ -106,6 +107,18 @@ export class BoardGroupSortComponent {
   readonly isDefault = computed(
     () => this.sort().field === DEFAULT_BOARD_TASK_SORT.field
   );
+
+  readonly sortLabel = computed(() => {
+    return boardTaskSortFieldLabels[this.sort().field];
+  });
+
+  readonly sortIcon = computed(() => {
+    const sort = this.sort();
+
+    if (sort.field === 'custom') return LucideArrowUpDown;
+
+    return sort.direction === 'desc' ? LucideArrowDown : LucideArrowUp;
+  });
 
   onFieldClicked(field: BoardTaskSortField) {
     const current = this.sort();

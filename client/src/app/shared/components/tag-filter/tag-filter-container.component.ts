@@ -15,6 +15,7 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
       [selectedCount]="selectedCount()"
       [untagged]="untagged()"
       (toggled)="onToggled($event)"
+      (cleared)="onCleared()"
       (untaggedChange)="onUntaggedChange($event)" />
   `,
 })
@@ -52,6 +53,10 @@ export class TagFilterContainerComponent {
     }
 
     this.filterRoute.patch({ tags: [...selected], hasTags: undefined });
+  }
+
+  onCleared() {
+    this.filterRoute.patch({ tags: [], hasTags: undefined });
   }
 
   onUntaggedChange(untagged: boolean) {
