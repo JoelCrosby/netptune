@@ -131,7 +131,7 @@ public sealed class UserPreferencesEndpointTests
         result.Groups
             .Select(group => group.Key)
             .Should()
-            .Equal("appearance", "commandPalette", "boards", "views", "notifications", "workspace");
+            .Equal("appearance", "commandPalette", "boards", "views", "assistant", "notifications", "workspace");
         preferences
             .Should()
             .Contain(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);

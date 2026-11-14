@@ -7,6 +7,8 @@ export const APPEARANCE_TASK_DETAIL_LAYOUT = 'appearance.taskDetailLayout';
 export const APPEARANCE_PAGE_WIDTH = 'appearance.pageWidth';
 export const APPEARANCE_PAGE_CONTENT_WIDTH = 'appearance.pageContentWidth';
 export const APPEARANCE_LOCALE = 'appearance.locale';
+export const ASSISTANT_MODEL = 'assistant.model';
+export const ASSISTANT_EFFORT = 'assistant.effort';
 export const BOARDS_HIDDEN_GROUP_IDS = 'boards.hiddenGroupIds';
 export const BOARDS_TASK_SORT = 'boards.taskSort';
 export const QUERIES_PINNED_IDS = 'views.pinnedIds';
@@ -33,7 +35,12 @@ export interface PreferenceDefinition {
   label: string;
   controlType: 'select' | 'toggle' | 'hidden';
   valueType:
-    'string' | 'boolean' | 'number-array' | 'number-array-map' | 'string-map';
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'number-array'
+    | 'number-array-map'
+    | 'string-map';
   defaultValue: unknown;
   allowedScopes: PreferenceScope[];
   options: PreferenceOption[];

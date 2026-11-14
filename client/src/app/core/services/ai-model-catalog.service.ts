@@ -1,17 +1,18 @@
 import { Service, computed, inject, signal } from '@angular/core';
-import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { AiProvider } from '@core/models/ai-credential';
 import { AiEffort } from '@core/models/ai-effort';
 import { AiModelOption } from '@core/models/ai-model';
+import { ASSISTANT_MODEL } from '@core/models/user-preferences';
 import { AiApiService } from '@core/services/ai-api.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { SessionService } from '@core/services/session.service';
+import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { onChange } from '@core/util/signals';
 
 @Service()
 export class AiModelCatalogService {
   private readonly api = inject(AiApiService);
-  private readonly settings = inject(BrowserSettingsService);
+  private readonly preferences = inject(UserPreferencesService);
   private readonly isAssistantAvailable =
     inject(SessionService).isAssistantAvailable;
 
@@ -64,6 +65,8 @@ export class AiModelCatalogService {
   }
 
   async load() {
+    await this.preferences.loadAndWait();
+
     const hasModels = this.models().length > 0;
 
     if (hasModels) {
@@ -93,12 +96,15 @@ export class AiModelCatalogService {
 
     this.hasCredentials.set(providers.size > 0);
     this.models.set(available);
+    this.resetToPreference();
     this.dropUnavailableModel(available);
   }
 
   select(modelId: string | null) {
     this.selectedModel.set(modelId);
-    this.settings.set('ai.model', modelId);
+    this.preferences
+      .updateValue(ASSISTANT_MODEL, 'global', modelId)
+      .subscribe({ error: () => null });
   }
 
   use(modelId: string | null) {
@@ -140,6 +146,8 @@ export class AiModelCatalogService {
   }
 
   private readPreference(): string | null {
-    return this.settings.get('ai.model') ?? null;
+    const value = this.preferences.effectiveValueFor(ASSISTANT_MODEL);
+
+    return typeof value === 'string' ? value : null;
   }
 }

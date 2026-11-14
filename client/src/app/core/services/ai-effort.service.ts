@@ -1,7 +1,8 @@
 import { Service, computed, inject, signal } from '@angular/core';
-import { BrowserSettingsService } from '@core/settings/browser-settings.service';
 import { AiEffort, AiEffortOption } from '@core/models/ai-effort';
+import { ASSISTANT_EFFORT } from '@core/models/user-preferences';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
+import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 const EFFORT_OPTIONS: AiEffortOption[] = [
   {
@@ -28,7 +29,7 @@ const EFFORT_OPTIONS: AiEffortOption[] = [
 
 @Service()
 export class AiEffortService {
-  private readonly settings = inject(BrowserSettingsService);
+  private readonly preferences = inject(UserPreferencesService);
   private readonly catalog = inject(AiModelCatalogService);
 
   readonly efforts = computed(() => {
@@ -64,7 +65,9 @@ export class AiEffortService {
 
   select(effort: AiEffort | null) {
     this.selectedEffort.set(effort);
-    this.settings.set('ai.effort', effort);
+    this.preferences
+      .updateValue(ASSISTANT_EFFORT, 'global', effort)
+      .subscribe({ error: () => null });
   }
 
   use(effort: AiEffort | null) {
@@ -76,7 +79,16 @@ export class AiEffortService {
   }
 
   private readPreference(): AiEffort | null {
-    return this.settings.get('ai.effort') ?? null;
+    const value = this.preferences.effectiveValueFor(ASSISTANT_EFFORT);
+
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const efforts = EFFORT_OPTIONS.map((option) => option.effort);
+    const isEffort = typeof value === 'number' && efforts.includes(value as AiEffort);
+
+    return isEffort ? (value as AiEffort) : null;
   }
 }
 

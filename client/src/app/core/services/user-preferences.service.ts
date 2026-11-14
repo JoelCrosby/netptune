@@ -9,7 +9,7 @@ import {
   PreferenceValuesResponse,
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { catchError, finalize, firstValueFrom, of, tap } from 'rxjs';
 
 @Service()
 export class UserPreferencesService {
@@ -20,6 +20,8 @@ export class UserPreferencesService {
   readonly values = signal<PreferenceValuesResponse | null>(null);
   readonly loading = signal(false);
   readonly loaded = signal(false);
+
+  private loadPromise: Promise<void> | null = null;
 
   readonly groups = computed(() => this.values()?.groups ?? []);
 
@@ -38,17 +40,33 @@ export class UserPreferencesService {
 
   /** Loads the values once, for callers that render outside the app shell. */
   ensureLoaded() {
-    if (this.loaded()) return;
+    if (this.loaded() || this.loading()) {
+      return;
+    }
 
     this.load();
   }
 
+  async loadAndWait() {
+    if (this.loaded()) {
+      return;
+    }
+
+    if (!this.loadPromise) {
+      this.load();
+    }
+
+    await this.loadPromise;
+  }
+
   load() {
-    if (this.loading()) return;
+    if (this.loading() || this.loaded()) {
+      return;
+    }
 
     this.loading.set(true);
 
-    this.http
+    const request = this.http
       .get<PreferenceValuesResponse>('api/user-preferences/values')
       .pipe(
         tap((values) => {
@@ -57,9 +75,13 @@ export class UserPreferencesService {
           this.applyThemePreference();
         }),
         catchError(() => of(null)),
-        finalize(() => this.loading.set(false))
-      )
-      .subscribe();
+        finalize(() => {
+          this.loading.set(false);
+          this.loadPromise = null;
+        })
+      );
+
+    this.loadPromise = firstValueFrom(request).then(() => undefined);
   }
 
   loadDefinitions() {

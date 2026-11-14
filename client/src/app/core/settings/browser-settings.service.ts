@@ -1,6 +1,6 @@
 import { Service, signal } from '@angular/core';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
-import { AiEffort } from '@core/models/ai-effort';
+
 import type { AiWorkspaceSession } from '@core/services/ai-session.service';
 import type { Theme } from '@core/services/theme.service';
 import { DatatableColumnPreference } from '@static/components/datatable/datatable.types';
@@ -15,8 +15,6 @@ export interface BrowserSettings {
   'pages.treeExpanded': Record<string, number[]>;
   'ai.mode': AiDisplayMode;
   'ai.panelWidth': number;
-  'ai.model': string | null;
-  'ai.effort': AiEffort | null;
   'ai.appliedChangesExpanded': boolean;
   'ai.sessions': Record<string, AiWorkspaceSession>;
   'ai.drafts': Record<string, string>;

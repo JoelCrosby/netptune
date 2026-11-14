@@ -118,7 +118,25 @@ public sealed class SetUserPreferenceValueCommandHandler
             return value.ValueKind is JsonValueKind.True or JsonValueKind.False;
         }
 
-        if (definition.ValueType == "string" && value.ValueKind != JsonValueKind.String) return false;
+        if (definition.ValueType == "number")
+        {
+            if (value.ValueKind == JsonValueKind.Null)
+            {
+                return definition.DefaultValue.ValueKind == JsonValueKind.Null;
+            }
+
+            return value.ValueKind == JsonValueKind.Number;
+        }
+
+        if (definition.ValueType == "string")
+        {
+            if (value.ValueKind == JsonValueKind.Null)
+            {
+                return definition.DefaultValue.ValueKind == JsonValueKind.Null;
+            }
+
+            if (value.ValueKind != JsonValueKind.String) return false;
+        }
 
         if (definition.Options.Count == 0) return true;
 

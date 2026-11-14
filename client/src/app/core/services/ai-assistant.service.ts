@@ -18,6 +18,7 @@ import { AiDraftService } from '@core/services/ai-draft.service';
 import { AiEffort } from '@core/models/ai-effort';
 import { AiEffortService } from '@core/services/ai-effort.service';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
+import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import {
   AiSessionService,
@@ -52,6 +53,7 @@ export class AiAssistantService {
   private readonly applyProgress = inject(AiApplyProgressService);
   private readonly catalog = inject(AiModelCatalogService);
   private readonly effort = inject(AiEffortService);
+  private readonly preferences = inject(UserPreferencesService);
   private readonly typewriter = inject(AiTypewriterService);
   private readonly drafts = inject(AiDraftService);
   private readonly sessions = inject(AiSessionService);
@@ -171,6 +173,9 @@ export class AiAssistantService {
   }
 
   async ensureLoaded() {
+    await this.preferences.loadAndWait();
+    this.catalog.resetToPreference();
+    this.effort.resetToPreference();
     await this.catalog.load();
   }
 

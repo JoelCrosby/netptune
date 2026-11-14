@@ -43,6 +43,12 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = "assistant",
+            Label = "Assistant",
+            Order = 19,
+        },
+        new()
+        {
             Key = "workspace",
             Label = "Workspace",
             Order = 25,
@@ -231,6 +237,30 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             AllowedScopes = [PreferenceScopes.Global],
             Internal = true,
             Order = 10,
+        },
+        new()
+        {
+            Key = PreferenceKeys.AssistantModel,
+            GroupKey = "assistant",
+            Label = "Assistant model",
+            ControlType = "hidden",
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement<string?>(null),
+            AllowedScopes = [PreferenceScopes.Global],
+            Internal = true,
+            Order = 10,
+        },
+        new()
+        {
+            Key = PreferenceKeys.AssistantEffort,
+            GroupKey = "assistant",
+            Label = "Assistant effort",
+            ControlType = "hidden",
+            ValueType = "number",
+            DefaultValue = JsonSerializer.SerializeToElement<int?>(null),
+            AllowedScopes = [PreferenceScopes.Global],
+            Internal = true,
+            Order = 20,
         },
         ..NotificationDefinitions(),
     ];
