@@ -22,3 +22,9 @@
 cdk-virtual-scroll-viewport .cdk-virtual-scroll-content-wrapper {
   padding-right: 0.4rem;
 }
+
+/* Holds the scrollbar's width whether or not it is showing, so the gutter can
+   be measured once and matched by anything centred beside the scroller. */
+.scroll-gutter {
+  scrollbar-gutter: stable;
+}

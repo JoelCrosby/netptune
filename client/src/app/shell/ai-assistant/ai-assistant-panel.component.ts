@@ -1,6 +1,8 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   DestroyRef,
+  ElementRef,
   Injector,
   afterNextRender,
   computed,
@@ -8,6 +10,7 @@ import {
   inject,
   input,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -20,7 +23,9 @@ import { AiPanelService } from '@core/services/ai-panel.service';
 import { AiAssistantChangeSetComponent } from './components/ai-assistant-change-set.component';
 import { AiAssistantComposerComponent } from './components/ai-assistant-composer.component';
 import { AiAssistantEmptyStateComponent } from './components/ai-assistant-empty-state.component';
+import { AiAssistantGreetingComponent } from './components/ai-assistant-greeting.component';
 import { AiAssistantHeaderComponent } from './components/ai-assistant-header.component';
+import { AiAssistantPromptsComponent } from './components/ai-assistant-prompts.component';
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
 import { AiQuestionResponse } from './components/ai-assistant-question.component';
@@ -38,14 +43,17 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
   },
   imports: [
     LucideArrowDown,
+    NgTemplateOutlet,
     MessageScrollerDirective,
     MessageScrollerItemDirective,
     AiAssistantChangeSetComponent,
     AiAssistantComposerComponent,
     AiAssistantEmptyStateComponent,
+    AiAssistantGreetingComponent,
     AiAssistantHeaderComponent,
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
+    AiAssistantPromptsComponent,
     ResizeHandleComponent,
   ],
   template: `
@@ -69,10 +77,12 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
       }
 
       <app-ai-assistant-header
+        [style.paddingRight.px]="scrollbarGutter()"
         [title]="headerTitle()"
         [subtitle]="headerSubtitle()"
         [mode]="panel.mode()"
         [contentWidth]="contentWidth()"
+        [roomy]="isPage()"
         [closable]="!isPage()"
         [hasModeMenu]="!isReview()"
         (modeChange)="setMode($event)"
@@ -83,13 +93,14 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
         <div
           appMessageScroller
           #scroller="messageScroller"
-          class="custom-scroll flex min-h-0 flex-1 flex-col overflow-y-auto"
+          #scrollPane
+          class="custom-scroll scroll-gutter flex min-h-0 flex-1 flex-col overflow-y-auto"
           role="log"
           i18n-aria-label="Accessible name of the assistant transcript"
           aria-label="Conversation">
           <div
-            class="mx-auto flex w-full flex-1 flex-col px-4.5 pt-5 pb-3"
-            [class]="contentWidth()">
+            class="mx-auto flex w-full flex-1 flex-col"
+            [class]="transcriptClass()">
             @if (isMissingKey()) {
               <app-ai-assistant-missing-key
                 class="mb-4"
@@ -97,7 +108,22 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
             }
 
             @if (entries().length === 0) {
-              <app-ai-assistant-empty-state (selected)="send($event)" />
+              @if (isCenteredStart()) {
+                <div
+                  class="flex flex-1 flex-col items-center justify-center gap-7 pb-14">
+                  <app-ai-assistant-greeting [roomy]="true" />
+
+                  <div class="w-full">
+                    <ng-container *ngTemplateOutlet="composer" />
+                  </div>
+
+                  <app-ai-assistant-prompts
+                    [roomy]="true"
+                    (selected)="send($event)" />
+                </div>
+              } @else {
+                <app-ai-assistant-empty-state (selected)="send($event)" />
+              }
             } @else {
               @if (assistant.droppedMessages() > 0) {
                 <p
@@ -111,11 +137,15 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
                 </p>
               }
 
-              <div class="flex flex-col gap-4.5">
+              <div
+                class="flex flex-col"
+                [class]="isPage() ? 'gap-6' : 'gap-4.5'">
                 @for (entry of entries(); track $index) {
                   <app-ai-assistant-message
                     [appMessageScrollerItem]="'entry-' + $index"
                     [scrollAnchor]="entry.role === 'user'"
+                    [class.mt-4]="isPage() && entry.role === 'user' && !$first"
+                    [roomy]="isPage()"
                     [entry]="entry"
                     [references]="assistant.references()"
                     [changeSets]="assistant.appliedChangeSets()"
@@ -140,6 +170,7 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
           <button
             type="button"
             class="bg-card border-border text-muted hover:text-foreground absolute inset-x-0 bottom-3 mx-auto flex h-8 w-8 items-center justify-center rounded-full border shadow-md transition-colors"
+            [style.right.px]="scrollbarGutter()"
             i18n-aria-label="
               Accessible label for the button that scrolls to the newest message
             "
@@ -150,22 +181,35 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
         }
       </div>
 
-      @if (!isReview() && assistant.changeSet(); as proposal) {
-        <app-ai-assistant-change-set
-          [changeSet]="proposal"
-          [excludedChangeIds]="assistant.excludedChangeIds()"
-          [isApplying]="assistant.isApplying()"
-          [contentWidth]="contentWidth()"
-          [workspace]="assistant.workspaceKey()"
-          (toggled)="assistant.toggleChange($event)"
-          (selectionChanged)="assistant.toggleChanges($event)"
-          (applied)="apply()"
-          (discarded)="discard()"
-          (undone)="undo()"
-          (stopped)="stopApplying()" />
-      }
+      <!-- Matches the transcript's scrollbar gutter so both columns centre on
+           the same line. -->
+      <div [style.paddingRight.px]="scrollbarGutter()">
+        @if (!isReview() && assistant.changeSet(); as proposal) {
+          <app-ai-assistant-change-set
+            [changeSet]="proposal"
+            [excludedChangeIds]="assistant.excludedChangeIds()"
+            [isApplying]="assistant.isApplying()"
+            [contentWidth]="contentWidth()"
+            [roomy]="isPage()"
+            [workspace]="assistant.workspaceKey()"
+            (toggled)="assistant.toggleChange($event)"
+            (selectionChanged)="assistant.toggleChanges($event)"
+            (applied)="apply()"
+            (discarded)="discard()"
+            (undone)="undo()"
+            (stopped)="stopApplying()" />
+        }
 
+        @if (!isCenteredStart()) {
+          <ng-container *ngTemplateOutlet="composer" />
+        }
+      </div>
+    </div>
+
+    <ng-template #composer>
       <app-ai-assistant-composer
+        [roomy]="isPage()"
+        [inline]="isCenteredStart()"
         [disabled]="isMissingKey()"
         [models]="assistant.models()"
         [selectedModel]="assistant.selectedModel()"
@@ -190,7 +234,7 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
         (editCancelled)="assistant.cancelEdit()"
         (modelSelected)="assistant.selectModel($event)"
         (effortSelected)="assistant.selectEffort($event)" />
-    </div>
+    </ng-template>
   `,
 })
 export class AiAssistantPanelComponent {
@@ -202,9 +246,17 @@ export class AiAssistantPanelComponent {
 
   private readonly scroller = viewChild.required(MessageScrollerDirective);
   private readonly composer = viewChild.required(AiAssistantComposerComponent);
+  private readonly scrollPane =
+    viewChild.required<ElementRef<HTMLElement>>('scrollPane');
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
 
   private anchoredId: string | null = null;
+
+  // The scroll pane holds its gutter whether or not the scrollbar shows, so one
+  // reading stands for the life of the panel. Platforms that overlay their
+  // scrollbars report nothing, which is the right answer there.
+  protected readonly scrollbarGutter = signal(0);
 
   protected readonly assistant = inject(AiAssistantService);
   protected readonly panel = inject(AiPanelService);
@@ -243,11 +295,34 @@ export class AiAssistantPanelComponent {
     return this.isPage() ? 'max-w-3xl' : '';
   });
 
+  protected readonly transcriptClass = computed(() => {
+    const width = this.contentWidth();
+
+    return this.isPage()
+      ? `${width} px-6 pt-8 pb-6`
+      : `${width} px-4.5 pt-5 pb-3`;
+  });
+
+  // A new chat on the page puts the greeting and the composer together in the
+  // middle, the way a blank slate reads best; once a reply lands the composer
+  // docks at the bottom.
+  protected readonly isCenteredStart = computed(() => {
+    const isEmpty = this.entries().length === 0;
+
+    return this.isPage() && isEmpty && !this.isMissingKey();
+  });
+
   protected readonly headerTitle = computed(() => {
     const title = this.assistant.conversationTitle();
 
     if (title) {
       return title;
+    }
+
+    // The greeting already says this is a blank slate, so the page leaves the
+    // header to the actions alone.
+    if (this.isCenteredStart()) {
+      return '';
     }
 
     return $localize`:Header of a conversation that has not started yet:New chat`;
@@ -256,7 +331,9 @@ export class AiAssistantPanelComponent {
   constructor() {
     const stopWatching = this.panel.watchTranscript();
 
-    inject(DestroyRef).onDestroy(stopWatching);
+    this.destroyRef.onDestroy(stopWatching);
+
+    this.afterRender(() => this.watchScrollbarGutter());
 
     effect(() => {
       const entries = this.assistant.entries();
@@ -277,6 +354,24 @@ export class AiAssistantPanelComponent {
 
       this.afterRender(() => this.scroller().scrollToEnd());
     });
+  }
+
+  // The gutter only moves when the pane itself does — a zoom, or a platform
+  // that swaps its scrollbars — so it is read off resizes rather than polled.
+  private watchScrollbarGutter() {
+    const pane = this.scrollPane().nativeElement;
+
+    const measure = () => {
+      this.scrollbarGutter.set(pane.offsetWidth - pane.clientWidth);
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(measure);
+
+    observer.observe(pane);
+
+    this.destroyRef.onDestroy(() => observer.disconnect());
   }
 
   private latestTurnId(entries: AiChatEntry[]): string | null {

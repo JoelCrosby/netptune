@@ -17,7 +17,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
 
 @Component({
   selector: 'app-ai-assistant-composer',
-  host: { class: 'block px-4 pb-3.5' },
+  host: { class: 'block' },
   imports: [
     AiAssistantContextComponent,
     AiAssistantEffortMenuComponent,
@@ -27,9 +27,10 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
     LucideSquare,
   ],
   template: `
-    <div class="mx-auto w-full" [class]="contentWidth()">
+    <div class="mx-auto w-full" [class]="outerClass()">
       <div
-        class="bg-form-field-background border-foreground/15 focus-within:border-primary flex flex-col gap-1 rounded-[14px] border p-2 transition-colors">
+        class="bg-form-field-background border-foreground/15 focus-within:border-primary flex flex-col gap-1 border transition-colors"
+        [class]="fieldClass()">
         @if (hasContextRow()) {
           <app-ai-assistant-context
             class="px-0.5 pt-0.5"
@@ -41,8 +42,9 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
 
         <textarea
           #input
-          rows="2"
-          class="placeholder:text-muted w-full resize-none bg-transparent px-1.5 pt-1.5 pb-0.5 text-[13.5px] leading-normal outline-none"
+          [rows]="roomy() ? 3 : 2"
+          class="placeholder:text-muted w-full resize-none bg-transparent outline-none"
+          [class]="textareaClass()"
           [ngModel]="draft()"
           (ngModelChange)="draftChanged.emit($event)"
           (keydown)="onKeydown($event)"
@@ -95,7 +97,8 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
             </span>
             <button
               type="button"
-              class="bg-foreground/5 text-foreground ring-foreground/15 hover:bg-foreground/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 transition-colors ring-inset"
+              class="bg-foreground/5 text-foreground ring-foreground/15 hover:bg-foreground/10 flex shrink-0 items-center justify-center rounded-full ring-1 transition-colors ring-inset"
+              [class]="roomy() ? 'h-9.5 w-9.5' : 'h-8 w-8'"
               i18n-aria-label="
                 Accessible label for the button that stops the assistant
               "
@@ -106,19 +109,18 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           } @else {
             <button
               type="button"
-              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors"
-              [class]="
-                canSend()
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/88'
-                  : 'bg-foreground/5 text-muted'
-              "
+              class="flex shrink-0 items-center justify-center rounded-full transition-colors"
+              [class]="sendClass()"
               [disabled]="!canSend()"
               i18n-aria-label="
                 Accessible label for the button that sends a message
               "
               aria-label="Send message"
               (click)="send()">
-              <svg lucideArrowUp class="h-3.75 w-3.75" strokeWidth="2.2"></svg>
+              <svg
+                lucideArrowUp
+                [class]="roomy() ? 'h-4.5 w-4.5' : 'h-3.75 w-3.75'"
+                strokeWidth="2.2"></svg>
             </button>
           }
         </div>
@@ -143,6 +145,9 @@ export class AiAssistantComposerComponent {
   readonly draft = input('');
   readonly chips = input<readonly AiContextChip[]>([]);
   readonly hasRemovedContext = input(false);
+  readonly roomy = input(false);
+  // Centred under the greeting on a new chat, rather than docked at the bottom.
+  readonly inline = input(false);
 
   readonly messageSent = output<string>();
   readonly modelSelected = output<string | null>();
@@ -158,6 +163,42 @@ export class AiAssistantComposerComponent {
 
   protected readonly hasContextRow = computed(() => {
     return this.chips().length > 0 || this.hasRemovedContext();
+  });
+
+  protected readonly outerClass = computed(() => {
+    const width = this.contentWidth();
+
+    if (this.inline()) {
+      return width;
+    }
+
+    return this.roomy() ? `${width} px-6 pb-6` : `${width} px-4.5 pb-3.5`;
+  });
+
+  protected readonly fieldClass = computed(() => {
+    if (this.roomy()) {
+      return 'rounded-[20px] p-2.5 shadow-sm';
+    }
+
+    return 'rounded-[14px] p-2';
+  });
+
+  protected readonly textareaClass = computed(() => {
+    if (this.roomy()) {
+      return 'px-2 pt-2 pb-1 text-[15px] leading-relaxed';
+    }
+
+    return 'px-1.5 pt-1.5 pb-0.5 text-[13.5px] leading-normal';
+  });
+
+  protected readonly sendClass = computed(() => {
+    const size = this.roomy() ? 'h-9.5 w-9.5' : 'h-8 w-8';
+
+    if (this.canSend()) {
+      return `${size} bg-primary text-primary-foreground hover:bg-primary/88`;
+    }
+
+    return `${size} bg-foreground/5 text-muted`;
   });
 
   protected readonly canSend = computed(() => {

@@ -43,8 +43,10 @@ const COPIED_RESET_MS = 1500;
 @Component({
   selector: 'app-ai-assistant-message',
   host: {
-    class: 'flex flex-col gap-3',
+    class: 'flex flex-col',
     '[class.items-end]': 'isUser()',
+    '[class.gap-3]': '!roomy()',
+    '[class.gap-4]': 'roomy()',
   },
   imports: [
     AiAssistantMarkdownComponent,
@@ -64,13 +66,15 @@ const COPIED_RESET_MS = 1500;
     @if (isUser()) {
       @if (entry().answer; as answer) {
         <p
-          class="bg-primary/10 border-primary/25 max-w-[85%] rounded-[14px_14px_4px_14px] border px-3.5 py-2.25 text-[13.5px] leading-normal whitespace-pre-wrap">
+          class="bg-primary/10 border-primary/25 border whitespace-pre-wrap"
+          [class]="bubbleClass()">
           {{ describeAnswer(answer) }}
         </p>
       } @else if (changeSet(); as applied) {
         <button
           type="button"
-          class="bg-primary/10 hover:border-primary/35 flex max-w-[85%] items-center gap-2.5 rounded-[14px_14px_4px_14px] border border-transparent px-3.5 py-2.25 text-left text-[13.5px] transition-colors"
+          class="bg-primary/10 hover:border-primary/35 flex items-center gap-2.5 border border-transparent text-left transition-colors"
+          [class]="bubbleClass()"
           (click)="showChanges(applied)">
           <svg lucideListChecks class="text-primary h-4 w-4 shrink-0"></svg>
           <span>{{ changeSummary() }}</span>
@@ -81,8 +85,7 @@ const COPIED_RESET_MS = 1500;
           </span>
         </button>
       } @else {
-        <p
-          class="bg-primary/10 max-w-[85%] rounded-[14px_14px_4px_14px] px-3.5 py-2.25 text-[13.5px] leading-normal whitespace-pre-wrap">
+        <p class="whitespace-pre-wrap" [class]="userBubbleClass()">
           {{ entry().text }}
         </p>
       }
@@ -107,12 +110,14 @@ const COPIED_RESET_MS = 1500;
         [isLive]="isStreaming()"
         [isThinking]="isThinking()"
         [elapsedMs]="elapsedMs()"
+        [roomy]="roomy()"
         [usage]="turnUsage()" />
 
       <app-ai-assistant-markdown
         [class.text-error]="entry().failed"
         [blocks]="blocks()"
         [references]="references()"
+        [roomy]="roomy()"
         [workspace]="workspace()" />
 
       @if (entry().question; as question) {
@@ -125,7 +130,9 @@ const COPIED_RESET_MS = 1500;
       }
 
       @if (hasFooter()) {
-        <div class="text-muted -mt-1 flex items-center gap-0.5">
+        <div
+          class="text-muted flex items-center gap-0.5"
+          [class]="roomy() ? '-mt-2' : '-mt-1'">
           @if (entry().stopped) {
             <span
               class="mr-2 text-xs italic"
@@ -193,6 +200,7 @@ export class AiAssistantMessageComponent {
   readonly turnUsage = input<AiTokenUsage | null>(null);
   readonly usage = input<AiTokenUsage | null>(null);
   readonly isLast = input(false);
+  readonly roomy = input(false);
 
   readonly retried = output();
   readonly edited = output();
@@ -205,6 +213,20 @@ export class AiAssistantMessageComponent {
   protected readonly isCopied = signal(false);
 
   protected readonly isUser = computed(() => this.entry().role === 'user');
+
+  protected readonly bubbleClass = computed(() => {
+    if (this.roomy()) {
+      return 'max-w-[82%] rounded-[14px_14px_4px_14px] px-4.5 py-3 text-[15px] leading-relaxed';
+    }
+
+    return 'max-w-[85%] rounded-[14px_14px_4px_14px] px-3.5 py-2.25 text-[13.5px] leading-normal';
+  });
+
+  protected readonly userBubbleClass = computed(() => {
+    const surface = this.roomy() ? 'bg-hover' : 'bg-primary/10';
+
+    return `${surface} ${this.bubbleClass()}`;
+  });
 
   protected describeAnswer(answer: AiQuestionAnswer): string {
     return answer.text ?? answer.selectedLabels.join(', ');

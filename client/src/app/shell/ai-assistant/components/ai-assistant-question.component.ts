@@ -1,9 +1,12 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiQuestion, AiQuestionAnswer } from '@core/models/ai-conversation';
-import { LucideCheck, LucidePencil, LucideSend } from '@lucide/angular';
-import { InlineButtonComponent } from '@static/components/button/inline-button.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import {
+  LucideArrowUp,
+  LucideCheck,
+  LucideCircleHelp,
+  LucidePencil,
+} from '@lucide/angular';
 
 export interface AiQuestionResponse {
   question: AiQuestion;
@@ -16,110 +19,113 @@ export interface AiQuestionResponse {
   host: { class: 'block' },
   imports: [
     FormsModule,
-    IconButtonComponent,
-    InlineButtonComponent,
+    LucideArrowUp,
     LucideCheck,
+    LucideCircleHelp,
     LucidePencil,
-    LucideSend,
   ],
   template: `
     <div
-      class="border-border bg-hover rounded-2xl border p-3"
+      class="border-border bg-card flex flex-col gap-3 rounded-2xl border p-4 pb-3"
       role="group"
       [attr.aria-label]="question().text">
-      @if (question().header; as header) {
-        <span
-          class="bg-hover text-muted rounded px-1.5 py-0.5 text-[0.65rem] tracking-wide uppercase">
-          {{ header }}
-        </span>
-      }
+      <div class="flex flex-col gap-1.5">
+        @if (question().header; as header) {
+          <span
+            class="text-muted flex items-center gap-1.75 text-[11px] font-semibold tracking-[0.09em] uppercase">
+            <svg
+              lucideCircleHelp
+              class="h-3.25 w-3.25 shrink-0"
+              [class]="iconClass()"></svg>
+            {{ header }}
+          </span>
+        }
 
-      <p class="mt-1.5 text-sm font-medium">{{ question().text }}</p>
+        <p class="text-[15px] leading-snug font-semibold">
+          {{ question().text }}
+        </p>
+      </div>
 
-      <div class="mt-2.5 flex flex-col gap-1.5">
+      <div class="flex flex-col gap-0.5">
         @for (option of question().options; track option.label) {
           <button
             type="button"
-            class="border-border/60 hover:border-primary/60 flex w-full flex-col gap-0.5 rounded-xl border px-3 py-2 text-left transition-colors disabled:cursor-default"
-            [class]="optionClass(option.label)"
+            class="flex w-full items-start gap-3 rounded-[10px] p-3 text-left transition-colors disabled:cursor-default"
+            [class]="rowClass(option.label)"
             [disabled]="isSettled()"
             [attr.aria-pressed]="isChosen(option.label)"
             (click)="choose(option.label)">
-            <span class="flex items-center gap-1.5 text-sm">
+            <span
+              class="mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-md"
+              [class]="badgeClass(option.label)">
               @if (isChosen(option.label)) {
                 <svg
                   lucideCheck
-                  class="text-primary h-3.5 w-3.5 shrink-0"></svg>
+                  class="text-primary-foreground h-3 w-3"
+                  strokeWidth="3.2"></svg>
+              } @else if (!question().multiSelect) {
+                <span class="font-avatar text-[11px] leading-none">
+                  {{ $index + 1 }}
+                </span>
               }
-              {{ option.label }}
             </span>
-            @if (option.description) {
-              <span class="text-muted text-xs">{{ option.description }}</span>
-            }
+
+            <span class="flex min-w-0 flex-1 flex-col gap-0.75">
+              <span class="text-[14.5px] leading-snug font-medium">
+                {{ option.label }}
+              </span>
+              @if (option.description) {
+                <span class="text-muted text-[13px] leading-normal">
+                  {{ option.description }}
+                </span>
+              }
+            </span>
           </button>
         }
       </div>
 
       @if (!isSettled()) {
-        @if (isTyping()) {
-          <div class="mt-2 flex items-end gap-2">
-            <textarea
-              rows="2"
-              class="border-border placeholder:text-muted flex-1 resize-none rounded-xl border bg-transparent px-3 py-2 text-sm outline-none"
-              i18n-placeholder="
-                Placeholder of the box for answering the assistant in your own
-                words
-              "
-              placeholder="Type your answer"
-              [ngModel]="typed()"
-              (ngModelChange)="typed.set($event)"
-              (keydown)="onKeydown($event)"></textarea>
+        <div
+          class="flex items-center gap-2.5 border-t pt-2.5"
+          [class]="footerClass()">
+          <svg lucidePencil class="text-muted h-3.25 w-3.25 shrink-0"></svg>
 
+          <input
+            type="text"
+            class="placeholder:text-muted min-w-0 flex-1 bg-transparent py-1.5 text-[13.5px] outline-none"
+            i18n-placeholder="
+              Placeholder of the box for answering the assistant in your own
+              words
+            "
+            placeholder="Type your answer"
+            [ngModel]="typed()"
+            (ngModelChange)="typed.set($event)"
+            (keydown)="onKeydown($event)" />
+
+          @if (showSendChoices()) {
             <button
               type="button"
-              app-icon-button
-              class="bg-primary text-primary-foreground hover:bg-primary/88 h-9 w-9 shrink-0 disabled:opacity-40"
+              class="bg-primary text-primary-foreground hover:bg-primary/88 shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors"
+              (click)="sendSelected()">
+              <span i18n="Button that sends the options picked in an answer">
+                Send
+              </span>
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors"
+              [class]="sendClass()"
               [disabled]="!canSendTyped()"
               i18n-aria-label="
                 Accessible label for the button that sends a typed answer
               "
               aria-label="Send answer"
               (click)="sendTyped()">
-              <svg lucideSend class="h-4 w-4"></svg>
+              <svg lucideArrowUp class="h-3.5 w-3.5" strokeWidth="2.4"></svg>
             </button>
-          </div>
-        } @else {
-          <div class="mt-2 flex items-center justify-between gap-2">
-            <button
-              type="button"
-              app-inline-button
-              color="muted"
-              appearance="lift"
-              class="gap-1"
-              (click)="startTyping()">
-              <svg lucidePencil class="h-3 w-3"></svg>
-              <span
-                i18n="
-                  Button that opens a box for answering the assistant in your
-                  own words
-                ">
-                Something else
-              </span>
-            </button>
-
-            @if (question().multiSelect) {
-              <button
-                type="button"
-                class="bg-primary text-primary-foreground rounded-full px-3 py-1.5 text-xs transition disabled:opacity-40"
-                [disabled]="selected().length === 0"
-                (click)="sendSelected()">
-                <span i18n="Button that sends the options picked in an answer">
-                  Send
-                </span>
-              </button>
-            }
-          </div>
-        }
+          }
+        </div>
       }
     </div>
   `,
@@ -132,7 +138,6 @@ export class AiAssistantQuestionComponent {
   readonly answered = output<AiQuestionResponse>();
 
   protected readonly selected = signal<string[]>([]);
-  protected readonly isTyping = signal(false);
   protected readonly typed = signal('');
 
   protected readonly isSettled = computed(() => {
@@ -143,14 +148,49 @@ export class AiAssistantQuestionComponent {
     return this.typed().trim().length > 0;
   });
 
-  protected optionClass(label: string): string {
-    const isChosen = this.isChosen(label);
+  protected readonly iconClass = computed(() => {
+    return this.isSettled() ? 'text-muted' : 'text-primary';
+  });
 
-    if (isChosen) {
-      return 'border-primary bg-primary/10';
+  // Typing wins over ticked options, so the one button in the footer follows
+  // the answer the person is actually working on.
+  protected readonly showSendChoices = computed(() => {
+    const hasSelection = this.selected().length > 0;
+
+    return this.question().multiSelect && hasSelection && !this.canSendTyped();
+  });
+
+  // The rule above the footer picks up the accent once focus has moved there.
+  protected readonly footerClass = computed(() => {
+    return this.canSendTyped() ? 'border-primary' : 'border-border/70';
+  });
+
+  protected readonly sendClass = computed(() => {
+    if (this.canSendTyped()) {
+      return 'bg-primary text-primary-foreground hover:bg-primary/88';
     }
 
-    return this.isSettled() ? 'opacity-60' : '';
+    return 'bg-foreground/5 text-muted';
+  });
+
+  protected rowClass(label: string): string {
+    if (this.isChosen(label)) {
+      return 'bg-primary/10';
+    }
+
+    return this.isSettled() ? 'opacity-45' : 'hover:bg-hover';
+  }
+
+  protected badgeClass(label: string): string {
+    if (this.isChosen(label)) {
+      return 'bg-primary';
+    }
+
+    if (this.question().multiSelect) {
+      return 'border-foreground/25 border';
+    }
+
+    return 'bg-foreground/8 text-muted';
   }
 
   protected isChosen(label: string): boolean {
@@ -189,10 +229,6 @@ export class AiAssistantQuestionComponent {
     });
   }
 
-  protected startTyping() {
-    this.isTyping.set(true);
-  }
-
   protected sendSelected() {
     const labels = this.selected();
 
@@ -216,13 +252,6 @@ export class AiAssistantQuestionComponent {
   }
 
   protected onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      event.stopPropagation();
-      this.isTyping.set(false);
-
-      return;
-    }
-
     const isSubmit = event.key === 'Enter' && !event.shiftKey;
 
     if (!isSubmit) {

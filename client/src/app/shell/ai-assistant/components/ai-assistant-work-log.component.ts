@@ -52,15 +52,26 @@ const stepSeconds = numberFormat({
   ],
   template: `
     @if (isVisible()) {
-      <div
-        class="flex flex-col overflow-hidden rounded-[10px] border"
-        [class]="isLive() ? 'border-primary/35' : 'border-foreground/7'">
-        @if (isLive()) {
-          <div
-            class="bg-foreground/3 text-foreground/70 flex h-8.5 items-center gap-2 px-2.5 text-xs"
-            role="status">
-            <app-spinner-icon class="h-3.5 w-3.5" />
-            <span class="min-w-0 flex-1 truncate">{{ liveLabel() }}</span>
+      <div class="flex flex-col overflow-hidden" [class]="frameClass()">
+        <button
+          type="button"
+          class="text-muted hover:text-foreground flex h-8.5 items-center gap-2 text-left text-xs transition-colors disabled:cursor-default disabled:hover:text-current"
+          [class]="barClass()"
+          [disabled]="steps().length === 0"
+          [attr.aria-expanded]="steps().length > 0 ? isExpanded() : null"
+          (click)="isExpanded.set(!isExpanded())">
+          @if (isLive()) {
+            <app-spinner-icon class="h-3.5 w-3.5 shrink-0" />
+          } @else if (entry().stopped) {
+            <svg lucideSquare class="h-2.5 w-2.5 shrink-0 fill-current"></svg>
+          } @else {
+            <svg lucideSparkle class="text-primary h-3.5 w-3.5 shrink-0"></svg>
+          }
+
+          @if (isLive()) {
+            <span class="text-shimmer min-w-0 flex-1 truncate" role="status">
+              {{ liveLabel() }}
+            </span>
             @if (liveMeta(); as meta) {
               <span
                 class="font-avatar text-muted text-[10.5px] tabular-nums"
@@ -68,34 +79,20 @@ const stepSeconds = numberFormat({
                 {{ meta }}
               </span>
             }
-          </div>
-        } @else {
-          <button
-            type="button"
-            class="bg-foreground/3 text-muted hover:text-foreground flex h-8.5 items-center gap-2 px-2.5 text-left text-xs transition-colors disabled:cursor-default disabled:hover:text-current"
-            [disabled]="steps().length === 0"
-            [attr.aria-expanded]="steps().length > 0 ? isExpanded() : null"
-            (click)="isExpanded.set(!isExpanded())">
-            @if (entry().stopped) {
-              <svg lucideSquare class="h-2.5 w-2.5 shrink-0 fill-current"></svg>
-            } @else {
-              <svg
-                lucideSparkle
-                class="text-primary h-3.5 w-3.5 shrink-0"></svg>
-            }
+          } @else {
             <span class="min-w-0 flex-1 truncate">{{ summary() }}</span>
-            @if (steps().length > 0) {
-              <svg
-                lucideChevronDown
-                class="h-3.5 w-3.5 shrink-0 transition-transform"
-                [class.rotate-180]="isExpanded()"></svg>
-            }
-          </button>
-        }
+          }
+
+          @if (steps().length > 0) {
+            <svg
+              lucideChevronDown
+              class="h-3.5 w-3.5 shrink-0 transition-transform"
+              [class.rotate-180]="isExpanded()"></svg>
+          }
+        </button>
 
         @if (showSteps()) {
-          <ul
-            class="border-foreground/7 flex flex-col border-t px-2.5 pt-1.5 pb-2">
+          <ul class="flex flex-col" [class]="stepsClass()">
             @for (step of steps(); track step.key) {
               <li
                 class="grid h-6.5 grid-cols-[14px_auto_minmax(0,1fr)_auto] items-center gap-2 text-xs">
@@ -154,8 +151,37 @@ export class AiAssistantWorkLogComponent {
   readonly isThinking = input(false);
   readonly elapsedMs = input(0);
   readonly usage = input<AiTokenUsage | null>(null);
+  readonly roomy = input(false);
 
   protected readonly isExpanded = signal(false);
+
+  // On the page the log is a quiet line above the reply; in the narrow drawer it
+  // keeps its frame so it does not read as part of the text.
+  protected readonly frameClass = computed(() => {
+    if (this.roomy()) {
+      return '';
+    }
+
+    const border = this.isLive() ? 'border-primary/35' : 'border-foreground/7';
+
+    return `rounded-[10px] border ${border}`;
+  });
+
+  protected readonly barClass = computed(() => {
+    if (this.roomy()) {
+      return '-ml-1 w-fit max-w-full rounded-md px-1.5';
+    }
+
+    return 'bg-foreground/3 px-2.5';
+  });
+
+  protected readonly stepsClass = computed(() => {
+    if (this.roomy()) {
+      return 'border-foreground/10 mt-1 ml-1.5 border-l pt-0.5 pb-1 pl-3';
+    }
+
+    return 'border-foreground/7 border-t px-2.5 pt-1.5 pb-2';
+  });
 
   private readonly calls = computed<AiStep[]>(() => {
     const entry = this.entry();
@@ -230,10 +256,12 @@ export class AiAssistantWorkLogComponent {
     return hasSteps || isWorthReporting || !!entry.stopped;
   });
 
+  // The tool calls stay folded away until asked for, live turn included; the
+  // label above already says what is running.
   protected readonly showSteps = computed(() => {
     const hasSteps = this.steps().length > 0;
 
-    return hasSteps && (this.isLive() || this.isExpanded());
+    return hasSteps && this.isExpanded();
   });
 
   protected readonly liveLabel = computed(() => {

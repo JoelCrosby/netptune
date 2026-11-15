@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiEntityReference } from '@core/models/ai-conversation';
 import { AiMarkdownBlock, AiMarkdownInline } from '@core/util/ai-markdown';
@@ -7,11 +7,13 @@ import { referenceKey, referenceRoute } from '@core/util/ai-references';
 
 @Component({
   selector: 'app-ai-assistant-markdown',
-  host: { class: 'flex flex-col gap-2 text-sm leading-relaxed' },
+  host: { class: 'block' },
   imports: [NgTemplateOutlet, RouterLink],
   template: `
-    <ng-container
-      *ngTemplateOutlet="blockList; context: { $implicit: blocks() }" />
+    <div class="flex flex-col" [class]="proseClass()">
+      <ng-container
+        *ngTemplateOutlet="blockList; context: { $implicit: blocks() }" />
+    </div>
 
     <ng-template #blockList let-list>
       @for (block of list; track $index) {
@@ -27,7 +29,8 @@ import { referenceKey, referenceRoute } from '@core/util/ai-references';
           }
           @case ('code') {
             <pre
-              class="bg-hover overflow-x-auto rounded-lg p-3 text-xs"><code>{{ block.value }}</code></pre>
+              class="bg-hover overflow-x-auto rounded-lg p-3"
+              [class]="smallClass()"><code>{{ block.value }}</code></pre>
           }
           @case ('list') {
             @if (block.ordered) {
@@ -60,7 +63,7 @@ import { referenceKey, referenceRoute } from '@core/util/ai-references';
           @case ('table') {
             <div class="border-border my-4 overflow-hidden rounded border">
               <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
+                <table class="w-full text-left" [class]="smallClass()">
                   <thead class="text-muted border-border border-b">
                     <tr>
                       @for (cell of block.head; track $index) {
@@ -196,9 +199,26 @@ export class AiAssistantMarkdownComponent {
   readonly blocks = input.required<AiMarkdownBlock[]>();
   readonly references = input<Map<string, AiEntityReference>>(new Map());
   readonly workspace = input<string | null>(null);
+  readonly roomy = input(false);
+
+  protected readonly proseClass = computed(() => {
+    if (this.roomy()) {
+      return 'gap-4 text-[15px] leading-[1.7]';
+    }
+
+    return 'gap-2 text-sm leading-relaxed';
+  });
+
+  protected readonly smallClass = computed(() => {
+    return this.roomy() ? 'text-[13px]' : 'text-xs';
+  });
 
   protected headingSize(block: AiMarkdownBlock): string {
     const isTopLevel = block.kind === 'heading' && block.level <= 2;
+
+    if (this.roomy()) {
+      return isTopLevel ? 'mt-2 text-[19px]' : 'mt-1 text-[16px]';
+    }
 
     return isTopLevel ? 'text-base' : 'text-sm';
   }

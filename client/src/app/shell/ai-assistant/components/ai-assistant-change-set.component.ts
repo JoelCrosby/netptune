@@ -51,7 +51,7 @@ const INLINE_ROW_LIMIT = 3;
     SelectionCheckboxComponent,
   ],
   template: `
-    <div class="mx-auto w-full px-4 py-3" [class]="contentWidth()">
+    <div class="mx-auto w-full" [class]="outerClass()">
       <section
         class="border-border bg-card rise-in flex flex-col overflow-hidden rounded-[10px] border"
         [attr.aria-label]="blockLabel">
@@ -341,6 +341,13 @@ export class AiAssistantChangeSetComponent {
   readonly excludedChangeIds = input.required<Set<number>>();
   readonly isApplying = input(false);
   readonly contentWidth = input('');
+  readonly roomy = input(false);
+
+  protected readonly outerClass = computed(() => {
+    const width = this.contentWidth();
+
+    return this.roomy() ? `${width} px-6 py-3` : `${width} px-4.5 py-3`;
+  });
   readonly workspace = input<string | null>(null);
 
   readonly toggled = output<number>();
