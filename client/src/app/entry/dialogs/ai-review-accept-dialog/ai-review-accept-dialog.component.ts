@@ -14,7 +14,6 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
-import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
 import { FormControlInputDirective } from '@static/components/form-control/form-control.directives';
@@ -29,8 +28,8 @@ import { DiffMode } from '@static/components/text-diff/text-diff';
 import { TextDiffComponent } from '@static/components/text-diff/text-diff.component';
 import { ValueChipComponent } from '@static/components/value-chip/value-chip.component';
 import { ValueSwapComponent } from '@static/components/value-swap/value-swap.component';
-import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { ScrollOverflowDirective } from '@static/directives/scroll-overflow.directive';
 
 export interface AiReviewAcceptTaskState {
   tags: string[];
@@ -75,15 +74,14 @@ const maxTagNameLength = 128;
     BadgeComponent,
     CalloutComponent,
     CheckboxComponent,
-    DialogActionsDirective,
     DialogCloseDirective,
-    DialogContentComponent,
     DialogTitleComponent,
     FlatButtonComponent,
     FormControlFieldComponent,
     FormControlInputDirective,
     FormTextAreaComponent,
     PanelComponent,
+    ScrollOverflowDirective,
     SegmentedControlComponent,
     StrokedButtonComponent,
     TaskScopeIdComponent,
@@ -91,18 +89,24 @@ const maxTagNameLength = 128;
     ValueChipComponent,
     ValueSwapComponent,
   ],
+  host: { class: 'flex min-h-0 flex-auto flex-col' },
   template: `
     <app-dialog-title
+      class="border-border flex-none border-b px-6 py-5"
+      noMargin
+      showCloseButton
+      [subtitle]="data.finding.title"
       i18n="Title of the dialog that previews a review suggestion">
       Accept suggestion
     </app-dialog-title>
 
-    <app-dialog-content>
+    <div
+      appScrollOverflow
+      #bodyScroll="appScrollOverflow"
+      class="custom-scroll min-h-0 flex-auto overflow-y-auto px-6 py-5"
+      [attr.tabindex]="bodyScroll.overflowing() ? 0 : null">
       <div class="flex flex-col gap-4">
-        <div>
-          <p class="font-semibold">{{ data.finding.title }}</p>
-          <p class="text-muted mt-1 text-sm">{{ data.finding.explanation }}</p>
-        </div>
+        <p class="text-muted text-sm">{{ data.finding.explanation }}</p>
 
         @switch (data.suggestion.kind) {
           @case ('edit') {
@@ -149,7 +153,7 @@ const maxTagNameLength = 128;
                   [(value)]="mode" />
               </div>
 
-              <app-panel class="max-h-[50vh] overflow-auto">
+              <app-panel>
                 <app-text-diff
                   [before]="data.currentText"
                   [after]="after()"
@@ -327,9 +331,10 @@ const maxTagNameLength = 128;
           }
         }
       </div>
-    </app-dialog-content>
+    </div>
 
-    <div app-dialog-actions align="end">
+    <div
+      class="border-border flex flex-none items-center justify-end gap-3 border-t px-6 py-4">
       <button app-stroked-button app-dialog-close type="button">
         <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
@@ -344,6 +349,12 @@ const maxTagNameLength = 128;
   `,
 })
 export class AiReviewAcceptDialogComponent {
+  static readonly panelClass = [
+    'np-dialog-bands',
+    'np-dialog-flush',
+    'app-review-accept-dialog',
+  ];
+
   private readonly dialogRef =
     inject<
       DialogRef<AiReviewAcceptDialogResult, AiReviewAcceptDialogComponent>

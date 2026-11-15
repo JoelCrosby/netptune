@@ -172,7 +172,6 @@ export class BoardPinnedBannerComponent {
       width: TaskDetailDialogComponent.width,
       height: TaskDetailDialogComponent.height,
       data: { systemId: pinned.task.systemId },
-      panelClass: TaskDetailDialogComponent.panelClass,
       autoFocus: false,
     });
   }

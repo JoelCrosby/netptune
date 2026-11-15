@@ -213,7 +213,11 @@ interface RelationOption {
   `,
 })
 export class LinkTaskDialogComponent {
-  static readonly panelClass = 'app-link-task-dialog';
+  static readonly panelClass = [
+    'np-dialog-bands',
+    'np-dialog-flush',
+    'app-link-task-dialog',
+  ];
 
   protected readonly linkIcon = LucideLink2;
 

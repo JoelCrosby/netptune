@@ -229,7 +229,6 @@ export class BoardGroupsSelectionComponent {
     this.dialog.open(BulkEditTasksDialogComponent, {
       width: BulkEditTasksDialogComponent.width,
       data: [...this.selection.selectedTasks()],
-      panelClass: BulkEditTasksDialogComponent.panelClass,
     });
   }
 

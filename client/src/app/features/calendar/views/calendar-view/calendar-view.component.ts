@@ -220,7 +220,6 @@ export class CalendarViewComponent {
       height: TaskDetailDialogComponent.height,
       data: task,
       autoFocus: false,
-      panelClass: TaskDetailDialogComponent.panelClass,
     });
 
     this.refresh();

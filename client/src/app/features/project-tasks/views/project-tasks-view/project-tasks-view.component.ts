@@ -105,7 +105,6 @@ export class ProjectTasksViewComponent implements OnDestroy {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
       height: CreateTaskDialogComponent.height,
-      panelClass: CreateTaskDialogComponent.panelClass,
     });
   }
 

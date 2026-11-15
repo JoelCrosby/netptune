@@ -313,9 +313,8 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   private readonly isPublicViewer = inject(SessionService).isPublicViewer;
   private readonly subscriptions = inject(NotificationSubscriptionsService);
-  private readonly notify = viewChild<NotificationSubscribeComponent>(
-    'boardNotify'
-  );
+  private readonly notify =
+    viewChild<NotificationSubscribeComponent>('boardNotify');
   private readonly readActivity = hasPermission(PERMISSIONS.activity.read);
 
   private readonly isSubscribed = computed(() => {
@@ -650,7 +649,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
     this.dialog.open(BoardActivityDialogComponent, {
       width: BoardActivityDialogComponent.width,
       height: BoardActivityDialogComponent.height,
-      panelClass: BoardActivityDialogComponent.panelClass,
       data: { boardId: board.id, boardName: board.name },
       autoFocus: false,
     });

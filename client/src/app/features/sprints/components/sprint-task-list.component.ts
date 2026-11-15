@@ -270,7 +270,6 @@ export class SprintTaskListComponent {
       height: TaskDetailDialogComponent.height,
       data: task,
       autoFocus: false,
-      panelClass: TaskDetailDialogComponent.panelClass,
     });
   }
 }

@@ -176,7 +176,6 @@ export class PinnedViewComponent {
       width: TaskDetailDialogComponent.width,
       height: TaskDetailDialogComponent.height,
       data: { systemId: task.systemId },
-      panelClass: TaskDetailDialogComponent.panelClass,
       autoFocus: false,
     });
   }

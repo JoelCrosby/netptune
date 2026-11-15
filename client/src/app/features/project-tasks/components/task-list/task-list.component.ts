@@ -164,7 +164,6 @@ export class TaskListComponent {
       height: TaskDetailDialogComponent.height,
       data: task,
       autoFocus: false,
-      panelClass: TaskDetailDialogComponent.panelClass,
     });
   }
 
@@ -172,7 +171,6 @@ export class TaskListComponent {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
       height: CreateTaskDialogComponent.height,
-      panelClass: CreateTaskDialogComponent.panelClass,
     });
   }
 

@@ -463,7 +463,7 @@ const documentContentTypes = new Set([
 export class CreateTaskDialogComponent {
   static readonly width = '1140px';
   static readonly height = '740px';
-  static readonly panelClass = 'app-full-height-dialog';
+  static readonly panelClass = ['np-dialog-flush', 'app-full-height-dialog'];
 
   private taskCommands = inject(TaskCommandsService);
   private dialog = inject(DialogService);
@@ -746,7 +746,6 @@ export class CreateTaskDialogComponent {
     >(LinkTaskDialogComponent, {
       data: {},
       width: '1100px',
-      panelClass: LinkTaskDialogComponent.panelClass,
     });
 
     if (!result) return;

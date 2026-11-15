@@ -134,7 +134,6 @@ export class TaskDetailRelationsComponent {
     >(LinkTaskDialogComponent, {
       data: { task },
       width: '1100px',
-      panelClass: LinkTaskDialogComponent.panelClass,
     });
 
     if (!result) return;

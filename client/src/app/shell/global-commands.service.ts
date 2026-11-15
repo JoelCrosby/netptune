@@ -432,7 +432,6 @@ export class GlobalCommandsService {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
       height: CreateTaskDialogComponent.height,
-      panelClass: CreateTaskDialogComponent.panelClass,
     });
   }
 

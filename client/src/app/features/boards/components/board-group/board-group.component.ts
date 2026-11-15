@@ -362,7 +362,6 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
         width: TaskDetailDialogComponent.width,
         height: TaskDetailDialogComponent.height,
         data: task,
-        panelClass: TaskDetailDialogComponent.panelClass,
         autoFocus: false,
       });
     }

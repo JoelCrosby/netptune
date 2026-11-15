@@ -28,6 +28,32 @@
   }
 }
 
+/* Dialogs laid out as bands: a header, a body that scrolls, a footer that stays put.
+   Both boxes between the pane and the bands have to be shrinkable columns, or the body's
+   own scroll never engages and the dialog outgrows the viewport instead. */
+.np-dialog-bands app-dialog-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.np-dialog-bands app-dialog-container .dialog-inner {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Dialogs whose content meets the dialog's edges, so each band or panel inside pads itself. */
+.np-dialog-flush app-dialog-container {
+  padding: 0;
+  overflow: hidden;
+}
+
+.np-dialog-flush app-dialog-container .dialog-inner {
+  padding-right: 0;
+}
+
 .app-modal-class {
   transition: max-height .3s ease-out;
   height: auto;
@@ -45,17 +71,15 @@
   }
 }
 
-/* The review is a surface, not a card: the container's padding, border and
-   radius come off so the header, list and footer meet the viewport edges. */
+/* The review is a surface, not a card: the border and radius come off too, so the
+   header, list and footer meet the viewport edges. */
 .np-review-dialog app-dialog-container {
-  padding: 0;
   border: 0;
   border-radius: 0;
   background: var(--background);
 }
 
 .np-review-dialog app-dialog-container .dialog-inner {
-  padding-right: 0;
   height: 100%;
   overflow: hidden;
 }
@@ -66,13 +90,10 @@
 }
 
 .app-full-height-dialog app-dialog-container {
-  padding: 0;
-  overflow: hidden;
   box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .5);
 }
 
 .app-full-height-dialog app-dialog-container .dialog-inner {
-  padding-right: 0;
   height: 100%;
   overflow: hidden;
 }
@@ -95,10 +116,8 @@
   }
 }
 
-/* The panel grows with the fields that have been added and stops at max-height, past which
-   the rows scroll while the header, the add-a-field button and the actions stay put. Both
-   boxes between the panel and the dialog have to be shrinkable columns for that to reach
-   the scrolling rows inside.
+/* The panel grows with the fields that have been added and stops here, past which the rows
+   scroll while the header, the add-a-field button and the actions stay put.
 
    Qualified with .cdk-overlay-pane deliberately: the CDK injects its own overlay stylesheet
    at runtime, after this one, and its `.cdk-overlay-pane { max-height: 100% }` would
@@ -107,19 +126,6 @@
   height: auto;
   min-height: 300px;
   max-height: min(820px, 90vh);
-}
-
-.app-bulk-edit-dialog app-dialog-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.app-bulk-edit-dialog app-dialog-container .dialog-inner {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
 }
 
 @media only screen and (max-width: 800px) {
@@ -137,27 +143,9 @@
   }
 }
 
-/* The link dialog is three bands — header, the two picking columns, footer — so the
-   container's padding comes off and each band manages its own. */
 .cdk-overlay-pane.app-link-task-dialog {
   height: auto;
   max-height: min(760px, 92vh);
-}
-
-.app-link-task-dialog app-dialog-container {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.app-link-task-dialog app-dialog-container .dialog-inner {
-  padding-right: 0;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
 }
 
 @media only screen and (max-width: 1150px) {
@@ -175,5 +163,18 @@
 
   .app-link-task-dialog app-dialog-container {
     border-radius: 0;
+  }
+}
+
+/* Without the cap the preview of a long description pushed the confirm row past the
+   bottom of the viewport. */
+.cdk-overlay-pane.app-review-accept-dialog {
+  height: auto;
+  max-height: min(760px, 92vh);
+}
+
+@media only screen and (max-width: 767.98px) {
+  .cdk-overlay-pane.app-review-accept-dialog {
+    max-height: calc(100dvh - 24px);
   }
 }

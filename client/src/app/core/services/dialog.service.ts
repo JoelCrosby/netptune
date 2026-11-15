@@ -24,12 +24,31 @@ export interface DialogWizardConfig<D, R, C> extends DialogConfig<
 // reach it. It goes first so a dialog's own panel class still overrides it.
 const DIALOG_PANEL_CLASS = 'np-dialog';
 
-function withDialogPanelClass(panelClass?: string | string[]): string[] {
-  if (!panelClass) return [DIALOG_PANEL_CLASS];
+type DialogPanelClass = string | string[];
 
-  const existing = Array.isArray(panelClass) ? panelClass : [panelClass];
+// A dialog component declares the pane classes its own layout needs as a static
+// `panelClass`, so no caller has to remember to pass them.
+interface DialogPanelClassHost {
+  panelClass?: DialogPanelClass;
+}
 
-  return [DIALOG_PANEL_CLASS, ...existing];
+function toPanelClasses(panelClass?: DialogPanelClass): string[] {
+  if (!panelClass) return [];
+
+  return Array.isArray(panelClass) ? panelClass : [panelClass];
+}
+
+function withDialogPanelClass<C>(
+  component: ComponentType<C> & DialogPanelClassHost,
+  panelClass?: DialogPanelClass
+): string[] {
+  const classes = [
+    DIALOG_PANEL_CLASS,
+    ...toPanelClasses(component.panelClass),
+    ...toPanelClasses(panelClass),
+  ];
+
+  return [...new Set(classes)];
 }
 
 @Service()
@@ -75,7 +94,7 @@ export class DialogService {
   }
 
   private openWithContainer<R, D, C>(
-    component: ComponentType<C>,
+    component: ComponentType<C> & DialogPanelClassHost,
     config: DialogConfig<D, DialogRef<R, C>>,
     container: Type<CdkDialogContainer>,
     providers: StaticProvider[] = []
@@ -83,7 +102,7 @@ export class DialogService {
     return this.dialog.open<R, D, C>(component, {
       ...config,
       hasBackdrop: true,
-      panelClass: withDialogPanelClass(config.panelClass),
+      panelClass: withDialogPanelClass(component, config.panelClass),
       container: {
         type: container,
         providers: () => [

@@ -457,6 +457,8 @@ const clampListWidth = (width: number): number => {
   `,
 })
 export class AiAssistantReviewDialogComponent {
+  static readonly panelClass = ['np-dialog-flush', 'np-review-dialog'];
+
   protected readonly assistant = inject(AiAssistantService);
 
   private readonly panel = inject(AiPanelService);

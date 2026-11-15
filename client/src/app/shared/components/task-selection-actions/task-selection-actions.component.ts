@@ -52,7 +52,6 @@ export class TaskSelectionActionsComponent {
     this.dialog.open(BulkEditTasksDialogComponent, {
       width: BulkEditTasksDialogComponent.width,
       data: [...this.selection()],
-      panelClass: BulkEditTasksDialogComponent.panelClass,
     });
   }
 

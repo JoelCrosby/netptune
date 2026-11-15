@@ -201,7 +201,6 @@ export class SprintDetailViewComponent {
     this.dialog.open(CreateTaskDialogComponent, {
       width: CreateTaskDialogComponent.width,
       height: CreateTaskDialogComponent.height,
-      panelClass: CreateTaskDialogComponent.panelClass,
       data: { projectId: sprint.projectId, sprintId: sprint.id },
     });
   }

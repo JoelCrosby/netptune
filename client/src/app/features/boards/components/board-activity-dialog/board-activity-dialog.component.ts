@@ -119,7 +119,7 @@ export interface BoardActivityDialogData {
 export class BoardActivityDialogComponent {
   static readonly width = '720px';
   static readonly height = '740px';
-  static readonly panelClass = 'app-full-height-dialog';
+  static readonly panelClass = ['np-dialog-flush', 'app-full-height-dialog'];
 
   protected readonly dialogRef = inject(DialogRef);
   private readonly data = inject<BoardActivityDialogData>(DIALOG_DATA);

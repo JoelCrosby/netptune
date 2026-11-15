@@ -330,7 +330,7 @@ const fadeEdgePx = 4;
 })
 export class BulkEditTasksDialogComponent {
   static readonly width = '760px';
-  static readonly panelClass = 'app-bulk-edit-dialog';
+  static readonly panelClass = ['np-dialog-bands', 'app-bulk-edit-dialog'];
 
   private readonly dialogRef =
     inject<DialogRef<void, BulkEditTasksDialogComponent>>(DialogRef);
