@@ -10,7 +10,7 @@ import {
   host: { class: 'block' },
   template: `
     <article
-      class="border-foreground/8 rounded-lg border p-3"
+      class="border-foreground/8 rounded-lg border px-3.5 py-3"
       [class.opacity-70]="muted()">
       <div class="flex flex-wrap items-center gap-2">
         <app-badge [color]="labelColor()" shape="rounded">
@@ -18,26 +18,26 @@ import {
         </app-badge>
 
         @if (status(); as status) {
-          <span class="text-muted text-xs">{{ status }}</span>
+          <span class="text-muted text-[13px]">{{ status }}</span>
         }
       </div>
 
-      <h4 class="mt-2 text-sm font-semibold">{{ title() }}</h4>
+      <h4 class="mt-2.5 text-[14.5px] font-semibold">{{ title() }}</h4>
 
       @if (body(); as body) {
-        <p class="text-muted mt-1 text-sm">{{ body }}</p>
+        <p class="text-foreground/75 mt-1.5 text-[14px]/[1.5]">{{ body }}</p>
       }
 
       @if (quote(); as quote) {
         <blockquote
-          class="border-foreground/15 text-muted mt-2 border-l-2 pl-2 text-xs italic">
+          class="border-foreground/15 text-muted mt-2.5 border-l-2 pl-2.5 text-[13px]/[1.5] italic">
           {{ quote }}
         </blockquote>
       }
 
       <ng-content />
 
-      <div class="mt-3 flex flex-wrap items-center gap-1 empty:hidden">
+      <div class="mt-3.5 flex flex-wrap items-center gap-1 empty:hidden">
         <ng-content select="[cardActions]" />
       </div>
     </article>

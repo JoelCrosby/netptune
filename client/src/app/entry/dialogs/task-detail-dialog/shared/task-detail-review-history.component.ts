@@ -37,7 +37,7 @@ import { AiReviewUnreadSourcesComponent } from './ai-review-unread-sources.compo
     StepLogComponent,
     TextLinkComponent,
   ],
-  host: { class: 'flex flex-col gap-2' },
+  host: { class: 'flex flex-col gap-4' },
   template: `
     @if (selectedRun(); as selected) {
       <button
@@ -61,7 +61,7 @@ import { AiReviewUnreadSourcesComponent } from './ai-review-unread-sources.compo
         <app-callout color="warn">{{ errorMessage(selected) }}</app-callout>
       } @else if (detail(); as detail) {
         @if (detail.run.summary; as summary) {
-          <p class="text-sm">{{ summary }}</p>
+          <p class="text-[14px]/[1.5]">{{ summary }}</p>
         }
         @for (finding of detail.findings; track finding.id) {
           <app-labelled-card

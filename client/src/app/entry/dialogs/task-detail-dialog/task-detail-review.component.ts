@@ -70,12 +70,12 @@ const countFormat = numberFormat();
     TaskScopeIdComponent,
     TextLinkComponent,
   ],
-  host: { class: 'flex min-h-full flex-col gap-3' },
+  host: { class: 'flex min-h-full flex-col gap-4' },
   template: `
     @if (current(); as current) {
       <div class="flex flex-wrap items-center gap-2">
         <app-badge [color]="readinessColor()">{{ readinessLabel() }}</app-badge>
-        <span class="text-muted text-xs">
+        <span class="text-muted text-[13px]">
           <span
             i18n="
               When a task was last reviewed, who ran it and which model. TIME is
@@ -113,7 +113,7 @@ const countFormat = numberFormat();
     }
 
     @if (review.liveRun(); as live) {
-      <div class="flex min-h-40 flex-1 flex-col gap-3">
+      <div class="flex min-h-40 flex-1 flex-col gap-4">
         <app-step-log
           [summary]="liveLabel()"
           [meta]="liveMeta()"
@@ -127,13 +127,13 @@ const countFormat = numberFormat();
           currentLabel="Thinking" />
 
         @if (live.summary; as summary) {
-          <p class="text-sm">{{ summary }}</p>
+          <p class="text-[14px]/[1.5]">{{ summary }}</p>
         }
 
         @if (liveDrafts().length) {
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-3">
             <span
-              class="text-muted text-xs font-medium"
+              class="text-muted text-[13px] font-medium"
               i18n="
                 Heading above the findings a running task review has written so
                 far, before they are checked and saved
@@ -152,7 +152,7 @@ const countFormat = numberFormat();
           </div>
         }
 
-        <p class="text-muted text-xs">
+        <p class="text-muted text-[13px]">
           <span
             i18n="
               Reassurance shown while a task review runs, so the reader knows
@@ -194,7 +194,7 @@ const countFormat = numberFormat();
 
       @if (current(); as current) {
         @if (current.run.summary; as summary) {
-          <p class="text-sm">{{ summary }}</p>
+          <p class="text-[14px]/[1.5]">{{ summary }}</p>
         }
 
         @if (toolSteps().length) {
@@ -214,7 +214,7 @@ const countFormat = numberFormat();
             <app-ai-review-evidence [evidence]="finding.evidence ?? []" />
 
             @if (finding.references.length) {
-              <ul class="mt-2 flex flex-col gap-1 text-xs">
+              <ul class="mt-2.5 flex flex-col gap-1.5 text-[13px]">
                 @for (
                   reference of finding.references;
                   track referenceKey(reference)
@@ -394,14 +394,14 @@ const countFormat = numberFormat();
       }
 
       @if (mentions().length) {
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1.5">
           <span
-            class="text-muted text-xs font-medium"
+            class="text-muted text-[13px] font-medium"
             i18n="Heading above other reviews that mention this task">
             Mentioned in other reviews
           </span>
           @for (mention of mentions(); track mention.findingId) {
-            <div class="flex items-center gap-1.5 text-xs">
+            <div class="flex items-center gap-1.5 text-[13px]">
               @if (mention.subjectSystemId) {
                 <app-task-scope-id [id]="mention.subjectSystemId" />
               }
