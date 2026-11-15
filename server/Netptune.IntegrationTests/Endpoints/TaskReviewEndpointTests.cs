@@ -57,7 +57,7 @@ public sealed class TaskReviewEndpointTests
         await using var revoked = await MemberPermissions.Revoke(Client, member.Id, NetptunePermissions.Assistant.Use);
 
         var memberClient = Fixture.CreateNetptuneClientAs(member.Email);
-        var response = await memberClient.PostAsync($"api/tasks/{task.Id}/reviews", null, CancellationToken);
+        var response = await memberClient.PostAsync($"api/ai/tasks/{task.Id}/reviews", null, CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -1468,7 +1468,7 @@ public sealed class TaskReviewEndpointTests
     private async Task<List<JsonElement>> Run(int taskId, HttpClient? client = null)
     {
         var sender = client ?? Client;
-        var response = await sender.PostAsync($"api/tasks/{taskId}/reviews", null, CancellationToken);
+        var response = await sender.PostAsync($"api/ai/tasks/{taskId}/reviews", null, CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 

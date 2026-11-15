@@ -33,7 +33,7 @@ export class AiReviewsService {
     taskId: number,
     listener: AiReviewRunListener
   ): Promise<AiReviewRunResult> {
-    const url = `${environment.apiEndpoint}api/tasks/${taskId}/reviews`;
+    const url = `${environment.apiEndpoint}api/ai/tasks/${taskId}/reviews`;
     const response = await fetch(url, {
       method: 'POST',
       credentials: 'include',

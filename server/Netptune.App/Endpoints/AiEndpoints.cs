@@ -152,6 +152,12 @@ public static class AiEndpoints
                 NetptunePermissions.Assistant.Use)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
+        // Under ai/ rather than tasks/ so the ingress routes the stream past its buffering middleware.
+        group
+            .MapPost("/tasks/{taskId:int}/reviews", HandleRunTaskReview)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read, NetptunePermissions.Assistant.Use)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
         group
             .MapPost("/pages/{pageId:int}/write", HandleWritePage)
             .RequireAuthorization(
@@ -179,11 +185,6 @@ public static class AiEndpoints
         var tasks = builder.MapGroup("tasks")
             .WithTags("AI assistant")
             .RequireAuthorization();
-
-        tasks
-            .MapPost("/{taskId:int}/reviews", HandleRunTaskReview)
-            .RequireAuthorization(NetptunePermissions.Tasks.Read, NetptunePermissions.Assistant.Use)
-            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
         tasks.MapGet("/{taskId:int}/reviews/latest", HandleGetLatestTaskReview)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
