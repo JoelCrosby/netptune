@@ -176,9 +176,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
     private static void LoadEnvironmentVariables()
     {
-        Environment.SetEnvironmentVariable(
-            "Authentication__SigningKey",
-            "test-signing-key-that-is-long-enough-for-hmac-sha256");
+        Environment.SetEnvironmentVariable("Authentication__SigningKey", "test-signing-key-that-is-long-enough-for-hmac-sha256");
         Environment.SetEnvironmentVariable("Authentication__GitHub__ClientId", "test");
         Environment.SetEnvironmentVariable("Authentication__GitHub__ClientSecret", "test");
         Environment.SetEnvironmentVariable("Authentication__GitHub__CallbackPath", "/test-github-callback");
@@ -195,6 +193,10 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Environment.SetEnvironmentVariable("Turnstile__SecretKey", "test");
         Environment.SetEnvironmentVariable("Email__Cloudflare__ApiToken", "test");
         Environment.SetEnvironmentVariable("Email__Cloudflare__AccountId", "test");
+
+        Environment.SetEnvironmentVariable("Ai__DevelopmentKeys__Anthropic", null);
+        Environment.SetEnvironmentVariable("Ai__DevelopmentKeys__OpenAi", null);
+        Environment.SetEnvironmentVariable("Ai__DevelopmentKeys__BraveSearch", null);
     }
 
     public async ValueTask DisposeAsync()
