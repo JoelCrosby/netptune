@@ -29,6 +29,50 @@ public class RepositoryToolsTests
     }
 
     [Fact]
+    public void DescribeCall_ShouldNameWhatEachRepositoryCallWasFor()
+    {
+        var read = Describe(
+            new ReadRepositoryFileTool(Reader, Identity),
+            """{"repository":"acme/api","path":"src/app.ts"}""");
+        var search = Describe(
+            new SearchRepositoryCodeTool(Reader, Identity),
+            """{"repository":"acme/api","query":"webhook retry"}""");
+        var files = Describe(
+            new ListRepositoryFilesTool(Reader, Identity),
+            """{"repository":"acme/api"}""");
+        var narrowed = Describe(
+            new ListRepositoryFilesTool(Reader, Identity),
+            """{"repository":"acme/api","path":"src/billing"}""");
+
+        read.Should().Be("read_repository_file · src/app.ts");
+        search.Should().Be("search_repository_code · webhook retry");
+        files.Should().Be("list_repository_files · acme/api");
+        narrowed.Should().Be("list_repository_files · src/billing");
+    }
+
+    [Fact]
+    public void DescribeCall_ShouldFallBackToTheToolName_WhenTheArgumentIsMissing()
+    {
+        var label = Describe(
+            new SearchRepositoryCodeTool(Reader, Identity),
+            """{"repository":"acme/api"}""");
+
+        label.Should().Be("search_repository_code");
+    }
+
+    [Fact]
+    public void DescribeCall_ShouldShortenALongArgument_AndKeepItOnOneLine()
+    {
+        var query = new string('x', 120);
+
+        var label = Describe(
+            new SearchRepositoryCodeTool(Reader, Identity),
+            $$"""{"query":"{{query}}\nmore"}""");
+
+        label.Should().Be($"search_repository_code · {new string('x', 80)}…");
+    }
+
+    [Fact]
     public async Task ReadFile_ShouldNumberTheRequestedLines()
     {
         GivenFile("one\ntwo\nthree\nfour\n");
@@ -221,6 +265,13 @@ public class RepositoryToolsTests
         Reader
             .ReadFile(WorkspaceId, Repository, Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
             .Returns(ClientResponse<ScmRepositoryFile>.Success(file));
+    }
+
+    private static string Describe(IAiTool tool, string json)
+    {
+        using var arguments = JsonDocument.Parse(json);
+
+        return tool.DescribeCall(arguments.RootElement);
     }
 
     private static async Task<AiToolExecution> Execute(IAiTool tool, string json)

@@ -7,6 +7,8 @@ namespace Netptune.Ai.Tools;
 
 public static class AiToolSchema
 {
+    private const int MaxDescribedArgumentLength = 80;
+
     public static JsonDocument Object(string propertiesJson, params string[] required)
     {
         var requiredJson = JsonSerializer.Serialize(required);
@@ -38,6 +40,30 @@ public static class AiToolSchema
         var isKnown = value is not null && knownValues.Contains(value, StringComparer.Ordinal);
 
         return isKnown ? $"{toolName} · {value}" : toolName;
+    }
+
+    // Takes the first of these arguments it was given, so a tool whose narrowing
+    // argument is optional is still described by it rather than by one that never varies.
+    public static string DescribeCall(
+        string toolName,
+        JsonElement arguments,
+        params string[] argumentsByPreference)
+    {
+        var value = argumentsByPreference
+            .Select(argument => GetString(arguments, argument)?.Trim())
+            .FirstOrDefault(found => !string.IsNullOrEmpty(found));
+        var isUsable = !string.IsNullOrEmpty(value);
+
+        if (!isUsable)
+        {
+            return toolName;
+        }
+
+        var shortened = value!.Length <= MaxDescribedArgumentLength
+            ? value
+            : $"{value[..MaxDescribedArgumentLength]}…";
+
+        return $"{toolName} · {shortened.ReplaceLineEndings(" ")}";
     }
 
     public static string? GetString(JsonElement arguments, string name)

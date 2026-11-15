@@ -44,6 +44,11 @@ public sealed class ListRepositoryCommitsTool : IAiTool
         """,
         AiRepositoryRead.RepositoryArgument);
 
+    public string DescribeCall(JsonElement arguments)
+    {
+        return AiToolSchema.DescribeCall(Name, arguments, "branch", AiRepositoryRead.RepositoryArgument);
+    }
+
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var repository = AiRepositoryRead.Repository(arguments);

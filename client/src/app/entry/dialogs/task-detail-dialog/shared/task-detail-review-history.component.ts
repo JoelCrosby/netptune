@@ -19,18 +19,22 @@ import {
 } from '@static/components/entry-list/entry-list.component';
 import { LabelledCardComponent } from '@static/components/labelled-card/labelled-card.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { StepTrailComponent } from '@static/components/step-trail/step-trail.component';
+import { StepLogComponent } from '@static/components/step-log/step-log.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
 import { TaskDetailService } from '../task-detail.service';
+import { AiReviewEvidenceComponent } from './ai-review-evidence.component';
+import { AiReviewUnreadSourcesComponent } from './ai-review-unread-sources.component';
 
 @Component({
   selector: 'app-task-detail-review-history',
   imports: [
+    AiReviewEvidenceComponent,
+    AiReviewUnreadSourcesComponent,
     CalloutComponent,
     EntryListComponent,
     LabelledCardComponent,
     SpinnerComponent,
-    StepTrailComponent,
+    StepLogComponent,
     TextLinkComponent,
   ],
   host: { class: 'flex flex-col gap-2' },
@@ -48,10 +52,10 @@ import { TaskDetailService } from '../task-detail.service';
       </button>
 
       @if (selectedSteps().length) {
-        <app-step-trail
-          [summary]="selectedSummary()"
-          [steps]="selectedSteps()" />
+        <app-step-log [summary]="selectedSummary()" [items]="selectedSteps()" />
       }
+
+      <app-ai-review-unread-sources [toolCalls]="selected.toolCalls ?? []" />
 
       @if (selected.status === failed) {
         <app-callout color="warn">{{ errorMessage(selected) }}</app-callout>
@@ -65,7 +69,9 @@ import { TaskDetailService } from '../task-detail.service';
             [labelColor]="categoryColors[finding.category]"
             [title]="finding.title"
             [body]="finding.explanation"
-            [quote]="finding.quote ?? null" />
+            [quote]="finding.quote ?? null">
+            <app-ai-review-evidence [evidence]="finding.evidence ?? []" />
+          </app-labelled-card>
         } @empty {
           <p
             class="text-muted text-sm"

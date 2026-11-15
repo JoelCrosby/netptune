@@ -5,7 +5,7 @@ import {
 } from '@core/models/ai-review';
 import { numberFormat } from '@core/util/locale';
 import { BadgeColor } from '@static/components/badge/badge.component';
-import { StepTrailItem } from '@static/components/step-trail/step-trail.component';
+import { StepLogItem } from '@static/components/step-log/step-log.component';
 
 export const aiReviewCategoryLabels: Record<AiReviewFindingCategory, string> = {
   [AiReviewFindingCategory.gap]: $localize`:Review finding category for something required that is missing:Gap`,
@@ -27,6 +27,8 @@ export const aiReviewCategoryColors: Record<
   [AiReviewFindingCategory.overlap]: 'info',
   [AiReviewFindingCategory.testability]: 'primary',
 };
+
+export const aiReviewRunningLabel = $localize`:Tooltip and accessible label of the mark shown on a task while an assistant review of it is running:Review running`;
 
 export const aiReviewReadinessLabels: Record<AiReviewReadiness, string> = {
   [AiReviewReadiness.unreviewed]: $localize`:Readiness of a task that has never been reviewed:Not reviewed`,
@@ -86,7 +88,7 @@ const toolCallGroupOrder: ToolCallGroup[] = [
   'workspace',
 ];
 
-const toolCallCount = numberFormat();
+const countFormat = numberFormat();
 
 const toolCallGroupLabels: Record<ToolCallGroup, (count: string) => string> = {
   files: (count) => {
@@ -121,25 +123,68 @@ export const aiReviewToolCallSummary = (calls: AiReviewToolCall[]): string => {
   return toolCallGroupOrder
     .filter((group) => counts.has(group))
     .map((group) => {
-      const count = toolCallCount.format(counts.get(group) ?? 0);
+      const count = countFormat.format(counts.get(group) ?? 0);
 
       return toolCallGroupLabels[group](count);
     })
     .join(' · ');
 };
 
-export const aiReviewToolSteps = (
-  calls: AiReviewToolCall[]
-): StepTrailItem[] => {
-  // Calls made in one batch share the note written before them, so it shows once, above the first.
-  return calls.map((call, index) => {
-    const previousNote = index > 0 ? calls[index - 1].note : null;
-    const isNewNote = call.note !== previousNote;
+export interface AiReviewUnreadSource {
+  label: string;
+  reason: string;
+}
 
-    return {
+const unreadReasons = {
+  failed: $localize`:Shown beside a source a review could not read, because the tool call failed:failed`,
+  truncated: $localize`:Shown beside a source a review read only part of, because what came back was too large:cut short`,
+};
+
+// What the review could not read in full. It changes how much the findings are
+// worth, so it is reported next to them rather than left in the step list.
+export const aiReviewUnreadSources = (
+  calls: AiReviewToolCall[]
+): AiReviewUnreadSource[] => {
+  return calls
+    .filter((call) => call.isError || call.truncated)
+    .map((call) => ({
       label: call.label,
-      failed: call.isError,
-      note: isNewNote ? call.note : null,
-    };
-  });
+      reason: call.isError ? unreadReasons.failed : unreadReasons.truncated,
+    }));
+};
+
+// Each whole sentence is one message. $localize cannot evaluate ICU, so the
+// plural is a ternary; fr/de/es share English's one/other split, and a locale
+// with more plural categories would need these moved into a template ICU.
+export const aiReviewUnreadSourcesLabel = (count: number): string => {
+  if (count === 1) {
+    return $localize`:Opens the list of sources a review could not read in full, when there is one:1 source was not read in full`;
+  }
+
+  const sources = countFormat.format(count);
+
+  return $localize`:Opens the list of sources a review could not read in full. COUNT is a count greater than one:${sources}:COUNT: sources were not read in full`;
+};
+
+export const aiReviewToolSteps = (calls: AiReviewToolCall[]): StepLogItem[] => {
+  const items: StepLogItem[] = [];
+
+  // Calls made in one batch share the note written before them, so it shows once,
+  // above the first — the same order a running review streams them in.
+  for (const [index, call] of calls.entries()) {
+    const previousNote = index > 0 ? calls[index - 1].note : null;
+    const note = call.note;
+
+    if (note && note !== previousNote) {
+      items.push({ kind: 'note', text: note, state: 'done' });
+    }
+
+    items.push({
+      kind: 'step',
+      text: call.label,
+      state: call.isError ? 'failed' : 'done',
+    });
+  }
+
+  return items;
 };

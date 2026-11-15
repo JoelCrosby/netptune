@@ -15,6 +15,7 @@ import { environment } from '@env/environment';
 export interface AiReviewRunResult {
   runId: number | null;
   failure: string | null;
+  findingCount: number | null;
 }
 
 export type AiReviewRunListener = (event: AiReviewStreamEvent) => void;
@@ -46,20 +47,30 @@ export class AiReviewsService {
       return {
         runId: null,
         failure: isRateLimited ? this.rateLimited : this.unreachable,
+        findingCount: null,
       };
     }
 
-    let result: AiReviewRunResult = { runId: null, failure: this.unfinished };
+    let result: AiReviewRunResult = {
+      runId: null,
+      failure: this.unfinished,
+      findingCount: null,
+    };
 
     const onEvent = (event: AiReviewStreamEvent) => {
       switch (event.type) {
         case AiReviewStreamEventType.completed:
-          result = { runId: event.runId ?? null, failure: null };
+          result = {
+            runId: event.runId ?? null,
+            failure: null,
+            findingCount: event.findingCount ?? null,
+          };
           break;
         case AiReviewStreamEventType.failed:
           result = {
             runId: event.runId ?? null,
             failure: event.message ?? this.unreachable,
+            findingCount: null,
           };
           break;
         default:

@@ -215,7 +215,7 @@ public sealed class AiReviewer : IAiReviewer
             Subject = subject,
             WorkspaceId = workspaceId,
             UserId = userId,
-            Context = context,
+            Context = context with { ToolLocators = CollectToolLocators(runContext.Invocations) },
             Provider = credential.Provider,
             Model = model,
             StartedAt = startedAt,
@@ -255,7 +255,7 @@ public sealed class AiReviewer : IAiReviewer
             Logger.LogInformation("Assistant review run {RunId} needed stray quotes repaired", storedRun.Id);
         }
 
-        yield return AiReviewStreamEvent.Completed(storedRun.Id);
+        yield return AiReviewStreamEvent.Completed(storedRun.Id, storedRun.Findings.Count);
     }
 
     private string? CorrectUnreadableReply(AiChatTurn turn)
@@ -325,6 +325,57 @@ public sealed class AiReviewer : IAiReviewer
         }
 
         return record.Context with { CandidateTasks = merged };
+    }
+
+    internal static IReadOnlySet<string> CollectToolLocators(List<AiToolInvocationRecord> invocations)
+    {
+        var locators = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var invocation in invocations)
+        {
+            // A call that failed read nothing, so the finding may not cite what it asked for.
+            if (invocation.IsError)
+            {
+                continue;
+            }
+
+            CollectStrings(invocation.Arguments.RootElement, locators);
+        }
+
+        return locators;
+    }
+
+    private static void CollectStrings(JsonElement element, HashSet<string> locators)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.String:
+                var value = element.GetString()?.Trim();
+                var isUsable = !string.IsNullOrEmpty(value);
+
+                if (isUsable)
+                {
+                    locators.Add(value!);
+                }
+
+                break;
+
+            case JsonValueKind.Object:
+                foreach (var property in element.EnumerateObject())
+                {
+                    CollectStrings(property.Value, locators);
+                }
+
+                break;
+
+            case JsonValueKind.Array:
+                foreach (var item in element.EnumerateArray())
+                {
+                    CollectStrings(item, locators);
+                }
+
+                break;
+        }
     }
 
     private static List<AiReviewToolCallViewModel> DescribeToolCalls(
@@ -518,6 +569,16 @@ public sealed class AiReviewer : IAiReviewer
         };
     }
 
+    private static JsonDocument? CreateEvidence(List<AiReviewEvidence> evidence)
+    {
+        if (evidence.Count == 0)
+        {
+            return null;
+        }
+
+        return JsonSerializer.SerializeToDocument(evidence, JsonSerializerOptions.Web);
+    }
+
     private static AiReviewFinding CreateFinding(RunRecord record, AiReviewDraftFinding draft, int sequence)
     {
         var finding = new AiReviewFinding
@@ -530,6 +591,7 @@ public sealed class AiReviewer : IAiReviewer
             Explanation = draft.Explanation,
             Quote = draft.Quote,
             Suggestion = draft.Suggestion,
+            Evidence = CreateEvidence(draft.Evidence),
             Status = AiReviewFindingStatus.Open,
         };
 

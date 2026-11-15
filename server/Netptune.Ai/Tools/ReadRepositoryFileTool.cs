@@ -49,6 +49,11 @@ public sealed class ReadRepositoryFileTool : IAiTool
         AiRepositoryRead.RepositoryArgument,
         "path");
 
+    public string DescribeCall(JsonElement arguments)
+    {
+        return AiToolSchema.DescribeCall(Name, arguments, "path");
+    }
+
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var repository = AiRepositoryRead.Repository(arguments);

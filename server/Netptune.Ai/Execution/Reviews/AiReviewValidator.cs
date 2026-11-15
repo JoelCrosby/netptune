@@ -19,6 +19,9 @@ public static class AiReviewValidator
     public const int MaxSplitTasks = 6;
     public const int MaxSplitNameLength = 200;
     public const int MaxSplitDescriptionLength = 4_000;
+    public const int MaxEvidence = 6;
+    public const int MaxLocatorLength = 500;
+    public const int MaxEvidenceDetailLength = 200;
     public const int MaxNewTags = 3;
     public const int MaxTagLength = 128;
     public const decimal MaxEstimate = 1_000;
@@ -96,7 +99,40 @@ public static class AiReviewValidator
             Quote = Clean(finding.Quote, MaxQuoteLength),
             Suggestion = ValidateSuggestion(finding.Suggestion, context),
             RelatedTaskIds = relatedTaskIds,
+            Evidence = ValidateEvidence(finding.Evidence, context),
         };
+    }
+
+    private static List<AiReviewEvidence> ValidateEvidence(
+        List<AiReviewReplyEvidence>? evidence,
+        AiReviewContext context)
+    {
+        var items = new List<AiReviewEvidence>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var item in evidence ?? [])
+        {
+            var locator = Clean(item.Locator, MaxLocatorLength);
+            var wasRead = locator is not null && context.ToolLocators.Contains(locator);
+            var hasRoom = items.Count < MaxEvidence;
+            var isFirstMention = locator is not null && !seen.Contains(locator);
+            var isUsable = wasRead && hasRoom && isFirstMention;
+
+            if (!isUsable)
+            {
+                continue;
+            }
+
+            seen.Add(locator!);
+
+            items.Add(new AiReviewEvidence
+            {
+                Locator = locator!,
+                Detail = Clean(item.Detail, MaxEvidenceDetailLength),
+            });
+        }
+
+        return items;
     }
 
     private static JsonDocument? ValidateSuggestion(JsonElement? suggestion, AiReviewContext context)

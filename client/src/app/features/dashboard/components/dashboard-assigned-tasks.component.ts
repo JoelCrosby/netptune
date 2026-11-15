@@ -2,6 +2,7 @@ import { Component, computed, inject, viewChild } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { taskReviewRunningLabel } from '@core/tasks/task-review-running-label';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
 import { scrollHeights } from '@static/components/datatable/datatable-classes';
 import { TaskTableComponent } from '@static/components/task-table.component';
@@ -40,6 +41,8 @@ const openStatusCategories = [
   `,
 })
 export class DashboardAssignedTasksComponent {
+  private readonly reviewRunningLabel = taskReviewRunningLabel();
+
   readonly scrollHeights = scrollHeights;
 
   private readonly table = viewChild(TaskTableComponent<TaskViewModel>);
@@ -64,6 +67,7 @@ export class DashboardAssignedTasksComponent {
       overrides: {
         name: taskNameCell<TaskViewModel>({
           link: (task) => ['../tasks', task.systemId],
+          busy: (task) => this.reviewRunningLabel(task.id),
         }),
         project: { widthClass: 'w-48' },
         sprint: { widthClass: 'w-38' },

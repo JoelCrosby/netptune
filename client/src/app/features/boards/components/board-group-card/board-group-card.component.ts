@@ -23,8 +23,11 @@ import {
   LucidePaperclip,
   LucidePin,
 } from '@lucide/angular';
+import { TaskReviewRunsService } from '@core/services/task-review-runs.service';
+import { aiReviewRunningLabel } from '@core/util/ai-review-copy';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
+import { BusyMarkerComponent } from '@static/components/busy-marker.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
@@ -59,6 +62,7 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
   imports: [
     AvatarComponent,
     BadgeComponent,
+    BusyMarkerComponent,
     TaskScopeIdComponent,
     LucideFlag,
     LucideCheck,
@@ -171,6 +175,10 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
           @if (task().statusCategory === statusCategory.done) {
             <svg lucideCheck class="text-green-500"></svg>
           }
+
+          @if (reviewRunning()) {
+            <app-busy-marker [label]="reviewRunningLabel" />
+          }
         </div>
 
         <div class="flex items-center gap-4">
@@ -209,9 +217,17 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
 })
 export class BoardGroupCardComponent {
   private readonly selection = inject(BoardSelectionService);
+  private readonly reviews = inject(TaskReviewRunsService);
 
   readonly selectionActive = computed(() => this.selection.count() > 0);
   readonly task = input.required<Selected<BoardViewTask>>();
+
+  readonly reviewRunningLabel = aiReviewRunningLabel;
+
+  readonly reviewRunning = computed(() => {
+    return this.reviews.isRunning(this.task().id);
+  });
+
   readonly groupId = input.required<number>();
   readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);

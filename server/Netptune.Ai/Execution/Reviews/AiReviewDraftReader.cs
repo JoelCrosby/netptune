@@ -17,7 +17,8 @@ internal sealed class AiReviewDraftReader
     };
 
     private readonly IReadOnlySet<AiReviewFindingCategory> AllowedCategories;
-    private readonly HashSet<int> EmittedPositions = [];
+    private readonly Dictionary<int, string> EmittedTitles = [];
+    private readonly HashSet<int> DetailedPositions = [];
 
     private bool HasEmittedSummary;
 
@@ -127,14 +128,24 @@ internal sealed class AiReviewDraftReader
                 finding.Category = AiReviewValidator.ParseCategory(value);
                 break;
 
+            case "explanation":
+                finding.Explanation = AiReviewValidator.Clean(value, AiReviewValidator.MaxExplanationLength);
+                break;
+
             default:
                 return;
         }
 
+        ReportFinding(finding, events);
+        ReportExplanation(finding, events);
+    }
+
+    private void ReportFinding(DraftFinding finding, List<AiReviewStreamEvent> events)
+    {
         var isComplete = finding is { Title: not null, Category: not null };
         var isAllowedCategory = isComplete && AllowedCategories.Contains(finding.Category!.Value);
-        var hasRoom = EmittedPositions.Count < AiReviewValidator.MaxFindings;
-        var isNew = !EmittedPositions.Contains(finding.Position);
+        var hasRoom = EmittedTitles.Count < AiReviewValidator.MaxFindings;
+        var isNew = !EmittedTitles.ContainsKey(finding.Position);
         var isReady = isAllowedCategory && hasRoom && isNew;
 
         if (!isReady)
@@ -142,9 +153,31 @@ internal sealed class AiReviewDraftReader
             return;
         }
 
-        EmittedPositions.Add(finding.Position);
+        EmittedTitles[finding.Position] = finding.Title!;
 
-        events.Add(AiReviewStreamEvent.Finding(finding.Category!.Value, finding.Title!));
+        events.Add(AiReviewStreamEvent.Finding(finding.Category!.Value, finding.Title!, finding.Position));
+    }
+
+    // The explanation is held back until the finding it belongs to has been reported,
+    // whichever order the model wrote the two fields in, so the client only ever has
+    // to fill in a draft it already has. A reply the model had to write again reuses
+    // the positions of the one before it, so the title has to match as well: the
+    // client is still showing the first reply's card at that position.
+    private void ReportExplanation(DraftFinding finding, List<AiReviewStreamEvent> events)
+    {
+        var isReported = EmittedTitles.TryGetValue(finding.Position, out var reportedTitle)
+            && reportedTitle == finding.Title;
+        var isNew = !DetailedPositions.Contains(finding.Position);
+        var isReady = isReported && isNew && finding.Explanation is not null;
+
+        if (!isReady)
+        {
+            return;
+        }
+
+        DetailedPositions.Add(finding.Position);
+
+        events.Add(AiReviewStreamEvent.FindingDetail(finding.Position, finding.Explanation!));
     }
 
     private sealed class DraftFinding
@@ -159,5 +192,7 @@ internal sealed class AiReviewDraftReader
         public string? Title { get; set; }
 
         public AiReviewFindingCategory? Category { get; set; }
+
+        public string? Explanation { get; set; }
     }
 }

@@ -5,6 +5,7 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
+import { taskReviewRunningLabel } from '@core/tasks/task-review-running-label';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -82,6 +83,8 @@ import { TaskTableComponent } from '@static/components/task-table.component';
   `,
 })
 export class SprintBacklogGroupComponent {
+  private readonly reviewRunningLabel = taskReviewRunningLabel();
+
   readonly scrollHeights = scrollHeights;
 
   readonly label = input.required<string>();
@@ -112,6 +115,7 @@ export class SprintBacklogGroupComponent {
       overrides: {
         name: taskNameCell<TaskViewModel>({
           link: (task) => ['../../tasks', task.systemId],
+          busy: (task) => this.reviewRunningLabel(task.id),
         }),
         status: { widthClass: 'w-32', visibleOnMobile: false },
         priority: { widthClass: 'w-24' },

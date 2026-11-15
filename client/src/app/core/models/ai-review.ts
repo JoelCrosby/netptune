@@ -52,6 +52,7 @@ export enum AiReviewStreamEventType {
   toolFinished = 7,
   finding = 8,
   summary = 9,
+  findingDetail = 10,
 }
 
 export type AiReviewStage = 'preparing' | 'investigating' | 'writing';
@@ -166,7 +167,13 @@ export interface AiReviewFinding {
   decidedAt?: string | null;
   dismissReason?: string | null;
   appliedChange?: AiReviewAppliedChange | null;
+  evidence?: AiReviewEvidence[] | null;
   references: AiReviewReference[];
+}
+
+export interface AiReviewEvidence {
+  locator: string;
+  detail?: string | null;
 }
 
 export interface AiReviewRunDetail {
@@ -215,6 +222,8 @@ export interface AiReviewStreamEvent {
   isNewBlock?: boolean | null;
   isError?: boolean | null;
   category?: AiReviewFindingCategory | null;
+  findingCount?: number | null;
+  position?: number | null;
 }
 
 export interface DecideAiReviewFindingRequest {

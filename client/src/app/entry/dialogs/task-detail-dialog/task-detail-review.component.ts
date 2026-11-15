@@ -35,18 +35,15 @@ import { CalloutComponent } from '@static/components/callout/callout.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { LabelledCardComponent } from '@static/components/labelled-card/labelled-card.component';
-import { StepTrailComponent } from '@static/components/step-trail/step-trail.component';
 import {
-  ActivityLogComponent,
-  ActivityLogItem,
-} from '@static/components/activity-log/activity-log.component';
-import {
-  BadgeListComponent,
-  BadgeListItem,
-} from '@static/components/badge-list/badge-list.component';
+  StepLogComponent,
+  StepLogItem,
+} from '@static/components/step-log/step-log.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
+import { AiReviewEvidenceComponent } from './shared/ai-review-evidence.component';
+import { AiReviewUnreadSourcesComponent } from './shared/ai-review-unread-sources.component';
 import { TaskDetailReviewHistoryComponent } from './shared/task-detail-review-history.component';
 import { TaskDetailReviewService } from './shared/task-detail-review.service';
 import { TaskDetailService } from './task-detail.service';
@@ -56,9 +53,9 @@ const countFormat = numberFormat();
 @Component({
   selector: 'app-task-detail-review',
   imports: [
-    ActivityLogComponent,
+    AiReviewEvidenceComponent,
+    AiReviewUnreadSourcesComponent,
     BadgeComponent,
-    BadgeListComponent,
     CalloutComponent,
     EmptyStateComponent,
     FlatButtonComponent,
@@ -67,7 +64,7 @@ const countFormat = numberFormat();
     LabelledCardComponent,
     LucideHistory,
     LucideSparkles,
-    StepTrailComponent,
+    StepLogComponent,
     StrokedButtonComponent,
     TaskDetailReviewHistoryComponent,
     TaskScopeIdComponent,
@@ -117,10 +114,11 @@ const countFormat = numberFormat();
 
     @if (review.liveRun(); as live) {
       <div class="flex min-h-40 flex-1 flex-col gap-3">
-        <app-activity-log
-          [status]="liveLabel()"
+        <app-step-log
+          [summary]="liveLabel()"
           [meta]="liveMeta()"
           [items]="liveSteps()"
+          [busy]="true"
           [current]="liveThinking()"
           i18n-currentLabel="
             Label before the assistant's current reasoning while a task review
@@ -128,16 +126,42 @@ const countFormat = numberFormat();
           "
           currentLabel="Thinking" />
 
-        @if (live.summary || liveDrafts().length) {
-          <app-badge-list
-            [items]="liveDrafts()"
-            [lead]="live.summary"
-            i18n-heading="
-              Heading above the findings a running task review has written so
-              far, before they are checked and saved
-            "
-            heading="Drafted so far" />
+        @if (live.summary; as summary) {
+          <p class="text-sm">{{ summary }}</p>
         }
+
+        @if (liveDrafts().length) {
+          <div class="flex flex-col gap-2">
+            <span
+              class="text-muted text-xs font-medium"
+              i18n="
+                Heading above the findings a running task review has written so
+                far, before they are checked and saved
+              ">
+              Drafted so far
+            </span>
+
+            @for (draft of liveDrafts(); track draft.position) {
+              <app-labelled-card
+                muted
+                [label]="categoryLabels[draft.category]"
+                [labelColor]="categoryColors[draft.category]"
+                [title]="draft.title"
+                [body]="draft.explanation" />
+            }
+          </div>
+        }
+
+        <p class="text-muted text-xs">
+          <span
+            i18n="
+              Reassurance shown while a task review runs, so the reader knows
+              they do not have to wait on this screen
+            ">
+            This keeps running if you close the task. You'll get a notice when
+            it finishes.
+          </span>
+        </p>
       </div>
     } @else {
       @if (review.runError(); as runError) {
@@ -174,8 +198,11 @@ const countFormat = numberFormat();
         }
 
         @if (toolSteps().length) {
-          <app-step-trail [summary]="toolSummary()" [steps]="toolSteps()" />
+          <app-step-log [summary]="toolSummary()" [items]="toolSteps()" />
         }
+
+        <app-ai-review-unread-sources
+          [toolCalls]="current.run.toolCalls ?? []" />
 
         @for (finding of review.openFindings(); track finding.id) {
           <app-labelled-card
@@ -184,6 +211,8 @@ const countFormat = numberFormat();
             [title]="finding.title"
             [body]="finding.explanation"
             [quote]="finding.quote ?? null">
+            <app-ai-review-evidence [evidence]="finding.evidence ?? []" />
+
             @if (finding.references.length) {
               <ul class="mt-2 flex flex-col gap-1 text-xs">
                 @for (
@@ -413,6 +442,9 @@ export class TaskDetailReviewComponent {
 
   private readonly canCreateTags = hasPermission(PERMISSIONS.tags.create);
 
+  readonly categoryLabels = aiReviewCategoryLabels;
+  readonly categoryColors = aiReviewCategoryColors;
+
   readonly canRun = this.taskDetail.canAskAssistant;
   readonly canDecide = hasPermission(PERMISSIONS.tasks.update);
 
@@ -476,7 +508,6 @@ export class TaskDetailReviewComponent {
     const elapsed = formatElapsed(this.review.elapsedMs());
     const stepCount =
       live?.log.filter((item) => item.kind === 'step').length ?? 0;
-    const draftCount = live?.drafts.length ?? 0;
     const parts = [elapsed];
 
     if (stepCount > 0) {
@@ -487,18 +518,10 @@ export class TaskDetailReviewComponent {
       );
     }
 
-    if (draftCount > 0) {
-      const drafts = countFormat.format(draftCount);
-
-      parts.push(
-        $localize`:Label and count of the findings a running task review has written so far:Drafted: ${drafts}:count:`
-      );
-    }
-
     return parts.join(' · ');
   });
 
-  readonly liveSteps = computed<ActivityLogItem[]>(() => {
+  readonly liveSteps = computed<StepLogItem[]>(() => {
     const log = this.review.liveRun()?.log ?? [];
 
     return log
@@ -506,15 +529,7 @@ export class TaskDetailReviewComponent {
       .filter((item) => item.text.length > 0);
   });
 
-  readonly liveDrafts = computed<BadgeListItem[]>(() => {
-    const drafts = this.review.liveRun()?.drafts ?? [];
-
-    return drafts.map((draft) => ({
-      badge: aiReviewCategoryLabels[draft.category],
-      color: aiReviewCategoryColors[draft.category],
-      text: draft.title,
-    }));
-  });
+  readonly liveDrafts = computed(() => this.review.liveRun()?.drafts ?? []);
 
   readonly liveThinking = computed(() => {
     const live = this.review.liveRun();

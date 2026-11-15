@@ -29,6 +29,7 @@ import { EYEBROW, META_CHIP } from '../task-detail-styles';
 import { TaskDetailService } from '../task-detail.service';
 import { TaskDetailReviewComponent } from '../task-detail-review.component';
 import { TaskDetailReviewService } from '../shared/task-detail-review.service';
+import { requestedTaskDetailSection } from '../shared/requested-task-detail-section';
 import { TaskDetailReviewOriginComponent } from '../shared/task-detail-review-origin.component';
 import {
   TabGroupComponent,
@@ -213,6 +214,8 @@ export class TaskDetailDocumentComponent {
     () => this.codeSection()?.count() ?? 0
   );
 
+  private readonly requestedTab = requestedTaskDetailSection();
+
   readonly activeTab = linkedSignal<
     { code: number; comments: boolean },
     string
@@ -220,7 +223,7 @@ export class TaskDetailDocumentComponent {
     source: () => ({ code: this.codeCount(), comments: this.readComments() }),
     computation: (source, previous) => {
       const fallback = source.comments ? 'comments' : 'links';
-      const tab = previous?.value ?? fallback;
+      const tab = previous?.value ?? this.initialTab(fallback);
       const isHiddenCodeTab = tab === 'code' && !source.code;
       const isHiddenCommentsTab = tab === 'comments' && !source.comments;
 
@@ -256,6 +259,16 @@ export class TaskDetailDocumentComponent {
   readonly showReview = computed(() => {
     return this.taskDetail.canAskAssistant() || this.review.hasReview();
   });
+
+  private initialTab(fallback: string): string {
+    const requested = this.requestedTab;
+
+    if (requested === null) return fallback;
+
+    const isKnown = Object.hasOwn(this.labels, requested);
+
+    return isKnown ? requested : fallback;
+  }
 
   tabItems(
     comments: number,

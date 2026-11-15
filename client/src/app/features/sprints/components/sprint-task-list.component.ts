@@ -6,6 +6,7 @@ import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-vi
 import { DialogService } from '@core/services/dialog.service';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
+import { taskReviewRunningLabel } from '@core/tasks/task-review-running-label';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { LucideListMinus } from '@lucide/angular';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
@@ -173,6 +174,8 @@ export class SprintTaskListComponent {
   private readonly sprintCommands = inject(SprintCommandsService);
   private readonly dialog = inject(DialogService);
 
+  private readonly reviewRunningLabel = taskReviewRunningLabel();
+
   protected readonly tabs = tabOptions;
   protected readonly selectedFilter = signal<SprintTaskFilter>('all');
   protected readonly showArchived = signal(false);
@@ -230,6 +233,7 @@ export class SprintTaskListComponent {
         name: taskNameCell<TaskViewModel>({
           action: (task) => this.openTask(task),
           showComments: true,
+          busy: (task) => this.reviewRunningLabel(task.id),
           archived: (task) => task.isArchived ?? false,
           badges: (task) => {
             return this.addedTaskIds().has(task.id) ? [addedBadge] : [];

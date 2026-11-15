@@ -26,6 +26,8 @@ public sealed record AiReviewFinding : KeyedEntity<long>
 
     public JsonDocument? Suggestion { get; init; }
 
+    public JsonDocument? Evidence { get; init; }
+
     public AiReviewFindingStatus Status { get; set; }
 
     public string? DecidedByUserId { get; set; }

@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { taskReviewRunningLabel } from '@core/tasks/task-review-running-label';
 import { taskNameCell, visibleTaskColumns } from '@core/tasks/task-columns';
 import {
   LucideLink,
@@ -181,6 +182,8 @@ import { injectBreadcrumbs } from '@core/services/breadcrumb.service';
   `,
 })
 export class QueryDetailViewComponent {
+  private readonly reviewRunningLabel = taskReviewRunningLabel();
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
@@ -268,6 +271,7 @@ export class QueryDetailViewComponent {
         overrides: {
           name: taskNameCell<TaskViewModel>({
             link: (task) => ['/', task.workspaceKey, 'tasks', task.systemId],
+            busy: (task) => this.reviewRunningLabel(task.id),
           }),
         },
       }

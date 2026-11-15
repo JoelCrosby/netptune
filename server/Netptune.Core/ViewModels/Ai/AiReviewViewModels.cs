@@ -99,6 +99,8 @@ public sealed record AiReviewFindingViewModel
 
     public JsonElement? Suggestion { get; init; }
 
+    public JsonElement? Evidence { get; init; }
+
     public AiReviewFindingStatus Status { get; init; }
 
     public string? DecidedByUserId { get; init; }

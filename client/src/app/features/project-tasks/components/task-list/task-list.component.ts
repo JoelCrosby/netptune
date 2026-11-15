@@ -14,6 +14,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskSelectionService } from '@core/services/task-selection.service';
 import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
+import { taskReviewRunningLabel } from '@core/tasks/task-review-running-label';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { LucideListChecks, LucidePlus, LucideTrash2 } from '@lucide/angular';
@@ -81,6 +82,8 @@ import { onChange } from '@core/util/signals';
 export class TaskListComponent {
   private dialog = inject(DialogService);
 
+  private readonly reviewRunningLabel = taskReviewRunningLabel();
+
   private table = viewChild(TaskTableComponent<TaskViewModel>);
 
   readonly count = computed(() => this.table()?.loadedCount() ?? null);
@@ -118,6 +121,7 @@ export class TaskListComponent {
           name: taskNameCell<TaskViewModel>({
             action: (task) => this.titleClicked(task),
             showComments: true,
+            busy: (task) => this.reviewRunningLabel(task.id),
             flagNames: (task) => {
               if (!readFlags) return [];
 

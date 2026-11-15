@@ -17,6 +17,7 @@ public enum AiReviewStreamEventType
     ToolFinished = 7,
     Finding = 8,
     Summary = 9,
+    FindingDetail = 10,
 }
 
 public static class AiReviewStages
@@ -47,6 +48,12 @@ public sealed record AiReviewStreamEvent
     public bool? IsError { get; init; }
 
     public AiReviewFindingCategory? Category { get; init; }
+
+    public int? FindingCount { get; init; }
+
+    // Where a drafted finding sits in the reply's findings array. The client keys
+    // drafts by it, so a finding can be reported again as more of it arrives.
+    public int? Position { get; init; }
 
     public static AiReviewStreamEvent ToolStarted(string label)
     {
@@ -83,9 +90,25 @@ public sealed record AiReviewStreamEvent
         };
     }
 
-    public static AiReviewStreamEvent Finding(AiReviewFindingCategory category, string title)
+    public static AiReviewStreamEvent Finding(AiReviewFindingCategory category, string title, int position)
     {
-        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Finding, Category = category, Text = title };
+        return new AiReviewStreamEvent
+        {
+            Type = AiReviewStreamEventType.Finding,
+            Category = category,
+            Text = title,
+            Position = position,
+        };
+    }
+
+    public static AiReviewStreamEvent FindingDetail(int position, string explanation)
+    {
+        return new AiReviewStreamEvent
+        {
+            Type = AiReviewStreamEventType.FindingDetail,
+            Text = explanation,
+            Position = position,
+        };
     }
 
     public static AiReviewStreamEvent Summary(string text)
@@ -93,9 +116,14 @@ public sealed record AiReviewStreamEvent
         return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Summary, Text = text };
     }
 
-    public static AiReviewStreamEvent Completed(int runId)
+    public static AiReviewStreamEvent Completed(int runId, int findingCount)
     {
-        return new AiReviewStreamEvent { Type = AiReviewStreamEventType.Completed, RunId = runId };
+        return new AiReviewStreamEvent
+        {
+            Type = AiReviewStreamEventType.Completed,
+            RunId = runId,
+            FindingCount = findingCount,
+        };
     }
 
     public static AiReviewStreamEvent Failed(string message, int? runId = null)
@@ -153,6 +181,19 @@ public sealed record AiReviewContext
     public IReadOnlyDictionary<string, int> CandidateTasks { get; init; } = new Dictionary<string, int>();
 
     public IReadOnlyList<string> WorkspaceTags { get; init; } = [];
+
+    // Every string a call that succeeded passed to one of its tools, at any depth of
+    // the arguments. A finding may only cite what the review actually read, so the
+    // validator drops a citation that is not in here.
+    public IReadOnlySet<string> ToolLocators { get; init; } =
+        new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+}
+
+public sealed record AiReviewEvidence
+{
+    public required string Locator { get; init; }
+
+    public string? Detail { get; init; }
 }
 
 public sealed record AiReviewApplyRequest

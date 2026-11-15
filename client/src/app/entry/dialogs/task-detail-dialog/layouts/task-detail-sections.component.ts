@@ -42,6 +42,7 @@ import { TaskDetailFieldRowsComponent } from '../shared/task-detail-field-rows.c
 import { TaskDetailPropertyChipsComponent } from '../shared/task-detail-property-chips.component';
 import { TaskDetailReviewOriginComponent } from '../shared/task-detail-review-origin.component';
 import { TaskDetailReviewService } from '../shared/task-detail-review.service';
+import { requestedTaskDetailSection } from '../shared/requested-task-detail-section';
 import { TaskDetailTagRowComponent } from '../shared/task-detail-tag-row.component';
 import { TaskDetailTimestampsComponent } from '../shared/task-detail-timestamps.component';
 import { TaskDetailService } from '../task-detail.service';
@@ -242,10 +243,12 @@ export class TaskDetailSectionsComponent {
     return this.codeSection()?.count() ?? 0;
   });
 
+  private readonly requestedSection = requestedTaskDetailSection();
+
   readonly section = linkedSignal<number, string>({
     source: this.codeCount,
     computation: (count, previous) => {
-      const section = previous?.value ?? 'overview';
+      const section = previous?.value ?? this.initialSection();
       const isHiddenCodeSection = section === 'code' && !count;
 
       return isHiddenCodeSection ? 'overview' : section;
@@ -284,6 +287,16 @@ export class TaskDetailSectionsComponent {
   private readonly attachedLabel = $localize`:Heading above the sections listing what is attached to a task:Attached`;
 
   readonly sectionLabel = computed(() => this.labels[this.section()]);
+
+  private initialSection(): string {
+    const requested = this.requestedSection;
+
+    if (requested === null) return 'overview';
+
+    const isKnown = Object.hasOwn(this.labels, requested);
+
+    return isKnown ? requested : 'overview';
+  }
 
   protected onAddToBoard(boards: TaskDetailBoardsComponent, event: MouseEvent) {
     boards.openAddMenu(event.currentTarget as HTMLElement);

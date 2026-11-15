@@ -33,14 +33,58 @@ public class AiReviewDraftReaderTests
             events.AddRange(reader.Read(Reply));
             events.AddRange(reader.Read(Reply));
 
-            events.Should().HaveCount(3, $"the reply was cut at {split}");
+            events.Should().HaveCount(4, $"the reply was cut at {split}");
             events[0].Type.Should().Be(AiReviewStreamEventType.Summary);
             events[0].Text.Should().Be("Nearly ready, but \"done\" is undefined.");
             events[1].Text.Should().Be("No acceptance criteria");
             events[1].Category.Should().Be(AiReviewFindingCategory.Gap);
-            events[2].Text.Should().Be("Café é wording");
-            events[2].Category.Should().Be(AiReviewFindingCategory.Ambiguity);
+            events[1].Position.Should().Be(0);
+            events[2].Type.Should().Be(AiReviewStreamEventType.FindingDetail);
+            events[2].Position.Should().Be(0);
+            events[2].Text.Should().Be("x");
+            events[3].Text.Should().Be("Café é wording");
+            events[3].Category.Should().Be(AiReviewFindingCategory.Ambiguity);
+            events[3].Position.Should().Be(2);
         }
+    }
+
+    [Fact]
+    public void Read_ShouldNotDetailAFindingFromTheReplyBefore_WhenTheModelWroteItAgain()
+    {
+        var reader = new AiReviewDraftReader(AllCategories);
+        var first = reader.Read("""{"findings":[{"category":"gap","title":"No acceptance criteria"}""");
+
+        var second = reader.Read(
+            """{"findings":[{"category":"scope","title":"Two changes in one task","explanation":"Split it"}]}""");
+
+        first.Should().ContainSingle().Which.Text.Should().Be("No acceptance criteria");
+        second.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Read_ShouldHoldAnExplanation_UntilItsFindingHasBeenReported()
+    {
+        var reader = new AiReviewDraftReader(AllCategories);
+
+        var events = reader.Read(
+            """{"findings":[{"explanation":"Why it matters","category":"gap","title":"Missing"}]}""");
+
+        events.Select(item => item.Type).Should().Equal(
+            AiReviewStreamEventType.Finding,
+            AiReviewStreamEventType.FindingDetail);
+        events[1].Text.Should().Be("Why it matters");
+        events[1].Position.Should().Be(0);
+    }
+
+    [Fact]
+    public void Read_ShouldNotReportAnExplanation_ForACategoryTheSubjectDoesNotAllow()
+    {
+        var reader = new AiReviewDraftReader(new HashSet<AiReviewFindingCategory> { AiReviewFindingCategory.Gap });
+
+        var events = reader.Read(
+            """{"findings":[{"category":"scope","title":"Too big","explanation":"Why it matters"}]}""");
+
+        events.Should().BeEmpty();
     }
 
     [Fact]

@@ -168,7 +168,7 @@
     </unit>
     <unit id="7719722612478824934">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:105</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:107</note>
         <note category="description">How many web searches and page reads a review made. COUNT is a number</note>
       </notes>
       <segment state="translated">
@@ -342,8 +342,8 @@
     <unit id="3817498941817715969">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:609</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:251</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:280</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:254</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:283</note>
         <note category="location">src/app/features/pages/components/page-folder-contents.component.ts:82</note>
         <note category="location">src/app/features/pages/components/page-tree.component.ts:110,112</note>
         <note category="location">src/app/features/pages/editor/page-reference.controller.ts:224</note>
@@ -835,7 +835,7 @@
     </unit>
     <unit id="5322873861888163184">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:141,143</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:142,144</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:58,61</note>
         <note category="description">Button that puts this task on another board</note>
       </notes>
@@ -862,6 +862,16 @@
       <segment state="translated">
         <source>Edit Board Groups</source>
         <target>Board-Gruppen bearbeiten</target>
+      </segment>
+    </unit>
+    <unit id="4528216391048143117">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:161</note>
+        <note category="description">Opens the list of sources a review could not read in full, when there is one</note>
+      </notes>
+      <segment state="translated">
+        <source>1 source was not read in full</source>
+        <target>1 Quelle wurde nicht vollständig gelesen</target>
       </segment>
     </unit>
     <unit id="4529090892145486687">
@@ -1510,7 +1520,7 @@
     </unit>
     <unit id="8820435528476775222">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:51</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:53</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -1691,6 +1701,16 @@
         <target>Tags löschen</target>
       </segment>
     </unit>
+    <unit id="3940871996003240154">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:140</note>
+        <note category="description">Shown beside a source a review read only part of, because what came back was too large</note>
+      </notes>
+      <segment state="translated">
+        <source>cut short</source>
+        <target>abgeschnitten</target>
+      </segment>
+    </unit>
     <unit id="3949141401593763883">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:395</note>
@@ -1834,7 +1854,7 @@
     </unit>
     <unit id="3781268880187367400">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:153,158</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:177,182</note>
         <note category="description">Title of the notice shown when the latest review of a task failed</note>
       </notes>
       <segment state="translated">
@@ -1904,7 +1924,7 @@
     </unit>
     <unit id="322229249598827754">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:533</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:548</note>
         <note category="description">Shown in place of a person&apos;s name when it is not known</note>
       </notes>
       <segment state="translated">
@@ -2286,7 +2306,7 @@
     </unit>
     <unit id="2387777488304902858">
       <notes>
-        <note category="location">src/app/core/services/ai-reviews.service.ts:28</note>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:29</note>
         <note category="location">src/app/core/services/ai-writer.service.ts:20</note>
         <note category="description">Shown on the Review tab when the review request fails before any reply</note>
       </notes>
@@ -2625,7 +2645,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:312,315</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:238,241</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:267,270</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:540</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:273</note>
@@ -2877,7 +2897,7 @@
     </unit>
     <unit id="1277566644129121082">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:119,120</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:120,121</note>
         <note category="description">Shown when a saved query cannot be found</note>
       </notes>
       <segment state="translated">
@@ -2897,7 +2917,7 @@
     </unit>
     <unit id="3325929519262234553">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:486</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:517</note>
         <note category="description">Label and count of the tool calls a running task review has made so far</note>
       </notes>
       <segment state="translated">
@@ -2969,10 +2989,10 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:798</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:820</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:195</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:135</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:139</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:249</note>
         <note category="location">src/app/features/queries/views/queries-view/queries-view.component.ts:159</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:230</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:233</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:175</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:310</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:148</note>
@@ -3224,14 +3244,14 @@
         <target>Möchten Sie diese Gruppe wirklich löschen?</target>
       </segment>
     </unit>
-    <unit id="1280672475146280593">
+    <unit id="171544322028923435">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:139,144</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:141,145</note>
         <note category="description">Heading above the findings a running task review has written so far, before they are checked and saved</note>
       </notes>
       <segment state="translated">
-        <source>Drafted so far</source>
-        <target>Bisher entworfen</target>
+        <source> Drafted so far </source>
+        <target> Bisher entworfen </target>
       </segment>
     </unit>
     <unit id="9200818513059635204">
@@ -3377,7 +3397,7 @@
     </unit>
     <unit id="5494881644226080803">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:296,298</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,327</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {Show 1 decided finding} other {Show <ph id="0" equiv="INTERPOLATION"/> decided findings}}</source>
@@ -3468,7 +3488,7 @@
     </unit>
     <unit id="6949815097015527714">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:277,281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:306,310</note>
         <note category="description">Shown when the latest review of a task left nothing open</note>
       </notes>
       <segment state="translated">
@@ -4177,7 +4197,7 @@
     </unit>
     <unit id="1615286370389385433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:549</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:564</note>
         <note category="description">Who dismissed a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -4255,6 +4275,16 @@
         <target>Abfragen werden geladen</target>
       </segment>
     </unit>
+    <unit id="4135377449613240419">
+      <notes>
+        <note category="location">src/app/core/services/task-review-runs.service.ts:156</note>
+        <note category="description">Notice shown when a task review finished while the task was not on screen, and the number of findings is unknown. TASK is a task identifier like NETP-612</note>
+      </notes>
+      <segment state="translated">
+        <source>The review of <ph id="0" equiv="TASK" disp="systemId"/> has finished.</source>
+        <target>Die Prüfung von <ph id="0" equiv="TASK" disp="systemId"/> ist abgeschlossen.</target>
+      </segment>
+    </unit>
     <unit id="4135402603013824809">
       <notes>
         <note category="location">src/app/core/services/page-commands.service.ts:242</note>
@@ -4288,7 +4318,7 @@
     <unit id="4140474966837806672">
       <notes>
         <note category="location">src/app/features/queries/components/query-card.component.ts:130,132</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:134,136</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:135,137</note>
         <note category="description">Eyebrow above the plain-language query summary</note>
       </notes>
       <segment state="translated">
@@ -4348,7 +4378,7 @@
     </unit>
     <unit id="1444811558141866044">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:85</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:86</note>
         <note category="description">Badge on a task added after its sprint started</note>
       </notes>
       <segment state="initial">
@@ -4378,7 +4408,7 @@
     </unit>
     <unit id="5586466201622047717">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:53</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:55</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -4571,8 +4601,7 @@
     <unit id="958878170701195111">
       <notes>
         <note category="location">src/app/core/transforms/activity-detail.ts:98</note>
-        <note category="location">src/app/static/components/activity-log/activity-log.component.ts:64,67</note>
-        <note category="location">src/app/static/components/step-trail/step-trail.component.ts:41,44</note>
+        <note category="location">src/app/static/components/step-log/step-log.component.ts:56,59</note>
         <note category="description">Shown after an assistant review in the activity feed when it failed</note>
       </notes>
       <segment state="translated">
@@ -4886,6 +4915,16 @@
         <target> Bereits verknüpft </target>
       </segment>
     </unit>
+    <unit id="4083337005045748464">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:139</note>
+        <note category="description">Shown beside a source a review could not read, because the tool call failed</note>
+      </notes>
+      <segment state="translated">
+        <source>failed</source>
+        <target>fehlgeschlagen</target>
+      </segment>
+    </unit>
     <unit id="7055914640394142544">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:146,149</note>
@@ -4918,8 +4957,8 @@
     </unit>
     <unit id="6746571899700014633">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:91,93</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:100,102</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:92,94</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:101,103</note>
         <note category="description">Opens the full list of a task&apos;s fields</note>
       </notes>
       <segment state="initial">
@@ -5022,7 +5061,7 @@
     </unit>
     <unit id="242059098779495199">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:257,260</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:286,289</note>
         <note category="description">Button that previews and applies a review suggestion</note>
       </notes>
       <segment state="translated">
@@ -5178,7 +5217,7 @@
     </unit>
     <unit id="3516718364454168290">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:145,146</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:146,147</note>
         <note category="description">Heading shown when a saved query no longer compiles</note>
       </notes>
       <segment state="translated">
@@ -5571,7 +5610,7 @@
     </unit>
     <unit id="4601050208636083135">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:51</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:52</note>
         <note category="description">Attention chip for open tasks without an estimate</note>
       </notes>
       <segment state="initial">
@@ -6200,7 +6239,7 @@
     </unit>
     <unit id="5502687224269585359">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:33</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:35</note>
         <note category="description">Readiness of a task whose review has open findings</note>
       </notes>
       <segment state="translated">
@@ -6377,7 +6416,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:239,244</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:296,301</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,330</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:88,90</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
@@ -6634,7 +6673,7 @@
     </unit>
     <unit id="6944205805962235415">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:93</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:95</note>
         <note category="description">How many repository files a review read. COUNT is a number</note>
       </notes>
       <segment state="translated">
@@ -6888,7 +6927,7 @@
     </unit>
     <unit id="6160972322896689559">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:274</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:277</note>
         <note category="description">Section holding a task&apos;s comments</note>
       </notes>
       <segment state="initial">
@@ -6939,16 +6978,6 @@
         <target>gerade eben</target>
       </segment>
     </unit>
-    <unit id="5018969756728532988">
-      <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:494</note>
-        <note category="description">Label and count of the findings a running task review has written so far</note>
-      </notes>
-      <segment state="translated">
-        <source>Drafted: <ph id="0" equiv="count" disp="drafts"/></source>
-        <target>Entworfen: <ph id="0" equiv="count" disp="drafts"/></target>
-      </segment>
-    </unit>
     <unit id="4737822868227557262">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:52</note>
@@ -6980,7 +7009,7 @@
         <note category="location">src/app/core/automations/automation-copy.ts:66</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:508</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:256</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:259</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:55,57</note>
         <note category="location">src/app/features/automations/models/task-update-fields.ts:49</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:81,84</note>
@@ -7153,7 +7182,7 @@
     </unit>
     <unit id="8552023238663754615">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:226</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:242</note>
         <note category="description">Tooltip on the icon marking a task that sits on more than one board</note>
       </notes>
       <segment state="translated">
@@ -7225,7 +7254,7 @@
     </unit>
     <unit id="6014538670324558918">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:46</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:48</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -8268,7 +8297,7 @@
     </unit>
     <unit id="2488300507912982276">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:138</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:134</note>
         <note category="description">What a stored conversation holds. COUNT is a number of messages, TOKENS a token count</note>
       </notes>
       <segment state="translated">
@@ -8311,7 +8340,7 @@
     <unit id="3807699453257291879">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:612</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:246</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:249</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:91</note>
         <note category="description">Name of the comments permission group</note>
       </notes>
@@ -8382,7 +8411,7 @@
     </unit>
     <unit id="481389193566012592">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:161,162</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:162,163</note>
         <note category="description">Toggle that shows archived sprint tasks. COUNT is a number</note>
       </notes>
       <segment state="initial">
@@ -8454,8 +8483,8 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:627</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:510</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:247</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:279</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:250</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:282</note>
         <note category="description">Name of the files permission group</note>
       </notes>
       <segment state="translated">
@@ -8715,6 +8744,16 @@
         <target>Noch keine geteilten Abfragen. Nur geteilte Abfragen können eingebettet werden, damit alle Leser der Seite dieselben Aufgaben sehen.</target>
       </segment>
     </unit>
+    <unit id="3912609268670256816">
+      <notes>
+        <note category="location">src/app/core/services/task-review-runs.service.ts:147</note>
+        <note category="description">Notice shown when a task review failed while the task was not on screen. TASK is a task identifier like NETP-612</note>
+      </notes>
+      <segment state="translated">
+        <source>The review of <ph id="0" equiv="TASK" disp="systemId"/> failed.</source>
+        <target>Die Prüfung von <ph id="0" equiv="TASK" disp="systemId"/> ist fehlgeschlagen.</target>
+      </segment>
+    </unit>
     <unit id="3915681373731822227">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:147</note>
@@ -8943,7 +8982,7 @@
     </unit>
     <unit id="4168406902354683639">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:395,399</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:424,428</note>
         <note category="description">Toggles the list of past reviews of a task</note>
       </notes>
       <segment state="translated">
@@ -9026,7 +9065,7 @@
     </unit>
     <unit id="4334698187230567378">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:360,364</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:389,393</note>
         <note category="description">Button that runs the assistant review on a task</note>
       </notes>
       <segment state="translated">
@@ -9461,7 +9500,7 @@
     </unit>
     <unit id="3302832028736051011">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:166,170</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:190,194</note>
         <note category="description">Suggests reviewing a task again after it changed</note>
       </notes>
       <segment state="translated">
@@ -9596,7 +9635,7 @@
     </unit>
     <unit id="2565426175330768428">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:471</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:503</note>
         <note category="description">Shown while the assistant reviews a task, before it starts writing</note>
       </notes>
       <segment state="translated">
@@ -9850,7 +9889,7 @@
     </unit>
     <unit id="6143795228406387052">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:77,81</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:78,82</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:100,104</note>
         <note category="description">Button that copies a shareable link to a query</note>
       </notes>
@@ -10252,7 +10291,7 @@
     </unit>
     <unit id="1675061222954835186">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:108</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:110</note>
         <note category="description">How many reads of tasks, pages and other workspace records a review made. COUNT is a number</note>
       </notes>
       <segment state="translated">
@@ -10746,7 +10785,7 @@
     </unit>
     <unit id="1496984288894458427">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:46,50</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:50,54</note>
         <note category="description">Returns from a past review to the list of reviews</note>
       </notes>
       <segment state="translated">
@@ -11823,7 +11862,7 @@
     </unit>
     <unit id="8414062594969817013">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:47</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:49</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -12111,7 +12150,7 @@
         <note category="location">src/app/features/automations/components/automation-run-history.component.ts:302</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:50</note>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:71</note>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:64</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:65</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:170</note>
         <note category="location">src/app/features/users/components/user-permissions/user-permissions.component.ts:25</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.ts:51</note>
@@ -12248,7 +12287,7 @@
     </unit>
     <unit id="6181219532554667310">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:114,117</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:115,118</note>
         <note category="description">Accessible name of the list that moves between a task&apos;s sections</note>
       </notes>
       <segment state="initial">
@@ -12278,7 +12317,7 @@
     </unit>
     <unit id="8734283461831058770">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:50</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:52</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -12771,7 +12810,7 @@
     </unit>
     <unit id="4753691295121065763">
       <notes>
-        <note category="location">src/app/core/services/ai-reviews.service.ts:30</note>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:31</note>
         <note category="description">Shown on the Review tab when the review stream ends early</note>
       </notes>
       <segment state="translated">
@@ -12862,7 +12901,7 @@
     </unit>
     <unit id="6852945703466668405">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:54</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:56</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -13186,7 +13225,7 @@
     </unit>
     <unit id="1798092421818152413">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:35</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:37</note>
         <note category="description">Readiness of a task that changed after its review</note>
       </notes>
       <segment state="translated">
@@ -13251,7 +13290,7 @@
     </unit>
     <unit id="6423210280939340786">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:34</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:36</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:633</note>
         <note category="description">Readiness of a task whose review has no open findings</note>
       </notes>
@@ -13571,7 +13610,7 @@
     </unit>
     <unit id="9114014874327219131">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:93,97</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:97,101</note>
         <note category="description">Accessible label for the board card selection checkbox</note>
       </notes>
       <segment state="translated">
@@ -13731,7 +13770,7 @@
     </unit>
     <unit id="3541398472508734323">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:348,349</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:377,378</note>
         <note category="description">Heading shown when a task has never been reviewed</note>
       </notes>
       <segment state="translated">
@@ -14146,6 +14185,16 @@
         <target> FALLS </target>
       </segment>
     </unit>
+    <unit id="5556218630376316917">
+      <notes>
+        <note category="location">src/app/core/services/task-review-runs.service.ts:43</note>
+        <note category="description">Action on the notice that a task review has finished, which opens the task</note>
+      </notes>
+      <segment state="translated">
+        <source>Open task</source>
+        <target>Aufgabe öffnen</target>
+      </segment>
+    </unit>
     <unit id="5557116058439889949">
       <notes>
         <note category="location">src/app/features/settings/components/notification-subscriptions/notification-subscriptions.component.ts:273</note>
@@ -14392,7 +14441,7 @@
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:276,277</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:301,302</note>
-        <note category="location">src/app/static/components/task-name.component.ts:48,50</note>
+        <note category="location">src/app/static/components/task-name.component.ts:50,52</note>
         <note category="description">Marks a deleted task</note>
       </notes>
       <segment state="translated">
@@ -14847,7 +14896,7 @@
     </unit>
     <unit id="2963979162586134182">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:468</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:500</note>
         <note category="description">Shown while a task review runs one of the assistant&apos;s tools. TOOL names the tool and what it reads, like read_repository_file · src/app.ts</note>
       </notes>
       <segment state="translated">
@@ -15312,7 +15361,7 @@
     </unit>
     <unit id="8617231936234975611">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:236</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:252</note>
         <note category="description">Tooltip on a task pinned at more than one scope</note>
       </notes>
       <segment state="translated">
@@ -15657,7 +15706,7 @@
     </unit>
     <unit id="6186101642106373118">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:111,116</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:108,113</note>
         <note category="description">Button that runs the assistant review on a task again</note>
       </notes>
       <segment state="translated">
@@ -15767,7 +15816,7 @@
     </unit>
     <unit id="862315084299301566">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:121,122</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:122,123</note>
         <note category="description">Advice shown when a saved query is missing</note>
       </notes>
       <segment state="translated">
@@ -15867,7 +15916,7 @@
     </unit>
     <unit id="765624106750732167">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:146,149</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:147,150</note>
         <note category="description">Accessible label of the sprint task filters</note>
       </notes>
       <segment state="initial">
@@ -15959,7 +16008,7 @@
     </unit>
     <unit id="7839623532162862548">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:41</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:42</note>
         <note category="description">Attention chip for open high and critical priority tasks</note>
       </notes>
       <segment state="initial">
@@ -16296,7 +16345,7 @@
     </unit>
     <unit id="8805582001022257690">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:116,118</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:117,119</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:186,188</note>
         <note category="description">Button that asks the assistant about this task</note>
       </notes>
@@ -16526,7 +16575,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-property-chips.component.ts:169,171</note>
         <note category="location">src/app/features/automations/models/task-update-fields.ts:84</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:240</note>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:91</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:92</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:140,143</note>
         <note category="description">Task field that an automation can watch for changes</note>
@@ -16599,7 +16648,7 @@
     <unit id="5234544449365538384">
       <notes>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:480</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:326</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:330</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:362</note>
         <note category="description">Shown when a page link could not be copied</note>
       </notes>
@@ -16610,7 +16659,7 @@
     </unit>
     <unit id="5239250186261980893">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:462</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:494</note>
         <note category="description">Shown while the assistant writes out the findings of a task review</note>
       </notes>
       <segment state="translated">
@@ -17285,8 +17334,8 @@
     <unit id="7565716024468232322">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:509</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:248</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:278</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:251</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:281</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
         <note category="description">Tab listing the tasks this one links to</note>
       </notes>
@@ -17472,7 +17521,7 @@
     </unit>
     <unit id="2800394832447902287">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:56</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:57</note>
         <note category="description">Attention chip for tasks added after the sprint started</note>
       </notes>
       <segment state="initial">
@@ -17986,7 +18035,7 @@
     </unit>
     <unit id="2952127331314675199">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:120,122</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:121,123</note>
         <note category="description">Label before the sprint&apos;s needs-attention filters</note>
       </notes>
       <segment state="initial">
@@ -18338,6 +18387,16 @@
         <target>Vorher</target>
       </segment>
     </unit>
+    <unit id="6196486264446084575">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/ai-review-evidence.component.ts:20,24</note>
+        <note category="description">Opens the list of sources a review finding rests on, under the finding</note>
+      </notes>
+      <segment state="translated">
+        <source>Why this</source>
+        <target>Warum dieser Befund</target>
+      </segment>
+    </unit>
     <unit id="6197183619710382830">
       <notes>
         <note category="location">src/app/features/projects/components/project-branding/project-branding.component.ts:27,29</note>
@@ -18643,7 +18702,7 @@
     </unit>
     <unit id="584754872792429089">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:126</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:130</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:46</note>
         <note category="description">Column heading for the sprint assign action</note>
       </notes>
@@ -19056,7 +19115,7 @@
     <unit id="7585826646011739428">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:157,160</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:107,110</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:108,111</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:213</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:219</note>
@@ -19221,7 +19280,7 @@
     </unit>
     <unit id="8079275177893504270">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:166,167</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:167,168</note>
         <note category="description">Shown when a saved query matches no tasks</note>
       </notes>
       <segment state="translated">
@@ -19475,7 +19534,7 @@
     </unit>
     <unit id="975709858305882846">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:46</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:47</note>
         <note category="description">Attention chip for open tasks with nobody assigned</note>
       </notes>
       <segment state="initial">
@@ -19506,7 +19565,7 @@
     </unit>
     <unit id="7223172032104127584">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:149</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:155</note>
         <note category="description">Counts of a past review&apos;s findings by state. OPEN, ACCEPTED and DISMISSED are numbers, MODEL is the assistant model</note>
       </notes>
       <segment state="translated">
@@ -19916,10 +19975,10 @@
     </unit>
     <unit id="2700504957203898501">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:136,139</note>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:140,144</note>
-        <note category="location">src/app/static/components/task-name.component.ts:63,64</note>
-        <note category="location">src/app/static/components/task-name.component.ts:65,68</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:140,143</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:144,148</note>
+        <note category="location">src/app/static/components/task-name.component.ts:65,66</note>
+        <note category="location">src/app/static/components/task-name.component.ts:67,70</note>
         <note category="description">Tooltip on the icon marking a task that has comments</note>
       </notes>
       <segment state="translated">
@@ -20090,6 +20149,16 @@
         <target>Neuer Arbeitsbereich</target>
       </segment>
     </unit>
+    <unit id="9008356707846295277">
+      <notes>
+        <note category="location">src/app/core/services/task-review-runs.service.ts:164</note>
+        <note category="description">Notice shown when a task review finished with one finding while the task was not on screen. TASK is a task identifier like NETP-612</note>
+      </notes>
+      <segment state="translated">
+        <source>The review of <ph id="0" equiv="TASK" disp="systemId"/> found 1 thing to look at.</source>
+        <target>Die Prüfung von <ph id="0" equiv="TASK" disp="systemId"/> ergab 1 Befund.</target>
+      </segment>
+    </unit>
     <unit id="8121515976557904639">
       <notes>
         <note category="location">src/app/core/services/ai-effort.service.ts:10</note>
@@ -20214,7 +20283,7 @@
     </unit>
     <unit id="6838818500770436132">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:82,84</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:88,90</note>
         <note category="description">Accessible label of the list of past reviews of a task</note>
       </notes>
       <segment state="translated">
@@ -21091,8 +21160,8 @@
     <unit id="7107218117130409950">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:605</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:249</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:277</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:252</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:280</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:64</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:88</note>
@@ -21270,7 +21339,7 @@
     </unit>
     <unit id="4621453002365170999">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:209</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:212</note>
         <note category="description">Shown when no sprint task matches the filter</note>
       </notes>
       <segment state="initial">
@@ -21394,7 +21463,7 @@
     <unit id="4237605958853876047">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:34,35</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:165</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:166</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:86,87</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:129</note>
         <note category="location">src/app/static/components/task-table.component.ts:101</note>
@@ -21559,7 +21628,7 @@
     </unit>
     <unit id="6425333040033977991">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:284</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:287</note>
         <note category="description">Heading above the sections listing what is attached to a task</note>
       </notes>
       <segment state="initial">
@@ -21706,6 +21775,16 @@
       <segment state="translated">
         <source>Today</source>
         <target>Heute</target>
+      </segment>
+    </unit>
+    <unit id="6049507486553473510">
+      <notes>
+        <note category="location">src/app/core/services/task-review-runs.service.ts:167</note>
+        <note category="description">Notice shown when a task review finished with several findings while the task was not on screen. TASK is a task identifier like NETP-612, COUNT is a count greater than one</note>
+      </notes>
+      <segment state="translated">
+        <source>The review of <ph id="0" equiv="TASK" disp="systemId"/> found <ph id="1" equiv="COUNT" disp="findingCount"/> things to look at.</source>
+        <target>Die Prüfung von <ph id="0" equiv="TASK" disp="systemId"/> ergab <ph id="1" equiv="COUNT" disp="findingCount"/> Befunde.</target>
       </segment>
     </unit>
     <unit id="3620188369327429839">
@@ -21915,7 +21994,7 @@
     </unit>
     <unit id="7077514990546083477">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:350,352</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:379,381</note>
         <note category="description">Explains what an assistant review of a task does</note>
       </notes>
       <segment state="translated">
@@ -22112,7 +22191,7 @@
     </unit>
     <unit id="3763180352815734429">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:24,26</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:25,27</note>
         <note category="description">Heading of the dashboard card listing your tasks</note>
       </notes>
       <segment state="translated">
@@ -22153,7 +22232,7 @@
     </unit>
     <unit id="1301232718408636510">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:34,36</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:35,37</note>
         <note category="description">Empty state for the assigned-tasks card</note>
       </notes>
       <segment state="translated">
@@ -22629,7 +22708,7 @@
     </unit>
     <unit id="7794941552856585194">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:73,77</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:79,83</note>
         <note category="description">Shown for a past review with no findings</note>
       </notes>
       <segment state="translated">
@@ -22722,7 +22801,7 @@
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:190</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:151</note>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:68</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:69</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes.component.ts:58,59</note>
         <note category="description">Label shown in the interface</note>
       </notes>
@@ -22885,7 +22964,7 @@
     </unit>
     <unit id="3922324539528568972">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:548</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:563</note>
         <note category="description">Who accepted a review finding. NAME is a person</note>
       </notes>
       <segment state="translated">
@@ -23302,7 +23381,7 @@
     </unit>
     <unit id="2198766149366659339">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:49</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:51</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -23362,7 +23441,7 @@
     </unit>
     <unit id="6447637885724395550">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:246</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:250</note>
         <note category="description">Row action that removes a task from its sprint</note>
       </notes>
       <segment state="initial">
@@ -23533,7 +23612,7 @@
     </unit>
     <unit id="8762534944604959180">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:38,41</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:39,42</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:248,249</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:189,190</note>
         <note category="location">src/app/static/components/task-table.component.ts:98</note>
@@ -23547,7 +23626,7 @@
     <unit id="2630272244920413702">
       <notes>
         <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:146,148</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:72,74</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:73,75</note>
         <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment state="translated">
@@ -23846,7 +23925,7 @@
     </unit>
     <unit id="7088061432353123225">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:87,99</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:84,96</note>
         <note category="description">When a task was last reviewed, who ran it and which model. TIME is relative, like 2 hours ago</note>
       </notes>
       <segment state="translated">
@@ -24822,7 +24901,7 @@
     </unit>
     <unit id="4426738042466538780">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:129,133</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:127,131</note>
         <note category="description">Label before the assistant&apos;s current reasoning while a task review runs</note>
       </notes>
       <segment state="translated">
@@ -25034,7 +25113,7 @@
     </unit>
     <unit id="4018446081703748026">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:102</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:104</note>
         <note category="description">How many repository listings a review made, of repositories, files or commits. COUNT is a number</note>
       </notes>
       <segment state="translated">
@@ -25064,7 +25143,7 @@
     </unit>
     <unit id="7828808805120058354">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,327</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:354,356</note>
         <note category="description">Button that undoes an accepted review suggestion</note>
       </notes>
       <segment state="translated">
@@ -25199,7 +25278,7 @@
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:90</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:155</note>
         <note category="location">src/app/features/sprints/components/sprint-overview.component.ts:364</note>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:76</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:77</note>
         <note category="description">Shown in the assignee picker when a task has nobody assigned</note>
       </notes>
       <segment state="translated">
@@ -26343,6 +26422,16 @@
         <target>Archiv importieren</target>
       </segment>
     </unit>
+    <unit id="4791513965937149764">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:166</note>
+        <note category="description">Opens the list of sources a review could not read in full. COUNT is a count greater than one</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="sources"/> sources were not read in full</source>
+        <target><ph id="0" equiv="COUNT" disp="sources"/> Quellen wurden nicht vollständig gelesen</target>
+      </segment>
+    </unit>
     <unit id="4797214229335185452">
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-transcript.component.ts:52,55</note>
@@ -26910,7 +26999,7 @@
     </unit>
     <unit id="6722197117273372334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:335,337</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:364,366</note>
         <note category="description">Button that reopens a decided review finding</note>
       </notes>
       <segment state="translated">
@@ -26953,7 +27042,7 @@
     </unit>
     <unit id="6724628084310944210">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:52</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:54</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -27064,7 +27153,7 @@
     </unit>
     <unit id="7305438510733628954">
       <notes>
-        <note category="location">src/app/core/services/ai-reviews.service.ts:29</note>
+        <note category="location">src/app/core/services/ai-reviews.service.ts:30</note>
         <note category="location">src/app/core/services/ai-writer.service.ts:21</note>
         <note category="description">Shown on the Review tab when reviews are being requested too quickly</note>
       </notes>
@@ -27218,7 +27307,7 @@
     </unit>
     <unit id="4777027777592183077">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:220,222</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:249,251</note>
         <note category="description">Placeholder of the optional reason for dismissing a review finding</note>
       </notes>
       <segment state="translated">
@@ -27561,8 +27650,8 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:253</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:276</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:256</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:279</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:32</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:103,104</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:263</note>
@@ -27832,7 +27921,7 @@
     </unit>
     <unit id="6460163696346705349">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:372,374</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:401,403</note>
         <note category="description">Heading above other reviews that mention this task</note>
       </notes>
       <segment state="translated">
@@ -27933,7 +28022,7 @@
     <unit id="892073694820881630">
       <notes>
         <note category="location">src/app/features/pages/views/page-detail-view/page-detail-view.component.ts:479</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:321</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:325</note>
         <note category="location">src/app/features/queries/views/query-form-view/query-form-view.component.ts:357</note>
         <note category="description">Confirmation that a page link was copied</note>
       </notes>
@@ -28167,7 +28256,7 @@
     </unit>
     <unit id="2754728570357204295">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:32</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:34</note>
         <note category="description">Readiness of a task that has never been reviewed</note>
       </notes>
       <segment state="translated">
@@ -28187,7 +28276,7 @@
     </unit>
     <unit id="2756114886316695221">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:164,166</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:188,190</note>
         <note category="description">Title of the notice shown when a task changed after it was reviewed</note>
       </notes>
       <segment state="translated">
@@ -29730,7 +29819,7 @@
     </unit>
     <unit id="4276946595199961340">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:72</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:73</note>
         <note category="description">Sprint task filter for high and critical priority tasks</note>
       </notes>
       <segment state="initial">
@@ -30289,7 +30378,7 @@
     </unit>
     <unit id="3468129479435447499">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:49,50</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:50,51</note>
         <note category="description">Button that assigns the task to a sprint</note>
       </notes>
       <segment state="translated">
@@ -30299,7 +30388,7 @@
     </unit>
     <unit id="5390387947838066066">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:75,78</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:76,79</note>
         <note category="description">Shown when there is no sprint to assign a task to</note>
       </notes>
       <segment state="translated">
@@ -30415,7 +30504,7 @@
     </unit>
     <unit id="2169543080106889901">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:208</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:211</note>
         <note category="description">Empty state for the sprint task list</note>
       </notes>
       <segment state="translated">
@@ -30489,7 +30578,7 @@
     </unit>
     <unit id="8963872349283159192">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:96</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:98</note>
         <note category="description">How many code searches a review ran. COUNT is a number</note>
       </notes>
       <segment state="translated">
@@ -30905,8 +30994,8 @@
     <unit id="8186013988289067040">
       <notes>
         <note category="location">src/app/core/transforms/activity-timeline.ts:719</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:252</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:281</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:255</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:284</note>
         <note category="description">Activity timeline filter for pull requests, commits and checks</note>
       </notes>
       <segment state="translated">
@@ -31473,8 +31562,8 @@
     </unit>
     <unit id="186236568870281953">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:250</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:275</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:253</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:278</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:282</note>
         <note category="description">Tab showing what has happened to a task</note>
       </notes>
@@ -31517,7 +31606,7 @@
     <unit id="4475093671158329161">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:303</note>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:95,99</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:96,100</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
       <segment state="translated">
@@ -31770,7 +31859,7 @@
     <unit id="2467702290618186989">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:306,308</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:152,154</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:153,155</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="initial">
@@ -31952,6 +32041,16 @@
       <segment state="translated">
         <source>Describe the page for the assistant to draft</source>
         <target>Beschreiben Sie die Seite, die der Assistent entwerfen soll</target>
+      </segment>
+    </unit>
+    <unit id="6665735535201032053">
+      <notes>
+        <note category="location">src/app/core/services/task-review-runs.service.ts:160</note>
+        <note category="description">Notice shown when a task review finished with no findings while the task was not on screen. TASK is a task identifier like NETP-612</note>
+      </notes>
+      <segment state="translated">
+        <source>The review of <ph id="0" equiv="TASK" disp="systemId"/> found nothing to fix.</source>
+        <target>Die Prüfung von <ph id="0" equiv="TASK" disp="systemId"/> hat nichts zu beanstanden gefunden.</target>
       </segment>
     </unit>
     <unit id="6667211785603976230">
@@ -32218,8 +32317,8 @@
     </unit>
     <unit id="5540143944145538402">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:151,154</note>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:155,160</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:155,158</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:159,164</note>
         <note category="description">Tooltip on the icon marking a task that has files attached</note>
       </notes>
       <segment state="translated">
@@ -32924,7 +33023,7 @@
     </unit>
     <unit id="842098238223236649">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:291,295</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:320,324</note>
         <note category="description">Hides review findings that were accepted or dismissed</note>
       </notes>
       <segment state="translated">
@@ -33075,7 +33174,7 @@
     </unit>
     <unit id="4175304775527800235">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:48</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:50</note>
         <note category="description">Why a stored review failed</note>
       </notes>
       <segment state="translated">
@@ -33469,7 +33568,7 @@
     </unit>
     <unit id="8787265779814996313">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:99</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:101</note>
         <note category="description">How many pull requests a review read. COUNT is a number</note>
       </notes>
       <segment state="translated">
@@ -33845,7 +33944,7 @@
     </unit>
     <unit id="6376671137838846973">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:458</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:490</note>
         <note category="description">Shown while a task review checks access and loads the task, before the assistant starts</note>
       </notes>
       <segment state="translated">
@@ -33861,6 +33960,16 @@
       <segment state="translated">
         <source>That pin could not be removed.</source>
         <target>Diese Anheftung konnte nicht entfernt werden.</target>
+      </segment>
+    </unit>
+    <unit id="6378913812621143893">
+      <notes>
+        <note category="location">src/app/core/util/ai-review-copy.ts:31</note>
+        <note category="description">Tooltip and accessible label of the mark shown on a task while an assistant review of it is running</note>
+      </notes>
+      <segment state="translated">
+        <source>Review running</source>
+        <target>Prüfung läuft</target>
       </segment>
     </unit>
     <unit id="85231400005408983">
@@ -33885,7 +33994,7 @@
     </unit>
     <unit id="5797079666713956753">
       <notes>
-        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:91,93</note>
+        <note category="location">src/app/features/queries/views/query-detail-view/query-detail-view.component.ts:92,94</note>
         <note category="description">Button that removes a query from the sidebar</note>
       </notes>
       <segment state="translated">
@@ -34150,7 +34259,7 @@
     </unit>
     <unit id="2614607010577950577">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:273</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:276</note>
         <note category="location">src/app/shell/shell-menu-link.component.ts:149</note>
         <note category="description">Section holding a task&apos;s description and remaining fields</note>
       </notes>
@@ -34192,7 +34301,7 @@
     </unit>
     <unit id="3504265772843656006">
       <notes>
-        <note category="location">src/app/core/util/ai-review-copy.ts:60</note>
+        <note category="location">src/app/core/util/ai-review-copy.ts:62</note>
         <note category="description">Why a stored review failed, when the reason is unknown</note>
       </notes>
       <segment state="translated">
@@ -34614,8 +34723,8 @@
     <unit id="1536087519743707362">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:230,233</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:267,269</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:259,262</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:296,298</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:30,31</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:76,77</note>
@@ -35457,7 +35566,7 @@
     </unit>
     <unit id="1899499061278057968">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:182</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review.service.ts:196</note>
         <note category="description">Shown when someone without permission accepts, dismisses or reopens a review finding</note>
       </notes>
       <segment state="translated">
@@ -35850,6 +35959,16 @@
       <segment state="initial">
         <source>Not set</source>
         <target>Nicht festgelegt</target>
+      </segment>
+    </unit>
+    <unit id="7322161524245433874">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:161,168</note>
+        <note category="description">Reassurance shown while a task review runs, so the reader knows they do not have to wait on this screen</note>
+      </notes>
+      <segment state="translated">
+        <source> This keeps running if you close the task. You&apos;ll get a notice when it finishes. </source>
+        <target> Die Prüfung läuft weiter, wenn du die Aufgabe schließt. Du erhältst eine Benachrichtigung, sobald sie fertig ist. </target>
       </segment>
     </unit>
     <unit id="7323157798987369833">

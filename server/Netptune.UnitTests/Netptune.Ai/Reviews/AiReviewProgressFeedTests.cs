@@ -93,6 +93,7 @@ public class AiReviewProgressFeedTests
             "Stage:writing",
             "Summary:Ready.",
             "Finding:First",
+            $"FindingDetail:{padding}",
             "Finding:Second");
     }
 

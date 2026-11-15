@@ -114,6 +114,10 @@ public sealed class AiReviewFindingEntityMap : KeyedEntityMap<AiReviewFinding, l
             .HasColumnType("jsonb");
 
         builder
+            .Property(finding => finding.Evidence)
+            .HasColumnType("jsonb");
+
+        builder
             .Property(finding => finding.Status)
             .HasConversion<int>()
             .IsRequired();

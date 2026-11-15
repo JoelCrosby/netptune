@@ -5,6 +5,7 @@ using FluentAssertions;
 using Netptune.Ai.Execution.Reviews;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
+using Netptune.Core.Services.Ai;
 
 using Xunit;
 
@@ -34,6 +35,100 @@ public class AiReviewValidatorTests
         var draft = AiReviewValidator.Validate(reply, Context(), allowed);
 
         draft.Findings.Select(finding => finding.Title).Should().Equal("Kept");
+    }
+
+    [Fact]
+    public void Validate_ShouldKeepEvidence_OnlyWhereTheRunAskedAToolForThatLocator()
+    {
+        var finding = Finding("gap", "No dead letter") with
+        {
+            Evidence =
+            [
+                new AiReviewReplyEvidence { Locator = " src/billing/webhook-retry.queue.ts ", Detail = "Backs off only" },
+                new AiReviewReplyEvidence { Locator = "src/billing/never-opened.ts", Detail = "Invented" },
+                new AiReviewReplyEvidence { Locator = "SRC/BILLING/WEBHOOK-RETRY.QUEUE.TS", Detail = "Same file again" },
+                new AiReviewReplyEvidence { Locator = "webhook retry" },
+            ],
+        };
+
+        var draft = AiReviewValidator.Validate(Reply(finding), Context(), AllCategories);
+
+        var evidence = draft.Findings.Should().ContainSingle().Which.Evidence;
+        evidence.Select(item => item.Locator).Should().Equal(
+            "src/billing/webhook-retry.queue.ts",
+            "webhook retry");
+        evidence[0].Detail.Should().Be("Backs off only");
+        evidence[1].Detail.Should().BeNull();
+    }
+
+    [Fact]
+    public void CollectToolLocators_ShouldTakeEveryStringAtAnyDepth_TrimmedAndCaseInsensitive()
+    {
+        var invocations = new List<AiToolInvocationRecord>
+        {
+            Invocation("""{"repository":" acme/api ","paths":["src/a.ts","src/b.ts"]}"""),
+            Invocation("""{"filter":{"query":"webhook retry","limit":20,"include":[" "]}}"""),
+        };
+
+        var locators = AiReviewer.CollectToolLocators(invocations);
+
+        locators.Should().BeEquivalentTo([
+            "acme/api",
+            "src/a.ts",
+            "src/b.ts",
+            "webhook retry",
+        ]);
+        locators.Contains("SRC/A.TS").Should().BeTrue();
+    }
+
+    [Fact]
+    public void CollectToolLocators_ShouldLeaveOutACallThatFailed()
+    {
+        var invocations = new List<AiToolInvocationRecord>
+        {
+            Invocation("""{"path":"src/read.ts"}"""),
+            Invocation("""{"path":"src/missing.ts"}""", isError: true),
+        };
+
+        var locators = AiReviewer.CollectToolLocators(invocations);
+
+        locators.Should().BeEquivalentTo(["src/read.ts"]);
+    }
+
+    [Fact]
+    public void Validate_ShouldDropEvidence_CitingAFileTheToolFailedToRead()
+    {
+        var invocations = new List<AiToolInvocationRecord>
+        {
+            Invocation("""{"path":"src/missing.ts"}""", isError: true),
+        };
+        var context = Context() with { ToolLocators = AiReviewer.CollectToolLocators(invocations) };
+        var finding = Finding("gap", "No dead letter") with
+        {
+            Evidence = [new AiReviewReplyEvidence { Locator = "src/missing.ts" }],
+        };
+
+        var draft = AiReviewValidator.Validate(Reply(finding), context, AllCategories);
+
+        draft.Findings.Should().ContainSingle().Which.Evidence.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Validate_ShouldStopAtSixPiecesOfEvidence()
+    {
+        var locators = Enumerable.Range(1, 8).Select(number => $"file-{number}.ts").ToList();
+        var finding = Finding("gap", "Too much") with
+        {
+            Evidence = locators.Select(locator => new AiReviewReplyEvidence { Locator = locator }).ToList(),
+        };
+        var context = Context() with
+        {
+            ToolLocators = locators.ToHashSet(StringComparer.OrdinalIgnoreCase),
+        };
+
+        var draft = AiReviewValidator.Validate(Reply(finding), context, AllCategories);
+
+        draft.Findings.Should().ContainSingle().Which.Evidence.Should().HaveCount(AiReviewValidator.MaxEvidence);
     }
 
     [Fact]
@@ -219,6 +314,22 @@ public class AiReviewValidatorTests
             EditableFields = new Dictionary<string, string> { [TaskReviewSubject.DescriptionField] = Description },
             CandidateTasks = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) { ["NETP-12"] = 12 },
             WorkspaceTags = ["Bug", "Feature"],
+            ToolLocators = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "src/billing/webhook-retry.queue.ts",
+                "webhook retry",
+            },
+        };
+    }
+
+    private static AiToolInvocationRecord Invocation(string argumentsJson, bool isError = false)
+    {
+        return new AiToolInvocationRecord
+        {
+            ToolName = "read_repository_file",
+            Arguments = JsonDocument.Parse(argumentsJson),
+            Result = "{}",
+            IsError = isError,
         };
     }
 

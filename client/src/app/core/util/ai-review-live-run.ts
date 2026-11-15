@@ -1,4 +1,4 @@
-import { ActivityLogItem } from '@static/components/activity-log/activity-log.component';
+import { StepLogItem } from '@static/components/step-log/step-log.component';
 import {
   AiReviewFindingCategory,
   AiReviewStage,
@@ -7,14 +7,16 @@ import {
 } from '@core/models/ai-review';
 
 export interface AiReviewLiveDraft {
+  position: number;
   category: AiReviewFindingCategory;
   title: string;
+  explanation: string | null;
 }
 
 export interface AiReviewLiveRun {
   startedAt: number;
   stage: AiReviewStage;
-  log: ActivityLogItem[];
+  log: StepLogItem[];
   thinking: string;
   summary: string | null;
   drafts: AiReviewLiveDraft[];
@@ -49,7 +51,9 @@ export const applyAiReviewEvent = (
     case AiReviewStreamEventType.toolFinished:
       return { ...run, log: finishStep(run.log, event) };
     case AiReviewStreamEventType.finding:
-      return { ...run, drafts: [...run.drafts, draft(event)] };
+      return { ...run, drafts: withDraft(run.drafts, draft(event)) };
+    case AiReviewStreamEventType.findingDetail:
+      return { ...run, drafts: withExplanation(run.drafts, event) };
     case AiReviewStreamEventType.summary:
       return { ...run, summary: event.text ?? null };
     default:
@@ -70,10 +74,7 @@ const applyStage = (
   return { ...run, stage, summary: null, drafts: [] };
 };
 
-const appendNote = (
-  log: ActivityLogItem[],
-  text: string
-): ActivityLogItem[] => {
+const appendNote = (log: StepLogItem[], text: string): StepLogItem[] => {
   const last = log.at(-1);
 
   if (last?.kind !== 'note') {
@@ -90,14 +91,14 @@ const appendThinking = (run: AiReviewLiveRun, event: AiReviewStreamEvent) => {
   return thinking.slice(-maxThinkingCharacters);
 };
 
-const step = (label: string): ActivityLogItem => {
+const step = (label: string): StepLogItem => {
   return { kind: 'step', text: label, state: 'running' };
 };
 
 const finishStep = (
-  log: ActivityLogItem[],
+  log: StepLogItem[],
   event: AiReviewStreamEvent
-): ActivityLogItem[] => {
+): StepLogItem[] => {
   const runningIndexes = log
     .map((item, position) => (item.state === 'running' ? position : -1))
     .filter((position) => position >= 0);
@@ -105,7 +106,7 @@ const finishStep = (
 
   if (index < 0) return log;
 
-  const state: ActivityLogItem['state'] = event.isError ? 'failed' : 'done';
+  const state: StepLogItem['state'] = event.isError ? 'failed' : 'done';
 
   return log.map((item, position) => {
     return position === index ? { ...item, state } : item;
@@ -114,7 +115,41 @@ const finishStep = (
 
 const draft = (event: AiReviewStreamEvent): AiReviewLiveDraft => {
   return {
+    position: event.position ?? 0,
     category: event.category ?? AiReviewFindingCategory.gap,
     title: event.text ?? '',
+    explanation: null,
   };
+};
+
+// Drafts are keyed by their place in the reply. A detail already on screen outlives
+// the title being reported again, because the two arrive as separate events.
+const withDraft = (
+  drafts: AiReviewLiveDraft[],
+  next: AiReviewLiveDraft
+): AiReviewLiveDraft[] => {
+  const index = drafts.findIndex((item) => item.position === next.position);
+
+  if (index < 0) return [...drafts, next];
+
+  return drafts.map((item, position) => {
+    return position === index
+      ? { ...next, explanation: item.explanation ?? next.explanation }
+      : item;
+  });
+};
+
+const withExplanation = (
+  drafts: AiReviewLiveDraft[],
+  event: AiReviewStreamEvent
+): AiReviewLiveDraft[] => {
+  const index = drafts.findIndex((item) => item.position === event.position);
+
+  if (index < 0) return drafts;
+
+  return drafts.map((item, position) => {
+    return position === index
+      ? { ...item, explanation: event.text ?? null }
+      : item;
+  });
 };

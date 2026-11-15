@@ -367,6 +367,7 @@ public class AiReviewRepository(DataContext context, IDbConnectionFactory connec
             Explanation = finding.Explanation,
             Quote = finding.Quote,
             Suggestion = CloneOrNull(finding.Suggestion),
+            Evidence = CloneOrNull(finding.Evidence),
             Status = finding.Status,
             DecidedByUserId = finding.DecidedByUserId,
             DecidedByDisplayName = decidedByDisplayName,

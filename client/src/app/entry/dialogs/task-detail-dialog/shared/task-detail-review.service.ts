@@ -82,6 +82,16 @@ export class TaskDetailReviewService {
   });
 
   constructor() {
+    // Someone with this task open can see the run land, whichever section they are
+    // reading, so the service should not also raise a notice for it.
+    effect((onCleanup) => {
+      const taskId = this.taskDetail.taskId();
+
+      if (taskId === undefined) return;
+
+      onCleanup(this.runs.watch(taskId));
+    });
+
     effect(() => {
       const startedAt = this.startedAt();
 
@@ -94,14 +104,18 @@ export class TaskDetailReviewService {
   }
 
   async run() {
-    const taskId = this.taskDetail.taskId();
+    const task = this.taskDetail.task();
 
-    if (!taskId) return;
+    if (!task) return;
 
     this.runError.set(null);
 
-    const result = await this.runs.run(taskId);
-    const isSameTask = this.taskDetail.taskId() === taskId;
+    const result = await this.runs.run({
+      id: task.id,
+      systemId: task.systemId,
+      workspaceKey: task.workspaceKey,
+    });
+    const isSameTask = this.taskDetail.taskId() === task.id;
 
     if (!result || !isSameTask) return;
 

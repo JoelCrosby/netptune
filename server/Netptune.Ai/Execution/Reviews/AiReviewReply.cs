@@ -207,7 +207,20 @@ public sealed record AiReviewReply
             Quote = StringValue(Property(finding, "quote")),
             Suggestion = isSuggestionObject ? suggestion!.Value.Clone() : null,
             RelatedTasks = relatedTasks,
+            Evidence = ReadEvidence(finding),
         };
+    }
+
+    private static List<AiReviewReplyEvidence> ReadEvidence(JsonElement finding)
+    {
+        return ArrayItems(Property(finding, "evidence"))
+            .Where(item => item.ValueKind == JsonValueKind.Object)
+            .Select(item => new AiReviewReplyEvidence
+            {
+                Locator = StringValue(Property(item, "locator")),
+                Detail = StringValue(Property(item, "detail")),
+            })
+            .ToList();
     }
 
     private static JsonElement? Property(JsonElement element, string name)
@@ -282,6 +295,15 @@ public sealed record AiReviewReplyFinding
     public JsonElement? Suggestion { get; init; }
 
     public List<string>? RelatedTasks { get; init; }
+
+    public List<AiReviewReplyEvidence>? Evidence { get; init; }
+}
+
+public sealed record AiReviewReplyEvidence
+{
+    public string? Locator { get; init; }
+
+    public string? Detail { get; init; }
 }
 
 public sealed record AiReviewDraftFinding
@@ -297,6 +319,8 @@ public sealed record AiReviewDraftFinding
     public JsonDocument? Suggestion { get; init; }
 
     public List<int> RelatedTaskIds { get; init; } = [];
+
+    public List<AiReviewEvidence> Evidence { get; init; } = [];
 }
 
 public sealed record AiReviewDraft

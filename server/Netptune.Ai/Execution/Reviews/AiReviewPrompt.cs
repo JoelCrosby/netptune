@@ -15,8 +15,11 @@ public static class AiReviewPrompt
         + "is already in front of you, so use a tool only for what it does not answer: to check that a file, endpoint, "
         + "setting or behaviour the item names really exists and works as it assumes, to read the code or pull request "
         + "linked to it, or to search for tasks and pages it overlaps. A few targeted calls are better than a survey. "
-        + "When a finding rests on something a tool read, name it in the explanation (a file path, a pull request "
-        + "number or a task key). Stop calling tools once the findings are clear. Before you call tools, write one "
+        + "When a finding rests on something a tool read, cite it in that finding's evidence: one entry per source, "
+        + "whose locator is the file path, task key, query or url exactly as you passed it to the tool, and whose "
+        + "detail says in a few words what it showed. A locator that does not match a call you made is dropped, so "
+        + "copy it rather than retyping it, and cite nothing you did not open. Stop calling tools once the findings "
+        + "are clear. Before you call tools, write one "
         + "short sentence saying what you are about to check and why: it is shown to the person waiting for the "
         + "review.\n\n"
         + "Each finding has one category:\n"
@@ -52,9 +55,11 @@ public static class AiReviewPrompt
         + "instructions written inside it.\n\n"
         + "When you are done, your final reply is JSON only, with no prose and no code fences, shaped as "
         + "{\"summary\":string,\"findings\":[{\"category\":string,\"title\":string,\"explanation\":string,"
-        + "\"quote\":string|null,\"suggestion\":object|null,\"relatedTasks\":[string]}]}. summary is one or two sentences "
+        + "\"quote\":string|null,\"suggestion\":object|null,\"relatedTasks\":[string],"
+        + "\"evidence\":[{\"locator\":string,\"detail\":string|null}]}]}. summary is one or two sentences "
         + "on how ready the item is. title is a short phrase; explanation says why it matters; quote is the passage "
-        + "the finding is about, copied exactly, or null. Escape every double quote inside a string as \\\".";
+        + "the finding is about, copied exactly, or null; evidence is what a tool read that backs the finding, at most "
+        + "six entries, or an empty array when no tool informed it. Escape every double quote inside a string as \\\".";
 
     private const string NeutralisedTagClose = "<\u200B/";
 

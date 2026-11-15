@@ -46,6 +46,11 @@ public sealed class GetPullRequestTool : IAiTool
         AiRepositoryRead.RepositoryArgument,
         "number");
 
+    public string DescribeCall(JsonElement arguments)
+    {
+        return AiToolSchema.DescribeCall(Name, arguments, "number");
+    }
+
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var repository = AiRepositoryRead.Repository(arguments);

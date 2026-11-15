@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { LucideMessageSquareText } from '@lucide/angular';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { BadgeColor, BadgeComponent } from './badge/badge.component';
+import { BusyMarkerComponent } from './busy-marker.component';
 import { TaskFlagBadgeComponent } from './task-flag-badge.component';
 
 export interface TaskNameBadge {
@@ -18,6 +19,7 @@ export interface TaskNameBadge {
     RouterLink,
     LucideMessageSquareText,
     BadgeComponent,
+    BusyMarkerComponent,
     TaskFlagBadgeComponent,
     TooltipDirective,
   ],
@@ -69,6 +71,9 @@ export interface TaskNameBadge {
           [count]="flagNames().length"
           [names]="flagNames()" />
       }
+      @if (busyLabel(); as busy) {
+        <app-busy-marker [label]="busy" />
+      }
     </ng-template>
   `,
 })
@@ -80,4 +85,6 @@ export class TaskNameComponent {
   readonly archived = input(false);
   readonly flagNames = input<readonly string[]>([]);
   readonly badges = input<readonly TaskNameBadge[]>([]);
+
+  readonly busyLabel = input<string | null>(null);
 }

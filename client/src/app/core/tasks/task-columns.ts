@@ -204,6 +204,9 @@ export interface TaskNameCellOptions<T extends TaskColumnRow> {
   flagNames?: (task: T) => readonly string[];
   archived?: (task: T) => boolean;
   badges?: (task: T) => readonly TaskNameBadge[];
+  // Read while the cell's inputs are built, so a signal read here keeps the cell
+  // current without the column list having to change.
+  busy?: (task: T) => string | null;
 }
 
 // The name column is the one cell every surface renders differently, because
@@ -212,7 +215,8 @@ export interface TaskNameCellOptions<T extends TaskColumnRow> {
 export function taskNameCell<T extends TaskColumnRow>(
   options: TaskNameCellOptions<T> = {}
 ): Partial<DatatableColumn<T>> {
-  const { link, action, showComments, flagNames, archived, badges } = options;
+  const { link, action, showComments, flagNames, archived, badges, busy } =
+    options;
 
   return {
     cell: {
@@ -228,6 +232,7 @@ export function taskNameCell<T extends TaskColumnRow>(
           flagNames: flagNames ? flagNames(task) : [],
           archived: isArchived,
           badges: badges ? badges(task) : [],
+          busyLabel: busy ? busy(task) : null,
         };
       },
     },
