@@ -16,7 +16,7 @@ import { TooltipDirective } from '../../directives/tooltip.directive';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'button[app-icon-button]',
+  selector: 'button[app-icon-button], a[app-icon-button]',
   template: '<ng-content />',
 })
 export class IconButtonComponent {

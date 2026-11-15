@@ -258,8 +258,8 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-effort.service.ts:62</note>
-        <note category="location">src/app/core/services/ai-model-catalog.service.ts:36</note>
+        <note category="location">src/app/core/services/ai-effort.service.ts:63</note>
+        <note category="location">src/app/core/services/ai-model-catalog.service.ts:37</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-effort-menu.component.ts:29,31</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:29,31</note>
         <note category="description">Effort option that lets the server choose</note>
@@ -451,7 +451,7 @@
     </unit>
     <unit id="3798194238981670052">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:572</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:679</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -712,7 +712,7 @@
     </unit>
     <unit id="8196293883467199481">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:370</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:375</note>
         <note category="description">Message sent to the assistant when drafting a new page from pages home</note>
       </notes>
       <segment state="translated">
@@ -1155,7 +1155,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:233</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:455</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:456</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -2610,7 +2610,7 @@
     </unit>
     <unit id="2159130950882492111">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:313</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:318</note>
         <note category="location">src/app/core/services/auth-commands.service.ts:214</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:310</note>
@@ -2805,7 +2805,7 @@
     </unit>
     <unit id="6585555772286165070">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:48</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:47</note>
         <note category="description">Notification subscription event, a task left this place</note>
       </notes>
       <segment state="initial">
@@ -2967,7 +2967,7 @@
     </unit>
     <unit id="7022070615528435141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:312</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:317</note>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
         <note category="location">src/app/core/services/board-group-commands.service.ts:309</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
@@ -3025,7 +3025,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:470</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:471</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3307,7 +3307,7 @@
     </unit>
     <unit id="8640677495548743141">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:928</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:933</note>
         <note category="description">Asks the user to confirm deleting one of their assistant conversations. TITLE is the conversation title</note>
       </notes>
       <segment state="translated">
@@ -3377,7 +3377,7 @@
     </unit>
     <unit id="5494028412212080550">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:36</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:35</note>
         <note category="description">Notification subscription event, a task was created here</note>
       </notes>
       <segment state="initial">
@@ -3643,7 +3643,7 @@
     </unit>
     <unit id="3127417567733728943">
       <notes>
-        <note category="location">src/app/core/models/ai-credential.ts:56</note>
+        <note category="location">src/app/core/models/ai-credential.ts:57</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:60,63</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
@@ -4037,7 +4037,7 @@
     <unit id="8473956176297638892">
       <notes>
         <note category="location">src/app/core/services/task-commands.service.ts:102</note>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:40</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:39</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4560,7 +4560,7 @@
     </unit>
     <unit id="955080669037591255">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:920</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:925</note>
         <note category="description">Asks the user to confirm deleting several of their assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -5220,7 +5220,7 @@
       <notes>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:56,59</note>
         <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:63,67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:439</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:440</note>
         <note category="description">Tooltip on the button that opens the activity feed</note>
       </notes>
       <segment state="translated">
@@ -5934,7 +5934,7 @@
         <note category="location">src/app/entry/dialogs/ai-review-accept-dialog/ai-review-accept-dialog.component.ts:334,337</note>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:385,388</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:423,425</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
@@ -6024,7 +6024,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:103</note>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-row.component.ts:48,51</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:243,245</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:244,246</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -6766,7 +6766,7 @@
     </unit>
     <unit id="1384666843214095488">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:164</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:154</note>
         <note category="description">Tooltip on the notify control when already subscribed. NAME is the board, sprint or project name</note>
       </notes>
       <segment state="initial">
@@ -6908,7 +6908,8 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:162,165</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:165,167</note>
+        <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:25</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:40,41</note>
         <note category="location">src/app/shell/global-commands.service.ts:339</note>
         <note category="description">Title of the create-task dialog</note>
@@ -6973,7 +6974,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:176</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:202</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
         <note category="location">src/app/features/pages/editor/page-transform.controller.ts:59</note>
@@ -6987,7 +6988,7 @@
     <unit id="4902817035128594900">
       <notes>
         <note category="location">src/app/core/automations/automation-copy.ts:66</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:433</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:508</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:256</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:55,57</note>
@@ -7030,7 +7031,7 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:254,256</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:280,282</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:40,42</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
@@ -7041,7 +7042,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:222,226</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:248,252</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -7061,7 +7062,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:232,235</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:258,261</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -7081,7 +7082,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:393,395</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:456,459</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -7141,8 +7142,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:539</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:551</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:646</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:658</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -7182,7 +7183,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:558</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:665</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -8452,7 +8453,7 @@
     <unit id="4116911651502837995">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:627</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:435</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:510</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:247</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:279</note>
         <note category="description">Name of the files permission group</note>
@@ -9105,7 +9106,7 @@
     </unit>
     <unit id="4848974027668435510">
       <notes>
-        <note category="location">src/app/core/services/ai-effort.service.ts:21</note>
+        <note category="location">src/app/core/services/ai-effort.service.ts:22</note>
         <note category="description">Assistant reasoning effort, above high</note>
         <note category="meaning">assistant effort level</note>
       </notes>
@@ -10692,7 +10693,7 @@
     </unit>
     <unit id="34847635610651233">
       <notes>
-        <note category="location">src/app/core/services/ai-effort.service.ts:13</note>
+        <note category="location">src/app/core/services/ai-effort.service.ts:14</note>
         <note category="description">Assistant reasoning effort, moderate</note>
         <note category="meaning">assistant effort level</note>
       </notes>
@@ -11121,7 +11122,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:348</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:353</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment state="translated">
@@ -12680,7 +12681,7 @@
     </unit>
     <unit id="3019943373516607551">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:44</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:43</note>
         <note category="description">Notification subscription event, a task joined this place</note>
       </notes>
       <segment state="initial">
@@ -15093,7 +15094,7 @@
     </unit>
     <unit id="8949873009695123445">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:165</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:155</note>
         <note category="description">Tooltip on the notify control when already subscribed</note>
       </notes>
       <segment state="initial">
@@ -15582,6 +15583,16 @@
         <target>Quoi</target>
       </segment>
     </unit>
+    <unit id="158772249689537707">
+      <notes>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:446,451</note>
+        <note category="description">Button on the create-task page that opens the task it just created</note>
+      </notes>
+      <segment state="translated">
+        <source> Open Task </source>
+        <target> Ouvrir la tâche </target>
+      </segment>
+    </unit>
     <unit id="7944522526823688756">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:180</note>
@@ -15676,7 +15687,7 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:574</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:579</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -16416,7 +16427,7 @@
     </unit>
     <unit id="4629125199934596376">
       <notes>
-        <note category="location">src/app/core/services/ai-effort.service.ts:25</note>
+        <note category="location">src/app/core/services/ai-effort.service.ts:26</note>
         <note category="description">Assistant reasoning effort, the highest</note>
         <note category="meaning">assistant effort level</note>
       </notes>
@@ -16447,7 +16458,7 @@
     </unit>
     <unit id="3702747701797275979">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:637</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:638</note>
         <note category="description">Command palette action that opens the manage-groups dialog for the open board</note>
       </notes>
       <segment state="translated">
@@ -16457,7 +16468,7 @@
     </unit>
     <unit id="3711445301896773033">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:447</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:448</note>
         <note category="description">Overflow action that opens the notification settings for this board</note>
       </notes>
       <segment state="translated">
@@ -16731,7 +16742,7 @@
     </unit>
     <unit id="2490742431400447774">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:170</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:160</note>
         <note category="description">Tooltip on the control that subscribes to activity</note>
       </notes>
       <segment state="initial">
@@ -17283,7 +17294,7 @@
     </unit>
     <unit id="7565716024468232322">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:434</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:509</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-document.component.ts:248</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:278</note>
         <note category="location">src/app/features/pages/components/page-rail.component.ts:277</note>
@@ -17589,7 +17600,7 @@
     </unit>
     <unit id="9162543989422983557">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:631</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:632</note>
         <note category="description">Command palette action that creates a group on the open board</note>
       </notes>
       <segment state="translated">
@@ -17719,6 +17730,16 @@
       <segment state="translated">
         <source>When a task becomes overdue</source>
         <target>Lorsqu&apos;une tâche est en retard</target>
+      </segment>
+    </unit>
+    <unit id="6028729594033777626">
+      <notes>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:387,392</note>
+        <note category="description">Shown on the create-task page when a new task was saved but some of its files did not upload</note>
+      </notes>
+      <segment state="translated">
+        <source> The task was created, but some files did not upload. Open the task and add them from there. </source>
+        <target> La tâche a été créée, mais certains fichiers n&apos;ont pas été téléversés. Ouvrez la tâche et ajoutez-les depuis celle-ci. </target>
       </segment>
     </unit>
     <unit id="5739101849785781342">
@@ -19579,10 +19600,11 @@
     </unit>
     <unit id="2330577642930707695">
       <notes>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:429,434</note>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:191,194</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-field-editor.component.ts:273,276</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:153,155</note>
-        <note category="description">Dismisses a dialog without acting</note>
+        <note category="description">Leaves the create-task page without saving the new task</note>
       </notes>
       <segment state="translated">
         <source> Cancel </source>
@@ -19968,7 +19990,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:342</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:347</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment state="translated">
@@ -20070,7 +20092,7 @@
     </unit>
     <unit id="8121515976557904639">
       <notes>
-        <note category="location">src/app/core/services/ai-effort.service.ts:9</note>
+        <note category="location">src/app/core/services/ai-effort.service.ts:10</note>
         <note category="description">Assistant reasoning effort, lowest</note>
         <note category="meaning">assistant effort level</note>
       </notes>
@@ -20161,7 +20183,7 @@
     </unit>
     <unit id="8761140310272472389">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:173,174</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:199,200</note>
         <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:139</note>
         <note category="description">Placeholder in the empty task summary field</note>
       </notes>
@@ -20459,7 +20481,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/edit-board/edit-board.component.ts:72,75</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:426</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:427</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -20977,7 +20999,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:263,264</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:264,265</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -21018,7 +21040,7 @@
     <unit id="989480357041643523">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:304,307</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:275,276</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:276,277</note>
         <note category="description">Menu item that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -21038,7 +21060,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:431</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:432</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -21048,7 +21070,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:463</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:464</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -22181,8 +22203,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:695</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:886</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:700</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:891</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -22963,7 +22985,7 @@
     </unit>
     <unit id="1295579971866134458">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:113,119</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:103,109</note>
         <note category="description">Explains that per-scope notifications still obey the personal notification settings</note>
       </notes>
       <segment state="initial">
@@ -23550,7 +23572,7 @@
         <note category="location">src/app/features/pages/components/page-tree.component.ts:284</note>
         <note category="location">src/app/features/pages/pages.routes.ts:13</note>
         <note category="location">src/app/features/pages/views/pages-archive-view/pages-archive-view.component.ts:44</note>
-        <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
+        <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:14</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:29</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:176</note>
         <note category="description">Heading of the archive file panel</note>
@@ -23592,7 +23614,7 @@
     </unit>
     <unit id="2386184427978292327">
       <notes>
-        <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:23</note>
+        <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:35</note>
         <note category="description">Page title for a single task detail view</note>
       </notes>
       <segment state="translated">
@@ -23733,7 +23755,7 @@
     </unit>
     <unit id="4431741797734368814">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:360</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:365</note>
         <note category="description">Seeds the assistant composer when turning a selected page checklist into tasks</note>
       </notes>
       <segment state="translated">
@@ -23814,7 +23836,7 @@
     </unit>
     <unit id="395357454003185588">
       <notes>
-        <note category="location">src/app/core/models/ai-credential.ts:57</note>
+        <note category="location">src/app/core/models/ai-credential.ts:58</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment state="translated">
@@ -26211,7 +26233,7 @@
     </unit>
     <unit id="8246436377858718644">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:927</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:932</note>
         <note category="description">Title of the confirmation dialog for deleting an assistant conversation</note>
       </notes>
       <segment state="translated">
@@ -26877,7 +26899,7 @@
     </unit>
     <unit id="4378805774812012692">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:376,380</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:413,417</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-timestamps.component.ts:51,55</note>
         <note category="description">Footer line naming who raises the new task. NAME is their display name</note>
       </notes>
@@ -27942,7 +27964,7 @@
     </unit>
     <unit id="8927455770711141149">
       <notes>
-        <note category="location">src/app/core/models/ai-credential.ts:62</note>
+        <note category="location">src/app/core/models/ai-credential.ts:63</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment state="translated">
@@ -27952,7 +27974,7 @@
     </unit>
     <unit id="9050138848550192211">
       <notes>
-        <note category="location">src/app/core/models/ai-credential.ts:61</note>
+        <note category="location">src/app/core/models/ai-credential.ts:62</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-header-actions.component.ts:68,71</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
@@ -28643,11 +28665,13 @@
     </unit>
     <unit id="6827887873610296004">
       <notes>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:179,181</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:184,188</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:154,156</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-chrome.component.ts:158,159</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:83,85</note>
         <note category="location">src/app/shared/components/pinned-task-row/pinned-task-row.component.ts:87,88</note>
-        <note category="description">Tooltip on the link that opens the task&apos;s own page</note>
+        <note category="description">Tooltip on the link that moves the create-task dialog to its own page</note>
       </notes>
       <segment state="translated">
         <source>Open in full page</source>
@@ -28951,7 +28975,7 @@
     </unit>
     <unit id="595057067927295883">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:95,98</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:85,88</note>
         <note category="description">Heading above the per-scope notification event toggles</note>
       </notes>
       <segment state="translated">
@@ -30683,7 +30707,7 @@
     </unit>
     <unit id="5673648104994903255">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:565</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:672</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -31735,7 +31759,7 @@
     </unit>
     <unit id="2467702290618186989">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:280,282</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:306,308</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/layouts/task-detail-sections.component.ts:152,154</note>
         <note category="description">Button that links this task to another</note>
       </notes>
@@ -31992,7 +32016,7 @@
     </unit>
     <unit id="4197157491600226733">
       <notes>
-        <note category="location">src/app/core/services/ai-effort.service.ts:17</note>
+        <note category="location">src/app/core/services/ai-effort.service.ts:18</note>
         <note category="description">Assistant reasoning effort, the API default</note>
         <note category="meaning">assistant effort level</note>
       </notes>
@@ -32164,7 +32188,7 @@
     </unit>
     <unit id="574980856658424744">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:919</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:924</note>
         <note category="description">Title of the confirmation dialog for deleting several assistant conversations. COUNT is how many</note>
       </notes>
       <segment state="translated">
@@ -32971,7 +32995,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:351,355</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:378,381</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -33293,7 +33317,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:327,330</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:353,356</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">
@@ -34724,7 +34748,7 @@
     </unit>
     <unit id="7909666899128311457">
       <notes>
-        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:169</note>
+        <note category="location">src/app/shared/components/notification-subscribe/notification-subscribe.component.ts:159</note>
         <note category="description">Tooltip on the control that subscribes to activity. NAME is the board, sprint or project name</note>
       </notes>
       <segment state="initial">

@@ -16,6 +16,8 @@ import {
   submit,
   validate,
 } from '@angular/forms/signals';
+import { Location } from '@angular/common';
+import { isActive, Router, RouterLink } from '@angular/router';
 import {
   EditorComponent,
   EditorUploader,
@@ -30,6 +32,7 @@ import {
   TASK_NAME_MAX_LENGTH,
 } from '@core/models/project-task';
 import { RelationType } from '@core/models/relation-type';
+import { isModifiedClick } from '@core/util/modified-click';
 import { AddTaskRelationRequest } from '@core/models/task-relation';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { UserSelectValue } from '@core/models/view-models/user-select-option';
@@ -43,7 +46,8 @@ import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskFileUploadService } from '@core/services/task-file-upload.service';
 import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { firstValueFrom } from 'rxjs';
-import { LucideX } from '@lucide/angular';
+import { LucideExternalLink, LucideX } from '@lucide/angular';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { SectionLabelDirective } from '@static/directives/section-label.directive';
 import { ListRowComponent } from '@static/components/list-row.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -73,26 +77,21 @@ import { HeadingInputDirective } from '@static/components/form-input/heading-inp
 import { UploadProgressComponent } from '@static/components/upload-progress/upload-progress.component';
 import { CreateTaskPropertyChipsComponent } from './create-task-property-chips.component';
 import {
+  CREATE_TASK_PAGE_DATA,
+  CreateTaskDialogData,
+  CreateTaskDraft,
+  CreateTaskDraftService,
+  StagedRelation,
+} from './create-task-draft';
+import {
   LinkTaskDialogComponent,
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
 
-export interface CreateTaskDialogData {
-  projectId?: number;
-  sprintId?: number;
-}
-
 interface CreateTaskForm {
   name: string;
   description: string;
-}
-
-interface StagedRelation {
-  relationTypeId: number;
-  label: string;
-  taskIsSource: boolean;
-  task: TaskViewModel;
 }
 
 type Tab = 'links' | 'files';
@@ -121,6 +120,7 @@ const documentContentTypes = new Set([
 ]);
 
 @Component({
+  selector: 'app-create-task-dialog',
   imports: [
     AvatarComponent,
     CreateTaskPropertyChipsComponent,
@@ -140,12 +140,15 @@ const documentContentTypes = new Set([
     HeadingInputDirective,
     IconButtonComponent,
     ListRowComponent,
+    LucideExternalLink,
     LucideX,
+    RouterLink,
     SectionLabelDirective,
     StrokedButtonComponent,
     TabGroupComponent,
     TaskRelationListComponent,
     TaskTagRowComponent,
+    TooltipDirective,
     UploadProgressComponent,
   ],
   providers: [TaskFileUploadService],
@@ -157,9 +160,32 @@ const documentContentTypes = new Set([
       novalidate
       (submit)="saveClicked($event)">
       <app-dialog-header
-        showCloseButton
+        [showCloseButton]="isDialog"
         i18n-heading="Title of the create-task dialog"
-        heading="Create Task" />
+        heading="Create Task">
+        @if (showFullPageLink()) {
+          <a
+            app-icon-button
+            dialogHeaderActions
+            size="small"
+            color="muted"
+            [routerLink]="fullPageLink()"
+            [queryParams]="fullPageQueryParams"
+            (click)="openFullPage($event)"
+            i18n-appTooltip="
+              Tooltip on the link that moves the create-task dialog to its own
+              page
+            "
+            appTooltip="Open in full page"
+            i18n-aria-label="
+              Accessible label for the link that moves the create-task dialog to
+              its own page
+            "
+            aria-label="Open in full page">
+            <svg lucideExternalLink class="h-4 w-4" aria-hidden="true"></svg>
+          </a>
+        }
+      </app-dialog-header>
 
       <div
         class="border-foreground/8 flex shrink-0 flex-col gap-3.5 border-b px-7 pt-5.5 pb-4">
@@ -343,14 +369,25 @@ const documentContentTypes = new Set([
 
                   @if (uploadsFailed()) {
                     <p class="text-warn mt-2 text-sm" role="alert">
-                      <span
-                        i18n="
-                          Shown when a new task was saved but some of its files
-                          did not upload
-                        ">
-                        The task was created, but some files did not upload.
-                        Close this dialog and add them from the task.
-                      </span>
+                      @if (isDialog) {
+                        <span
+                          i18n="
+                            Shown when a new task was saved but some of its
+                            files did not upload
+                          ">
+                          The task was created, but some files did not upload.
+                          Close this dialog and add them from the task.
+                        </span>
+                      } @else {
+                        <span
+                          i18n="
+                            Shown on the create-task page when a new task was
+                            saved but some of its files did not upload
+                          ">
+                          The task was created, but some files did not upload.
+                          Open the task and add them from there.
+                        </span>
+                      }
                     </p>
                   }
                 </div>
@@ -381,17 +418,44 @@ const documentContentTypes = new Set([
           </span>
         }
 
-        <button app-stroked-button type="button" (click)="close()">
-          <span i18n="Dismisses a dialog without saving">Close</span>
-        </button>
-        <button
-          app-flat-button
-          color="primary"
-          type="submit"
-          form="create-task-form"
-          [disabled]="busy()">
-          <span i18n="Button that saves the new task">Save Task</span>
-        </button>
+        @if (isDialog) {
+          <button app-stroked-button type="button" (click)="close()">
+            <span i18n="Dismisses a dialog without saving">Close</span>
+          </button>
+        } @else if (!created()) {
+          <button app-stroked-button type="button" (click)="close()">
+            <span
+              i18n="Leaves the create-task page without saving the new task">
+              Cancel
+            </span>
+          </button>
+        }
+
+        @if (!isDialog && created()) {
+          <button
+            app-flat-button
+            color="primary"
+            type="button"
+            [disabled]="uploading()"
+            (click)="openCreatedTask()">
+            <span
+              i18n="
+                Button on the create-task page that opens the task it just
+                created
+              ">
+              Open Task
+            </span>
+          </button>
+        } @else {
+          <button
+            app-flat-button
+            color="primary"
+            type="submit"
+            form="create-task-form"
+            [disabled]="busy()">
+            <span i18n="Button that saves the new task">Save Task</span>
+          </button>
+        }
       </app-dialog-footer>
     </form>
   `,
@@ -406,10 +470,21 @@ export class CreateTaskDialogComponent {
   private session = inject(SessionService);
   private uploadService = inject(TaskFileUploadService);
   private storage = inject(StorageService);
-  dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
-  readonly data = inject<CreateTaskDialogData | null>(DIALOG_DATA, {
+  private router = inject(Router);
+  private location = inject(Location);
+  private drafts = inject(CreateTaskDraftService);
+  private workspaceSlug = inject(CurrentWorkspaceService).slug;
+
+  readonly dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef, {
     optional: true,
   });
+  readonly isDialog = this.dialogRef !== null;
+
+  readonly data =
+    inject<CreateTaskDialogData | null>(DIALOG_DATA, { optional: true }) ??
+    inject(CREATE_TASK_PAGE_DATA, { optional: true });
+
+  private readonly draft = this.data?.draft;
 
   currentProjectId = inject(CurrentProjectService).currentId;
   readonly maxUploadBytes = inject(CurrentWorkspaceService).maxUploadBytes;
@@ -435,6 +510,27 @@ export class CreateTaskDialogComponent {
     files: $localize`:Section heading for files attached to a task:Files`,
   };
 
+  // A modified click opens the page in a new tab, which only has the presets to go on.
+  readonly fullPageQueryParams = {
+    projectId: this.data?.projectId ?? null,
+    sprintId: this.data?.sprintId ?? null,
+  };
+
+  readonly fullPageLink = computed(() => {
+    return ['/', this.workspaceSlug() ?? '', 'tasks', 'new'];
+  });
+
+  // The router ignores a link to the page it is already on, which would drop the draft.
+  private readonly onFullPage = isActive(
+    this.router.createUrlTree(this.fullPageLink()),
+    this.router,
+    { paths: 'exact', queryParams: 'ignored' }
+  );
+
+  readonly showFullPageLink = computed(() => {
+    return this.isDialog && !this.onFullPage();
+  });
+
   readonly tabActionClass =
     'border-foreground/8 hover:bg-hover h-[30px] cursor-pointer rounded-[7px] border px-2.5 text-xs font-medium transition-colors disabled:pointer-events-none disabled:opacity-50';
 
@@ -455,10 +551,13 @@ export class CreateTaskDialogComponent {
     };
   });
 
-  readonly selectedTags = signal<string[]>([]);
-  readonly stagedFiles = signal<File[]>([]);
-  readonly stagedRelations = signal<StagedRelation[]>([]);
+  readonly selectedTags = signal<string[]>(this.draft?.tags ?? []);
+  readonly stagedFiles = signal<File[]>(this.draft?.files ?? []);
+  readonly stagedRelations = signal<StagedRelation[]>(
+    this.draft?.relations ?? []
+  );
   readonly uploads = this.uploadService.uploads;
+  readonly uploading = this.uploadService.uploading;
 
   readonly activeTab = signal<Tab>(this.canLinkTasks() ? 'links' : 'files');
 
@@ -484,7 +583,7 @@ export class CreateTaskDialogComponent {
     return tabs;
   });
 
-  // Set once the task exists, which is also the point the dialog stops accepting edits.
+  // Set once the task exists, which is also the point the form stops accepting edits.
   private readonly createdSystemId = signal<string | null>(null);
   private readonly saving = signal(false);
 
@@ -494,17 +593,25 @@ export class CreateTaskDialogComponent {
     return this.uploads().some((upload) => Boolean(upload.error));
   });
 
-  readonly statusId = signal<number | null>(null);
-  readonly priority = signal<TaskPriority | null>(null);
-  readonly estimateType = signal<EstimateType | null>(null);
-  readonly estimateValue = signal<number | null>(null);
-  readonly sprintId = signal<number | null>(this.data?.sprintId ?? null);
-  readonly startDate = signal('');
-  readonly dueDate = signal('');
-  readonly projectId = signal<number | null>(
-    this.data?.projectId ?? this.currentProjectId() ?? null
+  readonly statusId = signal<number | null>(this.draft?.statusId ?? null);
+  readonly priority = signal<TaskPriority | null>(this.draft?.priority ?? null);
+  readonly estimateType = signal<EstimateType | null>(
+    this.draft?.estimateType ?? null
   );
-  readonly assignees = signal<UserSelectValue[]>([]);
+  readonly estimateValue = signal<number | null>(
+    this.draft?.estimateValue ?? null
+  );
+  readonly sprintId = signal<number | null>(
+    this.draft ? this.draft.sprintId : (this.data?.sprintId ?? null)
+  );
+  readonly startDate = signal(this.draft?.startDate ?? '');
+  readonly dueDate = signal(this.draft?.dueDate ?? '');
+  readonly projectId = signal<number | null>(
+    this.draft
+      ? this.draft.projectId
+      : (this.data?.projectId ?? this.currentProjectId() ?? null)
+  );
+  readonly assignees = signal<UserSelectValue[]>(this.draft?.assignees ?? []);
   readonly submissionAttempted = signal(false);
   readonly scheduleInvalid = computed(() => {
     const startDate = this.startDate();
@@ -530,8 +637,8 @@ export class CreateTaskDialogComponent {
   readonly nameMaxLength = TASK_NAME_MAX_LENGTH;
 
   taskFormModel = signal<CreateTaskForm>({
-    name: '',
-    description: '',
+    name: this.draft?.name ?? '',
+    description: this.draft?.description ?? '',
   });
 
   taskForm = form(this.taskFormModel, (schema) => {
@@ -576,8 +683,8 @@ export class CreateTaskDialogComponent {
   });
 
   constructor() {
-    // Files can only be attached once the task has an id, so the dialog stays open through the
-    // uploads and closes itself when they land. Failures keep it open with the reason showing.
+    // Files can only be attached once the task has an id, so the form stays up through the
+    // uploads and finishes when they land. Failures keep it up with the reason showing.
     effect(() => {
       if (!this.created()) return;
 
@@ -587,7 +694,7 @@ export class CreateTaskDialogComponent {
 
       if (!isSettled || this.uploadsFailed()) return;
 
-      untracked(() => this.dialogRef.close());
+      untracked(() => this.finish());
     });
   }
 
@@ -656,7 +763,41 @@ export class CreateTaskDialogComponent {
   }
 
   close() {
-    this.dialogRef.close();
+    if (this.dialogRef) {
+      this.dialogRef.close();
+
+      return;
+    }
+
+    const cameFromInsideTheApp =
+      !!this.router.lastSuccessfulNavigation()?.previousNavigation;
+
+    if (cameFromInsideTheApp) {
+      this.location.back();
+
+      return;
+    }
+
+    this.router.navigate(['/', this.workspaceSlug(), 'tasks']);
+  }
+
+  openFullPage(event: MouseEvent) {
+    const isModified = isModifiedClick(event);
+
+    if (isModified) return;
+
+    this.drafts.stash(this.snapshot());
+    this.dialogRef?.close();
+  }
+
+  openCreatedTask() {
+    const systemId = this.createdSystemId();
+
+    if (!systemId) return;
+
+    this.router.navigate(['/', this.workspaceSlug(), 'tasks', systemId], {
+      replaceUrl: true,
+    });
   }
 
   saveClicked(event: Event) {
@@ -687,17 +828,48 @@ export class CreateTaskDialogComponent {
     const files = this.stagedFiles();
 
     this.saving.set(false);
+    this.createdSystemId.set(created.systemId);
 
     if (!files.length) {
-      this.dialogRef.close();
+      this.finish();
 
       return;
     }
 
     // The uploads report their progress on the files tab.
     this.activeTab.set('files');
-    this.createdSystemId.set(created.systemId);
     this.uploadService.upload(created.systemId, files);
+  }
+
+  private finish() {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+
+      return;
+    }
+
+    this.openCreatedTask();
+  }
+
+  private snapshot(): CreateTaskDraft {
+    const { name, description } = this.taskFormModel();
+
+    return {
+      name,
+      description,
+      statusId: this.statusId(),
+      priority: this.priority(),
+      estimateType: this.estimateType(),
+      estimateValue: this.estimateValue(),
+      projectId: this.projectId(),
+      sprintId: this.sprintId(),
+      startDate: this.startDate(),
+      dueDate: this.dueDate(),
+      assignees: this.assignees(),
+      tags: this.selectedTags(),
+      files: this.stagedFiles(),
+      relations: this.stagedRelations(),
+    };
   }
 
   private stageRelations(result: LinkTaskDialogResult) {

@@ -1,16 +1,28 @@
 import { ActivatedRoute, Routes } from '@angular/router';
-import { tasksRestoreGuard } from './guards/tasks-restore.guard';
+import { PERMISSIONS } from '@core/auth/permissions';
+import { tasksPermissionGuard } from './guards/tasks-permission.guard';
 
 export const routes: Routes = [
   {
     path: 'archive',
-    canActivate: [tasksRestoreGuard],
+    canActivate: [tasksPermissionGuard(PERMISSIONS.tasks.restore)],
     loadComponent: () =>
       import('./views/archive-view/archive-view.component').then(
         (m) => m.ArchiveViewComponent
       ),
     data: {
       title: $localize`:Page title for the archived task list:Archive`,
+    },
+  },
+  {
+    path: 'new',
+    canActivate: [tasksPermissionGuard(PERMISSIONS.tasks.create)],
+    loadComponent: () =>
+      import('./views/create-task-page/create-task-page.component').then(
+        (m) => m.CreateTaskPageComponent
+      ),
+    data: {
+      title: $localize`:Page title for the page that creates a task:Create Task`,
     },
   },
   {
