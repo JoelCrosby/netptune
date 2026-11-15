@@ -21,7 +21,6 @@ import { AiAssistantChangeSetComponent } from './components/ai-assistant-change-
 import { AiAssistantComposerComponent } from './components/ai-assistant-composer.component';
 import { AiAssistantEmptyStateComponent } from './components/ai-assistant-empty-state.component';
 import { AiAssistantHeaderComponent } from './components/ai-assistant-header.component';
-import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
 import { AiQuestionResponse } from './components/ai-assistant-question.component';
@@ -45,7 +44,6 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
     AiAssistantComposerComponent,
     AiAssistantEmptyStateComponent,
     AiAssistantHeaderComponent,
-    AiAssistantHistoryComponent,
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
     ResizeHandleComponent,
@@ -77,7 +75,6 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
         [contentWidth]="contentWidth()"
         [closable]="!isPage()"
         [hasModeMenu]="!isReview()"
-        (historyToggled)="toggleHistory()"
         (modeChange)="setMode($event)"
         (newChat)="startNew()"
         (closed)="close()" />
@@ -99,14 +96,7 @@ import { ResizeHandleComponent } from '@static/components/resize-handle.componen
                 [workspace]="assistant.workspaceKey()" />
             }
 
-            @if (assistant.showHistory()) {
-              <app-ai-assistant-history
-                [conversations]="assistant.conversations()"
-                [hasMore]="assistant.hasMoreConversations()"
-                (loadMore)="loadMoreConversations()"
-                (opened)="openConversation($event)"
-                (deleted)="deleteConversation($event)" />
-            } @else if (entries().length === 0) {
+            @if (entries().length === 0) {
               <app-ai-assistant-empty-state (selected)="send($event)" />
             } @else {
               @if (assistant.droppedMessages() > 0) {
@@ -353,22 +343,6 @@ export class AiAssistantPanelComponent {
 
   protected setMode(mode: AiDisplayMode) {
     this.panel.setMode(mode);
-  }
-
-  protected toggleHistory() {
-    void this.assistant.toggleHistory();
-  }
-
-  protected openConversation(conversationId: string) {
-    void this.assistant.openConversation(conversationId);
-  }
-
-  protected loadMoreConversations() {
-    void this.assistant.loadMoreConversations();
-  }
-
-  protected deleteConversation(conversationId: string) {
-    void this.assistant.deleteConversation(conversationId);
   }
 
   protected startNew() {

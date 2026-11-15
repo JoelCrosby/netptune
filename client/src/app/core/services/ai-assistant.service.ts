@@ -78,7 +78,6 @@ export class AiAssistantService {
   readonly conversationTitle = this.conversation.title;
   readonly conversations = this.conversation.conversations;
   readonly hasMoreConversations = this.conversation.hasMoreConversations;
-  readonly showHistory = this.conversation.showHistory;
 
   readonly changeSet = this.changeSets.changeSet;
   readonly excludedChangeIds = this.changeSets.excludedChangeIds;
@@ -236,10 +235,6 @@ export class AiAssistantService {
 
   async discardChangeSet() {
     await this.changeSets.discard();
-  }
-
-  async toggleHistory() {
-    await this.conversation.toggleHistory();
   }
 
   async loadConversations() {

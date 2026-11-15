@@ -26,7 +26,6 @@ export class AiConversationService {
   readonly title = signal<string | null>(null);
   readonly conversations = signal<AiConversation[]>([]);
   readonly hasMoreConversations = signal(false);
-  readonly showHistory = signal(false);
 
   readonly awaitingReplySince = signal<number | null>(null);
 
@@ -60,16 +59,6 @@ export class AiConversationService {
     this.hasMoreConversations.set(hasNextPage(page));
   }
 
-  async toggleHistory() {
-    const next = !this.showHistory();
-
-    this.showHistory.set(next);
-
-    if (next) {
-      await this.loadList();
-    }
-  }
-
   async remove(conversationId: string) {
     await this.api.deleteConversation(conversationId);
   }
@@ -91,7 +80,6 @@ export class AiConversationService {
 
     this.id.set(detail.conversation.id);
     this.title.set(detail.conversation.title);
-    this.showHistory.set(false);
     this.awaitingReplySince.set(
       isAwaitingReply ? Date.parse(last.createdAt) : null
     );
@@ -142,7 +130,6 @@ export class AiConversationService {
   private reset() {
     this.id.set(null);
     this.title.set(null);
-    this.showHistory.set(false);
     this.awaitingReplySince.set(null);
     this.transcript.clear();
     this.changeSets.clear();

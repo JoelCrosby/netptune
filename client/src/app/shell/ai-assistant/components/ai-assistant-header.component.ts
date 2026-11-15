@@ -1,17 +1,18 @@
 import { Component, input, output } from '@angular/core';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
-import { LucideHistory, LucideSquarePen, LucideX } from '@lucide/angular';
+import { LucideSquarePen, LucideX } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { AiAssistantHistoryComponent } from './ai-assistant-history.component';
 import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component';
 
 @Component({
   selector: 'app-ai-assistant-header',
   host: { class: 'border-border block h-15 shrink-0 border-b' },
   imports: [
-    LucideHistory,
     LucideSquarePen,
     LucideX,
+    AiAssistantHistoryComponent,
     AiAssistantModeMenuComponent,
     IconButtonComponent,
     TooltipDirective,
@@ -30,17 +31,7 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
       </div>
 
       <div class="flex shrink-0 items-center gap-0.5">
-        <button
-          app-icon-button
-          type="button"
-          color="muted"
-          size="small"
-          i18n-appTooltip="Tooltip on the button that lists past conversations"
-          appTooltip="Conversation history"
-          appTooltipPosition="bottom"
-          (click)="historyToggled.emit()">
-          <svg lucideHistory class="h-4 w-4"></svg>
-        </button>
+        <app-ai-assistant-history />
 
         @if (hasModeMenu()) {
           <app-ai-assistant-mode-menu
@@ -88,7 +79,6 @@ export class AiAssistantHeaderComponent {
   readonly closable = input(false);
   readonly hasModeMenu = input(true);
 
-  readonly historyToggled = output();
   readonly modeChange = output<AiDisplayMode>();
   readonly newChat = output();
   readonly closed = output();
