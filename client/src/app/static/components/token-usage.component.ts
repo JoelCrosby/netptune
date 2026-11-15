@@ -1,19 +1,16 @@
 import { Component, computed, input } from '@angular/core';
 import { AiTokenUsage } from '@core/models/ai-conversation';
-import {
-  formatCost,
-  formatTokenCount,
-  formatTokens,
-} from '@core/util/ai-usage';
+import { formatTokenCount, formatUsage } from '@core/util/ai-usage';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 @Component({
-  selector: 'app-ai-assistant-usage',
+  selector: 'app-token-usage',
   host: { class: 'inline-flex' },
   imports: [TooltipDirective],
   template: `
     <span
-      class="font-avatar text-muted hover:text-foreground cursor-default text-[10.5px] tabular-nums transition-colors"
+      class="text-muted hover:text-foreground cursor-default tabular-nums transition-colors"
+      [class]="sizeClass()"
       tabindex="0"
       [appTooltip]="breakdown()"
       appTooltipPosition="top">
@@ -21,16 +18,15 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
     </span>
   `,
 })
-export class AiAssistantUsageComponent {
+export class TokenUsageComponent {
   readonly usage = input.required<AiTokenUsage>();
+  readonly size = input<'small' | 'inherit'>('inherit');
 
-  protected readonly label = computed(() => {
-    const usage = this.usage();
-    const tokens = formatTokens(usage);
-    const cost = formatCost(usage);
-
-    return $localize`:Assistant spend shown under the latest reply, for example "12.4k tok · $0.08":${tokens}:tokens: tok · ${cost}:cost:`;
+  protected readonly sizeClass = computed(() => {
+    return this.size() === 'small' ? 'font-avatar text-[10.5px]' : '';
   });
+
+  protected readonly label = computed(() => formatUsage(this.usage()));
 
   protected readonly breakdown = computed(() => {
     const usage = this.usage();

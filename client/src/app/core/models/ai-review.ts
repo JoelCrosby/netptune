@@ -1,3 +1,4 @@
+import { AiTokenUsage } from '@core/models/ai-conversation';
 import { AiProvider } from '@core/models/ai-credential';
 import { EntityType } from '@core/models/entity-type';
 import { RelationCategory } from '@core/models/relation-type';
@@ -83,6 +84,7 @@ export interface AiReviewRun {
   acceptedCount: number;
   dismissedCount: number;
   toolCalls?: AiReviewToolCall[] | null;
+  usage?: AiTokenUsage | null;
 }
 
 export interface AiReviewReference {

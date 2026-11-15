@@ -49,6 +49,8 @@ public sealed record AiReviewRunViewModel
 
     public List<AiReviewToolCallViewModel>? ToolCalls { get; init; }
 
+    public AiTokenUsageViewModel? Usage { get; init; }
+
     [JsonIgnore]
     public string BaselineFingerprint { get; init; } = string.Empty;
 }

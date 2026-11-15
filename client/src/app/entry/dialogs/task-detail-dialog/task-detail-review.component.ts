@@ -41,6 +41,7 @@ import {
 } from '@static/components/step-log/step-log.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TextLinkComponent } from '@static/components/text-link.component';
+import { TokenUsageComponent } from '@static/components/token-usage.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
 import { AiReviewEvidenceComponent } from './shared/ai-review-evidence.component';
 import { AiReviewUnreadSourcesComponent } from './shared/ai-review-unread-sources.component';
@@ -69,6 +70,7 @@ const countFormat = numberFormat();
     TaskDetailReviewHistoryComponent,
     TaskScopeIdComponent,
     TextLinkComponent,
+    TokenUsageComponent,
   ],
   host: { class: 'flex min-h-full flex-col gap-4' },
   template: `
@@ -94,6 +96,9 @@ const countFormat = numberFormat();
               current.run.model // i18n(ph="MODEL")
             }}
           </span>
+          @if (current.run.usage; as usage) {
+            · <app-token-usage [usage]="usage" />
+          }
         </span>
 
         @if (canRun()) {

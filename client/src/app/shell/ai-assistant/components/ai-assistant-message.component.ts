@@ -24,6 +24,7 @@ import {
   LucideRefreshCw,
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { TokenUsageComponent } from '@static/components/token-usage.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
 import { InlineButtonComponent } from '@static/components/button/inline-button.component';
@@ -35,7 +36,6 @@ import {
   AiAssistantReviewDialogComponent,
   AiReviewData,
 } from './ai-assistant-review-dialog.component';
-import { AiAssistantUsageComponent } from './ai-assistant-usage.component';
 import { AiAssistantWorkLogComponent } from './ai-assistant-work-log.component';
 
 const COPIED_RESET_MS = 1500;
@@ -51,7 +51,7 @@ const COPIED_RESET_MS = 1500;
   imports: [
     AiAssistantMarkdownComponent,
     AiAssistantQuestionComponent,
-    AiAssistantUsageComponent,
+    TokenUsageComponent,
     AiAssistantWorkLogComponent,
     IconButtonComponent,
     InlineButtonComponent,
@@ -181,7 +181,7 @@ const COPIED_RESET_MS = 1500;
           <span class="flex-1"></span>
 
           @if (usage(); as usage) {
-            <app-ai-assistant-usage [usage]="usage" />
+            <app-token-usage size="small" [usage]="usage" />
           }
         </div>
       }

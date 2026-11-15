@@ -197,7 +197,7 @@
     </unit>
     <unit id="3563415301877713192">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:109,114</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:135,141</note>
         <note category="description">Shown when older messages were left out of what the assistant can see</note>
       </notes>
       <segment>
@@ -1283,7 +1283,7 @@
     </unit>
     <unit id="3386323988375703429">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:283</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:311</note>
         <note category="description">Header of the work log of a reply the user stopped</note>
       </notes>
       <segment>
@@ -1673,7 +1673,7 @@
     </unit>
     <unit id="3781268880187367400">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:177,182</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:182,187</note>
         <note category="description">Title of the notice shown when the latest review of a task failed</note>
       </notes>
       <segment>
@@ -1736,7 +1736,7 @@
     </unit>
     <unit id="322229249598827754">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:548</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:553</note>
         <note category="description">Shown in place of a person&apos;s name when it is not known</note>
       </notes>
       <segment>
@@ -1908,7 +1908,7 @@
     </unit>
     <unit id="5860895315722028345">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:57</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-greeting.component.ts:43</note>
         <note category="description">Greeting shown in the assistant before noon</note>
       </notes>
       <segment>
@@ -2154,7 +2154,7 @@
     </unit>
     <unit id="1847898654428547577">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:102,104</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:105,107</note>
         <note category="description">Accessible label for the button that stops the assistant</note>
       </notes>
       <segment>
@@ -2388,7 +2388,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:312,315</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:201,204</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-comments.service.ts:161</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:267,270</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:272,275</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:540</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:273</note>
@@ -2423,7 +2423,7 @@
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
         <note category="location">src/app/features/workspaces/guards/unsent-invites.guard.ts:23</note>
         <note category="location">src/app/features/workspaces/views/create-workspace-view/create-workspace-view.component.ts:375</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:62,64</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:64,66</note>
         <note category="location">src/app/static/components/access-token-form/access-token-form.component.ts:101,104</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:97,99</note>
         <note category="location">src/app/static/components/editor/editor-bubble-menu.component.ts:227</note>
@@ -2637,7 +2637,7 @@
     </unit>
     <unit id="3325929519262234553">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:517</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:522</note>
         <note category="description">Label and count of the tool calls a running task review has made so far</note>
       </notes>
       <segment>
@@ -2655,7 +2655,7 @@
     </unit>
     <unit id="4688472285214998498">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:63,66</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:71,74</note>
         <note category="description">Accessible name of the handle that resizes the assistant panel</note>
       </notes>
       <segment>
@@ -2936,7 +2936,7 @@
     </unit>
     <unit id="171544322028923435">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:141,145</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:146,150</note>
         <note category="description">Heading above the findings a running task review has written so far, before they are checked and saved</note>
       </notes>
       <segment>
@@ -3072,7 +3072,7 @@
     </unit>
     <unit id="5494881644226080803">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,327</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:330,332</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {Show 1 decided finding} other {Show <ph id="0" equiv="INTERPOLATION"/> decided findings}}</source>
@@ -3154,7 +3154,7 @@
     </unit>
     <unit id="6949815097015527714">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:306,310</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:311,315</note>
         <note category="description">Shown when the latest review of a task left nothing open</note>
       </notes>
       <segment>
@@ -3163,7 +3163,7 @@
     </unit>
     <unit id="7951945431416072019">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:86,88</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:123,125</note>
         <note category="description">Accessible label for the button that sends a typed answer</note>
       </notes>
       <segment>
@@ -3668,7 +3668,7 @@
     </unit>
     <unit id="8475419621151577343">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:234</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:256</note>
         <note category="description">Describes a change set that was taken back</note>
       </notes>
       <segment>
@@ -3776,7 +3776,7 @@
     </unit>
     <unit id="1613971249126193196">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:44</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-prompts.component.ts:27</note>
         <note category="description">Suggested first question in the assistant</note>
       </notes>
       <segment>
@@ -3794,7 +3794,7 @@
     </unit>
     <unit id="1615286370389385433">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:564</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:569</note>
         <note category="description">Who dismissed a review finding. NAME is a person</note>
       </notes>
       <segment>
@@ -3893,7 +3893,7 @@
     </unit>
     <unit id="413961075487889368">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:172</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:213</note>
         <note category="description">Placeholder while the assistant is replying</note>
       </notes>
       <segment>
@@ -4158,7 +4158,7 @@
     <unit id="958878170701195111">
       <notes>
         <note category="location">src/app/core/transforms/activity-detail.ts:98</note>
-        <note category="location">src/app/static/components/step-log/step-log.component.ts:56,59</note>
+        <note category="location">src/app/static/components/step-log/step-log.component.ts:65,68</note>
         <note category="description">Shown after an assistant review in the activity feed when it failed</note>
       </notes>
       <segment>
@@ -4573,7 +4573,7 @@
     </unit>
     <unit id="242059098779495199">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:286,289</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:291,294</note>
         <note category="description">Button that previews and applies a review suggestion</note>
       </notes>
       <segment>
@@ -4771,7 +4771,7 @@
     </unit>
     <unit id="2334258665364702698">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:243</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:271</note>
         <note category="description">Assistant progress while a tool runs, naming the tool</note>
       </notes>
       <segment>
@@ -4928,7 +4928,7 @@
     <unit id="4043049091728011235">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:637</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:343</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:371</note>
         <note category="description">An export a member stopped</note>
       </notes>
       <segment>
@@ -5402,7 +5402,7 @@
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:254,259</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
         <note category="location">src/app/features/pages/dialogs/page-version-dialog.component.ts:76,78</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:65,66</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:71,72</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:440,443</note>
         <note category="location">src/app/static/components/dialog/dialog-header.component.ts:48</note>
         <note category="description">Dismisses a dialog without saving</note>
@@ -5806,7 +5806,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:154,161</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:169,174</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:239,244</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,330</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:330,335</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:88,90</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:74,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:112,117</note>
@@ -6476,7 +6476,7 @@
     </unit>
     <unit id="8545695896746073499">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:168,171</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:175,178</note>
         <note category="description">Button that asks the assistant to answer again</note>
       </notes>
       <segment>
@@ -6732,7 +6732,7 @@
     </unit>
     <unit id="5635707779811339571">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:505</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:512</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:746</note>
         <note category="description">Shown after applied proposals were taken back</note>
       </notes>
@@ -7038,7 +7038,7 @@
     </unit>
     <unit id="4323470180912194028">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:285</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:307</note>
         <note category="description">Tooltip on the button that copies a reply</note>
       </notes>
       <segment>
@@ -7169,15 +7169,6 @@
       </notes>
       <segment>
         <source> Change background </source>
-      </segment>
-    </unit>
-    <unit id="2687179756279777445">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:106,110</note>
-        <note category="description">Button that opens a box for answering the assistant in your own words</note>
-      </notes>
-      <segment>
-        <source> Something else </source>
       </segment>
     </unit>
     <unit id="2688547031134197193">
@@ -7475,7 +7466,7 @@
     </unit>
     <unit id="239908996088771686">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:273</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:301</note>
         <note category="description">Assistant progress while a reply is being prepared, for example &quot;8s · 12.4k tok&quot;</note>
       </notes>
       <segment>
@@ -8073,7 +8064,7 @@
     </unit>
     <unit id="1215136168573441022">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:447</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:454</note>
         <note category="description">One change cannot be applied</note>
       </notes>
       <segment>
@@ -8133,7 +8124,7 @@
     </unit>
     <unit id="4168406902354683639">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:424,428</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:429,433</note>
         <note category="description">Toggles the list of past reviews of a task</note>
       </notes>
       <segment>
@@ -8208,7 +8199,7 @@
     </unit>
     <unit id="4334698187230567378">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:389,393</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:394,398</note>
         <note category="description">Button that runs the assistant review on a task</note>
       </notes>
       <segment>
@@ -8601,7 +8592,7 @@
     </unit>
     <unit id="3302832028736051011">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:190,194</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:195,199</note>
         <note category="description">Suggests reviewing a task again after it changed</note>
       </notes>
       <segment>
@@ -8723,7 +8714,7 @@
     </unit>
     <unit id="2565426175330768428">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:503</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:508</note>
         <note category="description">Shown while the assistant reviews a task, before it starts writing</note>
       </notes>
       <segment>
@@ -8870,7 +8861,7 @@
     </unit>
     <unit id="7563035552061651664">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:117,119</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:111,114</note>
         <note category="description">Button that sends the options picked in an answer</note>
       </notes>
       <segment>
@@ -9761,7 +9752,7 @@
     </unit>
     <unit id="1496984288894458427">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:50,54</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:51,55</note>
         <note category="description">Returns from a past review to the list of reviews</note>
       </notes>
       <segment>
@@ -9797,7 +9788,7 @@
     </unit>
     <unit id="5209355630949476302">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:56,58</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:58,60</note>
         <note category="description">Shown while a question is being reworded</note>
       </notes>
       <segment>
@@ -9991,7 +9982,7 @@
     </unit>
     <unit id="3578676285239087285">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:176</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:217</note>
         <note category="description">Placeholder while proposed changes are being applied</note>
       </notes>
       <segment>
@@ -11162,7 +11153,7 @@
     </unit>
     <unit id="8740036082299980043">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:119,121</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:118,121</note>
         <note category="description">Accessible label for the button that sends a message</note>
       </notes>
       <segment>
@@ -11654,7 +11645,7 @@
     </unit>
     <unit id="6223729853033621981">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:47</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-prompts.component.ts:30</note>
         <note category="description">Suggested first question in the assistant</note>
       </notes>
       <segment>
@@ -12411,7 +12402,7 @@
     </unit>
     <unit id="3531469667047240907">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:534</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:541</note>
         <note category="description">Accessible label of the control that shows what an applied set did</note>
       </notes>
       <segment>
@@ -12456,7 +12447,7 @@
     </unit>
     <unit id="3541398472508734323">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:377,378</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:382,383</note>
         <note category="description">Heading shown when a task has never been reviewed</note>
       </notes>
       <segment>
@@ -12977,7 +12968,7 @@
     </unit>
     <unit id="6676914867306973161">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:287</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:315</note>
         <note category="description">Shown above a finished reply, saying how long the assistant worked on it</note>
       </notes>
       <segment>
@@ -13472,7 +13463,7 @@
     </unit>
     <unit id="2963979162586134182">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:500</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:505</note>
         <note category="description">Shown while a task review runs one of the assistant&apos;s tools. TOOL names the tool and what it reads, like read_repository_file · src/app.ts</note>
       </notes>
       <segment>
@@ -14203,7 +14194,7 @@
     </unit>
     <unit id="6186101642106373118">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:108,113</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:113,118</note>
         <note category="description">Button that runs the assistant review on a task again</note>
       </notes>
       <segment>
@@ -14678,7 +14669,7 @@
     </unit>
     <unit id="8892176286444857296">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:64</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-greeting.component.ts:50</note>
         <note category="description">Greeting shown in the assistant during the evening</note>
       </notes>
       <segment>
@@ -15063,7 +15054,7 @@
     </unit>
     <unit id="5239250186261980893">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:494</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:499</note>
         <note category="description">Shown while the assistant writes out the findings of a task review</note>
       </notes>
       <segment>
@@ -15273,8 +15264,8 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:253</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:48,50</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:328</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:54,56</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
       <segment>
@@ -15348,7 +15339,7 @@
     </unit>
     <unit id="3268147477051436079">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:80,84</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:84,88</note>
         <note category="description">Button that opens the table of changes the assistant made</note>
       </notes>
       <segment>
@@ -16387,7 +16378,7 @@
     </unit>
     <unit id="3974873904219815105">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:45</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-prompts.component.ts:28</note>
         <note category="description">Suggested first question in the assistant</note>
       </notes>
       <segment>
@@ -17251,7 +17242,7 @@
     </unit>
     <unit id="3525807365202276561">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:183</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:224</note>
         <note category="description">Placeholder for the assistant message input</note>
       </notes>
       <segment>
@@ -17511,7 +17502,7 @@
     </unit>
     <unit id="4308396666254841731">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:464</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:471</note>
         <note category="description">Accessible label of the button that applies the selected changes</note>
       </notes>
       <segment>
@@ -17686,7 +17677,7 @@
     </unit>
     <unit id="7223172032104127584">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:155</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:163</note>
         <note category="description">Counts of a past review&apos;s findings by state. OPEN, ACCEPTED and DISMISSED are numbers, MODEL is the assistant model</note>
       </notes>
       <segment>
@@ -18097,7 +18088,7 @@
     </unit>
     <unit id="3130959333071454929">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:531</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:538</note>
         <note category="description">Accessible label of the control that hides what an applied set did</note>
       </notes>
       <segment>
@@ -18253,7 +18244,7 @@
     </unit>
     <unit id="661825300358772750">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:61</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-greeting.component.ts:47</note>
         <note category="description">Greeting shown in the assistant during the afternoon</note>
       </notes>
       <segment>
@@ -18335,7 +18326,7 @@
     </unit>
     <unit id="6838818500770436132">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:88,90</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:89,91</note>
         <note category="description">Accessible label of the list of past reviews of a task</note>
       </notes>
       <segment>
@@ -19310,7 +19301,7 @@
     </unit>
     <unit id="3427257823783553545">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:23,27</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:18,22</note>
         <note category="description">Empty state inside the AI assistant panel</note>
       </notes>
       <segment>
@@ -19534,7 +19525,7 @@
     </unit>
     <unit id="6511066179052107110">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:293</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:321</note>
         <note category="description">Number of tools the assistant used, plural</note>
       </notes>
       <segment>
@@ -19883,7 +19874,7 @@
     </unit>
     <unit id="7077514990546083477">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:379,381</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:384,386</note>
         <note category="description">Explains what an assistant review of a task does</note>
       </notes>
       <segment>
@@ -20493,7 +20484,7 @@
     </unit>
     <unit id="2003333127264395537">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:339</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:367</note>
         <note category="description">Shown beside a tool the assistant is still running</note>
       </notes>
       <segment>
@@ -20529,7 +20520,7 @@
     </unit>
     <unit id="7794941552856585194">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:79,83</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/shared/task-detail-review-history.component.ts:80,84</note>
         <note category="description">Shown for a past review with no findings</note>
       </notes>
       <segment>
@@ -20760,7 +20751,7 @@
     </unit>
     <unit id="3922324539528568972">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:563</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:568</note>
         <note category="description">Who accepted a review finding. NAME is a person</note>
       </notes>
       <segment>
@@ -21317,7 +21308,7 @@
     </unit>
     <unit id="8056244872949744314">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:513</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:520</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment>
@@ -21627,7 +21618,7 @@
     </unit>
     <unit id="7088061432353123225">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:84,96</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:86,98</note>
         <note category="description">When a task was last reviewed, who ran it and which model. TIME is relative, like 2 hours ago</note>
       </notes>
       <segment>
@@ -21987,7 +21978,7 @@
     </unit>
     <unit id="1902863645498591519">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:517</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:524</note>
         <note category="description">Shown after a single change was applied</note>
       </notes>
       <segment>
@@ -22507,7 +22498,7 @@
     </unit>
     <unit id="4426738042466538780">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:127,131</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:132,135</note>
         <note category="description">Label before the assistant&apos;s current reasoning while a task review runs</note>
       </notes>
       <segment>
@@ -22563,7 +22554,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/assistant/assistant-conversations-card.component.ts:191</note>
         <note category="location">src/app/features/settings/components/assistant/assistant-own-conversations-card.component.ts:160</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:89,91</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:100,102</note>
         <note category="description">Column heading for an assistant conversation</note>
       </notes>
       <segment>
@@ -22725,7 +22716,7 @@
     </unit>
     <unit id="7828808805120058354">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:354,356</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:359,361</note>
         <note category="description">Button that undoes an accepted review suggestion</note>
       </notes>
       <segment>
@@ -22893,7 +22884,7 @@
     </unit>
     <unit id="4807681741561942956">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:73,76</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-question.component.ts:100,103</note>
         <note category="description">Placeholder of the box for answering the assistant in your own words</note>
       </notes>
       <segment>
@@ -22968,7 +22959,7 @@
     </unit>
     <unit id="7679272376567925786">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:241</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:263</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:756</note>
         <note category="description">Describes what applying a change set did</note>
       </notes>
@@ -23018,7 +23009,7 @@
     </unit>
     <unit id="1874095910893592675">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:450</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:457</note>
         <note category="description">Number of changes that cannot be applied</note>
       </notes>
       <segment>
@@ -24402,7 +24393,7 @@
     </unit>
     <unit id="6722197117273372334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:364,366</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:369,371</note>
         <note category="description">Button that reopens a decided review finding</note>
       </notes>
       <segment>
@@ -24680,7 +24671,7 @@
     </unit>
     <unit id="4777027777592183077">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:249,251</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:254,256</note>
         <note category="description">Placeholder of the optional reason for dismissing a review finding</note>
       </notes>
       <segment>
@@ -24890,7 +24881,7 @@
     </unit>
     <unit id="2903576963657594650">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:250</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:278</note>
         <note category="description">Shown while the assistant writes out its reply</note>
       </notes>
       <segment>
@@ -25234,7 +25225,7 @@
     </unit>
     <unit id="6460163696346705349">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:401,403</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:406,408</note>
         <note category="description">Heading above other reviews that mention this task</note>
       </notes>
       <segment>
@@ -25554,7 +25545,7 @@
     </unit>
     <unit id="2756114886316695221">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:188,190</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:193,195</note>
         <note category="description">Title of the notice shown when a task changed after it was reviewed</note>
       </notes>
       <segment>
@@ -25710,7 +25701,7 @@
     </unit>
     <unit id="5717355661357017349">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:164,166</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:171,173</note>
         <note category="description">Button that runs a failed assistant turn again</note>
       </notes>
       <segment>
@@ -25857,7 +25848,7 @@
     </unit>
     <unit id="5000740075940518750">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:498</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:505</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:740</note>
         <note category="description">Shown after proposals were discarded</note>
       </notes>
@@ -25921,7 +25912,7 @@
     </unit>
     <unit id="5186531450031488551">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-usage.component.ts:42</note>
+        <note category="location">src/app/static/components/token-usage.component.ts:38</note>
         <note category="description">Tooltip breaking assistant token spend down by category</note>
       </notes>
       <segment>
@@ -26445,7 +26436,7 @@
     </unit>
     <unit id="72760277315735644">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:390</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:397</note>
         <note category="description">Accessible label of the block holding the proposed changes</note>
       </notes>
       <segment>
@@ -26936,7 +26927,7 @@
     </unit>
     <unit id="4276249242746870131">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:94,97</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:96,99</note>
         <note category="description">Hint beside the stop button saying the key that stops a reply</note>
       </notes>
       <segment>
@@ -27509,7 +27500,7 @@
     </unit>
     <unit id="3601836670004499886">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:180</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:221</note>
         <note category="description">Placeholder while the assistant is waiting on an answer</note>
       </notes>
       <segment>
@@ -28223,7 +28214,7 @@
     </unit>
     <unit id="8348832067364561502">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:299</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:327</note>
         <note category="description">Header of the work log of a finished reply, for example &quot;Worked for 15s · 3 tool calls&quot;</note>
       </notes>
       <segment>
@@ -28340,7 +28331,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:146,148</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:177,179</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment>
@@ -28434,7 +28425,7 @@
     </unit>
     <unit id="2021375731542005347">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:455</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:462</note>
         <note category="description">Follows the count when a single change cannot be applied</note>
         <note category="meaning">one blocked change</note>
       </notes>
@@ -28612,7 +28603,7 @@
     </unit>
     <unit id="6509537909021660545">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:46</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-prompts.component.ts:29</note>
         <note category="description">Suggested first question in the assistant</note>
       </notes>
       <segment>
@@ -29445,7 +29436,7 @@
     </unit>
     <unit id="2653693004959110818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:292</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:320</note>
         <note category="description">Number of tools the assistant used, singular</note>
       </notes>
       <segment>
@@ -29809,7 +29800,7 @@
     <unit id="6631196071533020937">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:12</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:247</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-work-log.component.ts:275</note>
         <note category="description">Shown while the assistant is preparing its reply</note>
       </notes>
       <segment>
@@ -29837,7 +29828,7 @@
     </unit>
     <unit id="842098238223236649">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:320,324</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:325,329</note>
         <note category="description">Hides review findings that were accepted or dismissed</note>
       </notes>
       <segment>
@@ -29865,7 +29856,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:56,58</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:64,66</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment>
@@ -30218,7 +30209,7 @@
     </unit>
     <unit id="6282078456350219045">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:520</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:527</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment>
@@ -30282,7 +30273,7 @@
     </unit>
     <unit id="8296629752539852838">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:458</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:465</note>
         <note category="description">Follows the number of changes that cannot be applied</note>
         <note category="meaning">many blocked changes</note>
       </notes>
@@ -30501,7 +30492,7 @@
     </unit>
     <unit id="2115592966120408375">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:282</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:304</note>
         <note category="location">src/app/static/components/editor/editor-code-block.ts:49</note>
         <note category="description">Confirms the reply was copied to the clipboard</note>
       </notes>
@@ -30584,7 +30575,7 @@
     <unit id="5377078063439833222">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-rail.component.ts:53,58</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:100,104</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:103,107</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:132,134</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:101,103</note>
         <note category="description">Link that opens the automation editor</note>
@@ -30667,7 +30658,7 @@
     </unit>
     <unit id="6376671137838846973">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:490</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:495</note>
         <note category="description">Shown while a task review checks access and loads the task, before the assistant starts</note>
       </notes>
       <segment>
@@ -31371,8 +31362,8 @@
     <unit id="1536087519743707362">
       <notes>
         <note category="location">src/app/core/util/assistant-inline-prompt.ts:14</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:259,262</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:296,298</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:264,267</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:301,303</note>
         <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:30,31</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:76,77</note>
@@ -31946,7 +31937,7 @@
     </unit>
     <unit id="7926451185520893221">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:133,137</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:140,144</note>
         <note category="description">Shown under a reply the user stopped</note>
       </notes>
       <segment>
@@ -32490,7 +32481,7 @@
     </unit>
     <unit id="7322161524245433874">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:161,168</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-review.component.ts:166,173</note>
         <note category="description">Reassurance shown while a task review runs, so the reader knows they do not have to wait on this screen</note>
       </notes>
       <segment>
@@ -32627,8 +32618,8 @@
     </unit>
     <unit id="3559730003120126005">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-usage.component.ts:32</note>
-        <note category="description">Assistant spend shown under the latest reply, for example &quot;12.4k tok · $0.08&quot;</note>
+        <note category="location">src/app/core/util/ai-usage.ts:64</note>
+        <note category="description">Assistant spend, for example &quot;12.4k tok · $0.08&quot;</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="tokens" disp="tokens"/> tok · <ph id="1" equiv="cost" disp="cost"/></source>

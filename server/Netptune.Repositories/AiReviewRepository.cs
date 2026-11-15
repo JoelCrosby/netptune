@@ -275,6 +275,12 @@ public class AiReviewRepository(DataContext context, IDbConnectionFactory connec
             AcceptedCount = run.Findings.Count(finding => finding.Status == AiReviewFindingStatus.Accepted),
             DismissedCount = run.Findings.Count(finding => finding.Status == AiReviewFindingStatus.Dismissed),
             ToolCalls = ReadToolCalls(run.ToolCalls),
+            Usage = ReadUsage(
+                run.Model,
+                run.InputTokens,
+                run.OutputTokens,
+                run.CacheReadTokens,
+                run.CacheCreationTokens),
             BaselineFingerprint = run.BaselineFingerprint,
         });
     }
@@ -421,6 +427,29 @@ public class AiReviewRepository(DataContext context, IDbConnectionFactory connec
     private static List<AiReviewToolCallViewModel>? ReadToolCalls(JsonDocument? document)
     {
         return document?.Deserialize<List<AiReviewToolCallViewModel>>(JsonSerializerOptions.Web);
+    }
+
+    private static AiTokenUsageViewModel? ReadUsage(
+        string model,
+        int? inputTokens,
+        int? outputTokens,
+        int? cacheReadTokens,
+        int? cacheCreationTokens)
+    {
+        if (inputTokens is null)
+        {
+            return null;
+        }
+
+        var usage = new AiTokenUsageViewModel
+        {
+            InputTokens = inputTokens.Value,
+            OutputTokens = outputTokens ?? 0,
+            CacheReadTokens = cacheReadTokens ?? 0,
+            CacheCreationTokens = cacheCreationTokens ?? 0,
+        };
+
+        return usage.WithCost(model);
     }
 
     private sealed record MentionRow

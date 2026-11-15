@@ -161,6 +161,12 @@ public sealed class TaskReviewEndpointTests
 
             usage.InputTokens.Should().Be(300);
             usage.OutputTokens.Should().Be(70);
+
+            var runUsage = latest.Current.Run.Usage!;
+
+            runUsage.InputTokens.Should().Be(300);
+            runUsage.OutputTokens.Should().Be(70);
+            runUsage.Cost.Should().BePositive();
         }
         finally
         {
@@ -346,6 +352,7 @@ public sealed class TaskReviewEndpointTests
             var usage = await LatestReviewUsage();
 
             usage.OutputTokens.Should().Be(12);
+            latest.Current.Run.Usage!.OutputTokens.Should().Be(12);
         }
         finally
         {

@@ -36,6 +36,14 @@ public sealed record AiReviewRun : WorkspaceEntity<int>
 
     public JsonDocument? ToolCalls { get; init; }
 
+    public int? InputTokens { get; init; }
+
+    public int? OutputTokens { get; init; }
+
+    public int? CacheReadTokens { get; init; }
+
+    public int? CacheCreationTokens { get; init; }
+
     public DateTime StartedAt { get; init; }
 
     [JsonIgnore]

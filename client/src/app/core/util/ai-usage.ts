@@ -57,6 +57,13 @@ export const formatCost = (usage: AiTokenUsage | undefined): string => {
   return formatCurrency(usage?.cost ?? 0);
 };
 
+export const formatUsage = (usage: AiTokenUsage): string => {
+  const tokens = formatTokens(usage);
+  const cost = formatCost(usage);
+
+  return $localize`:Assistant spend, for example "12.4k tok · $0.08":${tokens}:tokens: tok · ${cost}:cost:`;
+};
+
 export const sumUsage = (usages: AiTokenUsage[]): AiTokenUsage => {
   return usages.reduce((total, usage) => {
     return {

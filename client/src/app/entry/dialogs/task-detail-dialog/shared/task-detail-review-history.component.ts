@@ -11,6 +11,7 @@ import {
   aiReviewToolCallSummary,
   aiReviewToolSteps,
 } from '@core/util/ai-review-copy';
+import { formatUsage } from '@core/util/ai-usage';
 import { fromNow } from '@core/util/dates';
 import { CalloutComponent } from '@static/components/callout/callout.component';
 import {
@@ -146,6 +147,13 @@ export class TaskDetailReviewHistoryComponent {
   }
 
   private runMeta(run: AiReviewRun): string {
+    const outcome = this.runOutcome(run);
+    const usage = run.usage ? formatUsage(run.usage) : null;
+
+    return [outcome, usage].filter((part) => !!part).join(' · ');
+  }
+
+  private runOutcome(run: AiReviewRun): string {
     const isFailed = run.status === AiReviewRunStatus.failed;
 
     if (isFailed) {

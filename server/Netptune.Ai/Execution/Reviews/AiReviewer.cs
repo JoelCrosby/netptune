@@ -220,6 +220,7 @@ public sealed class AiReviewer : IAiReviewer
             Model = model,
             StartedAt = startedAt,
             ToolCalls = DescribeToolCalls(runContext.Invocations, feed.CallNotes),
+            Usage = SumUsage(runContext.Turns),
         };
 
         var failure = ResolveFailure(outcome, timeout.IsCancellationRequested);
@@ -563,6 +564,10 @@ public sealed class AiReviewer : IAiReviewer
             FailureDetail = failure?.Detail,
             RawReply = failure?.RawReply,
             ToolCalls = JsonSerializer.SerializeToDocument(record.ToolCalls, JsonSerializerOptions.Web),
+            InputTokens = record.Usage.InputTokens,
+            OutputTokens = record.Usage.OutputTokens,
+            CacheReadTokens = record.Usage.CacheReadTokens,
+            CacheCreationTokens = record.Usage.CacheCreationTokens,
             StartedAt = record.StartedAt,
             CreatedByUserId = record.UserId,
             OwnerId = record.UserId,
@@ -647,11 +652,16 @@ public sealed class AiReviewer : IAiReviewer
             return;
         }
 
-        var usage = turns.Aggregate(new AiUsage(), (total, turn) => total.Add(turn.Usage));
+        var usage = SumUsage(turns);
 
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, model, usage, CancellationToken.None);
         await Credentials.MarkUsed(credential, CancellationToken.None);
         await UnitOfWork.CompleteAsync(CancellationToken.None);
+    }
+
+    private static AiUsage SumUsage(List<AiChatTurn> turns)
+    {
+        return turns.Aggregate(new AiUsage(), (total, turn) => total.Add(turn.Usage));
     }
 
     private sealed record RunRecord
@@ -671,6 +681,8 @@ public sealed class AiReviewer : IAiReviewer
         public DateTime StartedAt { get; init; }
 
         public required List<AiReviewToolCallViewModel> ToolCalls { get; init; }
+
+        public required AiUsage Usage { get; init; }
     }
 
     private sealed record ReviewFailure(string Code, string? Detail);
