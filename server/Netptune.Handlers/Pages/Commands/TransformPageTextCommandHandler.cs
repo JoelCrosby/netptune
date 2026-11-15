@@ -39,19 +39,22 @@ public sealed partial class TransformPageTextCommandHandler
     private readonly IAiPageTransformer Transformer;
     private readonly IAiCredentialProtector Protector;
     private readonly IAiSpendService Spend;
+    private readonly IAiCredentialResolver Credentials;
 
     public TransformPageTextCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IAiPageTransformer transformer,
         IAiCredentialProtector protector,
-        IAiSpendService spend)
+        IAiSpendService spend,
+        IAiCredentialResolver credentials)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Transformer = transformer;
         Protector = protector;
         Spend = spend;
+        Credentials = credentials;
     }
 
     public async ValueTask<ClientResponse<TransformPageTextResult>> Handle(
@@ -113,7 +116,8 @@ public sealed partial class TransformPageTextCommandHandler
         }
 
         var userId = Identity.GetCurrentUserId();
-        var credential = await AiHandlerCredentials.Resolve(UnitOfWork, userId, workspaceId, cancellationToken);
+        var credentials = await Credentials.Resolve(userId, workspaceId, cancellationToken);
+        var credential = credentials.FirstOrDefault();
 
         if (credential is null)
         {
@@ -134,7 +138,7 @@ public sealed partial class TransformPageTextCommandHandler
 
         // Booked whatever came back: the tokens were spent either way.
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, result.Model, result.Usage, cancellationToken);
-        await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, cancellationToken);
+        await Credentials.MarkUsed(credential, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         if (string.IsNullOrWhiteSpace(result.Text))

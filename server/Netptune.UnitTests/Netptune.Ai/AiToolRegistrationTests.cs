@@ -142,7 +142,7 @@ public class AiToolRegistrationTests
         services.AddSingleton(Substitute.For<IAiExecutionContext>());
         services.AddSingleton(Substitute.For<ISourceControlReader>());
         services.AddSingleton(Substitute.For<IAutomationActionRegistry>());
-        services.AddNetptuneAi(configuration);
+        services.AddNetptuneAi(configuration, isDevelopment: false);
 
         return services.BuildServiceProvider();
     }

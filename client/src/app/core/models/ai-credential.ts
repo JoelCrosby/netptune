@@ -32,6 +32,7 @@ export type AiCredentialScope = 'user' | 'workspace';
 export enum AiCredentialSource {
   user = 0,
   workspace = 1,
+  development = 2,
 }
 
 export interface AiProviderAvailability {

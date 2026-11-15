@@ -2,6 +2,9 @@ using System.Runtime.CompilerServices;
 
 using FluentAssertions;
 
+using Microsoft.Extensions.Options;
+
+using Netptune.Ai.Configuration;
 using Netptune.Ai.Execution;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
@@ -89,7 +92,9 @@ public class AiInlineWriterTests
         Protector.Unprotect(Arg.Any<byte[]>()).Returns("sk-test");
         ProviderFactory.Resolve(AiProvider.Anthropic).Returns(Provider);
 
-        Writer = new AiInlineWriter(UnitOfWork, Identity, Protector, Spend, ProviderFactory);
+        var credentials = new AiCredentialResolver(UnitOfWork, Protector, Options.Create(new AiOptions()));
+
+        Writer = new AiInlineWriter(UnitOfWork, Identity, Protector, Spend, ProviderFactory, credentials);
     }
 
     [Fact]

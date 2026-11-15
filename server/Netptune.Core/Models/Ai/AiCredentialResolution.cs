@@ -54,4 +54,18 @@ public static class AiCredentialResolution
 
         return resolved.Values.OrderBy(credential => credential.Provider).ToList();
     }
+
+    public static List<AiResolvedCredential> WithFallback(
+        IEnumerable<AiResolvedCredential> resolved,
+        IEnumerable<AiResolvedCredential> fallback)
+    {
+        var credentials = resolved.ToDictionary(credential => credential.Provider);
+
+        foreach (var credential in fallback)
+        {
+            credentials.TryAdd(credential.Provider, credential);
+        }
+
+        return credentials.Values.OrderBy(credential => credential.Provider).ToList();
+    }
 }

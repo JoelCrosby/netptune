@@ -41,6 +41,7 @@ public sealed class ImproveImportMappingCommandHandler
     private readonly IAiImportMappingAdvisor Assistant;
     private readonly IAiCredentialProtector Protector;
     private readonly IAiSpendService Spend;
+    private readonly IAiCredentialResolver Credentials;
 
     public ImproveImportMappingCommandHandler(
         INetptuneUnitOfWork unitOfWork,
@@ -49,7 +50,8 @@ public sealed class ImproveImportMappingCommandHandler
         IAiImportMappingAdvisor assistant,
         IAiCredentialProtector protector,
         IAiSpendService spend,
-        IImportSessionRepository importSessions)
+        IImportSessionRepository importSessions,
+        IAiCredentialResolver credentials)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
@@ -58,6 +60,7 @@ public sealed class ImproveImportMappingCommandHandler
         Protector = protector;
         Spend = spend;
         ImportSessions = importSessions;
+        Credentials = credentials;
     }
 
     public async ValueTask<ClientResponse<ImproveImportMappingResult>> Handle(
@@ -95,7 +98,8 @@ public sealed class ImproveImportMappingCommandHandler
         }
 
         var userId = Identity.GetCurrentUserId();
-        var credential = await AiHandlerCredentials.Resolve(UnitOfWork, userId, workspaceId, cancellationToken);
+        var credentials = await Credentials.Resolve(userId, workspaceId, cancellationToken);
+        var credential = credentials.FirstOrDefault();
 
         if (credential is null)
         {
@@ -119,7 +123,7 @@ public sealed class ImproveImportMappingCommandHandler
 
         // Booked whatever came back: the tokens were spent either way.
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, suggestion.Model, suggestion.Usage, cancellationToken);
-        await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, cancellationToken);
+        await Credentials.MarkUsed(credential, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         if (suggestion.Mapping.Bindings.Count == 0)

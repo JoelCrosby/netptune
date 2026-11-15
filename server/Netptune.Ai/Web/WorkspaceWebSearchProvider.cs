@@ -3,6 +3,8 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
@@ -19,6 +21,7 @@ public sealed class WorkspaceWebSearchProvider : IWebSearchProvider
     private readonly IAiCredentialProtector Protector;
     private readonly IEnumerable<IWebSearchEngine> Engines;
     private readonly AiWebOptions Options;
+    private readonly AiDevelopmentKeys DevelopmentKeys;
 
     public WorkspaceWebSearchProvider(
         HttpClient client,
@@ -34,34 +37,27 @@ public sealed class WorkspaceWebSearchProvider : IWebSearchProvider
         Protector = protector;
         Engines = engines;
         Options = options.Value.Web;
+        DevelopmentKeys = options.Value.DevelopmentKeys;
     }
 
     public async Task<WebSearchResult> Search(string query, int take, CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
         var stored = await UnitOfWork.WorkspaceSearchCredentials.GetForWorkspace(workspaceId, cancellationToken);
+        var credential = stored is null ? CreateDevelopmentCredential() : ToCredential(stored);
 
-        if (stored is null)
+        if (credential is null)
         {
             return WebSearchResult.Failed(
                 "No web search provider is set up for this workspace. An admin can add one in workspace settings.");
         }
 
-        var engine = Engines.FirstOrDefault(item => item.Provider == stored.Provider);
+        var engine = Engines.FirstOrDefault(item => item.Provider == credential.Provider);
 
         if (engine is null)
         {
-            return WebSearchResult.Failed($"Search provider {stored.Provider} is not supported.");
+            return WebSearchResult.Failed($"Search provider {credential.Provider} is not supported.");
         }
-
-        var apiKey = stored.Secret is null ? null : Protector.Unprotect(stored.Secret);
-        var credential = new WebSearchCredential
-        {
-            Provider = stored.Provider,
-            ApiKey = apiKey,
-            EngineId = stored.EngineId,
-            Endpoint = stored.Endpoint,
-        };
 
         var invalid = engine.Validate(credential);
 
@@ -73,7 +69,7 @@ public sealed class WorkspaceWebSearchProvider : IWebSearchProvider
         var count = Math.Clamp(take, 1, Options.MaxSearchResults);
         var hits = await Send(engine, credential, query, count, cancellationToken);
 
-        if (hits.IsSuccess)
+        if (hits.IsSuccess && stored is not null)
         {
             stored.LastUsedAt = DateTime.UtcNow;
 
@@ -81,6 +77,35 @@ public sealed class WorkspaceWebSearchProvider : IWebSearchProvider
         }
 
         return hits;
+    }
+
+    private WebSearchCredential ToCredential(WorkspaceSearchCredential stored)
+    {
+        var apiKey = stored.Secret is null ? null : Protector.Unprotect(stored.Secret);
+
+        return new WebSearchCredential
+        {
+            Provider = stored.Provider,
+            ApiKey = apiKey,
+            EngineId = stored.EngineId,
+            Endpoint = stored.Endpoint,
+        };
+    }
+
+    private WebSearchCredential? CreateDevelopmentCredential()
+    {
+        var apiKey = DevelopmentKeys.BraveSearch;
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            return null;
+        }
+
+        return new WebSearchCredential
+        {
+            Provider = WebSearchProvider.Brave,
+            ApiKey = apiKey.Trim(),
+        };
     }
 
     private async Task<WebSearchResult> Send(

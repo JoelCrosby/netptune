@@ -42,6 +42,24 @@ public sealed class AiOptions
     public int MaxHistoryCharacters { get; set; } = 120000;
 
     public AiWebOptions Web { get; set; } = new();
+
+    public AiDevelopmentKeys DevelopmentKeys { get; set; } = new();
+}
+
+public sealed class AiDevelopmentKeys
+{
+    public string? Anthropic { get; set; }
+
+    public string? OpenAi { get; set; }
+
+    public string? BraveSearch { get; set; }
+
+    public bool HasAny()
+    {
+        string?[] keys = [Anthropic, OpenAi, BraveSearch];
+
+        return keys.Any(key => !string.IsNullOrWhiteSpace(key));
+    }
 }
 
 public sealed class AiWebOptions

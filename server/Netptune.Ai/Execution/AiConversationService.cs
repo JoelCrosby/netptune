@@ -49,6 +49,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiToolRegistry Tools;
     private readonly IAiModelCatalog Models;
     private readonly AiWebFetchAllowance WebAllowance;
+    private readonly IAiCredentialResolver Credentials;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -66,6 +67,7 @@ public sealed class AiConversationService : IAiConversationService
         IAiToolRegistry tools,
         IAiModelCatalog models,
         AiWebFetchAllowance webAllowance,
+        IAiCredentialResolver credentials,
         IOptions<AiOptions> options)
     {
         UnitOfWork = unitOfWork;
@@ -82,6 +84,7 @@ public sealed class AiConversationService : IAiConversationService
         Tools = tools;
         Models = models;
         WebAllowance = webAllowance;
+        Credentials = credentials;
         Options = options.Value;
     }
 
@@ -122,7 +125,7 @@ public sealed class AiConversationService : IAiConversationService
             yield break;
         }
 
-        var credentials = await ResolveCredentials(userId, workspaceId, cancellationToken);
+        var credentials = await Credentials.Resolve(userId, workspaceId, cancellationToken);
 
         if (credentials.Count == 0)
         {
@@ -341,7 +344,7 @@ public sealed class AiConversationService : IAiConversationService
             var assistantMessageId = await PersistTurn(conversation, context, reply, cancellationToken);
             var pendingChangeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
 
-            await MarkCredentialUsed(credential, cancellationToken);
+            await Credentials.MarkUsed(credential, cancellationToken);
 
             await UnitOfWork.CompleteAsync(cancellationToken);
 
@@ -557,47 +560,6 @@ public sealed class AiConversationService : IAiConversationService
     private static string Neutralise(string text)
     {
         return text.Replace("</", "<\u200B/", StringComparison.Ordinal);
-    }
-
-    private async Task<List<AiResolvedCredential>> ResolveCredentials(
-        string userId,
-        int workspaceId,
-        CancellationToken cancellationToken)
-    {
-        var userCredentials = await UnitOfWork.AiCredentials.GetForUser(userId, cancellationToken);
-        var workspaceCredentials = await UnitOfWork.WorkspaceAiCredentials.GetForWorkspace(
-            workspaceId,
-            cancellationToken);
-
-        return AiCredentialResolution.Resolve(userCredentials, workspaceCredentials);
-    }
-
-    private async Task MarkCredentialUsed(AiResolvedCredential credential, CancellationToken cancellationToken)
-    {
-        var isWorkspaceKey = credential.Source == AiCredentialSource.Workspace;
-
-        if (isWorkspaceKey)
-        {
-            var workspaceCredential = await UnitOfWork.WorkspaceAiCredentials.GetAsync(
-                credential.Id,
-                cancellationToken: cancellationToken);
-
-            if (workspaceCredential is not null)
-            {
-                workspaceCredential.LastUsedAt = DateTime.UtcNow;
-            }
-
-            return;
-        }
-
-        var userCredential = await UnitOfWork.AiCredentials.GetAsync(
-            credential.Id,
-            cancellationToken: cancellationToken);
-
-        if (userCredential is not null)
-        {
-            userCredential.LastUsedAt = DateTime.UtcNow;
-        }
     }
 
     private static AiProvider ResolveProvider(

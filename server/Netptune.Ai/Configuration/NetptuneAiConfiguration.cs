@@ -14,7 +14,10 @@ namespace Netptune.Ai.Configuration;
 
 public static class NetptuneAiConfiguration
 {
-    public static IServiceCollection AddNetptuneAi(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddNetptuneAi(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        bool isDevelopment)
     {
         var section = configuration.GetSection(AiOptions.SectionName);
 
@@ -38,6 +41,9 @@ public static class NetptuneAiConfiguration
             .Validate(
                 options => options.ReviewMaxTurnCharacters >= options.MaxToolResultCharacters,
                 "Ai:ReviewMaxTurnCharacters must be at least Ai:MaxToolResultCharacters.")
+            .Validate(
+                options => isDevelopment || !options.DevelopmentKeys.HasAny(),
+                "Ai:DevelopmentKeys can only be set in the Development environment.")
             .ValidateOnStart();
 
         var webOptions = section.GetSection(nameof(AiOptions.Web)).Get<AiWebOptions>() ?? new AiWebOptions();
@@ -155,6 +161,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTitleGenerator, AiTitleGenerator>();
         services.AddScoped<IAiImportMappingAdvisor, AiImportMappingAdvisor>();
         services.AddScoped<IAiPageTransformer, AiPageTransformer>();
+        services.AddScoped<IAiCredentialResolver, AiCredentialResolver>();
         services.AddScoped<IAiInlineWriter, AiInlineWriter>();
         services.AddScoped<IAiReviewer, AiReviewer>();
         services.AddScoped<IAiReviewSubject, TaskReviewSubject>();

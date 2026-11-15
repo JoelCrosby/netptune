@@ -37,6 +37,7 @@ public sealed class AiReviewer : IAiReviewer
     private readonly IAiConversationRunner Runner;
     private readonly IEventRecordWriter EventRecords;
     private readonly IReadOnlyDictionary<EntityType, IAiReviewSubject> Subjects;
+    private readonly IAiCredentialResolver Credentials;
     private readonly AiOptions Options;
     private readonly ILogger<AiReviewer> Logger;
 
@@ -48,6 +49,7 @@ public sealed class AiReviewer : IAiReviewer
         IAiConversationRunner runner,
         IEventRecordWriter eventRecords,
         IEnumerable<IAiReviewSubject> subjects,
+        IAiCredentialResolver credentials,
         IOptions<AiOptions> options,
         ILogger<AiReviewer> logger)
     {
@@ -58,6 +60,7 @@ public sealed class AiReviewer : IAiReviewer
         Runner = runner;
         EventRecords = eventRecords;
         Subjects = subjects.ToDictionary(subject => subject.Type);
+        Credentials = credentials;
         Options = options.Value;
         Logger = logger;
     }
@@ -120,7 +123,8 @@ public sealed class AiReviewer : IAiReviewer
             yield break;
         }
 
-        var credential = await AiHandlerCredentials.Resolve(UnitOfWork, userId, workspaceId, cancellationToken);
+        var credentials = await Credentials.Resolve(userId, workspaceId, cancellationToken);
+        var credential = credentials.FirstOrDefault();
 
         if (credential is null)
         {
@@ -584,7 +588,7 @@ public sealed class AiReviewer : IAiReviewer
         var usage = turns.Aggregate(new AiUsage(), (total, turn) => total.Add(turn.Usage));
 
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, model, usage, CancellationToken.None);
-        await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, CancellationToken.None);
+        await Credentials.MarkUsed(credential, CancellationToken.None);
         await UnitOfWork.CompleteAsync(CancellationToken.None);
     }
 

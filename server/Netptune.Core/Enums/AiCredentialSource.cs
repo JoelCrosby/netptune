@@ -4,4 +4,5 @@ public enum AiCredentialSource
 {
     User = 0,
     Workspace = 1,
+    Development = 2,
 }

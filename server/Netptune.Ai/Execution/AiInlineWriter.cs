@@ -54,19 +54,22 @@ public sealed class AiInlineWriter : IAiInlineWriter
     private readonly IAiCredentialProtector Protector;
     private readonly IAiSpendService Spend;
     private readonly IAiChatProviderFactory ProviderFactory;
+    private readonly IAiCredentialResolver Credentials;
 
     public AiInlineWriter(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IAiCredentialProtector protector,
         IAiSpendService spend,
-        IAiChatProviderFactory providerFactory)
+        IAiChatProviderFactory providerFactory,
+        IAiCredentialResolver credentials)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
         Spend = spend;
         ProviderFactory = providerFactory;
+        Credentials = credentials;
     }
 
     public IAsyncEnumerable<AiStreamEvent> WriteTaskDescription(
@@ -219,7 +222,8 @@ public sealed class AiInlineWriter : IAiInlineWriter
             yield break;
         }
 
-        var credential = await AiHandlerCredentials.Resolve(UnitOfWork, userId, workspaceId, cancellationToken);
+        var credentials = await Credentials.Resolve(userId, workspaceId, cancellationToken);
+        var credential = credentials.FirstOrDefault();
 
         if (credential is null)
         {
@@ -302,7 +306,7 @@ public sealed class AiInlineWriter : IAiInlineWriter
         }
 
         await AiUsageRecorder.Record(UnitOfWork, origin, credential, request.Model, usage, CancellationToken.None);
-        await AiHandlerCredentials.MarkUsed(UnitOfWork, credential, CancellationToken.None);
+        await Credentials.MarkUsed(credential, CancellationToken.None);
         await UnitOfWork.CompleteAsync(CancellationToken.None);
     }
 

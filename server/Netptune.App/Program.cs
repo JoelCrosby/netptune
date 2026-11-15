@@ -121,7 +121,7 @@ builder.Services.AddS3StorageService();
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
-builder.Services.AddNetptuneAi(builder.Configuration);
+builder.Services.AddNetptuneAi(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.AddNetptuneSourceControl(builder.Configuration);
 builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddNetptuneAutomationTriggers();

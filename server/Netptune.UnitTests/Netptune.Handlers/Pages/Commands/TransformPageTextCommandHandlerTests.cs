@@ -1,5 +1,9 @@
 using FluentAssertions;
 
+using Microsoft.Extensions.Options;
+
+using Netptune.Ai.Configuration;
+using Netptune.Ai.Execution;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Localization;
@@ -64,7 +68,9 @@ public class TransformPageTextCommandHandlerTests
                 Usage = new AiUsage { InputTokens = 120, OutputTokens = 40 },
             });
 
-        Handler = new TransformPageTextCommandHandler(UnitOfWork, Identity, Transformer, Protector, Spend);
+        var credentials = new AiCredentialResolver(UnitOfWork, Protector, Options.Create(new AiOptions()));
+
+        Handler = new TransformPageTextCommandHandler(UnitOfWork, Identity, Transformer, Protector, Spend, credentials);
     }
 
     [Fact]
