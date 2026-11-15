@@ -8,7 +8,7 @@ namespace Netptune.IntegrationTests.Events;
 // netptune-events stream, which the api's publisher also owns.
 public sealed class NatsEventsFixture : IAsyncLifetime
 {
-    private readonly NatsContainer Container = new NatsBuilder("nats:alpine")
+    private readonly NatsContainer Container = new NatsBuilder("nats:2.15.1-alpine")
         .WithCommand("-js")
         .Build();
 

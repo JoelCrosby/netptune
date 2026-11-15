@@ -268,7 +268,7 @@ public class UpdateTaskCommandHandlerTests
         TaskBoardMoveContext? recordedContext = null;
 
         SetupHandlerDependencies(request, task, viewModel);
-        Placement.FollowStatus(default!, default!, default, default).ReturnsForAnyArgs(moves);
+        Placement.FollowStatus(default!, default!, default, TestContext.Current.CancellationToken).ReturnsForAnyArgs(moves);
         await Placement.RecordMoves(
             moves,
             Arg.Do<TaskBoardMoveContext>(context => recordedContext = context),
@@ -294,7 +294,7 @@ public class UpdateTaskCommandHandlerTests
 
         await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
-        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, default);
+        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, TestContext.Current.CancellationToken);
     }
 
     [Fact]

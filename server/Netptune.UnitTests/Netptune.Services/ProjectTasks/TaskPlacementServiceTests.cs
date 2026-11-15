@@ -79,8 +79,8 @@ public class TaskPlacementServiceTests
 
         moves.HasMoves.Should().BeFalse();
 
-        await UnitOfWork.BoardGroups.DidNotReceiveWithAnyArgs().GetStatusTaskTargets(default!, default, default);
-        await UnitOfWork.ProjectTasksInGroups.DidNotReceiveWithAnyArgs().DeletePlacements(default!, default);
+        await UnitOfWork.BoardGroups.DidNotReceiveWithAnyArgs().GetStatusTaskTargets(default!, default, TestContext.Current.CancellationToken);
+        await UnitOfWork.ProjectTasksInGroups.DidNotReceiveWithAnyArgs().DeletePlacements(default!, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class TaskPlacementServiceTests
 
         moves.HasMoves.Should().BeFalse();
 
-        await UnitOfWork.ProjectTasksInGroups.DidNotReceiveWithAnyArgs().DeletePlacements(default!, default);
+        await UnitOfWork.ProjectTasksInGroups.DidNotReceiveWithAnyArgs().DeletePlacements(default!, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class TaskPlacementServiceTests
 
         await Service.RecordMoves(TaskBoardMoves.None, context, TestContext.Current.CancellationToken);
 
-        await EventRecords.DidNotReceiveWithAnyArgs().AppendRange(default!, default);
+        await EventRecords.DidNotReceiveWithAnyArgs().AppendRange(default!, TestContext.Current.CancellationToken);
     }
 
     private void SetupPlacements(params TaskBoardPlacement[] placements)

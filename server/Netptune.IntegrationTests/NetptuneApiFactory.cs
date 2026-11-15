@@ -43,12 +43,12 @@ public sealed class NetptuneFixture : IAsyncLifetime
     private const string SearchMasterKey = "netptune-integration-test-master-key";
 
     private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:18.3").Build();
-    private readonly RedisContainer CacheContainer = new RedisBuilder("valkey/valkey:9.0-alpine").Build();
-    private readonly NatsContainer NatsContainer = new NatsBuilder("nats:alpine")
+    private readonly RedisContainer CacheContainer = new RedisBuilder("valkey/valkey:9.1").Build();
+    private readonly NatsContainer NatsContainer = new NatsBuilder("nats:2.15.1-alpine")
         .WithCommand("-js")
         .Build();
 
-    private readonly IContainer SearchContainer = new ContainerBuilder("getmeili/meilisearch:v1.22")
+    private readonly IContainer SearchContainer = new ContainerBuilder("getmeili/meilisearch:v1.55.0")
         .WithEnvironment("MEILI_MASTER_KEY", SearchMasterKey)
         .WithEnvironment("MEILI_NO_ANALYTICS", "true")
         .WithPortBinding(SearchPort, true)

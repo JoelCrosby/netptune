@@ -242,7 +242,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
 
         await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
-        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, default);
+        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, TestContext.Current.CancellationToken);
     }
 
     [Fact]

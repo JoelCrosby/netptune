@@ -264,7 +264,7 @@ public class MoveTasksToGroupCommandHandlerTests
 
         await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
 
-        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, default);
+        await Placement.DidNotReceiveWithAnyArgs().FollowStatus(default!, default!, default, TestContext.Current.CancellationToken);
     }
 
     private static ProjectTask TaskWithStatus(int taskId, int statusId)
