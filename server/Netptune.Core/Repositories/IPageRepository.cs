@@ -40,6 +40,8 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<bool> MarkReviewed(int id, int workspaceId, string userId, CancellationToken cancellationToken = default);
 
+    Task<List<int>> MarkReviewed(IReadOnlyCollection<int> ids, int workspaceId, string userId, CancellationToken cancellationToken = default);
+
     Task<List<int>> GetSubtreeIds(int pageId, int workspaceId, bool includeArchived, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetArchivedTogetherIds(Page root, CancellationToken cancellationToken = default);
@@ -58,7 +60,7 @@ public interface IPageRepository : IWorkspaceEntityRepository<Page, int>
 
     Task<List<RecentPageViewModel>> GetRecentlyVisited(int workspaceId, string userId, int take, CancellationToken cancellationToken = default);
 
-    Task<List<PageNeedingReviewViewModel>> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default);
+    Task<PagesNeedingReviewViewModel> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default);
 
     Task<List<PageChildViewModel>> GetChildren(int parentId, int workspaceId, CancellationToken cancellationToken = default);
 

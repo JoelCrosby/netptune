@@ -173,6 +173,11 @@ export interface PageNeedingReview {
   reason: PageReviewReason;
 }
 
+export interface PagesNeedingReview {
+  readonly pages: readonly PageNeedingReview[];
+  readonly total: number;
+}
+
 export interface SavePageRequest {
   title: string;
   body: string | null;

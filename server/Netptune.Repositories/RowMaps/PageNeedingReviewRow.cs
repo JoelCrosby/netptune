@@ -13,4 +13,6 @@ public class PageNeedingReviewRow
     public DateTime Updated_at { get; set; }
 
     public int Reason { get; set; }
+
+    public int Total_count { get; set; }
 }

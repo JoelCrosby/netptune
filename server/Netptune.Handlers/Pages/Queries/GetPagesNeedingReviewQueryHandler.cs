@@ -8,10 +8,10 @@ using Netptune.Core.ViewModels.Pages;
 
 namespace Netptune.Handlers.Pages.Queries;
 
-public sealed record GetPagesNeedingReviewQuery : IRequest<ClientResponse<List<PageNeedingReviewViewModel>>>;
+public sealed record GetPagesNeedingReviewQuery : IRequest<ClientResponse<PagesNeedingReviewViewModel>>;
 
 public sealed class GetPagesNeedingReviewQueryHandler
-    : IRequestHandler<GetPagesNeedingReviewQuery, ClientResponse<List<PageNeedingReviewViewModel>>>
+    : IRequestHandler<GetPagesNeedingReviewQuery, ClientResponse<PagesNeedingReviewViewModel>>
 {
     public const int Take = 6;
 
@@ -24,7 +24,7 @@ public sealed class GetPagesNeedingReviewQueryHandler
         Identity = identity;
     }
 
-    public async ValueTask<ClientResponse<List<PageNeedingReviewViewModel>>> Handle(
+    public async ValueTask<ClientResponse<PagesNeedingReviewViewModel>> Handle(
         GetPagesNeedingReviewQuery request,
         CancellationToken cancellationToken)
     {
@@ -32,13 +32,15 @@ public sealed class GetPagesNeedingReviewQueryHandler
 
         if (!isSignedIn)
         {
-            return ClientResponse<List<PageNeedingReviewViewModel>>.Success([]);
+            var empty = new PagesNeedingReviewViewModel { Pages = [] };
+
+            return ClientResponse<PagesNeedingReviewViewModel>.Success(empty);
         }
 
         var workspaceId = await Identity.GetWorkspaceId();
         var window = PageReviewWindow.At(workspaceId, DateTime.UtcNow, Take);
         var pages = await UnitOfWork.Pages.GetNeedingReview(window, cancellationToken);
 
-        return ClientResponse<List<PageNeedingReviewViewModel>>.Success(pages);
+        return ClientResponse<PagesNeedingReviewViewModel>.Success(pages);
     }
 }

@@ -91,6 +91,10 @@ export class PagesService {
     return this.http.post<ClientResponse>(`api/pages/${id}/reviewed`, null);
   }
 
+  markAllReviewed(ids: readonly number[]) {
+    return this.http.post<ClientResponse>('api/pages/reviewed', { ids });
+  }
+
   favourite(id: number) {
     return this.http.put<ClientResponse>(`api/pages/${id}/favourite`, null);
   }

@@ -6,7 +6,7 @@ import {
   PageChild,
   PageDetail,
   PageLinks,
-  PageNeedingReview,
+  PagesNeedingReview,
   PageTreeNode,
   PageVersion,
   PageVersionSummary,
@@ -130,14 +130,16 @@ export const recentPagesResource = () => {
 };
 
 export const pagesNeedingReviewResource = () => {
-  return permissionResource<PageNeedingReview[]>({
+  return permissionResource<PagesNeedingReview>({
     permission: PERMISSIONS.pages.read,
     request: memberRequest({ url: 'api/pages/needs-review' }),
-    parse: (response) => response.payload ?? [],
-    defaultValue: [],
+    parse: (response) => response.payload ?? noPagesNeedingReview,
+    defaultValue: noPagesNeedingReview,
     refreshOn: ['pages'],
   });
 };
+
+const noPagesNeedingReview: PagesNeedingReview = { pages: [], total: 0 };
 
 export const pageChildrenResource = (pageId: Signal<number | undefined>) => {
   return stableResource<PageChild[]>({

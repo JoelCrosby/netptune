@@ -78,6 +78,10 @@ public static class PagesEndpoints
             .RequireAuthorization(NetptunePermissions.Pages.Update)
             .Broadcasts(WorkspaceEventScopes.Page);
 
+        group.MapPost("/reviewed", HandleMarkPagesReviewed)
+            .RequireAuthorization(NetptunePermissions.Pages.Update)
+            .Broadcasts(WorkspaceEventScopes.Page);
+
         group.MapPut("/{id:int}/favourite", HandleFavourite).RequireAuthorization(NetptunePermissions.Pages.Read);
         group.MapDelete("/{id:int}/favourite", HandleUnfavourite).RequireAuthorization(NetptunePermissions.Pages.Read);
         group.MapPost("/{id:int}/visits", HandleVisit).RequireAuthorization(NetptunePermissions.Pages.Read);
@@ -109,6 +113,16 @@ public static class PagesEndpoints
     private static async Task<IResult> HandleMarkReviewed(IMediator mediator, int id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new MarkPageReviewedCommand(id), cancellationToken);
+
+        return result.ToResult();
+    }
+
+    private static async Task<IResult> HandleMarkPagesReviewed(
+        IMediator mediator,
+        MarkPagesReviewedRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new MarkPagesReviewedCommand(request), cancellationToken);
 
         return result.ToResult();
     }

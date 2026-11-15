@@ -19,8 +19,16 @@ import { DialogService } from '@core/services/dialog.service';
 import { PageCommandsService } from '@core/services/page-commands.service';
 import { SessionService } from '@core/services/session.service';
 import { fromNow } from '@core/util/dates';
-import { LucideFileClock, LucideHistory, LucideUpload } from '@lucide/angular';
+import {
+  LucideCheck,
+  LucideFileClock,
+  LucideFileText,
+  LucideHistory,
+  LucideUpload,
+} from '@lucide/angular';
 import { HeaderAction } from '@core/types/header-action';
+import { BadgeComponent } from '@static/components/badge/badge.component';
+import { InlineButtonComponent } from '@static/components/button/inline-button.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageBodyComponent } from '@static/components/page-container/page-body.component';
@@ -52,6 +60,12 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
   [PageReviewReason.brokenLinks]: $localize`:Why a page is listed under needs review:Links to a deleted task or page`,
 };
 
+// get_pages_needing_review.sql decides a broken link before it looks at reviewed_at, so marking
+// such a page reviewed stamps it but leaves it listed until the link itself is fixed.
+const clearedByReview = (reason: PageReviewReason) => {
+  return reason !== PageReviewReason.brokenLinks;
+};
+
 @Component({
   selector: 'app-pages-home-view',
   imports: [
@@ -66,6 +80,8 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
     EmptyStateComponent,
     PageBodyComponent,
     RowListComponent,
+    BadgeComponent,
+    InlineButtonComponent,
   ],
   host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
@@ -149,9 +165,10 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
             "
             description="Published pages are listed in the sidebar." />
         } @else {
-          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
             <app-chart-card
-              [flush]="true"
+              flush
+              headerFill
               [icon]="recentIcon"
               i18n-title="Heading over the pages the user opened recently"
               title="Recently viewed"
@@ -173,12 +190,21 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
             </app-chart-card>
 
             <app-chart-card
-              [flush]="true"
+              flush
+              headerFill
+              tone="amber"
+              [footer]="canMarkAllReviewed() || !listsEveryReview()"
               [icon]="reviewIcon"
               i18n-title="Heading over published pages that may be out of date"
               title="Needs review"
               i18n-description="Description of the pages home needs review card"
               description="Published pages that may be out of date">
+              <span chartCardActions class="contents">
+                @if (reviewTotal()) {
+                  <app-badge color="pending">{{ reviewTotal() }}</app-badge>
+                }
+              </span>
+
               <app-row-list
                 flush
                 i18n-ariaLabel="
@@ -189,6 +215,22 @@ const REVIEW_REASONS: Record<PageReviewReason, string> = {
                 emptyLabel="Every published page is up to date."
                 [items]="reviewItems()"
                 (actioned)="onReviewed($event)" />
+
+              <span chartCardFooter class="contents">
+                @if (!listsEveryReview()) {
+                  <span class="text-foreground/60 flex-1 text-xs">{{
+                    reviewCountLabel()
+                  }}</span>
+                }
+                @if (canMarkAllReviewed()) {
+                  <button
+                    app-inline-button
+                    type="button"
+                    (click)="onReviewedAll()">
+                    {{ markAllReviewedLabel() }}
+                  </button>
+                }
+              </span>
             </app-chart-card>
           </div>
         }
@@ -203,7 +245,7 @@ export class PagesHomeViewComponent {
   private readonly dialogs = inject(DialogService);
   private readonly assistant = inject(AiAssistantService);
   private readonly canUseAssistant = hasPermission(PERMISSIONS.assistant.use);
-  private readonly canUpdate = hasPermission(PERMISSIONS.pages.update);
+  protected readonly canUpdate = hasPermission(PERMISSIONS.pages.update);
   private readonly recent = recentPagesResource();
   protected readonly isPublicViewer = inject(SessionService).isPublicViewer;
   private readonly needingReview = pagesNeedingReviewResource();
@@ -292,22 +334,61 @@ export class PagesHomeViewComponent {
         id: page.id,
         title: page.title,
         subtitle: this.pathOf(page.id),
-        meta: [page.updatedByDisplayName ?? '', fromNow(page.visitedAt)],
+        icon: LucideFileText,
+        avatarName: page.updatedByDisplayName,
+        meta: [fromNow(page.visitedAt)],
         link: this.store.link(page.slug),
       };
     });
   });
 
-  protected readonly reviewItems = computed<RowListItem[]>(() => {
-    const actionLabel = this.canUpdate() ? markReviewedLabel : null;
+  protected readonly reviewTotal = computed(() => {
+    return this.needingReview.value().total;
+  });
 
-    return this.needingReview.value().map((page) => {
+  protected readonly listsEveryReview = computed(() => {
+    return this.reviewTotal() <= this.reviewItems().length;
+  });
+
+  protected readonly reviewCountLabel = computed(() => {
+    const shown = this.reviewItems().length;
+    const total = this.reviewTotal();
+
+    return $localize`:Hint under the pages home needs review list saying how many of the flagged pages it shows:Showing ${shown}:SHOWN: of ${total}:TOTAL:`;
+  });
+
+  private readonly clearableReviews = computed(() => {
+    return this.needingReview.value().pages.filter((page) => {
+      return clearedByReview(page.reason);
+    });
+  });
+
+  protected readonly canMarkAllReviewed = computed(() => {
+    return this.canUpdate() && this.clearableReviews().length > 0;
+  });
+
+  protected readonly markAllReviewedLabel = computed(() => {
+    const count = this.clearableReviews().length;
+
+    return count === 1
+      ? $localize`:Button on pages home that marks the one page a review can clear as still accurate:Mark 1 reviewed`
+      : $localize`:Button on pages home that marks the pages a review can clear as still accurate. COUNT is greater than one:Mark ${count}:COUNT: reviewed`;
+  });
+
+  protected readonly reviewItems = computed<RowListItem[]>(() => {
+    const canReview = this.canUpdate();
+
+    return this.needingReview.value().pages.map((page) => {
+      const clears = clearedByReview(page.reason);
+
       return {
         id: page.id,
         title: page.title,
         subtitle: REVIEW_REASONS[page.reason],
+        icon: LucideFileText,
         link: this.store.link(page.slug),
-        actionLabel,
+        actionLabel: canReview && clears ? markReviewedLabel : null,
+        actionIcon: clears ? LucideCheck : undefined,
       };
     });
   });
@@ -349,6 +430,12 @@ export class PagesHomeViewComponent {
 
   protected onReviewed(id: string | number) {
     this.commands.markReviewed(Number(id));
+  }
+
+  protected onReviewedAll() {
+    this.commands.markAllReviewed(
+      this.clearableReviews().map((page) => page.id)
+    );
   }
 
   private async requestFor(

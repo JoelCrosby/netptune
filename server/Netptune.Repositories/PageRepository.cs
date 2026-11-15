@@ -289,6 +289,29 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         return affected == 1;
     }
 
+    public async Task<List<int>> MarkReviewed(IReadOnlyCollection<int> ids, int workspaceId, string userId, CancellationToken cancellationToken = default)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var parameters = new
+        {
+            Ids = ids.ToArray(),
+            WorkspaceId = workspaceId,
+            UserId = userId,
+            ReviewedAt = DateTime.UtcNow,
+        };
+
+        var command = new CommandDefinition(SqlScripts.MarkPagesReviewed, parameters, cancellationToken: cancellationToken);
+        var marked = await connection.QueryAsync<int>(command);
+
+        return marked.ToList();
+    }
+
     public async Task<List<int>> GetSubtreeIds(int pageId, int workspaceId, bool includeArchived, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
@@ -401,7 +424,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<PageNeedingReviewViewModel>> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default)
+    public async Task<PagesNeedingReviewViewModel> GetNeedingReview(PageReviewWindow window, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -414,8 +437,7 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
         };
         var command = new CommandDefinition(SqlScripts.GetPagesNeedingReview, parameters, cancellationToken: cancellationToken);
         var rows = await connection.QueryAsync<PageNeedingReviewRow>(command);
-
-        return rows
+        var pages = rows
             .Select(row => new PageNeedingReviewViewModel
             {
                 Id = row.Id,
@@ -426,6 +448,14 @@ public sealed class PageRepository : WorkspaceEntityRepository<DataContext, Page
                 Reason = (PageReviewReason)row.Reason,
             })
             .ToList();
+
+        var total = rows.FirstOrDefault()?.Total_count ?? 0;
+
+        return new PagesNeedingReviewViewModel
+        {
+            Pages = pages,
+            Total = total,
+        };
     }
 
     public async Task<List<PageChildViewModel>> GetChildren(int parentId, int workspaceId, CancellationToken cancellationToken = default)

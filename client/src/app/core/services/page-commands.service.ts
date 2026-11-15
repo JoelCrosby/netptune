@@ -168,6 +168,22 @@ export class PageCommandsService {
       .subscribe(() => this.refresh());
   }
 
+  markAllReviewed(ids: readonly number[]) {
+    if (!ids.length) return;
+
+    this.pages
+      .markAllReviewed(ids)
+      .pipe(
+        requireSuccess(),
+        catchError((error: unknown) => {
+          this.refresh();
+
+          return this.report(error, reviewFailed);
+        })
+      )
+      .subscribe(() => this.refresh());
+  }
+
   setFavourite(id: number, isFavourite: boolean) {
     const request = isFavourite
       ? this.pages.favourite(id)

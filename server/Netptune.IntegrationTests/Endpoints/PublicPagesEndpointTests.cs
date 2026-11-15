@@ -129,7 +129,6 @@ public sealed class PublicPagesEndpointTests
     [Theory]
     [InlineData("api/pages/recent")]
     [InlineData("api/pages/archived")]
-    [InlineData("api/pages/needs-review")]
     public async Task AnonymousMemberLists_ShouldBeEmpty(string route)
     {
         var (owner, anonymous) = await CreatePublicWorkspace();
@@ -141,6 +140,21 @@ public sealed class PublicPagesEndpointTests
         var pages = await GetPayload<List<object>>(anonymous, route);
 
         pages.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task AnonymousNeedsReview_ShouldBeEmpty()
+    {
+        var (owner, anonymous) = await CreatePublicWorkspace();
+
+        var page = await Create(owner, new CreatePageRequest { Title = "Listed" });
+
+        await Publish(owner, page.Id);
+
+        var review = await GetPayload<PagesNeedingReviewViewModel>(anonymous, "api/pages/needs-review");
+
+        review.Pages.Should().BeEmpty();
+        review.Total.Should().Be(0);
     }
 
     [Fact]

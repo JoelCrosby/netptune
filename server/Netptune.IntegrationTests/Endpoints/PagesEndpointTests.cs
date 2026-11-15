@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Colors;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Pages;
 using Netptune.Core.Requests;
@@ -19,6 +20,7 @@ using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Entities.Contexts;
 using Netptune.Handlers.Pages.Commands;
+using Netptune.Handlers.Pages.Queries;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.TestData;
 
@@ -692,7 +694,8 @@ public sealed class PagesEndpointTests
                 .ExecuteUpdateAsync(setters => setters.SetProperty(page => page.UpdatedAt, old), cancellationToken);
         }
 
-        var flagged = await GetNeedingReview();
+        var payload = await GetNeedingReviewPayload();
+        var flagged = payload.Pages;
 
         flagged.Should().Contain(page => page.Id == broken.Id && page.Reason == PageReviewReason.BrokenLinks);
         flagged.Should().Contain(page => page.Id == stale.Id && page.Reason == PageReviewReason.Stale);
@@ -714,9 +717,146 @@ public sealed class PagesEndpointTests
         reviewedPage.ReviewedAt.Should().NotBeNull();
     }
 
+    [Fact]
+    public async Task MarkPagesReviewed_ShouldStampEveryPageInTheRequest_AndLeaveTheRestAlone()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var first = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "First runbook" });
+        var second = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Second runbook" });
+        var untouched = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = "Third runbook" });
+
+        var request = new MarkPagesReviewedRequest { Ids = [first.Id, second.Id, int.MaxValue] };
+        var response = await Client.PostAsJsonAsync("api/pages/reviewed", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var reviewed = await context.Pages
+            .AsNoTracking()
+            .Where(page => page.Id == first.Id || page.Id == second.Id)
+            .ToListAsync(cancellationToken);
+
+        reviewed.Should().OnlyContain(page => page.ReviewedAt != null && page.ReviewedByUserId != null);
+
+        var skipped = await context.Pages.AsNoTracking().SingleAsync(page => page.Id == untouched.Id, cancellationToken);
+
+        skipped.ReviewedAt.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task NeedsReview_ShouldCapThePages_AndStillCountEveryFlaggedPage()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var overTake = GetPagesNeedingReviewQueryHandler.Take + 1;
+        var ids = new List<int>();
+
+        for (var index = 0; index < overTake; index++)
+        {
+            var page = await Create(new CreatePageRequest { Kind = PageKind.Document, Title = $"Stale {index}" });
+
+            await Update(page.Id, new UpdatePageRequest { Status = PageStatus.Published });
+
+            ids.Add(page.Id);
+        }
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var old = DateTime.UtcNow.AddYears(-2);
+
+            await context.Pages
+                .Where(page => ids.Contains(page.Id))
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(page => page.CreatedAt, old)
+                    .SetProperty(page => page.UpdatedAt, old), cancellationToken);
+        }
+
+        var payload = await GetNeedingReviewPayload();
+
+        payload.Pages.Count.Should().Be(GetPagesNeedingReviewQueryHandler.Take);
+        payload.Total.Should().BeGreaterThanOrEqualTo(overTake);
+
+        // Other tests in this workspace assert on the capped list, so take these back out of it.
+        using var cleanupScope = Fixture.CreateScope();
+
+        var cleanupContext = cleanupScope.ServiceProvider.GetRequiredService<DataContext>();
+
+        await cleanupContext.Pages
+            .Where(page => ids.Contains(page.Id))
+            .ExecuteUpdateAsync(setters => setters.SetProperty(page => page.ReviewedAt, DateTime.UtcNow), cancellationToken);
+    }
+
+    [Fact]
+    public async Task MarkPagesReviewed_ShouldIgnorePages_InAnotherWorkspace()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var foreign = await CreatePageInAnotherWorkspace();
+
+        var request = new MarkPagesReviewedRequest { Ids = [foreign.Id] };
+        var response = await Client.PostAsJsonAsync("api/pages/reviewed", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var page = await context.Pages.AsNoTracking().SingleAsync(item => item.Id == foreign.Id, cancellationToken);
+
+        page.ReviewedAt.Should().BeNull();
+    }
+
+    private async Task<PageViewModel> CreatePageInAnotherWorkspace()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var slug = $"review-{Guid.NewGuid():N}"[..20];
+        var owner = Fixture.CreateNetptuneClient();
+
+        var workspace = new AddWorkspaceRequest
+        {
+            Name = slug,
+            Description = $"{slug} description",
+            Slug = slug,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        };
+
+        var created = await owner.PostAsJsonAsync("api/workspaces", workspace, cancellationToken);
+
+        created.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        owner.DefaultRequestHeaders.Remove("workspace");
+        owner.DefaultRequestHeaders.Add("workspace", slug);
+
+        var request = new CreatePageRequest { Kind = PageKind.Document, Title = "Foreign runbook" };
+        var response = await owner.PostAsJsonAsync("api/pages", request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PageViewModel>>(cancellationToken);
+
+        return result.Payload!;
+    }
+
+    [Fact]
+    public async Task MarkPagesReviewed_ShouldReturnNotFound_WhenNoPageMatches()
+    {
+        var request = new MarkPagesReviewedRequest { Ids = [int.MaxValue] };
+        var response = await Client.PostAsJsonAsync("api/pages/reviewed", request, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task<List<PageNeedingReviewViewModel>> GetNeedingReview()
     {
-        var result = await Client.GetFromJsonAsync<ClientResponse<List<PageNeedingReviewViewModel>>>(
+        var result = await GetNeedingReviewPayload();
+
+        return result.Pages;
+    }
+
+    private async Task<PagesNeedingReviewViewModel> GetNeedingReviewPayload()
+    {
+        var result = await Client.GetFromJsonAsync<ClientResponse<PagesNeedingReviewViewModel>>(
             "api/pages/needs-review",
             TestContext.Current.CancellationToken);
 

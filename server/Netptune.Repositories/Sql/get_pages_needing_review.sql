@@ -38,6 +38,7 @@ SELECT
     , candidates.slug
     , candidates.updated_at
     , candidates.reason
+    , COUNT(*) OVER () AS total_count
 FROM candidates
 WHERE candidates.reason IS NOT NULL
 ORDER BY candidates.reason DESC, candidates.updated_at ASC
