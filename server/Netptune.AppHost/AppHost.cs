@@ -73,6 +73,8 @@ var api = builder
     .WithReference(meilisearch)
     .WithExternalHttpEndpoints();
 
+var client = builder.AddDevClient();
+
 builder.AddClusterParity(new NetptuneResources
 {
     Cache = cache,

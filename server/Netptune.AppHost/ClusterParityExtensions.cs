@@ -1,8 +1,13 @@
+using Aspire.Hosting.JavaScript;
+
 namespace Netptune.AppHost;
 
 public static class ClusterParityExtensions
 {
     private const long Mebibyte = 1024 * 1024;
+
+    // Matches serve.options.port in client/angular.json.
+    private const int DevClientPort = 6400;
 
     extension(IDistributedApplicationBuilder builder)
     {
@@ -41,6 +46,23 @@ public static class ClusterParityExtensions
                 .AddProject<Projects.Netptune_SeedData>("seed-data")
                 .WithPostgres(database)
                 .WithParentRelationship(database);
+        }
+
+        // Cluster parity serves the built client behind the edge instead.
+        public IResourceBuilder<JavaScriptAppResource>? AddDevClient()
+        {
+            var clusterParity = ClusterParity.IsEnabled(builder);
+
+            if (clusterParity)
+            {
+                return null;
+            }
+
+            return builder
+                .AddJavaScriptApp("client", "../../client", "start")
+                .WithPnpm()
+                .WithHttpEndpoint(port: DevClientPort, isProxied: false)
+                .WithExternalHttpEndpoints();
         }
     }
 
