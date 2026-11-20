@@ -84,6 +84,11 @@
   overflow: hidden;
 }
 
+/* Fills the visible viewport so the footer actions stay above a phone's browser chrome. */
+.np-review-dialog {
+  height: 100dvh !important;
+}
+
 .app-full-height-dialog {
   height: 740px;
   max-height: 92vh;

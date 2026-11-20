@@ -66,8 +66,9 @@ interface AiChangeNotice {
     TaskScopeIdComponent,
   ],
   template: `
-    <div class="border-border flex flex-col gap-2 border-b px-5 py-4">
-      <div class="flex items-center gap-4">
+    <div
+      class="border-border flex flex-col gap-2 border-b px-5 py-4 max-md:px-4 max-md:py-3">
+      <div class="flex items-center gap-4 max-md:flex-wrap max-md:gap-y-3">
         <div class="flex min-w-0 flex-1 items-center gap-2.5">
           <app-badge shape="rounded" class="font-bold" [color]="tone()">
             {{ action() }}
@@ -95,7 +96,8 @@ interface AiChangeNotice {
           }
         </div>
 
-        <div class="flex shrink-0 items-center gap-2">
+        <div
+          class="flex shrink-0 items-center gap-2 max-md:w-full max-md:flex-wrap">
           @if (isPending()) {
             <button
               type="button"
@@ -118,7 +120,7 @@ interface AiChangeNotice {
               </span>
               <span>{{ includeLabel() }}</span>
             </button>
-            <span class="bg-border mx-0.5 h-5 w-px"></span>
+            <span class="bg-border mx-0.5 h-5 w-px max-md:hidden"></span>
           }
           @if (canRevise()) {
             @if (editableField(); as target) {
@@ -167,7 +169,7 @@ interface AiChangeNotice {
       <p class="text-muted m-0 text-sm">{{ summary() }}</p>
     </div>
 
-    <div class="custom-scroll flex-1 overflow-auto px-5 pt-4 pb-6">
+    <div class="custom-scroll flex-1 overflow-auto px-5 pt-4 pb-6 max-md:px-4">
       <div class="flex flex-col gap-4">
         @for (notice of notices(); track notice.id) {
           <app-callout

@@ -20,7 +20,8 @@ import {
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { BrowserSettingsService } from '@core/settings/browser-settings.service';
-import { LucideSparkles, LucideX } from '@lucide/angular';
+import { LayoutService } from '@core/services/layout.service';
+import { LucideArrowLeft, LucideSparkles, LucideX } from '@lucide/angular';
 import { ButtonComponent } from '@static/components/button/button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -89,9 +90,11 @@ const clampListWidth = (width: number): number => {
   host: {
     class: 'flex h-full min-h-0 flex-col text-sm',
     '(document:keydown)': 'onKeydown($event)',
+    '(keydown.escape)': 'onEscape($event)',
   },
   imports: [
     SpinnerIconComponent,
+    LucideArrowLeft,
     LucideSparkles,
     LucideX,
     ButtonComponent,
@@ -111,19 +114,20 @@ const clampListWidth = (width: number): number => {
   ],
   template: `
     <header
-      class="border-border bg-card-header flex items-center gap-4 border-b py-3 pr-2.5 pl-4">
+      class="border-border bg-card-header flex items-center gap-4 border-b py-3 pr-2.5 pl-4 max-md:gap-1 max-md:py-2 max-md:pl-3">
       <div class="flex min-w-0 flex-1 items-baseline gap-2.5">
-        <h1 class="font-overpass m-0 text-[22px] font-medium whitespace-nowrap">
+        <h1
+          class="font-overpass m-0 text-[22px] font-medium whitespace-nowrap max-md:text-lg">
           {{ title() }}
         </h1>
-        <span class="text-muted truncate text-[15px]">{{
+        <span class="text-muted truncate text-[15px] max-md:hidden">{{
           conversationTitle()
         }}</span>
       </div>
 
       @if (isRunning()) {
         <span
-          class="bg-primary/12 text-primary flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium">
+          class="bg-primary/12 text-primary flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium max-md:px-2.5">
           <app-spinner-icon class="h-3.5 w-3.5 text-current" />
           @if (isStoppingApply()) {
             <span i18n="Shown on the review while a run is being stopped"
@@ -171,32 +175,39 @@ const clampListWidth = (width: number): number => {
       </button>
     </header>
 
-    <div class="flex min-h-0 flex-1">
+    <div class="relative flex min-h-0 flex-1">
       <div class="bg-dialog-background flex min-w-0 flex-1 flex-col">
-        <div
-          class="border-border flex h-15 shrink-0 items-center gap-3 border-b px-4">
-          <app-filter-input
-            class="w-56 shrink-0"
-            [value]="query()"
-            (valueChange)="query.set($event)"
-            [placeholder]="filterPlaceholder" />
+        @if (!isDetailOnly()) {
+          <div
+            class="border-border flex h-15 shrink-0 items-center gap-3 border-b px-4 max-md:h-auto max-md:flex-wrap max-md:gap-2 max-md:px-3 max-md:py-2.5">
+            <app-filter-input
+              class="w-56 shrink-0 max-md:w-full"
+              [value]="query()"
+              (valueChange)="query.set($event)"
+              [placeholder]="filterPlaceholder" />
 
-          <app-segmented-control
-            variant="chips"
-            [options]="filters()"
-            [value]="filter()"
-            (valueChange)="filter.set($event)"
-            [ariaLabel]="filterGroupLabel" />
+            <div
+              class="min-w-0 max-md:-mx-3 max-md:flex-1 max-md:overflow-x-auto max-md:px-3">
+              <app-segmented-control
+                variant="chips"
+                [options]="filters()"
+                [value]="filter()"
+                (valueChange)="filter.set($event)"
+                [ariaLabel]="filterGroupLabel" />
+            </div>
 
-          <span class="flex-1"></span>
+            @if (!isPhone()) {
+              <span class="flex-1"></span>
 
-          <app-segmented-control
-            variant="outlined"
-            [options]="modes()"
-            [value]="mode()"
-            (valueChange)="setMode($event)"
-            [ariaLabel]="modeGroupLabel" />
-        </div>
+              <app-segmented-control
+                variant="outlined"
+                [options]="modes()"
+                [value]="diffMode()"
+                (valueChange)="setMode($event)"
+                [ariaLabel]="modeGroupLabel" />
+            }
+          </div>
+        }
 
         @if (groups().length === 0) {
           <app-empty-state
@@ -207,71 +218,109 @@ const clampListWidth = (width: number): number => {
           <main
             class="grid min-h-0 flex-1"
             [style.grid-template-columns]="listColumns()">
-            <div class="border-border relative flex min-h-0 flex-col border-r">
-              <app-resize-handle
-                [edge]="'right'"
-                [width]="listWidth()"
-                [minWidth]="minListWidth"
-                [maxWidth]="maxListWidth"
-                [label]="listResizeLabel"
-                (widthChange)="setListWidth($event)"
-                (resizingChange)="onListResizing($event)" />
-
+            @if (!isDetailOnly()) {
               <div
-                class="border-border flex h-11 shrink-0 items-center justify-between gap-2 border-b px-3.5">
-                <span class="text-muted text-[13px]">{{ listSummary() }}</span>
-                @if (isPending() && !isRunning() && selectableCount() > 1) {
-                  <app-button
-                    color="neutral"
-                    class="-my-1 h-7 px-2 text-[13px]"
-                    (click)="toggleAll()">
-                    @if (isEveryChangeSelected()) {
-                      <span i18n="Button that clears every selected change">
-                        Select none
-                      </span>
-                    } @else {
-                      <span i18n="Button that selects every change"
-                        >Select all</span
-                      >
-                    }
-                  </app-button>
+                class="border-border relative flex min-h-0 flex-col border-r max-md:border-r-0">
+                @if (!isPhone()) {
+                  <app-resize-handle
+                    [edge]="'right'"
+                    [width]="listWidth()"
+                    [minWidth]="minListWidth"
+                    [maxWidth]="maxListWidth"
+                    [label]="listResizeLabel"
+                    (widthChange)="setListWidth($event)"
+                    (resizingChange)="onListResizing($event)" />
                 }
-              </div>
 
-              <div class="custom-scroll flex-1 overflow-y-auto pb-3">
-                <app-ai-assistant-review-list
-                  [groups]="batched()"
-                  [excludedChangeIds]="assistant.excludedChangeIds()"
-                  [collapsedKeys]="collapsedKeys()"
-                  [selectedKey]="selectedGroup()?.key ?? null"
-                  [isPending]="isPending()"
-                  [isApplying]="isRunning()"
-                  [applyStatuses]="assistant.applyStatuses()"
-                  [applyingChangeId]="assistant.applyingChangeId()"
-                  (selected)="selectedKey.set($event)"
-                  (groupToggled)="toggleGroup($event)" />
+                <div
+                  class="border-border flex h-11 shrink-0 items-center justify-between gap-2 border-b px-3.5">
+                  <span class="text-muted text-[13px]">{{
+                    listSummary()
+                  }}</span>
+                  @if (isPending() && !isRunning() && selectableCount() > 1) {
+                    <app-button
+                      color="neutral"
+                      class="-my-1 h-7 px-2 text-[13px]"
+                      (click)="toggleAll()">
+                      @if (isEveryChangeSelected()) {
+                        <span i18n="Button that clears every selected change">
+                          Select none
+                        </span>
+                      } @else {
+                        <span i18n="Button that selects every change"
+                          >Select all</span
+                        >
+                      }
+                    </app-button>
+                  }
+                </div>
+
+                <div class="custom-scroll flex-1 overflow-y-auto pb-3">
+                  <app-ai-assistant-review-list
+                    [groups]="batched()"
+                    [excludedChangeIds]="assistant.excludedChangeIds()"
+                    [collapsedKeys]="collapsedKeys()"
+                    [selectedKey]="selectedGroup()?.key ?? null"
+                    [isPending]="isPending()"
+                    [isApplying]="isRunning()"
+                    [applyStatuses]="assistant.applyStatuses()"
+                    [applyingChangeId]="assistant.applyingChangeId()"
+                    (selected)="select($event)"
+                    (groupToggled)="toggleGroup($event)" />
+                </div>
               </div>
-            </div>
+            }
 
             @if (selectedGroup(); as group) {
-              <app-ai-assistant-review-detail
-                [group]="group"
-                [excludedChangeIds]="assistant.excludedChangeIds()"
-                [mode]="mode()"
-                [isPending]="isPending()"
-                [isApplying]="assistant.isApplying()"
-                [canRevise]="!isReadOnly"
-                [workspace]="workspace()"
-                [proposedTags]="proposedTags()"
-                [editingField]="editingField()"
-                [editError]="editError()"
-                [isSaving]="assistant.isEditingChange()"
-                (applied)="applyOnly($event)"
-                (toggled)="toggleIncluded($event)"
-                (editStarted)="startEditing($event)"
-                (editCancelled)="stopEditing()"
-                (saved)="saveEdit($event)"
-                (revised)="reviseChange($event)" />
+              @if (!isPhone() || isDetailOnly()) {
+                <div class="flex min-h-0 min-w-0 flex-col">
+                  @if (isPhone()) {
+                    <div
+                      class="border-border flex shrink-0 items-center gap-2 border-b py-1.5 pr-3 pl-1.5">
+                      <app-button
+                        color="neutral"
+                        class="h-9 gap-1.5 px-2 text-[13px]"
+                        (click)="isDetailShown.set(false)">
+                        <svg lucideArrowLeft class="h-4 w-4"></svg>
+                        <span
+                          i18n="
+                            Button on a phone that leaves a change and goes back
+                            to the list of changes in the review
+                          "
+                          >All changes</span
+                        >
+                      </app-button>
+                      <span class="flex-1"></span>
+                      <app-segmented-control
+                        variant="outlined"
+                        [options]="modes()"
+                        [value]="diffMode()"
+                        (valueChange)="setMode($event)"
+                        [ariaLabel]="modeGroupLabel" />
+                    </div>
+                  }
+
+                  <app-ai-assistant-review-detail
+                    class="flex-1"
+                    [group]="group"
+                    [excludedChangeIds]="assistant.excludedChangeIds()"
+                    [mode]="diffMode()"
+                    [isPending]="isPending()"
+                    [isApplying]="assistant.isApplying()"
+                    [canRevise]="!isReadOnly"
+                    [workspace]="workspace()"
+                    [proposedTags]="proposedTags()"
+                    [editingField]="editingField()"
+                    [editError]="editError()"
+                    [isSaving]="assistant.isEditingChange()"
+                    (applied)="applyOnly($event)"
+                    (toggled)="toggleIncluded($event)"
+                    (editStarted)="startEditing($event)"
+                    (editCancelled)="stopEditing()"
+                    (saved)="saveEdit($event)"
+                    (revised)="reviseChange($event)" />
+                </div>
+              }
             }
           </main>
         }
@@ -287,7 +336,7 @@ const clampListWidth = (width: number): number => {
         }
 
         <footer
-          class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3">
+          class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3 max-md:flex-wrap max-md:gap-x-3 max-md:gap-y-2 max-md:px-3 max-md:py-2.5">
           @if (isRunning()) {
             <app-spinner-icon class="shrink-0" />
             <p class="m-0 shrink-0 text-sm font-medium">
@@ -322,7 +371,8 @@ const clampListWidth = (width: number): number => {
             </button>
           } @else {
             @if (isPending()) {
-              <div class="text-muted flex items-center gap-4 text-[13px]">
+              <div
+                class="text-muted touch:hidden flex items-center gap-4 text-[13px] max-md:hidden">
                 <span class="flex items-center gap-1.5">
                   <app-keyboard-key
                     class="min-w-6 px-2 py-1 text-[13px]"
@@ -380,14 +430,16 @@ const clampListWidth = (width: number): number => {
               </div>
             }
 
-            <span class="flex-1"></span>
-            <p class="text-muted m-0 text-sm">{{ status() }}</p>
+            <span class="flex-1 max-md:hidden"></span>
+            <p class="text-muted m-0 text-sm max-md:basis-full">
+              {{ status() }}
+            </p>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 max-md:flex-1">
               @if (isPending()) {
                 <button
                   app-stroked-button
-                  class="h-12"
+                  class="h-12 max-md:h-11 max-md:flex-1"
                   type="button"
                   (click)="discard()">
                   <span i18n="Button that discards the proposed changes"
@@ -396,7 +448,7 @@ const clampListWidth = (width: number): number => {
                 </button>
                 <button
                   app-flat-button
-                  class="h-12"
+                  class="h-12 max-md:h-11 max-md:flex-1"
                   type="button"
                   [disabled]="assistant.isApplying() || selectedCount() === 0"
                   (click)="apply()">
@@ -409,7 +461,7 @@ const clampListWidth = (width: number): number => {
                 @if (failedCount() > 0 && !isReadOnly) {
                   <button
                     app-stroked-button
-                    class="h-12"
+                    class="h-12 max-md:h-11 max-md:flex-1"
                     type="button"
                     [disabled]="assistant.isApplying()"
                     (click)="retryFailed()">
@@ -422,7 +474,7 @@ const clampListWidth = (width: number): number => {
                 @if (canUndo()) {
                   <button
                     app-stroked-button
-                    class="h-12"
+                    class="h-12 max-md:h-11 max-md:flex-1"
                     type="button"
                     [disabled]="assistant.isApplying()"
                     (click)="undo()">
@@ -433,7 +485,7 @@ const clampListWidth = (width: number): number => {
                 }
                 <button
                   app-stroked-button
-                  class="h-12"
+                  class="h-12 max-md:h-11 max-md:flex-1"
                   type="button"
                   (click)="close()">
                   <span i18n="Button that closes the proposed changes dialog"
@@ -448,8 +500,8 @@ const clampListWidth = (width: number): number => {
 
       @if (canChat && isAssistantOpen()) {
         <app-ai-assistant-panel
-          class="border-border shrink-0 border-l"
-          [style.width]="assistantWidth()"
+          class="border-border shrink-0 border-l max-md:absolute max-md:inset-0 max-md:z-10 max-md:border-l-0"
+          [style.width]="isPhone() ? null : assistantWidth()"
           variant="review"
           (closed)="isAssistantOpen.set(false)" />
       }
@@ -462,6 +514,7 @@ export class AiAssistantReviewDialogComponent {
   protected readonly assistant = inject(AiAssistantService);
 
   private readonly panel = inject(AiPanelService);
+  private readonly layout = inject(LayoutService);
   private readonly settings = inject(BrowserSettingsService);
   private readonly dialogRef = inject<DialogRef<void>>(DialogRef);
   private readonly router = inject(Router);
@@ -474,7 +527,17 @@ export class AiAssistantReviewDialogComponent {
 
   /** The live review keeps the chat beside it so a revision never leaves the review. */
   protected readonly canChat = !this.isReadOnly && this.panel.isAvailable();
-  protected readonly isAssistantOpen = signal(this.canChat);
+  protected readonly isAssistantOpen = signal(
+    this.canChat && !this.layout.isMobileView()
+  );
+
+  protected readonly isPhone = this.layout.isMobileView;
+
+  protected readonly isDetailShown = signal(false);
+
+  protected readonly isDetailOnly = computed(() => {
+    return this.isPhone() && this.isDetailShown() && !!this.selectedGroup();
+  });
 
   private readonly assistantPanel = viewChild(AiAssistantPanelComponent);
 
@@ -498,7 +561,17 @@ export class AiAssistantReviewDialogComponent {
   protected readonly listResizeLabel = $localize`:Accessible name of the handle that resizes the list of changes in the review:Resize change list`;
 
   protected readonly listColumns = computed(() => {
+    if (this.isPhone()) {
+      return 'minmax(0, 1fr)';
+    }
+
     return `${this.listWidth()}px minmax(0, 1fr)`;
+  });
+
+  protected readonly diffMode = computed<AiDiffMode>(() => {
+    const mode = this.mode();
+
+    return this.isPhone() && mode === 'split' ? 'unified' : mode;
   });
 
   protected readonly conversationTitle = this.assistant.conversationTitle;
@@ -706,20 +779,28 @@ export class AiAssistantReviewDialogComponent {
     }
   );
 
-  protected readonly modes = computed<SegmentedOption<AiDiffMode>[]>(() => [
-    {
-      value: 'split' as AiDiffMode,
-      label: $localize`:Diff layout with two columns:Split`,
-    },
-    {
-      value: 'unified' as AiDiffMode,
-      label: $localize`:Diff layout with one column:Unified`,
-    },
-    {
-      value: 'inline' as AiDiffMode,
-      label: $localize`:Diff layout highlighting changed words:Inline`,
-    },
-  ]);
+  protected readonly modes = computed<SegmentedOption<AiDiffMode>[]>(() => {
+    const modes: SegmentedOption<AiDiffMode>[] = [
+      {
+        value: 'split',
+        label: $localize`:Diff layout with two columns:Split`,
+      },
+      {
+        value: 'unified',
+        label: $localize`:Diff layout with one column:Unified`,
+      },
+      {
+        value: 'inline',
+        label: $localize`:Diff layout highlighting changed words:Inline`,
+      },
+    ];
+
+    if (this.isPhone()) {
+      return modes.filter((mode) => mode.value !== 'split');
+    }
+
+    return modes;
+  });
 
   protected readonly listSummary = computed(() => {
     const changes = this.visibleChanges().length;
@@ -794,6 +875,11 @@ export class AiAssistantReviewDialogComponent {
 
   protected setQuery(event: Event) {
     this.query.set((event.target as HTMLInputElement).value);
+  }
+
+  protected select(key: string) {
+    this.selectedKey.set(key);
+    this.isDetailShown.set(true);
   }
 
   protected setMode(mode: AiDiffMode) {
@@ -920,6 +1006,20 @@ export class AiAssistantReviewDialogComponent {
 
   protected close() {
     this.dialogRef.close();
+  }
+
+  // The dialog closes on an Escape that reaches the document body, so a phone's
+  // way back to the list has to claim it on the host first.
+  protected onEscape(event: Event) {
+    const target = event.target as HTMLElement | null;
+    const isInAssistant = !!target?.closest('app-ai-assistant-panel');
+
+    if (event.defaultPrevented || isInAssistant || !this.isDetailOnly()) {
+      return;
+    }
+
+    event.stopPropagation();
+    this.isDetailShown.set(false);
   }
 
   protected onKeydown(event: KeyboardEvent) {
